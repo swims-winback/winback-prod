@@ -1,0 +1,240 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Software{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column space-between align-items-center">
+            <h1 class="text-center mt-4 mb-4">Software</h1>
+
+            <a class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange mb-4 w-50" href="{{path('software_add')}}">New Software</a>
+            {% for message in app.flashes('errorSoftware') %}
+                <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('message') %}
+                <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('infoSoftware') %}
+                <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {{ form(searchform) }}
+
+        
+
+
+
+
+        <!-- ===== SOFTWARE TABLE PER FAMILY ===== -->
+        <div class="d-flex flex-column space-between">
+        {% for family in families %}
+            
+            {#{% for software in family.software %}#}
+                {#{% if software %}#}
+                    <div class="accordion mt-2" id="accordionSoftware">
+                        <div class="accordion-item">
+                            <h2 class="text-center mt-2 mb-2 accordion-header" id="accordionHeading_{{ family.name }}">
+                                <!--
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="accordionCollapse_{{ family.name }}" aria-expanded="true" aria-controls="accordionCollapse_{{ family.name }}" style="background-color: #f18741c4; color: white;">
+                                    {{ family.name }}
+                                </button>
+                                -->
+                                {{ family.name }}
+                            </h2>
+                        </div>
+                   
+
+                        <div class="responsive-table accordion-collapse collapse show overflow-auto" id="accordionCollapse_{{ family.name }}" aria-labelledby="accordionHeading_{{ family.name }}" data-bs-parent="#accordionSoftware">
+                            <table class="table striped accordion-body" id="deviceTable">
+                                <thead>
+                                    <tr>
+                                        <th>Filename</th>
+                                        <th>Version <i class="fa-solid fa-arrow-up-a-z" onclick=sortTable(0)></i></th>
+                                        <th>Creation date</th>
+                                        {#<th>Update date</th>#}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        
+                                        {% for software in softwares %}
+                                            {% if software.family == family.name %}
+                                                
+                                                <tr>
+                                                    {#<td><a download href="{{ asset('uploads/softwares/' ~ software.name) }}">{{software.name}}</a></td>#}
+                                                    <td><a download href="{{ asset('uploads/softwares/' ~ software.family ~ "/" ~ software.name) }}">{{software.name}}</a></td>
+                                                    <td>{{software.version}}</td>
+                                                    <!--
+                                                    <td>
+                                                        {{ software.version|replace({'0': '', '-': '.'}) }}
+                                                    </td>
+                                                    -->
+                                                    <td>{{software.createdAt|date}}</td>
+                                                    <!--TODO-->
+                                                    {#<td>{{software.updatedAt|date}}</td>#}
+                                                    <td class="text-center">
+                                                        <a href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger" 
+                                                        data-bs-target="#modal_delete_{{software.id}}"
+                                                        data-id="delete_{{software.id}}"
+                                                        data-title="{{software.name}}"
+                                                        data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
+                                                    </td>
+                                                    <!--
+                                                    <td class="text-center">
+                                                        <a href="{{path('software_edit', {'id': software.id})}}" class="btn rounded-1 bg-orange press modal-trigger" 
+                                                        data-target=""
+                                                        data-id="{{software.id}}"
+                                                        data-title="{{software.name}}">Edit</a>
+                                                    </td>
+                                                    -->
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+
+                        </div>
+                        </div>
+
+                {#{% endif %}#}
+            {#{% endfor %}#}
+            
+
+        
+
+        {% endfor %}
+        </div>
+
+        {# ===== DELETE MODALS ===== #}
+        {% for software in softwares %}
+            <div class="modal fade" id="modal_delete_{{software.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Delete software</h5>
+                        <!--<button data-target="modal_delete_{{software.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger mt-2 mr-2"><i class="fa-solid fa-xmark"></i></button>-->
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{path('software_delete', {'id': software.id})}}" class="btn btn-outline-danger shadow-1 rounded-1 small">Validate</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            {#             
+            <div class="modal shadow-1 white falling" id="modal-edit" data-ax="modal">
+                <div class="modal-header">Edit software</div>
+
+                <div class="divider"></div>
+
+                <div class="modal-content">
+
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="modal-footer">
+                    <div><a href="" class="btn red shadow-1 rounded-1 small">Validate</a></div>
+                    <button data-target="modal-edit" class="ml-auto btn shadow-1 rounded-1 small modal-trigger">Close</button>
+                </div>
+            </div> #}
+        {% endfor %}
+    </div>
+    
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // ######### Delete function ######### //
+
+        window.onload = () => {
+
+            let deleteButton = document.querySelectorAll(".modal-trigger")
+            for(let button of deleteButton) {
+                button.addEventListener("click", function() {
+                    $id = button.getAttribute("data-id");
+                    $sn = button.getAttribute("data-title");
+                    console.log($id)
+                    document.querySelector(".modal-footer a").href = `/admin/software/delete/${$id}`
+                    document.querySelector(".modal-content").innerText = `Are you sure to delete software `+$sn
+                })
+            }
+            /*
+            let editButton = document.querySelectorAll(".modal-trigger")
+            for(let button of editButton) {
+                button.addEventListener("click", function() {
+                    $id = button.getAttribute("data-id");
+                    $sn = button.getAttribute("data-title");
+                    console.log($id)
+                    document.querySelector(".modal-footer a").href = `/admin/software/edit/${$id}`
+                    document.querySelector(".modal-content").innerText = `Are you sure to edit software `+$sn
+                })
+            }
+            */
+
+        }
+
+       
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("deviceTable");
+        switching = true;
+        // Set the sorting direction to ascending:
+        dir = "asc";
+        /* Make a loop that will continue until
+        no switching has been done: */
+        while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        console.log(rows);
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            //console.log(rows[i].getElementsByTagName("TD")[n]);
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            /* Check if the two rows should switch place,
+            based on the direction, asc or desc: */
+            if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+
+                break;
+            }
+            } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+
+                break;
+            }
+            }
+        }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++;
+        } else {
+            /* If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again. */
+            if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+            }
+        }
+        }
+    }
+
+        
+    </script>
+{% endblock %}

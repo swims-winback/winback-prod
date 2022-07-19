@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Software{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>New Software</h1>
+        
+        {{ form_start(form) }}
+            <div class="">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="row">
+                <!--
+                <div class="col form-field form-inline">
+                    {# {{ form_row(form.name) }} #}
+                </div>
+                <div class="col form-field" id="">
+                    {# {{ form_row(form.version) }} #}
+                </div>
+                <div class="col form-field" id="">
+                    {# {{ form_row(form.family) }} #}
+                </div>
+                -->
+                <div class="col form-field" id="">
+                    {{ form_row(form.file) }}
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

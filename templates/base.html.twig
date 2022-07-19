@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+        <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/axentix@1.3.3/dist/css/axentix.min.css">-->
+        <link rel="icon" type="image/png" href="{{ asset('img/Logo Winback.png') }}" />
+        <!--<link href="../Ressource/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+        {% block stylesheets %}
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+            {#{{ encore_entry_link_tags('app') }}#}
+        {% endblock %}
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        
+        <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js')}}"></script>
+
+        <script src="https://kit.fontawesome.com/06466c4cae.js" crossorigin="anonymous"></script>
+
+    </head>
+
+    <body class="layout">
+
+        {% include 'includes/_header.html.twig' %}
+
+        <main>
+
+        {% block content %}
+        {% endblock %}
+        </main>
+
+        {% include 'includes/_footer.html.twig' %}
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/axentix@1.3.3/dist/js/axentix.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+        {% block javascripts %}
+            
+        {% endblock %}
+        <script src="{{ asset('js/scripts.js')}}"></script>
+
+    </body>
+</html>

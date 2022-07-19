@@ -1,0 +1,19 @@
+            <!-- Modal edit for each device -->
+                <div class="modal shadow-1 white falling" id="modal_edit_{{device.id}}" data-ax="modal">
+                    <div class="modal-header">Device Edit</div>
+
+                    <div class="divider"></div>
+
+                    <div class="modal-content">
+                        {{form(editform)}}
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="modal-footer">
+                        <!--<div><a href="" class="btn red shadow-1 rounded-1 small">Validate</a></div>-->
+                        <button data-target="modal_edit_{{device.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger">Close</button>
+                    </div>
+                </div>
+
+

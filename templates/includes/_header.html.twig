@@ -1,0 +1,34 @@
+<header class="d-flex flex-column justify-content-center mb-4">
+    <nav class="navbar shadow-1 primary d-flex">
+        <div data-target="example-sidenav" class="press sidenav-trigger"><i class="fa-solid fa-ellipsis-vertical"></i></div>
+        <a class="navbar-logo" href="{{path('device')}}">        
+            <img src="{{asset('img/winback-logo.webp')}}" alt="Logo" class="logo" style="height: 50px;">
+        </a>
+        <!--<a href="{{path('device')}}" class="navbar-brand">Winback - Intranet</a>-->
+        <div class="navbar-menu">
+            <a class="navbar-link" href="{{path('app_logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+        </div>
+    </nav>
+    <nav class="header shadow primary bg-orange d-flex justify-content-around">
+            <a class="nav-link" href="{{path('software')}}">Software</a>
+            <a class="nav-link" href="{{path('device')}}">Device</a>
+            <a class="nav-link" href="{{path('statistics')}}">Statistics</a>
+            <a class="nav-link" href="">Maintenance</a>
+    </nav>
+</header>
+
+<!-- ##### Sidenav ##### -->
+<!--
+<div class="sidenav shadow-1 white" id="example-sidenav" data-ax="sidenav">
+    <div class="sidenav-header">
+        <img class="sidenav-logo dropshadow-1" src="{{asset('img/winback-logo.webp')}}" alt="Logo" />
+    </div>
+    <a href="#" class="sidenav-link active">Link 1</a>
+    <a href="#" class="sidenav-link">Link 2</a>
+    <a href="#" class="sidenav-link">Link 3</a>
+    <a href="#" class="sidenav-link">Link 4</a>
+    <div class="sidenav-footer cyan light-1">
+        This is a footer
+    </div>
+</div>
+-->

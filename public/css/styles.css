@@ -1,0 +1,137 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap");
+body, html {
+  width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 !important;
+}
+
+a {
+  color: black;
+  text-decoration: none !important;
+}
+
+.primary {
+  /*background-color: #f0780e;*/
+  background-color: transparent;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  color: black;
+}
+
+.bg-orange {
+  background-color: #f18841;
+  color: white !important;
+}
+
+.btn-outline-orange:hover {
+  border: #f18841 solid 1px;
+  color: #f18841 !important;
+  background-color: white;
+}
+
+.bg-green {
+  background-color: mediumseagreen;
+  color: white;
+}
+
+.btn-outline-green:hover {
+  border: mediumseagreen solid 1px;
+  color: mediumseagreen !important;
+  background-color: white;
+}
+
+.bg-red {
+  background-color: red;
+  color: white;
+}
+
+.device-active {
+  color: mediumseagreen;
+}
+
+.device-inactive {
+  color: crimson;
+}
+
+header, .footer {
+  width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+}
+
+.navbar {
+  padding: 2em;
+  justify-content: space-between;
+  font-family: "Open Sans", sans-serif;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.navbar .navbar-brand {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.navbar .navbar-link {
+  text-transform: uppercase;
+}
+
+.header {
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  justify-content: space-between;
+}
+.header .nav-link {
+  text-transform: uppercase;
+  margin: 0 1em 0 1em;
+  color: white;
+}
+.header .nav-link:hover {
+  border-bottom: solid white 1px;
+  box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0, 0, 0, 0);
+}
+.header #logo {
+  height: 15px !important;
+}
+
+.navbar-logo {
+  height: 100%;
+}
+
+.sidenav-logo {
+  padding: 0 1em;
+  width: 100%;
+}
+
+#screenDevice {
+  visibility: hidden;
+  display: none;
+}
+
+/*
+#testAcces {
+    visibility: hidden;
+    display: none;
+}
+*/
+#sn {
+  visibility: hidden;
+  display: none;
+}
+
+.accordion-collapse {
+  height: 20em;
+}
+
+button.accordionButton {
+  color: white !important;
+}/*# sourceMappingURL=styles.css.map */

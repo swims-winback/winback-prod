@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Device{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>New Device</h1>
+        {{ form_start(form) }}
+            <div class="">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="row">
+                <!--
+                <div class="col form-field form-inline">
+                    {#{{ form_row(form.type) }}#}
+                </div>
+                -->
+                <div class="col form-field" id="">
+                    {{ form_row(form.sn) }}
+                </div>
+                <div class="col form-field" id="">
+                    {{ form_row(form.deviceFamily) }}
+                </div>
+                <div class="col form-field" id="">
+                    {{ form_row(form.version) }}
+                </div>
+
+                <!--
+                <div class="col form-field" id="">
+                    {#{{ form_row(form.versionUpload) }}#}
+                </div>
+                -->
+                <div class="col form-field" id="">
+                    {{ form_row(form.ipAddr) }}
+                </div>
+                <div class="col form-field" id="">
+                    {{ form_row(form.logPointeur) }}
+                </div>
+                <div class="col form-field" id="">
+                    {{ form_row(form.pub) }}
+                </div>
+                <div class="col form-field" id="">
+                    {{ form_row(form.codePin) }}
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
