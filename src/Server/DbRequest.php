@@ -380,10 +380,18 @@ class DbRequest {
 		
 	}
 
-	function setConnect($connected, $sn=""){
-		$whereCond = SN."='$sn'";
-        $req = $this->update(IS_CONNECT, $connected, DEVICE_TABLE, $whereCond);
-        $res = $this->sendRq($req);
+	function setConnect($connected, $sn="", $ip=""){
+		if ($sn!="") {
+            $whereCond = SN."='$sn'";
+            $req = $this->update(IS_CONNECT, $connected, DEVICE_TABLE, $whereCond);
+            $res = $this->sendRq($req);
+        }
+        elseif ($ip!="") {
+            $whereCond = IP_ADDR."='$ip'";
+            $req = $this->update(IS_CONNECT, $connected, DEVICE_TABLE, $whereCond);
+            $res = $this->sendRq($req);
+        }
+
 	}
 
     function setConnectAll($connected){

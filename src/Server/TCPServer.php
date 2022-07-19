@@ -261,7 +261,7 @@ class TCPServer extends AbstractController
 				//echo "\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n";
 				$output->writeln("\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n");
 				$request = new DbRequest();
-				$request->setConnect(1, $ip);
+				$request->setConnect(1, $sn="", $ip);
 				//$clients[] = $newsock; // put accepted socket in a client array
 				// remove the listening socket from the clients-with-data array
 				$key = array_search($sock, $read); 
