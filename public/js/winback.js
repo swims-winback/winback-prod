@@ -43,21 +43,11 @@ function trunkId(idElt){
 }
 
 function connect(datakey, sn){
-	//$("#errorDeviceConnect").html("function doesn't work");
-	//console.log("waiting for connection");
-	//var path = "{{ path('tcpclient')}}";
     $.ajax({
         type:"POST",
         cache:false,
-        //url:"../src/Class/TCPClient.php",
-		//url: "{{ class_directory.'/TCPClient.php'}}",
-		//url: "TCPClient.php",
-		//url: "../src/Class/TCPClient.php",
-		//url: "{{path('class_directory', '/TCPClient.php')}}",
-
-		//url: `/admin/tcpclient/`,
 		url: path,
-        //data:{action: datakey, sn:sn},   // multiple data sent using ajax
+		// multiple data sent using ajax
 		data:{action: datakey, sn:sn},
         success: function (data) {
 			//console.log("success");
