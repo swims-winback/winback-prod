@@ -171,7 +171,9 @@
                                     </td>
                                     #}
                                     <td class="text-center">
+                                        {% if device.deviceFamily == "BIOBACK" %}
                                         <input class="btn {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %} connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces" {% if device.deviceFamily != "BIOBACK" %}hidden{% else %}{% endif %}>
+                                        {% endif %}
                                         {#<input class="btn connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" {% if device.isActive == true %}{% else %}{% endif %}>#}
                                     </td>
                                 </tr>
