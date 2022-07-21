@@ -171,8 +171,7 @@
                                     </td>
                                     #}
                                     <td class="text-center">
-                                        <input class="btn bg-orange btn-outline-orange connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces" {% if device.deviceFamily != "BIOBACK" %}hidden{% else %}{% endif %}>
-                                        
+                                        <input class="btn {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %} connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces" {% if device.deviceFamily != "BIOBACK" %}hidden{% else %}{% endif %}>
                                         {#<input class="btn connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" {% if device.isActive == true %}{% else %}{% endif %}>#}
                                     </td>
                                 </tr>
@@ -688,6 +687,8 @@
 {% block javascripts %}
     <script type="text/javascript">
         var path = "{{ asset('js/TCPClient2.php')}}";
+
+
     </script>
 
 
