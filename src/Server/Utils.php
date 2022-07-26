@@ -1,6 +1,6 @@
 <?php
 namespace App\Server;
-ini_set('memory_limit','16M');
+//ini_set('memory_limit','128M');
 //require_once dirname(__DIR__).'/config.php';
 //require_once(__DIR__.'/config.php');
 /*
