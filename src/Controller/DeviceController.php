@@ -78,13 +78,16 @@ class DeviceController extends AbstractController
         // input text version form
         $form = $this->createFormBuilder()
         ->add('versionInput', TextType::class, [
-            'label' => false
+            'label' => false,
+            'attr' => [
+                'class' => 'w-50 flex-grow-1',
+            ],
         ])
         ->add('Save', SubmitType::class, [
             'attr' => [
-                'class' => 'btn rounded-1 bg-orange',
+                'class' => 'w-auto text-center btn bg-orange fa-solid fa-check p-1',
             ],
-            //'label' => false,
+            'label' => false,
         ])
         ->getForm();
         
@@ -139,7 +142,6 @@ class DeviceController extends AbstractController
             }
             return $this->redirectToRoute('device');
         }
-
 
         return $this->render('device.html.twig', [
             'devices' => $devices,
@@ -404,6 +406,19 @@ class DeviceController extends AbstractController
         return $this->redirectToRoute('device');
     }
 
+    /**
+     * @Route("/admin/device/isactive/{id}", name="isactive")
+     */
+    public function isActive(Device $device)
+    {
+        //$result = ($device->getForced())?true:false;
+        //$device->setForced(($device->getForced())?false:true);
+        if ($device->getIsActive()) {
+            return new Response($device->getIsActive());
+        }
+        return new Response(false);
+        //return $this->redirectToRoute('device');
+    }
     /**
      * @Route("/admin/device/selected/{id}", name="selected")
      */
