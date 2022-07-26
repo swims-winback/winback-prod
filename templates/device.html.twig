@@ -18,27 +18,32 @@
                 {{ form(searchform) }}
                 </div>
 
-                <div id="listDeviceTable" class="responsive-table mt-4 mb-4 w-100 overflow-scroll">
-                    <table class="table striped w-100" id="deviceTable">
-                        <thead>
-                            <tr class="align-middle">
-                                <th></th>
+                <div id="listDeviceTable" class="table-responsive mt-4 mb-4 w-100">
+                    <table class="table table-striped table-hover w-100" id="deviceTable">
+                        <thead class="w-100 align-middle">
+                            <tr class="h-100 w-100 align-middle" id="deviceTableTitle">
+                                <th scope="col"></th>
                                 <!--<th class="text-center">Serial Number <i class="fa-solid fa-arrow-up-a-z" id="sn" onclick=sortTable(0)></i></th>-->
-                                <th class="text-center">Serial Number<i class="fa-solid fa-arrow-up-a-z" id="snSort" onclick=sortTable(0)></i></th>
-                                <th class="text-center">Device Family</th>
-                                <th class="text-center">Version</th>
-                                <th class="text-center">Upload Version</th>
+                                <th scope="col" class="h-100">
+                                    <div class="h-100 d-flex justify-content-between input-group no-wrap text-center align-items-center">
+                                        <span class="h-100 d-flex align-items-center">Serial Number</span>
+                                        <span class="btn btn-light text-dark h-100 p-1" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
+                                    </div>
+                                
+                                </th>
+                                <th scope="col" class="text-center">Device Family</th>
+                                <th scope="col" class="text-center">Version</th>
+                                <th scope="col" class="text-center">Upload Version</th>
                                 <!--
                                 TODO Progress bar
                                 <th class="text-center">Download status</th>
                                 -->
-                                <th class="text-center">Log files</th>
-                                <th></th>
-                                <th></th>
-                                <th>Connect</th>
-                                <th></th>
+                                <th scope="col" class="text-center">Log files</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col">Connect</th>
                             </tr>
-                            <tr>
+                            <tr class="w-100 align-bottom">
                                 <!--
                                 <th class="text-center">
                                     <a href="" class="btn rounded-1 bg-orange press modal-trigger" id="valid_0"
@@ -59,19 +64,20 @@
                                 <th></th>
                                 {#{{form_start(form)}}#}
                                 <th id='test_zone_0'>
-                                    <div class="input-group">
+                                    <!--<div class="input-group d-flex justify-content-end w-50 no-wrap" id="versionForm">-->
+                                    <div class="input-group d-flex no-wrap">
+                                            {{form_widget(form.versionInput)}}
+                                            {{form_widget(form.Save)}}
+                                    </div>
+                                        
                                         {#
-                                            {{form_row(form.versionInput)}}
-                                            {{form_row(form.Save)}}
-                                        #}
-                                        
                                         {{form(form)}}
-                                        
+                                        #}
                                         {#
                                         {{form_row(form.versionInput)}}
                                         {{form_row(form.Save)}}
                                         #}
-                                    </div>
+                                    <!--</div>-->
 
                                 </th>
                                 <th></th>
@@ -86,9 +92,9 @@
                             </tr>
                         </thead>
                         
-                        <tbody>
+                        <tbody class="w-100">
                             {% for device in devices %}
-                                <tr>
+                                <tr scope="row" class="w-100">
                                     <!--
                                     <td class="text-center">
                                         <a href="" class="btn rounded-1 bg-orange press modal-trigger" id="valid_{{device.id}}"
@@ -98,8 +104,8 @@
                                     
                                     <td class="text-center">
                                         
-                                        <div class="form-field">
-                                        <label class="form-check">
+                                        <div class="form-field text-center align-middle">
+                                        <label class="form-check text-center align-middle">
                                             <input type="checkbox" id="checkbox_{{device.id}}" data-id="{{device.id}}" name="checkbox_item" class="form-check-input" {{ (device.selected)? 'checked': ''}}/>
                                         </label>
                                         </div>
@@ -145,7 +151,14 @@
                                     -->
                                     <!--info-->
                                     <td class="text-center">
-                                        <a href="#" class="btn rounded-1 press modal-trigger {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %}" 
+                                        <!--<a id="info_device" href="#" class="info_device btn rounded-1 press modal-trigger {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %}" 
+                                        data-bs-target="#modal_info_{{device.id}}"
+                                        data-id="{{device.id}}"
+                                        data-title="{{device.sn}}"
+                                        data-bs-toggle="modal">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                        </a>-->
+                                        <a id="info_device" href="#" class="info_device btn rounded-1 press modal-trigger" 
                                         data-bs-target="#modal_info_{{device.id}}"
                                         data-id="{{device.id}}"
                                         data-title="{{device.sn}}"
@@ -170,12 +183,14 @@
                                         data-title="{{device.sn}}"><i class="fa-solid fa-pen"></i></a>
                                     </td>
                                     #}
+                                    
                                     <td class="text-center">
-                                        {% if device.deviceFamily == "BIOBACK" %}
-                                        <input class="btn {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %} connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces" {% if device.deviceFamily != "BIOBACK" %}hidden{% else %}{% endif %}>
+                                        {% if (device.deviceFamily == "BIOBACK" or device.deviceFamily == "RSHOCK" or device.deviceFamily == "CRYOBACK4") %}
+                                        <input class="btn {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %} connect_command" id="c_sn_{{device.sn}}" data-id="connect_{{device.id}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces">
                                         {% endif %}
                                         {#<input class="btn connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" {% if device.isActive == true %}{% else %}{% endif %}>#}
                                     </td>
+                                    
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -705,53 +720,57 @@
         /* Make a loop that will continue until
         no switching has been done: */
         while (switching) {
-        // Start by saying: no switching is done:
-        switching = false;
-        rows = table.rows;
-        console.log(rows);
-        /* Loop through all table rows (except the
-        first, which contains table headers): */
-        for (i = 2; i < (rows.length - 2); i++) {
-            // Start by saying there should be no switching:
-            shouldSwitch = false;
-            /* Get the two elements you want to compare,
-            one from current row and one from the next: */
-            //console.log(rows[i].getElementsByTagName("TD")[n]);
-            x = rows[i].getElementsByTagName("TD")[n];
-            y = rows[i + 1].getElementsByTagName("TD")[n];
-            /* Check if the two rows should switch place,
-            based on the direction, asc or desc: */
-            if (dir == "asc") {
-            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                // If so, mark as a switch and break the loop:
-                shouldSwitch = true;
+            // Start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            //console.log(rows.length)
+            //console.log(rows[14].getElementsByTagName("TD")[n].innerHTML)
+            //console.log(rows);
+            /* Loop through all table rows (except the
+            first, which contains table headers): */
+            for (i = 2; i < (rows.length -1); i++) {
+                // Start by saying there should be no switching:
+                shouldSwitch = false;
+                /* Get the two elements you want to compare,
+                one from current row and one from the next: */
+                
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                console.log(rows[14].getElementsByTagName("TD")[n].innerHTML)
+                /* Check if the two rows should switch place,
+                based on the direction, asc or desc: */
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        // If so, mark as a switch and break the loop:
+                        console.log(x.innerHTML.toLowerCase());
+                        shouldSwitch = true;
 
-                break;
-            }
-            } else if (dir == "desc") {
-            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                // If so, mark as a switch and break the loop:
-                shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        // If so, mark as a switch and break the loop:
+                        shouldSwitch = true;
 
-                break;
+                        break;
+                    }
+                }
             }
+            if (shouldSwitch) {
+                /* If a switch has been marked, make the switch
+                and mark that a switch has been done: */
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                // Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /* If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again. */
+                if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+                }
             }
-        }
-        if (shouldSwitch) {
-            /* If a switch has been marked, make the switch
-            and mark that a switch has been done: */
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-            // Each time a switch is done, increase this count by 1:
-            switchcount ++;
-        } else {
-            /* If no switching has been done AND the direction is "asc",
-            set the direction to "desc" and run the while loop again. */
-            if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
-            }
-        }
         }
     }
 
