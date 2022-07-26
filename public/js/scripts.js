@@ -1,6 +1,66 @@
 
-        
+ // ######### Connect function ######### //
+ /*
+ $(document).ready(function (){
+  let deviceArray = document.querySelectorAll(".info_device")
+  for (let device of deviceArray) {
+    //var deviceId = $('#info_device').data("id");
+    var deviceId = $(device).data("id");
+    //var infoButton = 
+    $( device ).load( `/admin/device/`);
+  }
+});
+*/
+
+ $(document).ready(function (){
+    
+  setInterval(function (){
+    let deviceArray = document.querySelectorAll(".info_device")
+    for (let device of deviceArray) {
+      //var deviceId = $('#info_device').data("id");
+      var deviceId = $(device).data("id");
+      
+      //var infoButton = 
+      $.ajax({    
+        type: "GET",
+        //url: `/admin/device/isactive/${deviceId}`, 
+        url: `/admin/device/isactive/${deviceId}`,          
+        dataType: "html",                  
+        success: function(data){ 
+          if ($.trim(data)==1){   
+            //$("#test").html(data); 
+            //$(device).css("background-color", "green");
+            $(device).addClass('bg-green btn-outline-green')
+            var deviceSn = $(device).data("title");
+            console.log(deviceSn);
+            //$(`#c_sn_${deviceSn}`).attr('hidden', false);
+            document.getElementById(`c_sn_${deviceSn}`).style.display = "block";
+            
+            //console.log(url);
+          } 
+          else  
+          {    
+            //$(device).css("background-color", "green");
+            $(device).addClass('bg-orange btn-outline-orange')
+            var deviceSn = $(device).data("title");
+            //$(`#c_sn_${deviceSn}`).attr('hidden', true);
+            //console.log(`#c_sn_${deviceSn}`);
+            document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
+            //document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
+            //$("#c_sn_".deviceSn).html('ok');
+            
+          }                 
+        }
+      });
+    }
+  }, 1000);
+});
+
+
 window.onload = () => {
+
+
+
   // ######## Validate version ######## //
   let updateButton = document.querySelectorAll(".update")
   let updateZone = document.querySelectorAll(".update-zone")
