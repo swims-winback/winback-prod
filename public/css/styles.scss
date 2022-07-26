@@ -144,3 +144,26 @@ header, .footer {
 button.accordionButton {
     color: white !important;
 }
+
+#versionForm {
+    &:first-child {
+        width: 50%;
+        justify-content: right;
+    }
+}
+
+td {
+    vertical-align: middle;
+}
+
+.test_zone_0 {
+    width: fit-content;
+    vertical-align:middle;
+}
+
+#deviceTableTitle {
+    th {
+
+        //padding: 0.25em;
+    }
+}
