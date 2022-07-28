@@ -1,4 +1,5 @@
 
+
  // ######### Connect function ######### //
  /*
  $(document).ready(function (){
@@ -58,6 +59,8 @@
 
 
 window.onload = () => {
+
+
 
 
 
