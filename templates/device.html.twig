@@ -62,66 +62,30 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                {#{{form_start(form)}}#}
                                 <th id='test_zone_0'>
-                                    <!--<div class="input-group d-flex justify-content-end w-50 no-wrap" id="versionForm">-->
                                     <div class="input-group d-flex no-wrap">
                                             {{form_widget(form.versionInput)}}
                                             {{form_widget(form.Save)}}
                                     </div>
-                                        
-                                        {#
-                                        {{form(form)}}
-                                        #}
-                                        {#
-                                        {{form_row(form.versionInput)}}
-                                        {{form_row(form.Save)}}
-                                        #}
-                                    <!--</div>-->
-
                                 </th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
                                 <th>
-                                    {#{{form_row(form.Save)}}#}
                                 </th>
-                                {#
-                                {{form_end(form)}}
-                                #}
                             </tr>
                         </thead>
                         
                         <tbody class="w-100">
                             {% for device in devices %}
                                 <tr scope="row" class="w-100">
-                                    <!--
                                     <td class="text-center">
-                                        <a href="" class="btn rounded-1 bg-orange press modal-trigger" id="valid_{{device.id}}"
-                                        data-target=""><i class="fa-solid fa-check"></i></a>
-                                    </td>
-                                    -->
-                                    
-                                    <td class="text-center">
-                                        
                                         <div class="form-field text-center align-middle">
                                         <label class="form-check text-center align-middle">
                                             <input type="checkbox" id="checkbox_{{device.id}}" data-id="{{device.id}}" name="checkbox_item" class="form-check-input" {{ (device.selected)? 'checked': ''}}/>
                                         </label>
                                         </div>
-                                        
                                     </td>
-                                    
-                                    <!--
-                                    <td>
-                                        {#
-                                        {{ form_start(forms[loop.index0]) }}
-                                        {{ form_widget(forms[loop.index0]) }}
-                                        {{ form_end(forms[loop.index0]) }}
-                                        #}
-
-                                    </td>
-                                    -->
                                     <td class="text-center">{{device.sn}}</td>
                                     <td class="text-center">{{device.deviceFamily}}</td>
                                     <td class="text-center">{{device.version}}</td>
@@ -134,30 +98,13 @@
                                         </div>
                                     </td>
                                     #}
-                                    <!--<td><a download href="{{ asset('uploads/devices/logs' ~ device.logFile) }}">Download Log</a></td>-->
                                     <td class="text-center"><a download href="{{ asset('Ressource/logs/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}"><i class="fa-solid fa-download"></i></a></td>
                                     <!-- forced -->
                                     <td class="text-center">
-                                        {% if device.forced %}<i class="fa-solid fa-rotate"></i>{% else %}{% endif %}
+                                        {% if device.forced %}<i class="fa-solid fa-f"></i>{% else %}{% endif %}
                                     </td>
-                                    <!--
-                                    <td class="text-center">
-                                        
-                                        
-                                        <button class="rounded-1 modal-trigger {% if device.forced %}bg-green{% else %}bg-orange{% endif %}">
-                                        <i class="fa-solid fa-rotate"></i>
-                                        </button>
-                                    </td>
-                                    -->
                                     <!--info-->
                                     <td class="text-center">
-                                        <!--<a id="info_device" href="#" class="info_device btn rounded-1 press modal-trigger {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %}" 
-                                        data-bs-target="#modal_info_{{device.id}}"
-                                        data-id="{{device.id}}"
-                                        data-title="{{device.sn}}"
-                                        data-bs-toggle="modal">
-                                        <i class="fa-solid fa-circle-info"></i>
-                                        </a>-->
                                         <a id="info_device" href="#" class="info_device btn rounded-1 press modal-trigger" 
                                         data-bs-target="#modal_info_{{device.id}}"
                                         data-id="{{device.id}}"
@@ -198,498 +145,23 @@
                     
                 </div>
             </div>
-
+            
             <!-- ===== INFO MODALS ===== -->
-            {% for device in devices %}
-                <div class="modal shadow-1 white falling overflow-scroll p-4" id="modal_info_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
-                    <div class="modal-dialog">
-
-
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="text-center w-100 align-middle">Device Info</h5>
-                        <!--<button data-target="modal_info_{{device.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger mt-2 mr-2"><i class="fa-solid fa-xmark"></i></button>-->
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <div class="divider"></div>
-                        <div class="responsive-table px-4">
-                            <table class="table striped">
-                                <tbody>
-                                    <tr>
-                                        <th>Serial Number :</th>
-                                        <td>{{device.sn}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Device Family :</th>
-                                        <td>{{device.deviceFamily}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Version :</th>
-                                        <td>{{device.version}}</td>
-                                    </tr>
-                                    {# 
-                                    <tr>
-                                        <th>Upload Version :</th>
-                                        <td>{{device.versionUpload}}</td>
-                                    </tr>
-                                    #} 
-
-                                    <tr>
-                                        <th>IP Adress :</th>
-                                        <td>{{device.ipAddr}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Log Pointeur :</th>
-                                        <td>{{device.logPointeur}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Advertising :</th>
-                                        <td class="{{(device.pub)? 'device-active': 'device-inactive'}}">
-                                        {{ (device.pub)? 'Yes': 'No'}}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>PIN code :</th>
-                                        <td>{{device.codePin}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Creation Date :</th>
-                                        <td>{{device.createdAt|date}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Server last activity :</th>
-                                        <td>{{device.serverDate|date}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Status :</th>
-                                        <td>
-                                            <div class="{{(device.isActive)? 'device-active': 'device-inactive'}}">{{(device.isActive)? 'Active':'Inactive'}}</div>
-                                        </td>
-                                    </tr>
-                                    <!--connect-->
-                                    <!--
-                                    <tr>
-                                        <th>Connected :</th>
-                                        
-                                        <td class="text-center">
-                                            {#
-                                            <a href="{{path('connected', {'id': device.id})}}" class="btn rounded-1 bg-orange press modal-trigger" 
-                                            data-target=""
-                                            data-id="{{device.id}}"
-                                            data-title="{{device.sn}}"
-                                            >{{(device.Connected)? 'Disconnect': 'Connect'}}</a>
-                                            #}
-                                        </td>
-                                        
-                                    </tr>
-                                    -->
-                                    <tr>
-                                        <th>Forced :</th>
-                                        <!--
-                                        <td>
-                                            <label class="form-switch mt-2">
-                                            
-                                            <a href="#" class="modal-trigger" 
-                                            data-target="modal_forced_{{device.id}}"
-                                            data-id="forced_{{device.id}}"
-                                            data-title="{{device.sn}}">
-                                                <input type="checkbox" {{ (device.forced)? 'checked': ''}} data-id="{{device.id}}" name="switchbox">
-                                            </a>
-                                            <span class="slider"></span>
-                                            </label>
-                                        </td>
-                                        -->
-                                        <td>
-                                        <!--
-                                            <label class="form-switch mt-2">
-                                            <a href="#" class="modal-trigger">
-                                                <input type="checkbox" checked>
-                                                <span class="slider"></span>
-                                            </a>
-                                            </label>
-                                        -->
-                                            <a href="#" class="form-field form-default"
-                                            data-target="modal_forced_{{device.id}}"
-                                            data-id="forced_{{device.id}}"
-                                            data-title="{{device.sn}}">
-                                                <label class="form-switch mt-2">
-                                                <input type="checkbox" {{ (device.forced)? 'checked': ''}} data-id="{{device.id}}" name="switchbox" onblur="this.value=''">
-                                                <span class="slider"></span>
-                                                
-                                                </label>
-                                            </a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Upload Version :</th>
-                                        
-                                            {#{{device.versionUpload}}#}
-                                            <!--
-                                            <input placeholder="Enter some text" name="name" value={{device.versionUpload}}/>
-                                            <p id="log"></p>
-                                            -->
-                                        
-                                        <td>
-                                            {#
-                                            {{ form_start(versionforms[loop.index0]) }}
-                                            {{ form_widget(versionforms[loop.index0]) }}
-                                            {{ form_end(versionforms[loop.index0]) }}
-                                            #}
-                                            {#
-                                            <a href="#" class="modal-trigger" 
-                                            data-target="modal_upload_{{device.id}}"
-                                            data-id="upload_{{device.id}}"
-                                            data-title="{{device.sn}}">
-                                                <input type="text" data-id="{{device.id}}" name="" value={{device.versionUpload}} class="update-zone">
-                                            </a>
-                                            #}
-                                            {#<input type="text" data-id="{{device.id}}" name="" value={{device.versionUpload}} class="update-zone">#}
-                                            <input type="text" data-id="{{device.id}}" name="" value="" class="update-zone" onblur="this.value=''">
-                                            {#{{form(editform)}}#}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                        </div>
-                        <div class="divider"></div>
-                        <div class="modal-footer">
-                            <!--<div><a href="{{path('updated', {'id': device.id, 'version': '5.8'})}}" class="update btn red shadow-1 rounded-1 small" id="update_{{device.id}}">Validate</a></div>-->
-                            <div><a href="" class="update btn btn-outline-dark red shadow-1 rounded-1 small" id="update_{{device.id}}" name="validate">Validate</a></div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="modal shadow-1 white falling" id="modal_forced_{{device.id}}" data-ax="modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            Force Device
-                            <button data-target="modal_forced_{{device.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger mt-2 mr-2 bg-orange btn-outline-orange"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-
-                            <div class="modal-footer">
-                                <div>
-                                    
-                                    <a href="{{path('forced', {'id': device.id})}}" class="btn red shadow-1 rounded-1 small">Validate</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    
-
-                </div>
-            {% endfor %}
-
-
+            {% include 'device/info_modals.html.twig' %}
 
             {#
             TODO Uncomment new device if needed to test
             <button class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange"><a href="{{path('device_add')}}">New Device</a></button>
             #}
 
-           {#  <button class="ml-auto btn shadow-1 rounded-1 small bg-orange"><a href="{{path('device_edit_multiple', {'id': devices.id})}}">Edit All</a></button> #}
+            <!-- ===== DEVICE ACTION ===== -->
+            {% include 'device/device_action.html.twig' %}
 
-            <!-- ### DEVICE ACTION ### -->
-            
-            <div id="deviceAction">
-
-                <div id="listDevice">
-                    <fieldset>
-                        {#
-                        <legend>Filter:</legend>
-                        #}
-                        <form action="./filter.php" method="post">
-                            
-                            {% for hardware in families %}
-                                
-                            <label>
-                            {#
-                                <input type="checkbox" value="{{ key }}" name="hardware"/>{{hardware | slice(0, {{hardware |length}} - 1)}}
-
-                            #}
-                            </label>
-                                {% endfor %}
-                            {#
-                            <label for="sn">Sn:</label>
-                            #}
-                            <input type="text" id="sn" name="sn" visibility="hidden"/>
-                            {#
-                            <input type="submit" value="Search" />
-                            #}
-                        </form>
-                    </fieldset>
-
-                </div>
-
-                <!-- ### SCREEN DEVICE ### -->
-                
-                <div id="screenDevice" data-sn="1234" value="1234" class="screenDevice">
-                    {#                    
-                    <fieldset >
-                        <legend>Stimulation:</legend>
-                        <div>
-                            <span>Status: </span>
-                            <input type="radio" id="<?php echo 'd_stimOn_sn_1234'; ?>" name="stimStatus" value="on">
-                            <label for="d_on">On</label>
-                            <input type="radio" id="<?php echo 'd_stimOff_sn_1234'; ?>" name="stimStatus" value="off" checked>
-                            <label for="d_off">Off</label>
-                        </div>
-                        <div>
-                            <span>Fréquence: </span>
-                            <input type="button" id="<?php echo 'd_stimHzLow_sn_1234'; ?>" name="stimHz" value="low" >
-                            <input type="button" id="<?php echo 'd_stimHzNormal_sn_1234'; ?>" name="stimHz" value="normal">
-                            <input type="button" id="<?php echo 'd_stimHzHigh_sn_1234'; ?>" name="stimHz" value="high">
-                        </div>
-                        <div>
-                            <span>Pulse: </span>
-                            <input type="button" id="<?php echo 'd_stimPulseShort_sn_1234'; ?>" name="stimPulse" value="short" >
-                            <input type="button" id="<?php echo 'd_stimPulseNormal_sn_1234'; ?>" name="stimPulse" value="normal">
-                            <input type="button" id="<?php echo 'd_stimPulseLong_sn_1234'; ?>" name="stimPulse" value="long">
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Thécartherapy:</legend>
-                        <div>
-                            <span>Status: </span>
-                            <input type="radio" id="<?php echo 'd_tecaOn_sn_1234'; ?>" name="tecaStatus" value="on" checked>
-                            <label for="d_on">On</label>
-                            <input type="radio" id="<?php echo 'd_tecaOff_sn_1234'; ?>" name="tecaStatus" value="off">
-                            <label for="d_off">Off</label>
-                        </div>
-                        <div>
-                            <span>Intensity: </span>
-                            <input type="radio" id="<?php echo 'd_tecaIntens1_sn_1234'; ?>" name="tecaIntensity" value="1" checked>
-                            <label for="1">1</label>
-                            <input type="radio" id="<?php echo 'd_tecaIntens2_sn_1234'; ?>" name="tecaIntensity" value="2">
-                            <label for="2">2</label>                        
-                            <input type="radio" id="<?php echo 'd_tecaIntens3_sn_1234'; ?>" name="tecaIntensity" value="3">
-                            <label for="3">3</label>                        
-                            <input type="radio" id="<?php echo 'd_tecaIntens4_sn_1234'; ?>" name="tecaIntensity" value="4" >
-                            <label for="4">4</label>
-                            <input type="radio" id="<?php echo 'd_tecaIntens5_sn_1234'; ?>" name="tecaIntensity" value="5">
-                            <label for="5">5</label>                        
-                            <input type="radio" id="<?php echo 'd_tecaIntens6_sn_1234'; ?>" name="tecaIntensity" value="6">
-                            <label for="6">6</label>                        
-                            <input type="radio" id="<?php echo 'd_tecaIntens7_sn_1234'; ?>" name="tecaIntensity" value="7" >
-                            <label for="7">7</label>
-                            <input type="radio" id="<?php echo 'd_tecaIntens8_sn_1234'; ?>" name="tecaIntensity" value="8">
-                            <label for="8">8</label>
-                            <input type="radio" id="<?php echo 'd_tecaIntens9_sn_1234'; ?>" name="tecaIntensity" value="9">
-                            <label for="9">9</label>
-                            <input type="radio" id="<?php echo 'd_tecaIntens10_sn_1234'; ?>" name="tecaIntensity" value="10">
-                            <label for="10">10</label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Timer:</legend>
-                        <div>
-                            <input type="button" id="<?php echo 't_timerMinLess_sn_1234'; ?>" name="timerSlide" value="-">
-                            <span id="timerMin">10</span><span>:</span><span id="timerSec">00</span>
-                            <input type="button" id="<?php echo 't_timereMinPlus_sn_1234'; ?>" name="timerSlide" value="+">
-                        </div>
-                        <div>
-                            <input type="button" id="<?php echo 'p_timerPlay_sn_1234'; ?>" name="timerStatus" value="Start">
-                            <input type="button" id="<?php echo 'p_timerPause_sn_1234'; ?>" name="timerStatus" value="Pause" disabled="disabled">
-                        </div>
-                    </fieldset>
-                    #}
-                </div>
-
-            </div>
             
             <div id="errorDeviceConnect alert alert-danger"></div>
-            <!-- ### TEST ACCES ### -->
-            <!--
-            <div class="modal fade" id="deviceAccessModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deviceSn">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="testAcces" data-sn="1234">
-                        <fieldset>
-                            <legend>Test Touch</legend>
-                                <div>
-                                    <label for="pageSlide">Page: </label>
-                                    <input type="button" id="<?php echo 'i_infoPageLess_sn_1234'; ?>" name="pageSlide" value="-">
-                                    <span id="pageInfoNumber">0</span>
-                                    <input type="button" id="<?php echo 'i_infoPagePlus_sn_1234'; ?>" name="pageSlide" value="+"><br><br>
-                                    
-                                    <label for="tag">Tag: </label>
-                                    <input type="text" id="<?php echo 's_tagTest_sn_1234'; ?>" name="tagTest" value="0"><br><br>
-                                    <label for="tracker">Tracker: </label>
-                                    <input type="text" id="<?php echo 's_trackerTest_sn_1234'; ?>" name="trackerTest" value="0"><br><br>
-                                    <input type="button" id="<?php echo 's_testTouch_sn_1234'; ?>" name="touchTest" value="Send">
-                                <div>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Test Command</legend>
-                                <div>
-                                
-                                    <label for="cmdString">Command String: </label>
-                                    <input type="text" id="<?php echo 'u_cmdStringTest_sn_1234'; ?>" name="cmdString" value="">
-                                    <input type="button" id="<?php echo 'u_cmdTest_sn_1234'; ?>" name="cmdTest" value="Send">
-                                </div>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Device Information:</legend>
-                            <table id="infoList">
-                                
-                            </table>
-                        </fieldset>
-                        </div>
-                        <div class="modal-footer">
-                        <input type="button" id="<?php echo 'q_disconnect_sn_1234'; ?>" name='<?php echo $device['sn']; ?>' value="disconnect" style="visibility: hidden">
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
 
-            <!-- ### TEST ACCES ### -->
-            <!--
-            <div id="testAcces" data-sn="1234" class="testAcces px-4">
-                    <div class="mb-2">
-                        <h1 id="deviceSn"><h1>
-                        
-
-                    </div>
-                    <fieldset class="mb-2">
-                        <legend>Test Touch</legend>
-                                <div class="form-outline mb-2">
-                                    <label for="pageSlide" class="form-label">Page: </label>
-                                    <div class="input-group">
-                                        <input class="btn btn-outline-secondary connect_command" type="button" id='i_infoPageLess_sn_1234' name="pageSlide" value="-">
-                                        <span class="input-group-text" id="pageInfoNumber">0</span>
-                                        <input class="btn btn-outline-secondary connect_command" type="button" id="i_infoPagePlus_sn_1234" name="pageSlide" value="+">
-                                    </div>
-                                </div>
-                    </fieldset>
-                    <fieldset class="mb-2">
-                        <legend>Test Command</legend>
-                        <div class="input-group">
-                        
-                            <input class="form-control connect_command" type="text" id="u_cmdStringTest_sn_1234" name="cmdString" value="" placeholder="Command String">
-                            <input class="btn btn-outline-dark connect_command" type="button" id="u_cmdTest_sn_1234" name="cmdTest" value="Send">
-                        </div>
-                    </fieldset>
-                    <fieldset class="mb-2">
-                        <legend>Device Information</legend>
-                        <table id="infoList">
-                            
-                        </table>
-                    </fieldset>
-                    <input class="btn btn-outline-dark connect_command" type="button" id="q_disconnect_sn_1234" name='1234' value="Disconnect">
-            </div>
-            -->
-            <!-- TEST MODAL ACCES -->
-            <div class="modal fade testAcces px-4" id="testAcces" data-sn="1234" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deviceSn"></h5>
-                        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-2">
-                            <h1 id="deviceSn"><h1>
-                            
-
-                        </div>
-                        <fieldset class="mb-2">
-                            <legend>Test Touch</legend>
-                                    <div class="form-outline mb-2">
-                                        <label for="pageSlide" class="form-label">Page: </label>
-                                        <div class="input-group">
-                                            <input class="btn btn-outline-secondary connect_command" type="button" id='i_infoPageLess_sn_1234' name="pageSlide" value="-">
-                                            <span class="input-group-text" id="pageInfoNumber">0</span>
-                                            <input class="btn btn-outline-secondary connect_command" type="button" id="i_infoPagePlus_sn_1234" name="pageSlide" value="+">
-                                        </div>
-                                    </div>
-                        </fieldset>
-                        <fieldset class="mb-2">
-                            <legend>Test Command</legend>
-                            <div class="input-group">
-                            
-                                <input class="form-control connect_command" type="text" id="u_cmdStringTest_sn_1234" name="cmdString" value="" placeholder="Command String">
-                                <input class="btn btn-outline-dark connect_command" type="button" id="u_cmdTest_sn_1234" name="cmdTest" value="Send">
-                            </div>
-                        </fieldset>
-                        <fieldset class="mb-2">
-                            <legend>Device Information</legend>
-                            <table id="infoList">
-                                
-                            </table>
-                        </fieldset>
-                        <input class="btn btn-outline-dark connect_command" type="button" id="q_disconnect_sn_1234" name='1234' value="Disconnect" data-bs-dismiss="modal">
-                    </div>
-                    <div class="modal-footer">
-                        <!--
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        -->
-                    </div>
-                    </div>
-                </div>
-            </div>
-            
-            {% for device in devices %}
-            <!--
-            <div id="testAcces_{{device.sn}}" data-sn="{{device.sn}}" class="d-flex flex-column justify-content-between px-4 testAcces">
-				<div class="mb-2">
-					<h1 id="{{device.sn}}"><h1>
-	                <input type="button" id='q_disconnect_sn_{{device.sn}}' name='{{device.sn}}' value="disconnect" style="visibility: hidden">
-
-				</div>
-                <fieldset class="mb-2">
-                    <legend>Test Touch</legend>
-						<div>
-                            <div class="form-outline">
-                                <label for="pageSlide" class="form-label">Page: </label>
-                                <input type="button" id='i_infoPageLess_sn_{{device.sn}}' name="pageSlide" value="-">
-                                <span id="pageInfoNumber">0</span>
-                                <input type="button" id="i_infoPagePlus_sn_{{device.sn}}" name="pageSlide" value="+">
-                            </div>
-                            <div class="form-outline">
-                                <label for="tag" class="form-label">Tag: </label>
-                                <input type="text" id="s_tagTest_sn_{{device.sn}}" name="tagTest" value="0">
-							</div>
-                            <div class="form-outline">
-                                <label for="tracker" class="form-label">Tracker: </label>
-                                <input type="text" id="s_trackerTest_sn_{{device.sn}}" name="trackerTest" value="0">
-                                <input type="button" id="s_testTouch_sn_{{device.sn}}" name="touchTest" value="Send">
-                            </div>
-						<div>
-                </fieldset>
-                <fieldset class="mb-2">
-                    <legend>Test Command</legend>
-						<div>
-						
-                            <label for="cmdString" class="form-label">Command String: </label>
-                            <input type="text" id="u_cmdStringTest_sn_{{device.sn}}" name="cmdString" value="">
-                            <input type="button" id="u_cmdTest_sn_{{device.sn}}" name="cmdTest" value="Send">
-						</div>
-                </fieldset>
-                <fieldset class="mb-2">
-                    <legend>Device Information:</legend>
-                    <table id="infoList">
-                        
-                    </table>
-                </fieldset><br>
-                <input type="button" id="q_disconnect_sn_{{device.sn}}" name='{{device.sn}}' value="disconnect">
-            </div>
-            -->
-            {% endfor %}
+            <!-- ===== ACCESS MODALS ===== -->
+            {% include 'device/acces_modals.html.twig' %}
 
         </div>
 
@@ -703,14 +175,12 @@
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript">
-        var path = "{{ asset('js/TCPClient2.php')}}";
-
-
+    var path = "{{ asset('js/TCPClient2.php')}}";
     </script>
-
-
+    
     <script>
-       
+
+    // ######### Sort Table by alphabetical order ######### //
     function sortTable(n) {
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
         table = document.getElementById("deviceTable");
@@ -720,123 +190,107 @@
         /* Make a loop that will continue until
         no switching has been done: */
         while (switching) {
-            // Start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            //console.log(rows.length)
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 2; i < (rows.length -1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
             //console.log(rows[14].getElementsByTagName("TD")[n].innerHTML)
-            //console.log(rows);
-            /* Loop through all table rows (except the
-            first, which contains table headers): */
-            for (i = 2; i < (rows.length -1); i++) {
-                // Start by saying there should be no switching:
-                shouldSwitch = false;
-                /* Get the two elements you want to compare,
-                one from current row and one from the next: */
-                
-                x = rows[i].getElementsByTagName("TD")[n];
-                y = rows[i + 1].getElementsByTagName("TD")[n];
-                console.log(rows[14].getElementsByTagName("TD")[n].innerHTML)
-                /* Check if the two rows should switch place,
-                based on the direction, asc or desc: */
-                if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        // If so, mark as a switch and break the loop:
-                        console.log(x.innerHTML.toLowerCase());
-                        shouldSwitch = true;
-
-                        break;
-                    }
-                } else if (dir == "desc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        // If so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-
-                        break;
-                    }
-                }
+            /* Check if the two rows should switch place,
+            based on the direction, asc or desc: */
+            if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                //console.log(x.innerHTML.toLowerCase());
+                shouldSwitch = true;
+                break;
             }
-            if (shouldSwitch) {
-                /* If a switch has been marked, make the switch
-                and mark that a switch has been done: */
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                // Each time a switch is done, increase this count by 1:
-                switchcount ++;
-            } else {
-                /* If no switching has been done AND the direction is "asc",
-                set the direction to "desc" and run the while loop again. */
-                if (switchcount == 0 && dir == "asc") {
-                dir = "desc";
-                switching = true;
-                }
+            } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+            }
             }
         }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++;
+        } else {
+            /* If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again. */
+            if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+            }
+        }
+        }
     }
+        /*
+        let versionInput = document.getElementsByName('versionInput');
+        //const input = document.querySelector('input');
+        const log = document.getElementById('log');
+        for(let button of versionInput){
+            button.addEventListener('change', function (){
+                log.textContent = e.target.value;
+                $id = button.getAttribute("data-id");
+                let xmlhttp = new XMLHttpRequest;
+                console.log($id);
+                xmlhttp.open("GET", `/admin/device/updated/${$id}`)
+                xmlhttp.send()
+            });
+        }
+        */
 
-            /*
-            let versionInput = document.getElementsByName('versionInput');
-            //const input = document.querySelector('input');
-            const log = document.getElementById('log');
-
-            for(let button of versionInput){
-                button.addEventListener('change', function (){
-                    log.textContent = e.target.value;
-                    $id = button.getAttribute("data-id");
-                    let xmlhttp = new XMLHttpRequest;
-                    console.log($id);
-                    xmlhttp.open("GET", `/admin/device/updated/${$id}`)
-                    xmlhttp.send()
-                });
-
-            } */
-
-
-
-            /*
-            function checkForm(value) {
-                if (test_zone.innerHTML != "blublublu") {
-                    test_zone.innerHTML = value
-                }
+        /*
+        function checkForm(value) {
+            if (test_zone.innerHTML != "blublublu") {
+                test_zone.innerHTML = value
             }
-            */
+        }
+        */
 
+        /*
+        log.textContent = e.target.value;
+        $id = button.getAttribute("data-id");
+        let xmlhttp = new XMLHttpRequest;
+        console.log($id);
+        xmlhttp.open("GET", `/admin/device/updated/${$id}`)
+        xmlhttp.send()
+        */
 
-                    /*
-                    log.textContent = e.target.value;
-                    $id = button.getAttribute("data-id");
-                    let xmlhttp = new XMLHttpRequest;
-                    console.log($id);
-                    xmlhttp.open("GET", `/admin/device/updated/${$id}`)
-                    xmlhttp.send()
-                    */
+        /*            
+        input.addEventListener('change', updateValue);
+        function updateValue(e) {
+        log.textContent = e.target.value;
+        }
+        */
 
-
-            /*            
-            input.addEventListener('change', updateValue);
-
-            function updateValue(e) {
-            log.textContent = e.target.value;
-            }
-            */
-
-
-            /*
-            let editButton = document.querySelectorAll(".modal-trigger")
-            for(let button of editButton) {
-                button.addEventListener("click", function() {
-                    $id = button.getAttribute("data-id");
-                    $sn = button.getAttribute("data-title");
-                    console.log($id)
-                    document.querySelector(".modal-footer a").href = `/admin/device/edit/${$id}`
-                    document.querySelector(".modal-content").innerText = `Are you sure to edit device `+$sn
-                })
-            }
-            */
-        
-
+        /*
+        let editButton = document.querySelectorAll(".modal-trigger")
+        for(let button of editButton) {
+            button.addEventListener("click", function() {
+                $id = button.getAttribute("data-id");
+                $sn = button.getAttribute("data-title");
+                console.log($id)
+                document.querySelector(".modal-footer a").href = `/admin/device/edit/${$id}`
+                document.querySelector(".modal-content").innerText = `Are you sure to edit device `+$sn
+            })
+        }
+        */
     </script>
-
     <script type="text/javascript" src="{{ asset('js/winback.js')}}"></script>
     <script type="text/javascript" src="{{ asset('js/socket.js')}}"></script>
 {% endblock %}

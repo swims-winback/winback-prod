@@ -1,0 +1,185 @@
+<!-- ===== INFO MODALS ===== -->
+{% for device in devices %}
+    <div class="modal shadow-1 white falling overflow-scroll p-4" id="modal_info_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="text-center w-100 align-middle">Device Info</h5>
+            <!--<button data-target="modal_info_{{device.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger mt-2 mr-2"><i class="fa-solid fa-xmark"></i></button>-->
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="divider"></div>
+            <div class="responsive-table px-4">
+                <table class="table striped">
+                    <tbody>
+                        <tr>
+                            <th>Serial Number :</th>
+                            <td>{{device.sn}}</td>
+                        </tr>
+                        <tr>
+                            <th>Device Family :</th>
+                            <td>{{device.deviceFamily}}</td>
+                        </tr>
+                        <tr>
+                            <th>Version :</th>
+                            <td>{{device.version}}</td>
+                        </tr>
+                        {# 
+                        <tr>
+                            <th>Upload Version :</th>
+                            <td>{{device.versionUpload}}</td>
+                        </tr>
+                        #} 
+
+                        <tr>
+                            <th>IP Adress :</th>
+                            <td>{{device.ipAddr}}</td>
+                        </tr>
+                        <tr>
+                            <th>Log Pointeur :</th>
+                            <td>{{device.logPointeur}}</td>
+                        </tr>
+                        <tr>
+                            <th>Advertising :</th>
+                            <td class="{{(device.pub)? 'device-active': 'device-inactive'}}">
+                            {{ (device.pub)? 'Yes': 'No'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>PIN code :</th>
+                            <td>{{device.codePin}}</td>
+                        </tr>
+                        <tr>
+                            <th>Creation Date :</th>
+                            <td>{{device.createdAt|date}}</td>
+                        </tr>
+                        <tr>
+                            <th>Server last activity :</th>
+                            <td>{{device.serverDate|date}}</td>
+                        </tr>
+                        <tr>
+                            <th>Status :</th>
+                            <td>
+                                <div class="{{(device.isActive)? 'device-active': 'device-inactive'}}">{{(device.isActive)? 'Active':'Inactive'}}</div>
+                            </td>
+                        </tr>
+                        <!--connect-->
+                        <!--
+                        <tr>
+                            <th>Connected :</th>
+                            
+                            <td class="text-center">
+                                {#
+                                <a href="{{path('connected', {'id': device.id})}}" class="btn rounded-1 bg-orange press modal-trigger" 
+                                data-target=""
+                                data-id="{{device.id}}"
+                                data-title="{{device.sn}}"
+                                >{{(device.Connected)? 'Disconnect': 'Connect'}}</a>
+                                #}
+                            </td>
+                            
+                        </tr>
+                        -->
+                        <tr>
+                            <th>Forced :</th>
+                            <!--
+                            <td>
+                                <label class="form-switch mt-2">
+                                
+                                <a href="#" class="modal-trigger" 
+                                data-target="modal_forced_{{device.id}}"
+                                data-id="forced_{{device.id}}"
+                                data-title="{{device.sn}}">
+                                    <input type="checkbox" {{ (device.forced)? 'checked': ''}} data-id="{{device.id}}" name="switchbox">
+                                </a>
+                                <span class="slider"></span>
+                                </label>
+                            </td>
+                            -->
+                            <td>
+                            <!--
+                                <label class="form-switch mt-2">
+                                <a href="#" class="modal-trigger">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </a>
+                                </label>
+                            -->
+                                <a href="#" class="form-field form-default"
+                                data-target="modal_forced_{{device.id}}"
+                                data-id="forced_{{device.id}}"
+                                data-title="{{device.sn}}">
+                                    <label class="form-switch mt-2">
+                                    <input type="checkbox" {{ (device.forced)? 'checked': ''}} data-id="{{device.id}}" name="switchbox" onblur="this.value=''">
+                                    <span class="slider"></span>
+                                    
+                                    </label>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Upload Version :</th>
+                            
+                                {#{{device.versionUpload}}#}
+                                <!--
+                                <input placeholder="Enter some text" name="name" value={{device.versionUpload}}/>
+                                <p id="log"></p>
+                                -->
+                            
+                            <td>
+                                {#
+                                {{ form_start(versionforms[loop.index0]) }}
+                                {{ form_widget(versionforms[loop.index0]) }}
+                                {{ form_end(versionforms[loop.index0]) }}
+                                #}
+                                {#
+                                <a href="#" class="modal-trigger" 
+                                data-target="modal_upload_{{device.id}}"
+                                data-id="upload_{{device.id}}"
+                                data-title="{{device.sn}}">
+                                    <input type="text" data-id="{{device.id}}" name="" value={{device.versionUpload}} class="update-zone">
+                                </a>
+                                #}
+                                {#<input type="text" data-id="{{device.id}}" name="" value={{device.versionUpload}} class="update-zone">#}
+                                <input type="text" data-id="{{device.id}}" name="" value="" class="update-zone" onblur="this.value=''">
+                                {#{{form(editform)}}#}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+            <div class="divider"></div>
+            <div class="modal-footer">
+                <!--<div><a href="{{path('updated', {'id': device.id, 'version': '5.8'})}}" class="update btn red shadow-1 rounded-1 small" id="update_{{device.id}}">Validate</a></div>-->
+                <div><a href="" class="update btn btn-outline-dark red shadow-1 rounded-1 small" id="update_{{device.id}}" name="validate">Validate</a></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="modal shadow-1 white falling" id="modal_forced_{{device.id}}" data-ax="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                Force Device
+                <button data-target="modal_forced_{{device.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger mt-2 mr-2 bg-orange btn-outline-orange"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div class="modal-footer">
+                    <div>
+                        
+                        <a href="{{path('forced', {'id': device.id})}}" class="btn red shadow-1 rounded-1 small">Validate</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+{% endfor %}

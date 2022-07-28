@@ -1,0 +1,50 @@
+<!-- ===== ACCESS MODALS ===== -->
+<div class="modal fade testAcces px-4" id="testAcces" data-sn="1234" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deviceSn"></h5>
+            <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+        </div>
+        <div class="modal-body">
+            <div class="mb-2">
+                <h1 id="deviceSn"><h1>
+                
+
+            </div>
+            <fieldset class="mb-2">
+                <legend>Test Touch</legend>
+                        <div class="form-outline mb-2">
+                            <label for="pageSlide" class="form-label">Page: </label>
+                            <div class="input-group">
+                                <input class="btn btn-outline-secondary connect_command" type="button" id='i_infoPageLess_sn_1234' name="pageSlide" value="-">
+                                <span class="input-group-text" id="pageInfoNumber">0</span>
+                                <input class="btn btn-outline-secondary connect_command" type="button" id="i_infoPagePlus_sn_1234" name="pageSlide" value="+">
+                            </div>
+                        </div>
+            </fieldset>
+            <fieldset class="mb-2">
+                <legend>Test Command</legend>
+                <div class="input-group">
+                
+                    <input class="form-control connect_command" type="text" id="u_cmdStringTest_sn_1234" name="cmdString" value="" placeholder="Command String">
+                    <input class="btn btn-outline-dark connect_command" type="button" id="u_cmdTest_sn_1234" name="cmdTest" value="Send">
+                </div>
+            </fieldset>
+            <fieldset class="mb-2">
+                <legend>Device Information</legend>
+                <table id="infoList">
+                    
+                </table>
+            </fieldset>
+            <input class="btn btn-outline-dark connect_command" type="button" id="q_disconnect_sn_1234" name='1234' value="Disconnect" data-bs-dismiss="modal">
+        </div>
+        <div class="modal-footer">
+            <!--
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            -->
+        </div>
+        </div>
+    </div>
+</div>

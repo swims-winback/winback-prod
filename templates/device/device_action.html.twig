@@ -1,0 +1,107 @@
+<!-- ### DEVICE ACTION ### -->
+
+<div id="deviceAction">
+
+    <div id="listDevice">
+        <fieldset>
+            {#
+            <legend>Filter:</legend>
+            #}
+            <form action="./filter.php" method="post">
+                
+                {% for hardware in families %}
+                    
+                <label>
+                {#
+                    <input type="checkbox" value="{{ key }}" name="hardware"/>{{hardware | slice(0, {{hardware |length}} - 1)}}
+
+                #}
+                </label>
+                    {% endfor %}
+                {#
+                <label for="sn">Sn:</label>
+                #}
+                <input type="text" id="sn" name="sn" visibility="hidden"/>
+                {#
+                <input type="submit" value="Search" />
+                #}
+            </form>
+        </fieldset>
+
+    </div>
+
+    <!-- ### SCREEN DEVICE ### -->
+    
+    <div id="screenDevice" data-sn="1234" value="1234" class="screenDevice">
+        {#                    
+        <fieldset >
+            <legend>Stimulation:</legend>
+            <div>
+                <span>Status: </span>
+                <input type="radio" id="<?php echo 'd_stimOn_sn_1234'; ?>" name="stimStatus" value="on">
+                <label for="d_on">On</label>
+                <input type="radio" id="<?php echo 'd_stimOff_sn_1234'; ?>" name="stimStatus" value="off" checked>
+                <label for="d_off">Off</label>
+            </div>
+            <div>
+                <span>Fréquence: </span>
+                <input type="button" id="<?php echo 'd_stimHzLow_sn_1234'; ?>" name="stimHz" value="low" >
+                <input type="button" id="<?php echo 'd_stimHzNormal_sn_1234'; ?>" name="stimHz" value="normal">
+                <input type="button" id="<?php echo 'd_stimHzHigh_sn_1234'; ?>" name="stimHz" value="high">
+            </div>
+            <div>
+                <span>Pulse: </span>
+                <input type="button" id="<?php echo 'd_stimPulseShort_sn_1234'; ?>" name="stimPulse" value="short" >
+                <input type="button" id="<?php echo 'd_stimPulseNormal_sn_1234'; ?>" name="stimPulse" value="normal">
+                <input type="button" id="<?php echo 'd_stimPulseLong_sn_1234'; ?>" name="stimPulse" value="long">
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Thécartherapy:</legend>
+            <div>
+                <span>Status: </span>
+                <input type="radio" id="<?php echo 'd_tecaOn_sn_1234'; ?>" name="tecaStatus" value="on" checked>
+                <label for="d_on">On</label>
+                <input type="radio" id="<?php echo 'd_tecaOff_sn_1234'; ?>" name="tecaStatus" value="off">
+                <label for="d_off">Off</label>
+            </div>
+            <div>
+                <span>Intensity: </span>
+                <input type="radio" id="<?php echo 'd_tecaIntens1_sn_1234'; ?>" name="tecaIntensity" value="1" checked>
+                <label for="1">1</label>
+                <input type="radio" id="<?php echo 'd_tecaIntens2_sn_1234'; ?>" name="tecaIntensity" value="2">
+                <label for="2">2</label>                        
+                <input type="radio" id="<?php echo 'd_tecaIntens3_sn_1234'; ?>" name="tecaIntensity" value="3">
+                <label for="3">3</label>                        
+                <input type="radio" id="<?php echo 'd_tecaIntens4_sn_1234'; ?>" name="tecaIntensity" value="4" >
+                <label for="4">4</label>
+                <input type="radio" id="<?php echo 'd_tecaIntens5_sn_1234'; ?>" name="tecaIntensity" value="5">
+                <label for="5">5</label>                        
+                <input type="radio" id="<?php echo 'd_tecaIntens6_sn_1234'; ?>" name="tecaIntensity" value="6">
+                <label for="6">6</label>                        
+                <input type="radio" id="<?php echo 'd_tecaIntens7_sn_1234'; ?>" name="tecaIntensity" value="7" >
+                <label for="7">7</label>
+                <input type="radio" id="<?php echo 'd_tecaIntens8_sn_1234'; ?>" name="tecaIntensity" value="8">
+                <label for="8">8</label>
+                <input type="radio" id="<?php echo 'd_tecaIntens9_sn_1234'; ?>" name="tecaIntensity" value="9">
+                <label for="9">9</label>
+                <input type="radio" id="<?php echo 'd_tecaIntens10_sn_1234'; ?>" name="tecaIntensity" value="10">
+                <label for="10">10</label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Timer:</legend>
+            <div>
+                <input type="button" id="<?php echo 't_timerMinLess_sn_1234'; ?>" name="timerSlide" value="-">
+                <span id="timerMin">10</span><span>:</span><span id="timerSec">00</span>
+                <input type="button" id="<?php echo 't_timereMinPlus_sn_1234'; ?>" name="timerSlide" value="+">
+            </div>
+            <div>
+                <input type="button" id="<?php echo 'p_timerPlay_sn_1234'; ?>" name="timerStatus" value="Start">
+                <input type="button" id="<?php echo 'p_timerPause_sn_1234'; ?>" name="timerStatus" value="Pause" disabled="disabled">
+            </div>
+        </fieldset>
+        #}
+    </div>
+
+</div>

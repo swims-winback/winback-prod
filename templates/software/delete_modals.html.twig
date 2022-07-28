@@ -1,0 +1,36 @@
+{# ===== DELETE MODALS ===== #}
+{% for software in softwares %}
+    <div class="modal fade" id="modal_delete_{{software.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Delete software</h5>
+                    <!--<button data-target="modal_delete_{{software.id}}" class="ml-auto btn shadow-1 rounded-1 small modal-trigger mt-2 mr-2"><i class="fa-solid fa-xmark"></i></button>-->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{path('software_delete', {'id': software.id})}}" class="btn btn-outline-danger shadow-1 rounded-1 small">Validate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#             
+    <div class="modal shadow-1 white falling" id="modal-edit" data-ax="modal">
+        <div class="modal-header">Edit software</div>
+
+        <div class="divider"></div>
+
+        <div class="modal-content">
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="modal-footer">
+            <div><a href="" class="btn red shadow-1 rounded-1 small">Validate</a></div>
+            <button data-target="modal-edit" class="ml-auto btn shadow-1 rounded-1 small modal-trigger">Close</button>
+        </div>
+    </div> #}
+{% endfor %}
