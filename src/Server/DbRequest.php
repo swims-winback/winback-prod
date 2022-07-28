@@ -312,7 +312,7 @@ class DbRequest {
     function insertNewDevice(string $sn, $vers, $devType) : string
     {
         //$date = date("Y-m-d H:i:s");
-        $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.") VALUES ('".$devType."', '".$sn."', '".$vers."', '".$vers."', '0','0','0','0','0')";
+        $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '".$vers."', '0','0','0','0','0','".date("Y-m-d | H:i:s")."')";
         return $req;
     }
     
@@ -394,7 +394,7 @@ class DbRequest {
 
 	}
 
-    function setConnectAll($connected){
+    function setConnectAll($connected, $sn=""){
         $req = $this->update(IS_CONNECT, $connected, DEVICE_TABLE);
         $res = $this->sendRq($req);
 	}
@@ -404,7 +404,13 @@ class DbRequest {
         $req = $this->update(CREATED_AT, $date, DEVICE_TABLE, $whereCond);
         $res = $this->sendRq($req);
     }
+    function setUpdatedAt($sn, $date){
+        $whereCond = SN."='$sn'";
+        $req = $this->update(UPDATED_AT, $date, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
     
+    /*
     function addSN($data){
         $req = "SELECT SN FROM sn WHERE SN = '".$data['SN']."'";
         $res = $this->sendRq($req); 
@@ -416,9 +422,9 @@ class DbRequest {
         }
         $res = $this->sendRq($req);  	
     }
-    
+    */
     // get sn from excel file
-    //TODO how to merge the two tables device and sn???
+    /*
     function addSNfromDeviceTable(){
         
         $req = "SELECT * FROM ".DEVICE_TABLE;
@@ -434,6 +440,7 @@ class DbRequest {
         }
         //echo $data['DeviceType'];
     }
+    */
 
     function getDevice($sn, $rowName)
     {
