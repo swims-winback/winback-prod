@@ -142,7 +142,13 @@ class TCPServer extends AbstractController
 		$logFile = date("Y-m-d").".txt";
 		if (file_exists(LOG_PATH."server/".$logFile) && filesize(LOG_PATH."server/".$logFile) < 40000) {
 			$fd = fopen(LOG_PATH."server/".$logFile, "a+");
-			fclose($fd);
+			if($fd){
+				fwrite($fd, $logTxt);
+				fclose($fd);
+				return $logFile;
+			}else{
+				echo "fd error";
+			}
 
 		}
 		else {
