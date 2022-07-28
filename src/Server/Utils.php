@@ -1,6 +1,6 @@
 <?php
 namespace App\Server;
-//ini_set('memory_limit','128M');
+ini_set('memory_limit','128M');
 //require_once dirname(__DIR__).'/config.php';
 //require_once(__DIR__.'/config.php');
 /*
@@ -8,7 +8,7 @@ namespace App\Server;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+require_once dirname(__FILE__, 3).'/configServer/config.php';
 
 class Utils {
     
@@ -24,7 +24,7 @@ class Utils {
     function listFiles(string $deviceType, $path)
     {
         if (file_exists($path.deviceTypeArray[$deviceType])) {
-            return array_diff(scandir($path.deviceTypeArray[$deviceType], 1), array('..', '.'));
+            return array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'));
         }
         else {
             echo "\r\nUhuh, something went wrong ! Path doesn't exist, please check that {$path} exists.\r\n";
@@ -34,8 +34,12 @@ class Utils {
 
     /**
      * Get device version from a file list
+     * 
+     * @param array $fileList
+     * @param string $boardType
+     * @return string $version
      */
-    function getVersion(array $fileList, string $boardType = '2') : string
+    function getVersion2(array $fileList, string $boardType = '2') : string
     {
         //$fileList = $this->listUpFile($deviceType);
         if ($fileList) {
@@ -62,6 +66,21 @@ class Utils {
     }
 
     /**
+     * Get last file of a list of software files and extract the version number
+     */
+    function getVersion(array $fileList) : string
+    {
+        if ($fileList) {
+            $versionValue = basename(end($fileList), extFILENAME);
+            $version = substr($versionValue, -7);
+            return $version;
+        }
+        echo "\r\nUhuh, something went wrong ! Filelist is empty, please check your package folder.\r\n";
+        echo "\r\n #################### \r\n";
+
+    }
+
+    /**
      * Compare contents of package file and archive file
      *
      * @param string $fileArch
@@ -81,16 +100,12 @@ class Utils {
         $bhandle = fopen($fileUp, 'rb');
 
 		if($ahandle && $bhandle){
-			//while(!feof($ahandle))
-			//{
 			  if(fread($ahandle, 8192) != fread($bhandle, 8192))
 			  {
                 echo "\r\nUhuh, something went wrong ! Contents of package file and archive file are different, please check your files.\r\n";
                 echo "\r\n #################### \r\n";
                 return false;
-				//break;
 			  }
-			//}
 			fclose($ahandle);
 			fclose($bhandle);
 		}
@@ -106,7 +121,7 @@ class Utils {
      *
      * @param string $deviceType
      * @param string $boardType
-     * @return string|boolean
+     * @return string|boolean $filename
      */
     function checkFile(string $deviceType, string $boardType = '2') : string|bool
     {
@@ -115,17 +130,17 @@ class Utils {
 
         if(count($scanPackFile) === count($scanArchFile))
         {
-            $lastVersUp = $this->getVersion($scanPackFile, $boardType);
-            $lastVersArch = $this->getVersion($scanArchFile, $boardType);
+            $lastVersUp = $this->getVersion($scanPackFile);
+            $lastVersArch = $this->getVersion($scanArchFile);
 
             if($lastVersArch === $lastVersUp)
             {
-                $file = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
-                $lastUpVerFile = PACK_PATH.deviceTypeArray[$deviceType].$file;
-                $lastArchVerFile = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$file;
+                $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
+                $lastUpVerFile = PACK_PATH.deviceTypeArray[$deviceType].$filename;
+                $lastArchVerFile = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$filename;
                 if($this->compareFile($lastArchVerFile,$lastUpVerFile))
                 {
-                    return $file;
+                    return $filename;
                 }
                 else
                 {
@@ -149,7 +164,6 @@ class Utils {
             echo "\r\n #################### \r\n";
             return false;
         }
-        
 		echo "error 4 ";
         echo "\r\nUhuh, something went wrong !\r\n";
         echo "\r\n #################### \r\n";
@@ -164,6 +178,7 @@ class Utils {
      * @param string $boardType
      * @return string|boolean
      */
+    /*
     function setVersionFilename(string $deviceType, $boardType = '2') : string|bool
     {
         if($this->checkFile($deviceType, $boardType)){
@@ -176,7 +191,7 @@ class Utils {
             return false;
         }
     }
-
+    */
     /**
      * set software filename, verify if file exist in package folder, returns file content into a string
      * equivalence of fileContent in original code
@@ -193,7 +208,7 @@ class Utils {
         {
 			$aValue = explode('_', $fileName);
             echo "\r\naValue: ".$aValue[2];
-			return file_get_contents($this->setVersionFilename($deviceType, $aValue[2]));
+			return file_get_contents($this->checkFile($deviceType, $aValue[2]));
 		}
     }
 
@@ -220,3 +235,16 @@ $utils = new Utils($deviceType);
 $utils->getContentFromIndex($deviceType, $index=10, $length=FW_OCTETS);
 */
 //$utils->getVersion($deviceType, $boardType = '2');
+// verify if check file & set version filename return the same thing
+/*
+$deviceType = "12";
+$utils = new Utils($deviceType);
+echo "\r\n".$utils->checkFile($deviceType)."\r\n";
+echo "\r\n".$utils->setVersionFilename($deviceType)."\r\n";
+*/
+/*
+$deviceType = "12";
+$utils = new Utils($deviceType);
+$path=PACK_PATH;
+echo ($utils->getVersion(array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'))));
+*/
