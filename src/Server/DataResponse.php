@@ -133,7 +133,9 @@ class DataResponse extends Utils
 		return strlen($this->getContentFromIndex);
     }
 	*/
-
+    /**
+     * Extract content from file, between startOffset and 4096
+     */
 	function setFileContent4096Bytes($fileContent, $fromIndex = 0, $startOffset = 0){
         //$startOffset = 0;
         $startOffset += $fromIndex;
@@ -171,29 +173,41 @@ class DataResponse extends Utils
     }
 	
     function getSynchroDirectoryData($path, $device){
-		$listFiles = scandir(LIB_PATH.$device.$path);
-        //echo "\r\npath : {$path}\r\n";
-		$directoryListString='';
-		for($i=0;$i<count($listFiles);$i++)if($listFiles[$i][0]!='.'){
-			if(strpos($listFiles[$i],'.')){
-				$handle = fopen(LIB_PATH.$device.$path.$listFiles[$i], 'rb');
-				if($handle){
-					$contents=fread($handle, 9);
-					fclose($handle);
-					$version=hexdec(bin2hex($contents[7]));
-					$revision=hexdec(bin2hex($contents[8]));
-					$directoryListString.=$listFiles[$i].','.(($version/100)%10).(($version/10)%10).($version%10).(($revision/100)%10).(($revision/10)%10).($revision%10).'|';
-				}
-			}else $directoryListString.=$listFiles[$i].'|';
-		}
-		//echo "\r\ndirectory : {$directoryListString}\r\n";
-		
-		//$directoryListString="DOCS/|";
-		$dataSize=strlen($directoryListString);
-		$this->header[4]=chr(intval($dataSize/256));
-		$this->header[5]=chr($dataSize%256);
-		$Response = $this->header.$directoryListString;
-		return $Response;
+        if (file_exists(LIB_PATH.$device.$path)) {
+            $listFiles = scandir(LIB_PATH.$device.$path);
+            //echo "\r\npath : {$path}\r\n";
+            $directoryListString='';
+            for($i=0;$i<count($listFiles);$i++)if($listFiles[$i][0]!='.'){
+                if(strpos($listFiles[$i],'.')){
+                    $handle = fopen(LIB_PATH.$device.$path.$listFiles[$i], 'rb');
+                    if($handle){
+                        $contents=fread($handle, 9);
+                        fclose($handle);
+                        $version=hexdec(bin2hex($contents[7]));
+                        $revision=hexdec(bin2hex($contents[8]));
+                        $directoryListString.=$listFiles[$i].','.((intval($version/100))%10).((intval($version/10))%10).($version%10).((intval($revision/100))%10).((intval($revision/10))%10).($revision%10).'|';
+                    }
+                }else $directoryListString.=$listFiles[$i].'|';
+            }
+            //echo "\r\ndirectory : {$directoryListString}\r\n";
+            
+            //$directoryListString="DOCS/|";
+            $dataSize=strlen($directoryListString);
+            $this->header[4]=chr(intval($dataSize/256));
+            $this->header[5]=chr($dataSize%256);
+            $Response = $this->header.$directoryListString;
+            return $Response;
+        }
+        /*
+        else {
+            $directoryListString='';
+            $dataSize=strlen($directoryListString);
+            $this->header[4]=chr(intval($dataSize/256));
+            $this->header[5]=chr($dataSize%256);
+            $Response = $this->header.$directoryListString;
+        }
+        */
+
 	}
 
 
@@ -224,18 +238,31 @@ class DataResponse extends Utils
 	 *
 	 */
 	function writeCommandLog(string $sn, string $deviceType, string $logTxt){
-		if (!file_exists(LOG_PATH."command/".deviceType[$deviceType])) {
-			mkdir(LOG_PATH."command/".deviceType[$deviceType], 0777, true);
+        $path = LOG_PATH."command/".deviceType[$deviceType];
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
 		}
 		$logFile = trim($sn).".txt";
-		$fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "a+");
-		if($fd){
-			fwrite($fd, $logTxt);
-			fclose($fd);
-			return $logFile;
-		}else{
-			echo "fd error";
-		}
+        if (file_exists($path.$logFile) && filesize($path.$logFile) < 20000) {
+            $fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "a+");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+        else {
+            $fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "w");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
 	}
 
     function getPubsData(string $deviceType){
@@ -314,7 +341,7 @@ class DataResponse extends Utils
     function getCRCAutoDetect(string $deviceType, $startOffset)
     {
         //echo "\r\nGetCRCAutoDetect...\r\n";
-        $fileName = $this->setVersionFilename($deviceType, $boardType = '2');
+        $fileName = $this->checkFile($deviceType, $boardType = '2');
         $crcFileContent = $this->getFileContent($deviceType, $fileName);
         $fileContentCRC = substr($crcFileContent, $startOffset, strlen($crcFileContent) - $startOffset);
         $sizeContent = 0;
@@ -550,9 +577,13 @@ $deviceType = "12";
 $reqId = 99;
 $command = "DC";
 $indexToGet = 000000;
-$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType), $indexToGet);
+$fileName = "WLE256_12_2_v003.005";
+$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType, $fileName), $indexToGet);
 $fileContent = $fileContentArray[0];
 $nbDataToSend = $fileContentArray[1];
+echo ($nbDataToSend);
+*/
+/*
 $dataResponse->setHeader(cmdByte[$command], $reqId, $nbDataToSend);
 $response = $dataResponse->getCesarMatrix(
     $temporaryResponse = $dataResponse->getResponseData($fileContent)
@@ -575,3 +606,5 @@ $temporaryResponse = $dataResponse->getLogByPointer($newPointeur);
 //$output->writeln("\r\n"."TX data : ".bin2hex($temporaryResponse)."\r\n");
 $response = $dataResponse->getCesarMatrix($temporaryResponse);
 */
+//$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
+//$response = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType]);

@@ -177,7 +177,7 @@ class CommandDetect extends AbstractController {
 					$this->boardType = 2;
 				}
 
-				$fileName = $dataResponse->setVersionFilename($deviceType, $this->boardType);
+				$fileName = $dataResponse->checkFile($deviceType, $this->boardType);
 				//echo "\r\nfilename : ".$fileName."\r\n";
 				$deviceObj["Filename"] = $fileName;
 				$forcedUpdate = 0;
@@ -291,7 +291,6 @@ class CommandDetect extends AbstractController {
 		$device = new Device();
 		//$doctrine = new ManagerRegistryEntityManager;
 
-
 		$deviceObj = $this->getDeviceVariables($data, $dataResponse);
 		$sn = $deviceObj["Serial Number"];
 		$version = $deviceObj["Device Version"];
@@ -316,7 +315,8 @@ class CommandDetect extends AbstractController {
 			$ipAddr = $ipAddr;
             $request->setIpAddr($ipAddr, $sn);
 			//$request->setForced($sn, $forcedUpdate);
-			$request->setCreatedAt($sn, date("Y-m-d | H:i:s"));
+			//$request->setCreatedAt($sn, date("Y-m-d | H:i:s"));
+			$request->setUpdatedAt($sn, date("Y-m-d | H:i:s"));
         }
 		/*
 		$device->setIpAddr($ipAddr);
@@ -335,12 +335,14 @@ class CommandDetect extends AbstractController {
 		if(isset($deviceInfo[FORCED_UPDATE]) && (($deviceInfo[FORCED_UPDATE] === '1') || ($deviceInfo[FORCED_UPDATE] === 1)))
 		{
 			$forcedUpdate = 1;
+			$request->setForced($sn, $forcedUpdate);
 		}
 		else
 		{
 			$forcedUpdate = 0;
+			$request->setForced($sn, $forcedUpdate);
 		}
-		var_dump($deviceInfo);
+		//var_dump($deviceInfo);
        	if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($this->boardType<32768))
 		{	
 				
@@ -348,19 +350,13 @@ class CommandDetect extends AbstractController {
 			$versionString = str_pad($versionData[0], 3 , "0" , STR_PAD_LEFT);
 			$revisionString = str_pad($versionData[1], 3 , "0" , STR_PAD_LEFT);
 			//var_dump($versionData);
+			/*
 			echo "versionString: ".$versionString."\n";
 			echo "revisionString: ".$revisionString."\n";
+			*/
 			//$output->writeln("\r\nVersion data: ".$versionData."\r\n");
 			$fileName = stFILENAME."_".$deviceType."_".$this->boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
 			//echo $fileName."\n";
-			/*
-			if (file_exists(PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName)) {
-				$fileArch = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName;
-			}
-            if (file_exists(PACK_PATH.deviceTypeArray[$deviceType].$fileName)) {
-				$fileUp = PACK_PATH.deviceTypeArray[$deviceType].$fileName;
-			}
-            */
 			$fileArch = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName;
 			$fileUp = PACK_PATH.deviceTypeArray[$deviceType].$fileName;
             $cmpFile = $dataResponse->compareFile($fileArch, $fileUp);
@@ -382,7 +378,7 @@ class CommandDetect extends AbstractController {
 		//var_dump($fileName);
 
 		if(!isset($fileName)){
-			$fileName = $dataResponse->setVersionFilename($deviceType, $boardType = '2');
+			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 		}
 		$dataResponse->getFileContent($deviceType, $fileName);
 		echo "filename after dataresponse: ".$fileName;
@@ -398,7 +394,7 @@ class CommandDetect extends AbstractController {
             case "F5": //UART_CMD_UPDATE_SUBPROG4
 				// if filename has not been defined by upload version
 				if (!$fileName) {
-					$fileName = $dataResponse->setVersionFilename($deviceType, $boardType = '2');
+					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
                 $startOffset = $dataResponse->getIndexForProg($command, $dataResponse->getFileContent($deviceType, $fileName));
 				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
@@ -407,9 +403,11 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getResponseData($fileContent);
                 break;
             case "FD": //UART_CMD_UPDATE_PICTURES
+				/*
 				if (!$fileName) {
-					$fileName = $dataResponse->setVersionFilename($deviceType, $boardType = '2');
+					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
+				*/
                 $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName), $this->indexToGet, $startOffset);
@@ -419,9 +417,11 @@ class CommandDetect extends AbstractController {
             case "FE": //UART_CMD_AUTODETECT
 				$request->setVersion($version, $sn);
                 $dataResponse->setHeader(cmdByte[$command], $this->reqId, 39);
+				/*
 				if (!$fileName) {
-					$fileName = $dataResponse->setVersionFilename($deviceType, $boardType = '2');
+					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
+				*/
 				echo "\r\nfilename: ".$fileName."\r\n";
                 $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset);
@@ -446,14 +446,16 @@ class CommandDetect extends AbstractController {
 
 			//TODO Uncomment to test
 		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
-				//$request->setConnect('1', $sn);
-				echo("\r\nVersion: ".$version."\r\n");
+				$request->setConnect('1', $sn);
+				//echo("\r\nVersion: ".$version."\r\n");
 				$request->setVersion($version, $sn);
+				/*
 				// TODO set version upload
 				if (!isset($fileName)) {
-					$fileName = $dataResponse->setVersionFilename($deviceType, $boardType = '2');
+					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				echo "\r\nfilename: ".$fileName."\r\n";
+				*/
+				//echo "\r\nfilename: ".$fileName."\r\n";
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$tempResponse = $dataResponse->getResponseData($fileContent);
@@ -491,12 +493,15 @@ class CommandDetect extends AbstractController {
 
 			///*
 			case "DC": //Download BOARD //Download Version
+				/*
 				if (!$fileName) {
-					$fileName = $dataResponse->setVersionFilename($deviceType, $boardType = '2');
+					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
+				*/
 				$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType, $fileName), $this->indexToGet);
 				$fileContent = $fileContentArray[0];
 				$nbDataToSend = $fileContentArray[1];
+				//$dataResponse->writeCommandLog($sn, $deviceType, $nbDataToSend);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $nbDataToSend);
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getResponseData($fileContent)
@@ -509,6 +514,7 @@ class CommandDetect extends AbstractController {
 			case "DB": //Load & copy Logs
 				$logFile = $this->writeLog($sn, $deviceType);
 				$request->setLogFile($sn, $logFile);
+				$request->setConnect('1', $sn);
 			///*
 			case "D9":	//resend logs pointer
 				$newPointeur = $dataResponse->getPointeur($sn, $deviceType);
@@ -562,9 +568,10 @@ class CommandDetect extends AbstractController {
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $size);
 				$tempResponse = $dataResponse->getFile4096Bytes($this->path, deviceType[$deviceType], $this->indexToGet, $size);
 				$response = $dataResponse->getCesarMatrix($tempResponse);
-				echo "\n"."TX data: ".bin2hex($response);
+				//echo "\n"."TX data: ".bin2hex($response);
 				break;
             case "F9": //Ready To Receive
+				$request->setConnect('1', $sn);
 				$request->setVersion($version, $sn);
 				$newPointeur = strval($request->getDevice($sn, LOG_POINTEUR));
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 11);
@@ -588,7 +595,7 @@ class CommandDetect extends AbstractController {
 
 			///*
             case "F2": //Close log 
-				$request->setConnect('1', $sn);
+				//$request->setConnect('1', $sn);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
 				$response = $dataResponse->getResponseData();
 				break;
