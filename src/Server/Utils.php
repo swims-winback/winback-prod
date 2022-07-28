@@ -39,7 +39,7 @@ class Utils {
      * @param string $boardType
      * @return string $version
      */
-    function getVersion2(array $fileList, string $boardType = '2') : string
+    function getVersion(array $fileList, string $boardType = '2') : string
     {
         //$fileList = $this->listUpFile($deviceType);
         if ($fileList) {
@@ -68,7 +68,7 @@ class Utils {
     /**
      * Get last file of a list of software files and extract the version number
      */
-    function getVersion(array $fileList) : string
+    function getVersion2(array $fileList) : string
     {
         if ($fileList) {
             $versionValue = basename(end($fileList), extFILENAME);

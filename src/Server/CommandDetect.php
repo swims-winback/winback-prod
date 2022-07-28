@@ -379,6 +379,7 @@ class CommandDetect extends AbstractController {
 
 		if(!isset($fileName)){
 			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
+			echo "filename after checkfile: ".$fileName;
 		}
 		$dataResponse->getFileContent($deviceType, $fileName);
 		echo "filename after dataresponse: ".$fileName;
