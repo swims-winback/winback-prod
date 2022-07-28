@@ -60,16 +60,17 @@ class DeviceController extends AbstractController
                 //$search->get('version')->getData(),
                 $version = $search->get('version')->getData(),
                 $versionUpload = $search->get('versionUpload')->getData(),
-                //$forced = $search->get('forced')->getData(),
-                //var_dump($version),
+                $forced = $search->get('forced')->getData(),
+                //var_dump($forced),
             );
+
             if ($devices == null) {
                 $this->addFlash(
                     'error', 'Device '.$value.' not found, please try again !'
                 );
                 return $this->redirectToRoute('device');
             }
-        
+            //return $this->redirectToRoute('device');
         }
 
         //TODO old search form in notes

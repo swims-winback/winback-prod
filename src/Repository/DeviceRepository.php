@@ -65,7 +65,7 @@ class DeviceRepository extends ServiceEntityRepository
      *
      * @return void
      */
-    public function search($value = null, $limit = null, $category = null, $version = null, $versionUpload = null) {
+    public function search($value = null, $limit = null, $category = null, $version = null, $versionUpload = null, $forced = null) {
         
         $query = $this->createQueryBuilder('d');
         //$dbrequest->searchDevice($value);
@@ -120,7 +120,11 @@ class DeviceRepository extends ServiceEntityRepository
             $query->andWhere('d.versionUpload = :versionUpload')
             ->setParameter('versionUpload', $versionUpload);
         }
-            
+          
+        if ($forced!=null) {
+            $query->andWhere('d.forced = :forced')
+            ->setParameter('forced', $forced);
+        }
         //}
         //var_dump($value);
         return $query->getQuery()

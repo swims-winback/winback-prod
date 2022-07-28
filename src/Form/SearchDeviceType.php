@@ -75,8 +75,8 @@ class SearchDeviceType extends AbstractType
             ->add('forced', ChoiceType::class, [
                 'label' => 'Device Forced :',
                 'choices' => [
-                    '1' => true,
-                    //'0' => false,
+                    'Forced' => true,
+                    'Not forced' => false,
                 ],
                 'attr' => [
                     'class' => 'form-control w-25',

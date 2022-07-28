@@ -142,7 +142,6 @@ class SoftwareController extends AbstractController
     }
 	
     function initSoftwareInDB($name, $devType, $version, $date, DbRequest $request){
-        //$whereCond = NAME."='$name'";
         $req = $this->insertNewSoftware($name, $devType, $version, $date);
         $res = $request->sendRq($req);
         
@@ -150,15 +149,11 @@ class SoftwareController extends AbstractController
     }
 
     function updateNewSoftware($name, $devType, $version, $date){
-        //$req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name.", ".$devType.", ".$version.", ".$date."')";
-        //$req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".CREATED_AT."= '".date("Y-m-d | H:i:s")."'";
         $req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
-        //$req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."')'"; //ON DUPLICATE KEY UPDATE ".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
         return $req;
     }
 	
     function updateSoftwareInDB($name, $devType, $version, $date, DbRequest $request){
-        //$whereCond = NAME."='$name'";
         $req = $this->updateNewSoftware($name, $devType, $version, $date);
         $res = $request->sendRq($req);
         
