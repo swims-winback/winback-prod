@@ -140,18 +140,20 @@ class TCPServer extends AbstractController
 
 		}
 		$logFile = date("Y-m-d").".txt";
-		if (!file_exists(LOG_PATH."server/".$logFile)) {
-			$fd = fopen(LOG_PATH."server/".$logFile, "w");
+		if (file_exists(LOG_PATH."server/".$logFile) && filesize(LOG_PATH."server/".$logFile) < 40000) {
+			$fd = fopen(LOG_PATH."server/".$logFile, "a+");
 			fclose($fd);
 
 		}
-		$fd = fopen(LOG_PATH."server/".$logFile, "a+");
-		if($fd){
-			fwrite($fd, $logTxt);
-			fclose($fd);
-			return $logFile;
-		}else{
-			echo "fd error";
+		else {
+			$fd = fopen(LOG_PATH."server/".$logFile, "w");
+			if($fd){
+				fwrite($fd, $logTxt);
+				fclose($fd);
+				return $logFile;
+			}else{
+				echo "fd error";
+			}
 		}
 	}
 
@@ -316,7 +318,7 @@ class TCPServer extends AbstractController
 					{
 						reset($clientsInfo);
 						$output->writeln("\r\n********************* Connected list *****************************\r\n");
-						//$this->writeServerLog("\r\n********************* Connected list *****************************\r\n");
+						$this->writeServerLog("\r\n********************* Connected list *****************************\r\n");
 						//=> Initiate client info (id, sn, ip, time) and update it at each iteration
 						//$request->setConnectAll(0);
 						// if sn or ip from db not in connected list
@@ -327,11 +329,11 @@ class TCPServer extends AbstractController
 							//$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 							if (isset(current($clientsInfo)[1])) {
 								$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
-								//$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
+								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 							}
 							else {
 								$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".$ip." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
-								//$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".$ip." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
+								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".$ip." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 							}
 							
 						}

@@ -233,7 +233,7 @@ class DataResponse extends Utils
 	}
     */
 
-    	/**
+    /**
 	 * Write logTxt variable to a log file with sn as filename
 	 *
 	 */
