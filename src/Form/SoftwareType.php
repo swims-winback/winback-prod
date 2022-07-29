@@ -46,7 +46,7 @@ class SoftwareType extends AbstractType
                 ],
                  'constraints' => [
                     new File([
-                        'maxSize' => '20M',
+                        'maxSize' => '40M',
                         /*
                         'mimeTypes' => [
                             'application/pdf',

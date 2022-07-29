@@ -85,7 +85,8 @@ class SoftwareRepository extends ServiceEntityRepository
     public function findSoftwareByVersion($value, $category): ?Software
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.version = :val')
+            //->andWhere('s.version = :val')
+            ->andWhere('s.version LIKE :val')
             ->setParameter('val', $value)
             
             ->leftJoin('s.deviceFamily', 'c')

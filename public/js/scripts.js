@@ -5,9 +5,9 @@ if (window.performance) {
 console.info(performance.navigation.type);
 if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
   console.info( "This page is reloaded" );
-  /*
+  
   let selectedButton = document.querySelectorAll(".form-check-input");
-  let saveButton = document.querySelector("#form_Save");
+  //let saveButton = document.querySelector("#form_Save");
   for(let button of selectedButton){
   //for (var i=1; i < selectedButton.length; i++) {
       //saveButton.addEventListener("click", function(){
@@ -15,19 +15,19 @@ if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
           //let id = button.getAttribute("data-id");
           let substr_id = button.getAttribute("id");
           let id = substr_id.substr(9);
-          //button.checked == true;
+          button.checked = false;
           let xmlhttp = new XMLHttpRequest;
           //if (id != 0 && button.checked) {
           if (id != 0) {
             console.log(id);
             console.log(button.checked);
-            xmlhttp.open("GET", `/admin/device/unselected/${id}`)
+            xmlhttp.open("GET", `/admin/device/selected/${id}/${0}`)
             xmlhttp.send()
           }
 
       //})
   }
-  */
+  
 
 } else {
   console.info( "This page is not reloaded");
@@ -45,7 +45,7 @@ if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
 });
 */
 
- $(document).ready(function (){
+$(document).ready(function (){
     
   //setInterval(function (){
     let deviceArray = document.querySelectorAll(".info_device")
@@ -245,7 +245,7 @@ function sortTable(n) {
         let xmlhttp = new XMLHttpRequest;
         //console.log(checkboxes[i]);
         //console.log(id);
-        xmlhttp.open("GET", `/admin/device/selected/${id}`)
+        xmlhttp.open("GET", `/admin/device/selected/${id}/${1}`)
         xmlhttp.send()
       }
     }
@@ -262,7 +262,7 @@ function sortTable(n) {
         let xmlhttp = new XMLHttpRequest;
         //console.log(checkboxes[i]);
         //console.log(id);
-        xmlhttp.open("GET", `/admin/device/unselected/${id}`)
+        xmlhttp.open("GET", `/admin/device/selected/${id}/${0}`)
         xmlhttp.send()
       }
     }
@@ -290,7 +290,7 @@ function sortTable(n) {
   // ######### Selected function ######### //
   //just to "select" devices in db
   let selectedButton = document.querySelectorAll(".form-check-input");
-  let saveButton = document.querySelector("#form_Save");
+  //let saveButton = document.querySelector("#form_Save");
   for(let button of selectedButton){
   //for (var i=1; i < selectedButton.length; i++) {
       //saveButton.addEventListener("click", function(){
@@ -301,10 +301,16 @@ function sortTable(n) {
           //button.checked == true;
           let xmlhttp = new XMLHttpRequest;
           //if (id != 0 && button.checked) {
-          if (id != 0) {
+          if (id != 0 && button.checked == true) {
             console.log(id);
             console.log(button.checked);
-            xmlhttp.open("GET", `/admin/device/selected/${id}`)
+            xmlhttp.open("GET", `/admin/device/selected/${id}/${1}`)
+            xmlhttp.send()
+          }
+          else if (id != 0 && button.checked == false) {
+            console.log(id);
+            console.log(button.checked);
+            xmlhttp.open("GET", `/admin/device/selected/${id}/${0}`)
             xmlhttp.send()
           }
 
