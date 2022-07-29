@@ -122,11 +122,20 @@ class DeviceController extends AbstractController
                 $version_software = $softwareRepository->findSoftwareByVersion($version_input, $category);
                 //print_r($deviceId);
                 //$device->setSelected(($device->getSelected())?false:true);
-                if($device->getSelected()) {
-                    $device->setVersionUpload($version_input);
-                    $device->setSelected(false);
-                    $em = $doctrine->getManager();
-                    $em->flush();
+                if($device->getSelected() ) {
+                    //if ($version_software) {
+                        $device->setVersionUpload($version_input);
+                        $device->setSelected(false);
+                        $em = $doctrine->getManager();
+                        $em->flush();
+                    //}
+                    /*
+                    else {
+                        $this->addFlash(
+                            'error', 'Software '.$version_input.' not found, please try again !'
+                        );
+                    }
+                    */
                 }
                 
                 else {
@@ -416,27 +425,13 @@ class DeviceController extends AbstractController
         //return $this->redirectToRoute('device');
     }
     /**
-     * @Route("/admin/device/selected/{id}", name="selected")
+     * @Route("/admin/device/selected/{id}/{select_bool}", name="selected")
      */
-    public function selected(Device $device, ManagerRegistry $doctrine)
+    public function selected(Device $device, ManagerRegistry $doctrine, $select_bool)
     {
-        //$device->setSelected(($device->getSelected())?false:true);
-        $device->setSelected(true);
-        $em = $doctrine->getManager();
-        $em->persist($device);
-        $em->flush();
-
-        //return new Response("true");
-        return $this->redirectToRoute('device');
-    }
-
-    /**
-     * @Route("/admin/device/unselected/{id}", name="unselected")
-     */
-    public function unselected(Device $device, ManagerRegistry $doctrine)
-    {
-        $device->setSelected(false);
-
+        print_r($select_bool);
+        $device->setSelected(($select_bool==0)?0:1);
+        //$device->setSelected($select_bool);
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
@@ -447,8 +442,9 @@ class DeviceController extends AbstractController
 
 
     /**
-     * @Route("/admin/device/updated/{id}/{version}", name="updated")
+     * @Route("/admin/device/updated/{id}/{version}/", name="updated")
      */
+    
     public function updated(Device $device, ManagerRegistry $doctrine, $version)
     {
         //print_r($version);
@@ -463,5 +459,23 @@ class DeviceController extends AbstractController
         return $this->redirectToRoute('device');
         
     }
+    
+    public function updated_bool(Device $device, ManagerRegistry $doctrine, $version, $select_bool)
+    {
+        //print_r($version);
+        if ($select_bool == true) {
+            $device->setVersionUpload($version);
+
+            $em = $doctrine->getManager();
+            $em->persist($device);
+            $em->flush();
+    
+            //return new Response("true");
+            return $this->redirectToRoute('device');
+        }
+
+        
+    }
+    
 }
 
