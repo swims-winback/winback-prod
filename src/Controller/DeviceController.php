@@ -81,12 +81,13 @@ class DeviceController extends AbstractController
         ->add('versionInput', TextType::class, [
             'label' => false,
             'attr' => [
-                'class' => 'w-50 flex-grow-1',
+                'class' => 'flex-grow-1',
             ],
         ])
         ->add('Save', SubmitType::class, [
             'attr' => [
                 'class' => 'w-auto text-center btn bg-orange fa-solid fa-check p-1',
+                //'class' => 'w-auto text-center btn bg-orange p-1',
             ],
             'label' => false,
         ])
@@ -108,11 +109,13 @@ class DeviceController extends AbstractController
         //$devices = $deviceRepository->findAll();
         
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        //if($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted()) {
+            
             //for ($i=1; $i <= sizeof($devices); $i++) {
             foreach ($devices as $device) {   
                 //$deviceId = $i;
-                //print_r($deviceId);
+                print_r($device->getId());
                 //$device = $deviceRepository->findDeviceById($deviceId);
                 $version_input = $form->get('versionInput')->getData();
                 $category = $device->getDeviceFamily();
@@ -124,15 +127,6 @@ class DeviceController extends AbstractController
                     $device->setSelected(false);
                     $em = $doctrine->getManager();
                     $em->flush();
-                    /*
-                    if ($version_software) {
-
-                    }
-                    else {
-                        //throw new NotFoundResourceException("Software does not exist");
-                        $this->addFlash('error', 'Software does not exist');
-                    }
-                    */
                 }
                 
                 else {
@@ -141,6 +135,7 @@ class DeviceController extends AbstractController
                 
                 
             }
+            
             return $this->redirectToRoute('device');
         }
 
@@ -425,8 +420,8 @@ class DeviceController extends AbstractController
      */
     public function selected(Device $device, ManagerRegistry $doctrine)
     {
-        $device->setSelected(($device->getSelected())?false:true);
-
+        //$device->setSelected(($device->getSelected())?false:true);
+        $device->setSelected(true);
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
@@ -435,7 +430,20 @@ class DeviceController extends AbstractController
         return $this->redirectToRoute('device');
     }
 
-    
+    /**
+     * @Route("/admin/device/unselected/{id}", name="unselected")
+     */
+    public function unselected(Device $device, ManagerRegistry $doctrine)
+    {
+        $device->setSelected(false);
+
+        $em = $doctrine->getManager();
+        $em->persist($device);
+        $em->flush();
+
+        //return new Response("true");
+        return $this->redirectToRoute('device');
+    }
 
 
     /**

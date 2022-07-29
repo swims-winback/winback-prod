@@ -11,6 +11,10 @@ body, html {
     padding: 0 !important;
 }
 
+container {
+    height: 100%;
+}
+
 a {
     color: black;
     text-decoration: none !important;
@@ -65,13 +69,13 @@ body {
     color:crimson;
 }
 
-header, .footer {
+.header, .footer {
     width: 100%;
     height: fit-content;
     text-align: center;
 }
 
-.navbar {
+.header {
     padding: 2em;
     justify-content: space-between;
     font-family: 'Open Sans', sans-serif;
@@ -86,7 +90,7 @@ header, .footer {
         text-transform: uppercase;
     }
 }
-.header {
+.navbar {
     //padding: 2em;
     font-family: 'Open Sans', sans-serif;
     //color: black !important;
@@ -159,4 +163,12 @@ td {
 .test_zone_0 {
     width: fit-content;
     vertical-align:middle;
+}
+
+#softwareSearch {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }

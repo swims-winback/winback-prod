@@ -1,24 +1,22 @@
-<header class="d-flex flex-column justify-content-center mb-4">
-    <nav class="navbar shadow-1 primary d-flex">
-        <div data-target="example-sidenav" class="press sidenav-trigger">
+<header class="header shadow d-flex justify-content-center">
+        <div data-target="example-sidenav" class="press sidenav-trigger flex-1">
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </div>
-        <a class="navbar-logo" href="{{path('device')}}">
+        <a class="navbar-logo w-100 flex-2" href="{{path('device')}}">
             <img src="{{asset('img/winback-logo.webp')}}" alt="Logo" class="logo" style="height: 50px;">
         </a>
-        <div class="navbar-menu">
+        <div class="navbar-menu flex-1">
             <a class="navbar-link" href="{{path('app_logout')}}">
                 <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
             </a>
         </div>
-    </nav>
-    <nav class="header shadow primary bg-orange d-flex justify-content-around">
-        <a class="nav-link" href="{{path('software')}}">Software</a>
-        <a class="nav-link" href="{{path('device')}}">Device</a>
-        <!--<a class="nav-link" href="{{path('statistics')}}">Statistics</a>-->
-        <!--<a class="nav-link" href="">Maintenance</a>-->
-    </nav>
 </header>
+<nav class="navbar sticky-top shadow primary bg-orange d-flex justify-content-around">
+    <a class="nav-link" href="{{path('software')}}">Software</a>
+    <a class="nav-link" href="{{path('device')}}">Device</a>
+    <!--<a class="nav-link" href="{{path('statistics')}}">Statistics</a>-->
+    <!--<a class="nav-link" href="">Maintenance</a>-->
+</nav>
 <!-- ##### Sidenav ##### -->
 <!--
 <div class="sidenav shadow-1 white" id="example-sidenav" data-ax="sidenav">
