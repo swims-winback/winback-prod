@@ -10,6 +10,10 @@ body, html {
   padding: 0 !important;
 }
 
+container {
+  height: 100%;
+}
+
 a {
   color: black;
   text-decoration: none !important;
@@ -60,7 +64,7 @@ body {
   color: crimson;
 }
 
-header, .footer {
+.header, .footer {
   width: 100%;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -68,7 +72,7 @@ header, .footer {
   text-align: center;
 }
 
-.navbar {
+.header {
   padding: 2em;
   justify-content: space-between;
   font-family: "Open Sans", sans-serif;
@@ -76,30 +80,30 @@ header, .footer {
   height: -moz-fit-content;
   height: fit-content;
 }
-.navbar .navbar-brand {
+.header .navbar-brand {
   text-align: center;
   text-transform: uppercase;
   font-weight: 700;
 }
-.navbar .navbar-link {
+.header .navbar-link {
   text-transform: uppercase;
 }
 
-.header {
+.navbar {
   font-family: "Open Sans", sans-serif;
   display: flex;
   justify-content: space-between;
 }
-.header .nav-link {
+.navbar .nav-link {
   text-transform: uppercase;
   margin: 0 1em 0 1em;
   color: white;
 }
-.header .nav-link:hover {
+.navbar .nav-link:hover {
   border-bottom: solid white 1px;
   box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0, 0, 0, 0);
 }
-.header #logo {
+.navbar #logo {
   height: 15px !important;
 }
 
@@ -150,4 +154,12 @@ td {
   width: -moz-fit-content;
   width: fit-content;
   vertical-align: middle;
+}
+
+#softwareSearch {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }/*# sourceMappingURL=styles.css.map */

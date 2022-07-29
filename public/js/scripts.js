@@ -1,5 +1,37 @@
 
+if (window.performance) {
+  console.info("window.performance works fine on this browser");
+}
+console.info(performance.navigation.type);
+if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+  console.info( "This page is reloaded" );
+  /*
+  let selectedButton = document.querySelectorAll(".form-check-input");
+  let saveButton = document.querySelector("#form_Save");
+  for(let button of selectedButton){
+  //for (var i=1; i < selectedButton.length; i++) {
+      //saveButton.addEventListener("click", function(){
+        //button.addEventListener("click", function(){
+          //let id = button.getAttribute("data-id");
+          let substr_id = button.getAttribute("id");
+          let id = substr_id.substr(9);
+          //button.checked == true;
+          let xmlhttp = new XMLHttpRequest;
+          //if (id != 0 && button.checked) {
+          if (id != 0) {
+            console.log(id);
+            console.log(button.checked);
+            xmlhttp.open("GET", `/admin/device/unselected/${id}`)
+            xmlhttp.send()
+          }
 
+      //})
+  }
+  */
+
+} else {
+  console.info( "This page is not reloaded");
+}
  // ######### Connect function ######### //
  /*
  $(document).ready(function (){
@@ -15,7 +47,7 @@
 
  $(document).ready(function (){
     
-  setInterval(function (){
+  //setInterval(function (){
     let deviceArray = document.querySelectorAll(".info_device")
     for (let device of deviceArray) {
       //var deviceId = $('#info_device').data("id");
@@ -46,7 +78,9 @@
             var deviceSn = $(device).data("title");
             //$(`#c_sn_${deviceSn}`).attr('hidden', true);
             //console.log(`#c_sn_${deviceSn}`);
-            document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
+            if (deviceSn) {
+              document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
+            }
             //document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
             //$("#c_sn_".deviceSn).html('ok');
             
@@ -54,12 +88,39 @@
         }
       });
     }
-  }, 1000);
+    /*
+    setTimeout(() => {
+      document.location.reload();
+    }, 3000);
+    */
+  //}, 1000);
 });
 
 
 window.onload = () => {
+  //check devices are initialized unselected on page onload
+  /*
+  let unselectedButton = document.querySelectorAll(".form-check-input");
+  for(let button of unselectedButton){
+  //for (var i=1; i < selectedButton.length; i++) {
+      //saveButton.addEventListener("click", function(){
+        //button.addEventListener("click", function(){
+          //let id = button.getAttribute("data-id");
+          let substr_id = button.getAttribute("id");
+          let id = substr_id.substr(9);
+          //button.checked == true;
+          let xmlhttp = new XMLHttpRequest;
+          //if (id != 0 && button.checked) {
+          if (id != 0) {
+            console.log(id);
+            console.log(button.checked);
+            xmlhttp.open("GET", `/admin/device/unselected/${id}`)
+            xmlhttp.send()
+          }
 
+      //})
+  }
+  */
 
 
 
@@ -169,8 +230,45 @@ function sortTable(n) {
   }
   */
 
+  let checkbox_0 = document.querySelector('#checkbox_0');
+  checkbox_0.onclick = function() {
+    console.log(checkbox_0.checked);
+    if (checkbox_0.checked == true) {
+      var checkboxes = document.getElementsByClassName('form-check-input');
+      //for (var checkbox of checkboxes) {
+      for (var i=1; i < checkboxes.length; i++) {
   
-  document.getElementById('checkbox_0').onclick = function() {
+        //let id = checkbox.getAttribute("data-id");
+        //checkbox.checked = this.checked;
+        let id = checkboxes[i].getAttribute("data-id");
+        checkboxes[i].checked = true;
+        let xmlhttp = new XMLHttpRequest;
+        //console.log(checkboxes[i]);
+        //console.log(id);
+        xmlhttp.open("GET", `/admin/device/selected/${id}`)
+        xmlhttp.send()
+      }
+    }
+    
+    else {
+      var checkboxes = document.getElementsByClassName('form-check-input');
+      //for (var checkbox of checkboxes) {
+      for (var i=1; i < checkboxes.length; i++) {
+  
+        //let id = checkbox.getAttribute("data-id");
+        //checkbox.checked = this.checked;
+        let id = checkboxes[i].getAttribute("data-id");
+        checkboxes[i].checked = false;
+        let xmlhttp = new XMLHttpRequest;
+        //console.log(checkboxes[i]);
+        //console.log(id);
+        xmlhttp.open("GET", `/admin/device/unselected/${id}`)
+        xmlhttp.send()
+      }
+    }
+  }
+  /*
+  if (checkbox_0.checked == false) {
     var checkboxes = document.getElementsByClassName('form-check-input');
     //for (var checkbox of checkboxes) {
     for (var i=1; i < checkboxes.length; i++) {
@@ -178,18 +276,19 @@ function sortTable(n) {
       //let id = checkbox.getAttribute("data-id");
       //checkbox.checked = this.checked;
       let id = checkboxes[i].getAttribute("data-id");
-      checkboxes[i].checked = this.checked;
+      checkboxes[i].checked = false;
       let xmlhttp = new XMLHttpRequest;
-      console.log(checkboxes[i]);
-      console.log(id);
-      xmlhttp.open("GET", `/admin/device/selected/${id}`)
+      //console.log(checkboxes[i]);
+      //console.log(id);
+      xmlhttp.open("GET", `/admin/device/unselected/${id}`)
       xmlhttp.send()
     }
   }
+  */
   
   
   // ######### Selected function ######### //
-  
+  //just to "select" devices in db
   let selectedButton = document.querySelectorAll(".form-check-input");
   let saveButton = document.querySelector("#form_Save");
   for(let button of selectedButton){
@@ -216,7 +315,7 @@ function sortTable(n) {
 
   let checkbox_array = document.getElementsByName('checkbox_item');
 
-  let checkbox_0 = document.querySelector('#checkbox_0');
+  //let checkbox_0 = document.querySelector('#checkbox_0');
   let validButton_0 = document.querySelector('#valid_0');
  
 

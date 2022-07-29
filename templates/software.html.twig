@@ -4,21 +4,23 @@
 
 {% block content %}
     <div class="container d-flex flex-column space-between align-items-center">
-        <h1 class="text-center mt-4 mb-4">Software</h1>
-        <!-- ===== NEW SOFTWARE ===== -->
-        <a class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange mb-4 w-50" href="{{path('software_add')}}">New Software</a>
-        <!-- ===== ALERT MESSAGES ===== -->
-        {% for message in app.flashes('errorSoftware') %}
-            <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
-        {% endfor %}
-        {% for message in app.flashes('message') %}
-            <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message }}</div>
-        {% endfor %}
-        {% for message in app.flashes('infoSoftware') %}
-            <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
-        {% endfor %}
-        <!-- ===== SEARCH SOFTWARE IN DB ===== -->
-        {{ form(searchform) }}
+        <section id="softwareSearch">
+            <h1 class="text-center mt-4 mb-4">Software</h1>
+            <!-- ===== NEW SOFTWARE ===== -->
+            <a class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange mb-4 w-50" href="{{path('software_add')}}">New Software</a>
+            <!-- ===== ALERT MESSAGES ===== -->
+            {% for message in app.flashes('errorSoftware') %}
+                <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('message') %}
+                <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('infoSoftware') %}
+                <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
+            {% endfor %}
+            <!-- ===== SEARCH SOFTWARE IN DB ===== -->
+            {{ form(searchform) }}
+        </section>
 
         <!-- ===== SOFTWARE TABLE PER FAMILY ===== -->
         <div class="d-flex flex-column space-between">
