@@ -229,8 +229,8 @@ class SoftwareController extends AbstractController
                 //$softwareVersionModified = preg_replace($pattern, '', $softwareVersion);
                 $softwareVersionModified = preg_replace($pattern2, '.', $softwareVersion);
                 //$softwareVersionModified2 = preg_replace($pattern3, '\1', $softwareVersionModified);
-                $pattern3 = "/^0{2}/";
-                $pattern4 = "/\.0{2}/";
+                $pattern3 = "/^0{1,2}/";
+                $pattern4 = "/\.0{1,2}/";
                 $softwareVersionModified2 = preg_replace($pattern3, '', $softwareVersionModified);
                 $softwareVersionModified3 = preg_replace($pattern4, '.', $softwareVersionModified2);
                 //print_r($softwareVersionModified2);
