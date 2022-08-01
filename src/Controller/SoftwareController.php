@@ -225,10 +225,15 @@ class SoftwareController extends AbstractController
                 $softwareName = $originalFilename;
 
                 $pattern2 = '/-/i';
+                //$pattern3 = '((?:0)*(\d+)).((?:0)*(\d+))';
                 //$softwareVersionModified = preg_replace($pattern, '', $softwareVersion);
                 $softwareVersionModified = preg_replace($pattern2, '.', $softwareVersion);
-                
-                
+                //$softwareVersionModified2 = preg_replace($pattern3, '\1', $softwareVersionModified);
+                $pattern3 = "/^0{2}/";
+                $pattern4 = "/\.0{2}/";
+                $softwareVersionModified2 = preg_replace($pattern3, '', $softwareVersionModified);
+                $softwareVersionModified3 = preg_replace($pattern4, '.', $softwareVersionModified2);
+                //print_r($softwareVersionModified2);
                 //$softwareNumber = substr($originalFilename, 7, 2);
 
                 //$familyRepository = $doctrine->getRepository(DeviceFamily::class);
@@ -241,9 +246,9 @@ class SoftwareController extends AbstractController
                 $software->setFamily($family);
                 $software->setName($fileName);
                 $software->setSoftwareFile($fileName);
-                $software->setVersion($softwareVersionModified);
+                $software->setVersion($softwareVersionModified3);
 
-                $this->updateSoftwareInDB($name=$fileName, $devType=deviceTypeId[$deviceType], $softwareVersionModified, $date=date("Y-m-d | H:i:s"), $dbRequest);
+                $this->updateSoftwareInDB($name=$fileName, $devType=deviceTypeId[$deviceType], $softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
             }
 
             /*
