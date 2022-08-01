@@ -149,7 +149,7 @@ class SoftwareController extends AbstractController
     }
 
     function updateNewSoftware($name, $devType, $version, $date){
-        $req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
+        $req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".SOFT_VERSION."= '".$version."',".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
         return $req;
     }
 	
@@ -248,7 +248,7 @@ class SoftwareController extends AbstractController
                 $software->setSoftwareFile($fileName);
                 $software->setVersion($softwareVersionModified3);
 
-                $this->updateSoftwareInDB($name=$fileName, $devType=deviceTypeId[$deviceType], $softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
+                $this->updateSoftwareInDB($name=$fileName, $devType=deviceTypeId[$deviceType], $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
             }
 
             /*
