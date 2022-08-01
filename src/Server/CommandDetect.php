@@ -247,6 +247,7 @@ class CommandDetect extends AbstractController {
 					else if($command === "DE" || $command === "DD" || $command === "DC")
 					{
 						$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
+						echo "\r\nVersion : ".$version."\r\n";
 						$this->boardType = hexdec(substr($data, 32, 4));
 						$this->indexToGet = hexdec(substr($data, 36, 8));
 						$deviceObj["Device Version"] = $version;
@@ -404,11 +405,11 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getResponseData($fileContent);
                 break;
             case "FD": //UART_CMD_UPDATE_PICTURES
-				/*
+				
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				*/
+				
                 $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName), $this->indexToGet, $startOffset);
@@ -418,11 +419,11 @@ class CommandDetect extends AbstractController {
             case "FE": //UART_CMD_AUTODETECT
 				$request->setVersion($version, $sn);
                 $dataResponse->setHeader(cmdByte[$command], $this->reqId, 39);
-				/*
+				
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				*/
+				
 				echo "\r\nfilename: ".$fileName."\r\n";
                 $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset);
@@ -450,13 +451,13 @@ class CommandDetect extends AbstractController {
 				$request->setConnect('1', $sn);
 				//echo("\r\nVersion: ".$version."\r\n");
 				$request->setVersion($version, $sn);
-				/*
+				
 				// TODO set version upload
 				if (!isset($fileName)) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				*/
-				//echo "\r\nfilename: ".$fileName."\r\n";
+				
+				echo "\r\nfilename: ".$fileName."\r\n";
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$tempResponse = $dataResponse->getResponseData($fileContent);
@@ -494,11 +495,11 @@ class CommandDetect extends AbstractController {
 
 			///*
 			case "DC": //Download BOARD //Download Version
-				/*
+				
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				*/
+				
 				$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType, $fileName), $this->indexToGet);
 				$fileContent = $fileContentArray[0];
 				$nbDataToSend = $fileContentArray[1];
