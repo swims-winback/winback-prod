@@ -27,7 +27,7 @@ class Utils {
             return array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'));
         }
         else {
-            echo "\r\nUhuh, something went wrong ! Path doesn't exist, please check that {$path} exists.\r\n";
+            echo "\r\nUhuh, something went wrong ! Path doesn't exist, please check that ".$path.deviceTypeArray[$deviceType]." exists.\r\n";
             echo "\r\n #################### \r\n";
         }
     }
