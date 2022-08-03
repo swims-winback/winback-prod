@@ -276,7 +276,7 @@ class DataResponse extends Utils
             $pubSize = filesize(PUB_PATH.$deviceType."PUBS".extFILENAME);
 
             // Concatenate header, contents & pubsize to form response
-            $response = $this->header.$contents.chr($pubSize/256/256/256).chr($pubSize/256/256).chr($pubSize/256).chr($pubSize%256);
+            $response = $this->header.$contents.chr(intval($pubSize/256/256/256)).chr(intval($pubSize/256/256)).chr(intval($pubSize/256)).chr(intval($pubSize%256));
             //echo bin2hex($response);
             /*
             echo "\r\ngetPubsData function is working correctly !\r\n";
