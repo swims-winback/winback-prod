@@ -427,7 +427,7 @@ class CommandDetect extends AbstractController {
 				echo "\r\nfilename: ".$fileName."\r\n";
                 $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset);
-				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $dataResponse->getFileContent($deviceType, $fileName), $this->forcedUpdate);
+				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $dataResponse->getFileContent($deviceType, $fileName), $forcedUpdate);
 				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
                 $response = $dataResponse->getAutoDetectResponse($tempResponse);
                 break;
