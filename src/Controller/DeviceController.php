@@ -57,16 +57,15 @@ class DeviceController extends AbstractController
                 $value = $search->get('value')->getData(), 
                 $search->get('max_result')->getData(),
                 $family = $search->get('category')->getData(),
-                //$search->get('version')->getData(),
                 $version = $search->get('version')->getData(),
                 $versionUpload = $search->get('versionUpload')->getData(),
                 $forced = $search->get('forced')->getData(),
-                //var_dump($forced),
+                //var_dump($family),
             );
 
             if ($devices == null) {
                 $this->addFlash(
-                    'error', 'Device '.$value.' not found, please try again !'
+                    'error', 'Device not found, please try again !'
                 );
                 return $this->redirectToRoute('device');
             }
@@ -123,19 +122,19 @@ class DeviceController extends AbstractController
                 //print_r($deviceId);
                 //$device->setSelected(($device->getSelected())?false:true);
                 if($device->getSelected() ) {
-                    //if ($version_software) {
+                    if ($version_software) {
                         $device->setVersionUpload($version_input);
                         $device->setSelected(false);
                         $em = $doctrine->getManager();
                         $em->flush();
-                    //}
-                    /*
+                    }
+                    
                     else {
                         $this->addFlash(
                             'error', 'Software '.$version_input.' not found, please try again !'
                         );
                     }
-                    */
+                    
                 }
                 
                 else {
@@ -156,7 +155,6 @@ class DeviceController extends AbstractController
             'form' => $form->createView(),
             'checkform' => $checkform->createView(),
             //'checkitemform' => $checkitemform->createView()
-
             //'forms' => $forms,
             //'versionforms' => $versionforms,
         ]);
@@ -397,12 +395,12 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * @Route("/admin/device/forced/{id}", name="forced")
+     * @Route("/admin/device/forced/{id}/{select_bool}", name="forced")
      */
-    public function forced(Device $device, ManagerRegistry $doctrine)
+    public function forced(Device $device, ManagerRegistry $doctrine, $select_bool)
     {
-        $device->setForced(($device->getForced())?false:true);
-
+        //$device->setForced(($device->getForced())?false:true);
+        $device->setForced(($select_bool==0)?0:1);
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();

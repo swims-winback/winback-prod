@@ -17,6 +17,8 @@ class SearchDeviceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            //TODO uncomment
+            
             ->add('value', SearchType::class, [
                 'label' => false,
                 'attr' => [
@@ -25,6 +27,7 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
+            
             ->add('category', EntityType::class, [
                 'class' => DeviceFamily::class,
                 'label' => 'Device Type :',
@@ -34,6 +37,8 @@ class SearchDeviceType extends AbstractType
                 'required' => false,
             ])
             
+            // TODO uncomment
+            
             ->add('version', SearchType::class, [
                 'label' => false,
                 'attr' => [
@@ -42,6 +47,7 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
+            
             /*
             ->add('version', EntityType::class, [
                 'class' => Software::class,
@@ -53,6 +59,8 @@ class SearchDeviceType extends AbstractType
                 'required' => false,
             ])
             */
+            //TODO uncomment
+            
             ->add('versionUpload', SearchType::class, [
                 'label' => false,
                 'attr' => [
@@ -61,6 +69,7 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
+            
             /*
             ->add('versionUpload', EntityType::class, [
                 'class' => Software::class,
@@ -83,20 +92,7 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
-            /*
-            ->add('version', ChoiceType::class, [
-                'label' => 'Device Upload Version :',
-                'choices' => [
-                    '1.8' => 1.8,
-                    '2.8' => 2.8,
-                    '001-062' => 001-062,
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'required' => false,
-            ])
-            */
+            
             ->add('max_result', ChoiceType::class, [
                 'label' => 'Max result: ',
                 'choices'  => [
@@ -109,6 +105,7 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
+            
             ->add('Search', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn bg-orange btn-outline-orange',
