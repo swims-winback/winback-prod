@@ -75,6 +75,7 @@ class DeviceRepository extends ServiceEntityRepository
         }
         */
         
+        
         if($value != null){
             //$query->where('d.sn = :val OR d.type = :val OR d.version = :val OR d.ipAddr = :val OR d.logPointeur = :val')
             //->setParameter('value', $value);
@@ -84,33 +85,17 @@ class DeviceRepository extends ServiceEntityRepository
             ->setParameter(':value', '%'.$value.'%');
         }
         
+        
         if($limit != null){
             $query->setMaxResults($limit);
         }
+        
         if($category != null){
             $query->leftJoin('d.deviceFamily', 'c');
             $query->andWhere('c.id = :id')
             ->setParameter('id', $category);
         }
-        /*
-        if($version != null){
-            //$query->leftJoin('d.software', 'c');
-            $query->andWhere('d.versionUpload = :version')
-            ->setParameter('version', $version);
-        }
-        */
-
-        //if($version != null){
-            /*
-            $query->innerJoin('d.software', 's');
-            $query->andWhere('s.id = :id')
-            ->setParameter('id', $version);
-            */
-            
-            //$query->innerJoin('d.software', 's');
-            //$query->andWhere('s.version = :version')
-            //->setParameter('version', $version);
-            
+        
         if ($version!=null) {
             $query->andWhere('d.version = :version')
             ->setParameter('version', $version);
@@ -120,13 +105,13 @@ class DeviceRepository extends ServiceEntityRepository
             $query->andWhere('d.versionUpload = :versionUpload')
             ->setParameter('versionUpload', $versionUpload);
         }
-          
+        
         if ($forced!=null) {
             $query->andWhere('d.forced = :forced')
             ->setParameter('forced', $forced);
         }
         //}
-        //var_dump($value);
+        //var_dump($category);
         return $query->getQuery()
         //->getOneOrNullResult()
         ->getResult()

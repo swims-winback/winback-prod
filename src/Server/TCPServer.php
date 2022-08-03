@@ -338,10 +338,19 @@ class TCPServer extends AbstractController
 							if (isset(current($clientsInfo)[1])) {
 								$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
+								
+								if (array_key_exists(current($clientsInfo)[0], $this->linkConnection)) {
+									echo 'Client already exists !';
+								}
+								
+								
 							}
 							else {
 								$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".$ip." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".$ip." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
+								if (array_key_exists(current($clientsInfo)[0], $this->linkConnection)) {
+									echo 'Client already exists !';
+								}
 							}
 							
 						}
