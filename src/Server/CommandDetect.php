@@ -237,6 +237,8 @@ class CommandDetect extends AbstractController {
 						if(!empty($data[28]) || !empty($data[29]) || !empty($data[30]) || !empty($data[31])){			
 							$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
 							$deviceObj["Device Version"] = $version;
+							echo "\r\nVersion : ".$version."\r\n";
+							$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
 						}
 					}
 					else if($command === "F5" || $command === "F6" || $command === "F7" || $command === "F8" || $command === "FC" || $command === "FD")
@@ -248,6 +250,7 @@ class CommandDetect extends AbstractController {
 					{
 						$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
 						echo "\r\nVersion : ".$version."\r\n";
+						$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
 						$this->boardType = hexdec(substr($data, 32, 4));
 						$this->indexToGet = hexdec(substr($data, 36, 8));
 						$deviceObj["Device Version"] = $version;

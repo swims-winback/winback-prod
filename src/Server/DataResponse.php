@@ -198,15 +198,14 @@ class DataResponse extends Utils
             $Response = $this->header.$directoryListString;
             return $Response;
         }
-        /*
-        else {
-            $directoryListString='';
-            $dataSize=strlen($directoryListString);
-            $this->header[4]=chr(intval($dataSize/256));
-            $this->header[5]=chr($dataSize%256);
+        else {            
+            //$dataSize=strlen($directoryListString);
+            $directoryListString = false;
+            $this->header[4]=chr(0);
+            $this->header[5]=chr(0);
             $Response = $this->header.$directoryListString;
+            return $Response;
         }
-        */
 
 	}
 
