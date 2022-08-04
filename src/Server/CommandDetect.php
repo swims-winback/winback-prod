@@ -14,7 +14,6 @@ class CommandDetect extends AbstractController {
     
     private $command = ""; // str of 2 letters (ex: DE) in 20 & 21 position to get from data received
     private $indexToGet; // index of 8 digits to get from data received
-    //private $fileName = "WLE256_10_2_v1.3.bin";
     private $reqId; // int of 2 digits (ex: 81) in 22 & 23 position to get from data received
 	private $boardType; // software type (ex: sport, fitness, comfort), 2 by default for the moment
     private $path;
@@ -170,16 +169,18 @@ class CommandDetect extends AbstractController {
 				//$utils = new Utils($deviceType);
 				if($command === 'DE' || $command === 'DD' || $command === 'DC')
 				{
-					$this->boardType = hexdec(substr($data, 32, 4));
+					$boardType = hexdec(substr($data, 32, 4));
+					$deviceObj["boardType"] = $boardType;
 				}
 				else
 				{
-					$this->boardType = 2;
+					$boardType = 2;
+					$deviceObj["boardType"] = $boardType;
 				}
 
-				$fileName = $dataResponse->checkFile($deviceType, $this->boardType);
+				//$fileName = $dataResponse->checkFile($deviceType, $boardType);
 				//echo "\r\nfilename : ".$fileName."\r\n";
-				$deviceObj["Filename"] = $fileName;
+				//$deviceObj["Filename"] = $fileName;
 				$forcedUpdate = 0;
 				$deviceObj["Forced Update"] = $forcedUpdate;
 
@@ -251,7 +252,7 @@ class CommandDetect extends AbstractController {
 						$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
 						echo "\r\nVersion : ".$version."\r\n";
 						$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
-						$this->boardType = hexdec(substr($data, 32, 4));
+						$boardType = hexdec(substr($data, 32, 4));
 						$this->indexToGet = hexdec(substr($data, 36, 8));
 						$deviceObj["Device Version"] = $version;
 						$deviceObj["Index"] = $this->indexToGet;
@@ -304,6 +305,7 @@ class CommandDetect extends AbstractController {
 		$reqId = $deviceObj["Request Id"];
 		$this->indexToGet = $deviceObj["Index"];
 		$forcedUpdate = $deviceObj["Forced Update"];
+		$boardType = $deviceObj["boardType"];
 
 		$dbHandle = $request->dbConnect();
 		//echo "COMMAND ".$command;
@@ -347,7 +349,7 @@ class CommandDetect extends AbstractController {
 			$request->setForced($sn, $forcedUpdate);
 		}
 		//var_dump($deviceInfo);
-       	if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($this->boardType<32768))
+       	if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768))
 		{	
 				
 			$versionData = explode(".",$deviceInfo[VERSION_UPLOAD],8);
@@ -359,7 +361,7 @@ class CommandDetect extends AbstractController {
 			echo "revisionString: ".$revisionString."\n";
 			*/
 			//$output->writeln("\r\nVersion data: ".$versionData."\r\n");
-			$fileName = stFILENAME."_".$deviceType."_".$this->boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
+			$fileName = stFILENAME."_".$deviceType."_".$boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
 			//echo $fileName."\n";
 			$fileArch = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName;
 			$fileUp = PACK_PATH.deviceTypeArray[$deviceType].$fileName;
@@ -386,6 +388,7 @@ class CommandDetect extends AbstractController {
 			echo "filename after checkfile: ".$fileName;
 			$dataResponse->writeCommandLog($sn, $deviceType, "filename after checkfile: ".$fileName);
 		}
+		$deviceObj["Filename"] = $fileName;
 		$dataResponse->getFileContent($deviceType, $fileName);
 		echo "filename after dataresponse: ".$fileName;
 		$dataResponse->writeCommandLog($sn, $deviceType, "filename after dataresponse: ".$fileName);
@@ -430,9 +433,16 @@ class CommandDetect extends AbstractController {
 				}
 				
 				echo "\r\nfilename: ".$fileName."\r\n";
-                $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
+				$startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset);
 				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $dataResponse->getFileContent($deviceType, $fileName), $forcedUpdate);
+				/*
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename: ".$fileName."\r\n");
+				$fileContent = $dataResponse->getFileContent($deviceType, $fileName);
+                $startOffset = $dataResponse->getIndexForImg($fileContent);
+				$sizeContent = $dataResponse->getCRCAutoDetect($startOffset, $fileContent);
+				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $fileContent, $forcedUpdate);
+				*/
 				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
                 $response = $dataResponse->getAutoDetectResponse($tempResponse);
                 break;
@@ -498,7 +508,6 @@ class CommandDetect extends AbstractController {
 				//echo '....'.$this->indexToGet.'.....';
 				break;	
 
-			///*
 			case "DC": //Download BOARD //Download Version
 				
 				if (!$fileName) {
@@ -517,12 +526,10 @@ class CommandDetect extends AbstractController {
 				$output->writeln("\r\nDC - TX data : ".bin2hex($response)."\r\n");
 				$output->writeln("\r\n"."TX data size: ".strlen($response)."\r\n");
 				break;
-			//*/
 			case "DB": //Load & copy Logs
 				$logFile = $this->writeLog($sn, $deviceType);
 				$request->setLogFile($sn, $logFile);
 				$request->setConnect('1', $sn);
-			///*
 			case "D9":	//resend logs pointer
 				$newPointeur = $dataResponse->getPointeur($sn, $deviceType);
 				$request->setLog($sn, $newPointeur);
@@ -578,6 +585,7 @@ class CommandDetect extends AbstractController {
 				//echo "\n"."TX data: ".bin2hex($response);
 				break;
             case "F9": //Ready To Receive
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename: ".$fileName."\r\n");
 				$request->setConnect('1', $sn);
 				$request->setVersion($version, $sn);
 				$newPointeur = strval($request->getDevice($sn, LOG_POINTEUR));
