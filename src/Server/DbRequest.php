@@ -312,7 +312,7 @@ class DbRequest {
     function insertNewDevice(string $sn, $vers, $devType) : string
     {
         //$date = date("Y-m-d H:i:s");
-        $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '".$vers."', '0','0','0','0','0','".date("Y-m-d | H:i:s")."')";
+        $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','0','0','0','0','".date("Y-m-d | H:i:s")."')";
         return $req;
     }
     
