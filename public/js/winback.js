@@ -228,10 +228,12 @@ function startTest(action, sn, nameTouchTag, tagValue, trackerValue){
 //connect_command
 
 //document.addEventListener('click',function(e){
-let connectButton = document.getElementsByClassName('connect_command')
+let connectButton = document.getElementsByClassName('connect_command');
+
 for(let e of connectButton){
+	console.log(e);
 	//e.onclick = function() {
-	e.addEventListener("click", function(){
+	e.addEventListener("click", function(e){
 		console.log(e);
 		//if(e.target && e.target.id){
 			/*

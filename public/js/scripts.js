@@ -43,7 +43,8 @@ $(document).ready(function (){
           {    
             $(device).addClass('bg-orange btn-outline-orange')
             var deviceSn = $(device).data("title");
-            if (deviceSn) {
+            //console.log(document.getElementById(`c_sn_${deviceSn}`));
+            if (deviceSn && document.getElementById(`c_sn_${deviceSn}`)) {
               document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
             }
             

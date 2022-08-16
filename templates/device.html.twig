@@ -24,7 +24,7 @@
                             <tr class="h-100 w-100 align-middle" id="deviceTableTitle">
                                 <th scope="col"></th>
                                 <!--<th class="text-center">Serial Number <i class="fa-solid fa-arrow-up-a-z" id="sn" onclick=sortTable(0)></i></th>-->
-                                <th scope="col" class="h-100" data-sortable="true" data-field="sn">
+                                <th scope="col" class="h-100">
                                     <div class="h-100 d-flex justify-content-between input-group no-wrap text-center align-items-center">
                                         <span class="h-100 d-flex align-items-center">Serial Number</span>
                                         <span class="btn btn-light text-dark h-100 p-1" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
@@ -32,16 +32,16 @@
                                 
                                 </th>
                                 <th scope="col" class="text-center">Device Family</th>
-                                <th scope="col" class="text-center" data-sortable="true" data-field="version">Version</th>
+                                <th scope="col" class="text-center">Version</th>
                                 <th scope="col" class="text-center">Upload Version</th>
                                 <!--
                                 TODO Progress bar
                                 <th class="text-center">Download status</th>
                                 -->
                                 <th scope="col" class="text-center">Log files</th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col">Connect</th>
+                                <th scope="col" class="text-center">Forced</th>
+                                <th scope="col" class="text-center">Info</th>
+                                <th scope="col" class="text-center">Connect</th>
                             </tr>
                             <tr class="w-100 align-bottom">
                                 <!--
@@ -136,7 +136,7 @@
                                     
                                     <td class="text-center">
                                         {% if (device.deviceFamily == "BIOBACK" or device.deviceFamily == "RSHOCK" or device.deviceFamily == "CRYOBACK4") %}
-                                        <input class="btn {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %} connect_command" id="c_sn_{{device.sn}}" data-id="connect_{{device.id}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces">
+                                        <input class="btn connect_command {% if device.isActive == true %}bg-green btn-outline-green{% else %}bg-orange btn-outline-orange{% endif %}" id="c_sn_{{device.sn}}" data-id="connect_{{device.id}}" name='{{device.sn}}' type="button" value="Connect" data-bs-toggle="modal" data-bs-target="#testAcces">
                                         {% endif %}
                                         {#<input class="btn connect_command" id="c_sn_{{device.sn}}" name='{{device.sn}}' type="button" value="Connect" {% if device.isActive == true %}{% else %}{% endif %}>#}
                                     </td>
@@ -192,6 +192,7 @@
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
         table = document.getElementById("deviceTable");
         switching = true;
+        //console.log("hello");
         // Set the sorting direction to ascending:
         dir = "asc";
         while (switching) {
