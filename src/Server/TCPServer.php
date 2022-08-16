@@ -180,7 +180,6 @@ class TCPServer extends AbstractController
 		$request = new DbRequest();
 		$resultArray = $this->createServer();
 		$clients = $resultArray[0];
-		
 		//$clients = $this->createServer();
 		/*
 		$clientsInfo = $resultArray[1];
@@ -340,7 +339,28 @@ class TCPServer extends AbstractController
 								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 								
 								if (array_key_exists(current($clientsInfo)[0], $this->linkConnection)) {
-									echo 'Client already exists !';
+									//echo array_key_exists(current($clientsInfo)[0], $this->linkConnection);
+									//echo "\r\nClient ".current($clientsInfo)[0]." already exists in list of connected devices !\r\n";
+									//print_r($this->linkConnection);
+									//print_r($clientsInfo);
+									//echo "\r\nClients count ";
+									//print_r(count($clients));
+									//echo "\r\nClientsInfo count ";
+									//print(count($clientsInfo));
+									//echo "\r\ni value: ".$i."\r\n";
+									
+									if ($clientsInfo[$i][0]==current($clientsInfo)[0]) {
+										//print_r($clientsInfo[$i][0]);
+									}
+									
+									
+									//print_r(array_keys($clientsInfo, current($clientsInfo)[0]));
+									//echo count(array_keys($this->linkConnection, current($clientsInfo)[0]));
+									if (count(array_keys($this->linkConnection, current($clientsInfo)[0]))>0) {
+										$key = array_search(current($clientsInfo)[0], $this->linkConnection);
+										echo "\r\nClient has key: ".$key."\r\n";
+									}
+									
 								}
 								
 								
