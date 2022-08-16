@@ -429,8 +429,8 @@ class DataResponse extends Utils
     //function getResponseData(int $cmd, int $reqId, string $deviceType, $index) : string
     function getResponseData($fileContent='') : string
     {
-        echo "header: ".$this->header;
-        echo "fileContent: ".$fileContent;
+        //echo "header: ".$this->header;
+        //echo "fileContent: ".$fileContent;
         $response = $this->header.$fileContent;
 
         return $response;
