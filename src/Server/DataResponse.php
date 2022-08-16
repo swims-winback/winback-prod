@@ -90,7 +90,7 @@ class DataResponse extends Utils
         //$this->aIndex[1] = hexdec(bin2hex($this->fileContent[19]));
         $aIndex[0] = hexdec(bin2hex($fileContent[18]))*256;
         $aIndex[1] = hexdec(bin2hex($fileContent[19]));
-        $startOffset = $aIndex[0]+$aIndex[1];
+        $startOffset = $aIndex[0] + $aIndex[1];
         /*
         echo "\r\naIndex[0] : ".$aIndex[0]."\r\n";
         echo "\r\naIndex[1] : ".$aIndex[1]."\r\n";
@@ -98,6 +98,7 @@ class DataResponse extends Utils
         echo "\r\ngetIndexForImg function is working correctly !\r\n";
         echo "\r\n #################### \r\n";
         */
+        echo "\r\nstartOffset : ".$startOffset."\r\n";
         return $startOffset;
     }
     
@@ -337,10 +338,11 @@ class DataResponse extends Utils
 
     /* ############################# */
     
-    function getCRCAutoDetect(string $deviceType, $startOffset)
+    function getCRCAutoDetect(string $deviceType, $startOffset, $fileName)
+    //function getCRCAutoDetect($startOffset, $crcFileContent)
     {
         //echo "\r\nGetCRCAutoDetect...\r\n";
-        $fileName = $this->checkFile($deviceType, $boardType = '2');
+        //$fileName = $this->checkFile($deviceType, $boardType = '2');
         $crcFileContent = $this->getFileContent($deviceType, $fileName);
         $fileContentCRC = substr($crcFileContent, $startOffset, strlen($crcFileContent) - $startOffset);
         $sizeContent = 0;
@@ -348,12 +350,23 @@ class DataResponse extends Utils
             $sizeContent = $sizeContent + (hexdec(bin2hex($fileContentCRC[$parse])));
         }
         //$sizeContent = chr($sizeContent);
+        echo "sizeContent : ".chr($sizeContent);
         //echo "size content type: ".gettype($sizeContent);
         return chr($sizeContent);
     }
 
+    function initAutoDetectResponse($nbData = 39){
+        for($aInit = 0; $aInit < $nbData; $aInit++){
+            $aResponse[$aInit] = chr(0);
+        }
+        return $aResponse;
+    }
+
+    /**
+     * Fill tempResponse with elements in fileContent
+     */
     function autoDetectBody(string $sizeContent, $fileContent, $forced = 0){
-        //$aResponse = $this->initAutoDetectResponse(); // Init aResponse content
+        $aResponse = $this->initAutoDetectResponse(); // Init aResponse content
         //$fileContent = $this->getContentFromIndex($deviceType, $fromIndex);
         //$fileContent = $this->getFileContent($deviceType);
 
@@ -403,12 +416,12 @@ class DataResponse extends Utils
         return $aResponse;
 	}
 
+    /**
+     * create final response with header & tempResponse
+     */
     function getAutoDetectResponse($aResponse){
         $response =  $this->header;
         $response .= implode('', $aResponse);
-        
-        //echo "\r\ngetAutoDetectResponse Response size : ".strlen($response)."\r\n";
-        //echo "\r\ngetAutoDetectResponse Response : ".$response."\r\n";
         return $response;
 
     }
@@ -416,6 +429,8 @@ class DataResponse extends Utils
     //function getResponseData(int $cmd, int $reqId, string $deviceType, $index) : string
     function getResponseData($fileContent='') : string
     {
+        echo "header: ".$this->header;
+        echo "fileContent: ".$fileContent;
         $response = $this->header.$fileContent;
 
         return $response;
@@ -433,10 +448,8 @@ class DataResponse extends Utils
         $aResponse = array_fill(0, 11, chr(0)); //Init response array filled with n zeros
         $aResponse2 = $aResponse;
         $pointer = str_split($pointer);
-        //echo $pointer[0];
 		$ptLength = count($pointer);
         $size = count($pointer);
-        //echo "\r\nptLength = {$ptLength}\r\n";
         
 		$parse = 0;
 		for($i = $ptLength - 1; $i >= 0 ; $i--){
