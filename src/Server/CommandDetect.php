@@ -231,7 +231,6 @@ class CommandDetect extends AbstractController {
 							$length++;
 						}
 						$this->ptLogSave = $length;
-						//echo "\r\nlogTxt = ".$this->logTxt;
 					}
 					else if($command === "F9" || $command === "FE" || $command === "FA")
 					{
@@ -355,14 +354,9 @@ class CommandDetect extends AbstractController {
 			$versionData = explode(".",$deviceInfo[VERSION_UPLOAD],8);
 			$versionString = str_pad($versionData[0], 3 , "0" , STR_PAD_LEFT);
 			$revisionString = str_pad($versionData[1], 3 , "0" , STR_PAD_LEFT);
-			//var_dump($versionData);
-			/*
-			echo "versionString: ".$versionString."\n";
-			echo "revisionString: ".$revisionString."\n";
-			*/
-			//$output->writeln("\r\nVersion data: ".$versionData."\r\n");
 			$fileName = stFILENAME."_".$deviceType."_".$boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
-			//echo $fileName."\n";
+			echo "\r\n".$deviceInfo[VERSION_UPLOAD]."\r\n";
+			echo "\r\nFilename is: ".$fileName."\r\n";
 			$fileArch = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName;
 			$fileUp = PACK_PATH.deviceTypeArray[$deviceType].$fileName;
             $cmpFile = $dataResponse->compareFile($fileArch, $fileUp);
@@ -387,6 +381,7 @@ class CommandDetect extends AbstractController {
 			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 			echo "filename after checkfile: ".$fileName;
 			$dataResponse->writeCommandLog($sn, $deviceType, "filename after checkfile: ".$fileName);
+			//$request->updateData($sn, );
 		}
 		$deviceObj["Filename"] = $fileName;
 		$dataResponse->getFileContent($deviceType, $fileName);
