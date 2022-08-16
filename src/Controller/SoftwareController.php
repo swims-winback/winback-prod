@@ -184,6 +184,9 @@ class SoftwareController extends AbstractController
                         if (!file_exists(UPLOAD_PATH."softwares/".$deviceType.$file)) {
                             copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
                         }
+                        if (!file_exists(PACK_ARCH_PATH.$deviceType.$file)) {
+                            copy(PACK_PATH.$deviceType.$file, PACK_ARCH_PATH.$deviceType.$file);
+                        }
                         $this->initSoftwareInDB($name=$file, $devType=$deviceTypeId, $version, $date=date("Y-m-d | H:i:s"), $request);
                     }
                 }
