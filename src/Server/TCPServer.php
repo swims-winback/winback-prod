@@ -672,7 +672,7 @@ class TCPServer extends AbstractController
 									}
 								}
 								//var_dump($this->linkConnection);
-								$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$response."\r\n");
+								//$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$response."\r\n");
 								//echo "Response: ".bin2hex($response);
 								//var_dump($this->linkConnection[$sn][0]);
 								socket_write($this->linkConnection[$sn][0], $response);
