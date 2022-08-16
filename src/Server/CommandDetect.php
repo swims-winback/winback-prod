@@ -453,7 +453,7 @@ class CommandDetect extends AbstractController {
 					$tempResponse = $dataResponse->getResponseData($fileContent)
 				);
 				//echo "\r\n"."TX data : ".bin2hex($response)."\r\n";
-				$output->writeln("\r\nDC - TX data : ".bin2hex($response)."\r\n");
+				//$output->writeln("\r\nDC - TX data : ".bin2hex($response)."\r\n");
 				$output->writeln("\r\n"."TX data size: ".strlen($response)."\r\n");
 				break;
 			case "DB": //Load & copy Logs
