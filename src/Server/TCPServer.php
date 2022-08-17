@@ -348,18 +348,20 @@ class TCPServer extends AbstractController
 									//echo "\r\nClientsInfo count ";
 									//print(count($clientsInfo));
 									//echo "\r\ni value: ".$i."\r\n";
-									
+									/*
 									if ($clientsInfo[$i][0]==current($clientsInfo)[0]) {
 										//print_r($clientsInfo[$i][0]);
 									}
-									
+									*/
 									
 									//print_r(array_keys($clientsInfo, current($clientsInfo)[0]));
 									//echo count(array_keys($this->linkConnection, current($clientsInfo)[0]));
+									/*
 									if (count(array_keys($this->linkConnection, current($clientsInfo)[0]))>0) {
 										$key = array_search(current($clientsInfo)[0], $this->linkConnection);
 										echo "\r\nClient has key: ".$key."\r\n";
 									}
+									*/
 									
 								}
 								
