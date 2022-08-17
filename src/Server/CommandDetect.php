@@ -183,7 +183,7 @@ class CommandDetect extends AbstractController {
 
 				if(isset($data[1]))
 				{
-					$output->writeln("\r\n"."RX data : ".$data."\r\n");
+					//$output->writeln("\r\n"."RX data : ".$data."\r\n");
 					// Récupérer les 20 premiers characters qui correspondent au sn
 					if(!empty($data[0]))
 					{
@@ -287,6 +287,7 @@ class CommandDetect extends AbstractController {
 		$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
 		$dbHandle = $request->dbConnect();
 		if($dbHandle){
+			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
 			$deviceTypeId = $request->getDeviceType($deviceType, ID); // get deviceType id from deviceType table to put in device table
             $deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId);
 			$ipAddr = $ipAddr;
@@ -403,6 +404,7 @@ class CommandDetect extends AbstractController {
 				$indexToGet = hexdec(substr($data, 36, 8));
 				$request->setConnect('1', $sn);
 				//echo("\r\nVersion: ".$version."\r\n");
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
 				$request->setVersion($version, $sn);
 				
 				// TODO set version upload
