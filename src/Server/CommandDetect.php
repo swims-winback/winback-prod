@@ -173,13 +173,13 @@ class CommandDetect extends AbstractController {
 				$forcedUpdate = 0;
 				$deviceObj["Forced Update"] = $forcedUpdate;
 
-				/*
+				
 				if($command ==='D8' || $command === 'CE')
 				{
 					$indexToGet = hexdec(substr($data, 24, 8));
 					$deviceObj["Index"] = $indexToGet;
 				}
-				*/
+				
 
 				if(isset($data[1]))
 				{
@@ -230,22 +230,22 @@ class CommandDetect extends AbstractController {
 							$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
 						}
 					}
-					/*
+					
 					else if($command === "F5" || $command === "F6" || $command === "F7" || $command === "F8" || $command === "FC" || $command === "FD")
 					{
 						$indexToGet = hexdec(substr($data, 24, 8));
 						$deviceObj["Index"] = $indexToGet;
 					}
-					*/
+					
 					else if($command === "DE" || $command === "DD" || $command === "DC")
 					{
 						$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
 						echo "\r\nVersion : ".$version."\r\n";
 						$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
 						$boardType = hexdec(substr($data, 32, 4));
-						//$indexToGet = hexdec(substr($data, 36, 8));
+						$indexToGet = hexdec(substr($data, 36, 8));
 						$deviceObj["Device Version"] = $version;
-						//$deviceObj["Index"] = $indexToGet;
+						$deviceObj["Index"] = $indexToGet;
 					}
 					else if($command === "CF" || $command === "CE")
 					{
@@ -280,7 +280,7 @@ class CommandDetect extends AbstractController {
 		$deviceType = $deviceObj["Device Type"];
 		$command = $deviceObj["Command"];
 		$reqId = $deviceObj["Request Id"];
-		//$indexToGet = $deviceObj["Index"];
+		$indexToGet = $deviceObj["Index"];
 		$forcedUpdate = $deviceObj["Forced Update"];
 		$boardType = $deviceObj["boardType"];
 
@@ -355,7 +355,7 @@ class CommandDetect extends AbstractController {
             case "F6": //prog
 				//$indexToGet = hexdec(substr($data, 24, 8));
             case "F5": //UART_CMD_UPDATE_SUBPROG4
-				$indexToGet = hexdec(substr($data, 24, 8));
+				//$indexToGet = hexdec(substr($data, 24, 8));
 				// if filename has not been defined by upload version
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
@@ -367,7 +367,7 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getResponseData($fileContent);
                 break;
             case "FD": //UART_CMD_UPDATE_PICTURES
-				$indexToGet = hexdec(substr($data, 24, 8));
+				//$indexToGet = hexdec(substr($data, 24, 8));
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
@@ -401,7 +401,7 @@ class CommandDetect extends AbstractController {
 				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFE - TX : ".bin2hex($response)."\r\n");
                 break;
 		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
-				$indexToGet = hexdec(substr($data, 36, 8));
+				//$indexToGet = hexdec(substr($data, 36, 8));
 				$request->setConnect('1', $sn);
 				//echo("\r\nVersion: ".$version."\r\n");
 				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
@@ -450,7 +450,7 @@ class CommandDetect extends AbstractController {
 				break;	
 
 			case "DC": //Download BOARD //Download Version
-				$indexToGet = hexdec(substr($data, 36, 8));
+				//$indexToGet = hexdec(substr($data, 36, 8));
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
@@ -499,7 +499,7 @@ class CommandDetect extends AbstractController {
 			//TODO work on getPubsFile in dataResponse !
 			///*
 		    case "D8": //Download PUBS
-				$indexToGet = hexdec(substr($data, 24, 8));
+				//$indexToGet = hexdec(substr($data, 24, 8));
 				$size = (filesize(PUB_PATH.deviceTypeArray[$deviceType]."PUBS.bin")-$indexToGet);
 				if($size>4096)$size=4096;
 				//echo '....'.$this->indexToGet.'.....'.$size.'.....';
@@ -519,7 +519,7 @@ class CommandDetect extends AbstractController {
 				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);//$this->Response[$i]+=$getserverCesarMatrixArray[$i%214];				
 				break;
 			case "CE": //Download file
-				$indexToGet = hexdec(substr($data, 24, 8));		
+				//$indexToGet = hexdec(substr($data, 24, 8));		
 				//echo "\n"." CE data : ".$this->indexToGet." ".$this->path;
 				$size=(filesize(LIB_PATH.deviceType[$deviceType].$this->path)-$indexToGet);
 				if($size>4096)$size=4096;
