@@ -7,7 +7,26 @@
         <section id="softwareSearch">
             <h1 class="text-center mt-4 mb-4">Software</h1>
             <!-- ===== NEW SOFTWARE ===== -->
-            <a class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange mb-4 w-50" href="{{path('software_add')}}">New Software</a>
+            <a class="btn shadow-1 bg-orange btn-outline-orange floatingBtn" 
+            href="{{path('software_add')}}"
+            style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999; padding: 1em;" 
+            type="button">
+                <i class="fa-solid fa-plus"></i>
+            </a>
+            <!--
+            <button href="" id="floatingBtn" class="btn bg-orange btn-outline-orange floatingBtn" 
+            style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
+            type="button"
+            data-bs-target="#modal_upload_soft"
+            data-id="{{device.id}}"
+            data-title="{{device.sn}}"
+            data-bs-toggle="modal">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            -->
+            <!-- ===== UPLOAD MODALS ===== -->
+            {% include 'software/upload_modals.html.twig' %}
+
             <!-- ===== ALERT MESSAGES ===== -->
             {% for message in app.flashes('errorSoftware') %}
                 <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
