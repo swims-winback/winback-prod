@@ -122,6 +122,7 @@ class SoftwareController extends AbstractController
             //return $this->redirectToRoute('software');
         }
 
+        //$uploadform = $this->addSoftware($request, $dbRequest, $doctrine, $fileUploader, $deviceFamilyRepository);
         $this->addDirectorySoftware($dbRequest);
 
         return $this->render('software.html.twig', [
@@ -130,6 +131,7 @@ class SoftwareController extends AbstractController
             //'form' => $form,
             'families' => $families,
             'searchform' => $searchform->createView(),
+            //'uploaform' => $uploadform,
         ]);
     }
 
@@ -326,12 +328,9 @@ class SoftwareController extends AbstractController
         }
         */
         if (file_exists($this->getParameter('softwares_directory').'/'.$deviceType."/".$name)) {
-            //var_dump($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
-            //$filesystem->remove(['softwares_directory'.'/'.$deviceType."/".$name]);
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
         //unlink(PACK_PATH.$deviceType.$name);
-        //TODO include deviceType in function
 
         $em = $doctrine->getManager();
         $em->remove($software);

@@ -24,7 +24,7 @@ class DeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, Device::class);
     }
 
-
+    /*
     function searchDevice(DbRequest $dbRequest, $sn = '', $device='', $version=''){
         $whereExist = false;
         $where = '';
@@ -59,6 +59,7 @@ class DeviceRepository extends ServiceEntityRepository
         }
         return false;
     }
+    */
 
     /**
      * Recherche les devices en fonction du formulaire
@@ -110,6 +111,12 @@ class DeviceRepository extends ServiceEntityRepository
             $query->andWhere('d.forced = :forced')
             ->setParameter('forced', $forced);
         }
+        /*
+        if ($connected!=null) {
+            $query->andWhere('d.isActive = :connected')
+            ->setParameter('connected', $connected);
+        }
+        */
         //}
         //var_dump($category);
         return $query->getQuery()

@@ -17,7 +17,6 @@ class SearchDeviceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            //TODO uncomment
             
             ->add('value', SearchType::class, [
                 'label' => false,
@@ -36,8 +35,6 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
-            
-            // TODO uncomment
             
             ->add('version', SearchType::class, [
                 'label' => false,
@@ -59,7 +56,6 @@ class SearchDeviceType extends AbstractType
                 'required' => false,
             ])
             */
-            //TODO uncomment
             
             ->add('versionUpload', SearchType::class, [
                 'label' => false,
@@ -106,6 +102,19 @@ class SearchDeviceType extends AbstractType
                 'required' => false,
             ])
             
+            /*
+            ->add('connected', ChoiceType::class, [
+                'label' => 'Device Connected :',
+                'choices' => [
+                    'Connected' => true,
+                    'Not connected' => false,
+                ],
+                'attr' => [
+                    'class' => 'form-control w-25',
+                ],
+                'required' => false,
+            ])
+            */
             ->add('Search', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn bg-orange btn-outline-orange',

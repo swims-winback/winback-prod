@@ -463,9 +463,10 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getResponseData($fileContent)
 				);
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nIndex : ".$indexToGet."\r\n");
 				//echo "\r\n"."TX data : ".bin2hex($response)."\r\n";
 				//$output->writeln("\r\nDC - TX data : ".bin2hex($response)."\r\n");
-				$output->writeln("\r\n"."TX data size: ".strlen($response)."\r\n");
+				//$output->writeln("\r\n"."TX data size: ".strlen($response)."\r\n");
 				break;
 			case "DB": //Load & copy Logs
 				$logFile = $this->writeLog($sn, $deviceType);

@@ -60,6 +60,7 @@ class DeviceController extends AbstractController
                 $version = $search->get('version')->getData(),
                 $versionUpload = $search->get('versionUpload')->getData(),
                 $forced = $search->get('forced')->getData(),
+                //$connected = $search->get('connected')->getData(),
                 //var_dump($family),
             );
 
@@ -71,8 +72,6 @@ class DeviceController extends AbstractController
             }
             //return $this->redirectToRoute('device');
         }
-
-        //TODO old search form in notes
 
 
         // input text version form
@@ -86,7 +85,6 @@ class DeviceController extends AbstractController
         ->add('Save', SubmitType::class, [
             'attr' => [
                 'class' => 'w-auto text-center btn bg-orange fa-solid fa-check p-1',
-                //'class' => 'w-auto text-center btn bg-orange p-1',
             ],
             'label' => false,
         ])
@@ -97,30 +95,20 @@ class DeviceController extends AbstractController
         ->add('check', CheckboxType::class, [
             'attr' => [
                 'name' => 'checkbox',
-                //'id' => 'checkbox_0',
                 'type' => 'checkbox'
             ],
             'label' => false
         ])
         ->getForm();
         
-
-        //$devices = $deviceRepository->findAll();
         
         $form->handleRequest($request);
-        //if($form->isSubmitted() && $form->isValid()) {
         if($form->isSubmitted()) {
             
-            //for ($i=1; $i <= sizeof($devices); $i++) {
-            foreach ($devices as $device) {   
-                //$deviceId = $i;
-                print_r($device->getId());
-                //$device = $deviceRepository->findDeviceById($deviceId);
+            foreach ($devices as $device) {
                 $version_input = $form->get('versionInput')->getData();
                 $category = $device->getDeviceFamily();
                 $version_software = $softwareRepository->findSoftwareByVersion($version_input, $category);
-                //print_r($deviceId);
-                //$device->setSelected(($device->getSelected())?false:true);
                 if($device->getSelected() ) {
                     if ($version_software) {
                         $device->setVersionUpload($version_input);
