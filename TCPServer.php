@@ -52,7 +52,6 @@ class TCPServer extends AbstractController
 		
 
 		$msg = str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3)."\r\n==========   SERVER STARTED   ==========\r\n".str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3);
-		//$output = new StreamOutput(fopen('php://stdout', 'w'));
 		$output = new ConsoleOutput();
 		$output->writeln($msg);
 
@@ -139,15 +138,12 @@ class TCPServer extends AbstractController
 				//$output->writeln("\r\nRead type size : ".sizeof($read));
 				$newsock = socket_accept($this->sock);
 				socket_getpeername($newsock, $ip, $port);
-				//echo "\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n";
-				$output->writeln("\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n");
+				echo "\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n";
+				//$output->writeln("\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n");
 				$clients[] = $newsock; // put accepted socket in a client array
-				$key = array_search($this->sock, $read); 
-				$output->writeln("\r\nRead type size : ".sizeof($read));
+				$key = array_search($this->sock, $read);
 				unset($read[$key]);
 				$key = array_search($newsock, $clients);
-				$output->writeln("\r\nRead type size : ".sizeof($read));
-				$output->writeln("\r\nClients type size : ".sizeof($clients));
 				$clientsInfo[$key][0] = "sn unknown";
 				$clientsInfo[$key][1] = "{$ip} : {$port}";
 				$clientsInfo[$key][2] = hrtime(true)+$this->timeOut;
@@ -158,59 +154,34 @@ class TCPServer extends AbstractController
 				*/									   
 				
 				//echo "\n"."There are ".count($clients)." client(s) connected to the server\n";
-				//$sockData = socket_read($newsock, 4096, PHP_BINARY_READ) or die("Could not read input\n");
-				//echo "\r\nData : ".$sockData;
 			}
-			
-			$time_start = microtime(true);
-			$memory_start = memory_get_usage(true);
 
 			// loop through all the clients that have data to read from
-			//echo " readsock length : ".sizeof($read);
-
-			//TODO if read > 1 -->
-			$output->writeln("\r\nRead type : ".gettype($read));
-			$output->writeln("\r\nRead type size : ".sizeof($read));
 
 			foreach ($read as $read_sock)
 			{
-				//$output->writeln("\r\nRead type : ".gettype($read));
-				$output->writeln("\r\nReadSock type : ".gettype($read_sock));
 				// read until newline or 1024 bytes
 				// socket_read while show errors when the client is disconnected, so silence the error messages
 				$data = @socket_read($read_sock, 4096, PHP_BINARY_READ) or die("Could not read input\n");
-				//$task = new commandDetect();
 				$request = new DbRequest();
-				//$dataResponse = new dataResponse($deviceType);
-				$output->writeln("\r\nData type : ".gettype($data));
 				
 				//=> If data exists
 				if (!empty($data))
 				{
 					reset($clientsInfo);
-					/*
-					echo "\r\n##################################################\r\n";
-					echo $data[20]!=0&&$data[21]!=0? "\r\n********************* CONNECTED LIST : ".$data[20].$data[21]." *****************************\r\n": "\r\n********************* Connected list".""."*****************************\r\n";
-					echo "\r\n##################################################\r\n";
-					*/
 					//$output->writeln($data[20]!=0&&$data[21]!=0? "\r\n********************* CONNECTED LIST : ".$data[20].$data[21]." *****************************\r\n": "\r\n********************* Connected list".""."*****************************\r\n");
 					$output->writeln("\r\n********************* Connected list *****************************\r\n");
 					//=> Initiate client info (id, sn, ip, time) and update it at each iteration
 					for($i=1; $i<count($clients); $i++){
 						next($clientsInfo);
 						//echo "\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n";
-						//TODO ToDelete: echo "\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : {$ip} | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n";
 						$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 					}
-					//$task = new commandDetect();
+
 					//=> if no commands are returned from data device
-					
-					// TODO uncomment
-					
 					if(!$this->dataToTreat($data)) //=> msg to Device
 					{	
 						//echo "\r\n{$ip} send {$data} from {$read_sock} to ?? with SN ".$clientsInfo[$key][0]."\r\n";
-						//echo "\r\nData length : ".strlen($data)."\r\n"; // check data length
 						$output->writeln("\r\nData length : ".strlen($data)."\r\n");
 						if(($data[0] == 'W') && (strlen($data) == 20)) 
 						{
@@ -296,32 +267,31 @@ class TCPServer extends AbstractController
 						$key = array_search($read_sock, $clients);			
 						$clientsInfo[$key][2] = hrtime(true)+$this->timeOut;
 						//echo "\r\n".date("Y-m-d H:i:s | ")."Msg received with IP: {$ip} | SN: ".$clientsInfo[$key][0]." | \r\n ".$key." | Command : {$data[20]}{$data[21]} | RX : ".$data."\r\n"; //{$data}
+						// TODO timer
+						
 						$output->writeln("\r\n".date("Y-m-d H:i:s | ")."Msg received with IP: {$ip} | SN: ".$clientsInfo[$key][0]." | \r\n ".$key." | Command : {$data[20]}{$data[21]} | RX : ".$data."\r\n");
 						if(substr($data, 0, 1) == 'W'){ // Verify that data comes from a device (all devices start with W)
+							$time_start = microtime(true);
 							$task = new CommandDetect();
 							$sn = substr($data, 0, 20);
 							$deviceType = hexdec($data[3].$data[4]);
-							//echo "Device Type ".$deviceType;
-							// TODO Uncomment to test function
-							
 							
 							$clientsInfo[$key][0] = $sn; // Show serial number in terminal
 
 							$dataResponse = new DataResponse();
-							//$utils = new Utils($deviceType);
-							//$device = $task->getDeviceVariables($data, $dataResponse);
-							//$deviceCommand = $device["Command"];
 							$deviceCommand = $data[20].$data[21];
 
 							$response = $task->start($data, $ip);
-							//$cmdRec = $data[20].$data[21];
-							
-							//echo $deviceCommand." ".$cmdRec;
 							
 							$affResponse = bin2hex($response);
 							$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : {$affResponse} \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 							//echo "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n";
 							$output->writeln("\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
+							$time_end = microtime(true);
+							$execution_time = ($time_end - $time_start);
+							echo "\r\n================= Total Execution Time: ".($execution_time*1000)." Milliseconds ============\r\n";
+							//$output->writeln("\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n");
+							$dataResponse->writeCommandLog($sn, $deviceType, "\r\n================= Total Execution Time: ".($execution_time*1000)." Milliseconds ============\r\n");
 							//$dataResponse->writeLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 							//echo "\r\n".date("Y-m-d H:i:s | ")."Msg send : \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n";
 
@@ -371,14 +341,14 @@ class TCPServer extends AbstractController
 
 			} 
 
-			$memory_end = memory_get_usage(true);
-			$time_end = microtime(true);
-			$execution_time = ($time_end - $time_start);
+			//$memory_end = memory_get_usage(true);
+			//$time_end = microtime(true);
+			//$execution_time = ($time_end - $time_start);
 			//echo "\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n";
-			$output->writeln("\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n");
-			$execution_memory = ($memory_end - $memory_start);
+			//$output->writeln("\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n");
+			//$execution_memory = ($memory_end - $memory_start);
 			//echo "\r\nTotal Execution Memory: ".($execution_memory)." \r\n";
-			$output->writeln("\r\nTotal Execution Memory: ".($execution_memory)." \r\n");
+			//$output->writeln("\r\nTotal Execution Memory: ".($execution_memory)." \r\n");
 			// end of reading foreach
 		}
 		// close the listening socket
