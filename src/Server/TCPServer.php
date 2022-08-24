@@ -11,6 +11,8 @@ use App\Server\DbRequest;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 //use App\Class\DbRequest;
 
@@ -192,7 +194,7 @@ class TCPServer extends AbstractController
 		while (true)
 		{
 			$time_start3 = microtime(true);
-			echo ("-----------AAAAAAAAAAAAAAAAAAAAA-----------");
+			//echo ("-----------AAAAAAAAAAAAAAAAAAAAA-----------");
 			// get a list of all the clients that have data to be read from
 			// if there are no clients with data, go to next iteration
 			//echo current($clientsInfo[0]);
@@ -604,6 +606,19 @@ class TCPServer extends AbstractController
 								
 								//$response = $task->start($data, $ip);
 								$time_start_command = microtime(true);
+								// TODO symfony process
+								/*
+								$process = new Process([$task->start($data, $clientsInfo[$key][3])]);
+								$process->run();
+
+								// executes after the command finishes
+								if (!$process->isSuccessful()) {
+									throw new ProcessFailedException($process);
+								}
+
+								echo $process->getOutput();
+								*/
+								//TODO $response = $process->getOutput();
 								$response = $task->start($data, $clientsInfo[$key][3]);
 								$time_end_command = microtime(true);
 								$execution_time_command = ($time_end_command - $time_start_command);
@@ -613,11 +628,10 @@ class TCPServer extends AbstractController
 								//echo $deviceCommand." ".$cmdRec;
 								
 								$affResponse = bin2hex($response);
-								//TODO 
 								$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".$affResponse." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 								//echo "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n";
 								echo "\r\n".$deviceCommand."\r\n";
-								//TODO $output->writeln("\r\nSN : ".$clientsInfo[$key][0]."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$deviceCommand." from server");
+								$output->writeln("\r\nSN : ".$clientsInfo[$key][0]."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$deviceCommand." from server");
 								//$output->writeln("\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 								//echo "\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n";
 								//$output->writeln("\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n");

@@ -347,6 +347,20 @@ class DbRequest {
             return false;
         }
     }
+
+    function setDeviceData($sn, $version, $logFile){
+		$where = SN."='$sn'";
+        //$req = $this->update($column, $value, DEVICE_TABLE, $whereCond);
+        $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$version."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."'";
+        if(!empty($where)){
+            $req .= " WHERE $where";
+        }
+        
+        //return $req;
+        $res = $this->sendRq($req);
+
+	}
+
         
     function getIpAddrFromSn($sn){
         $whereCondition = SN."='".$sn."'";

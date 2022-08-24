@@ -391,19 +391,36 @@ class CommandDetect extends AbstractController {
                 break;
 		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
 				//$indexToGet = hexdec(substr($data, 36, 8));
-				$request->setConnect('1', $sn);
-				$logFile = LOG_PATH.deviceTypeArray[$deviceType].trim($sn)."txt";
-				$request->setLogFile($sn, $logFile);
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
-				$request->setVersion($version, $sn);
+				$time_start4 = microtime(true);
+				$logFile = trim($sn).".txt";
+				$request->setDeviceData($sn, $version, $logFile);
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-a: ".($execution_time4*1000)." Milliseconds\r\n";
+
+				$time_start4 = microtime(true);
 				if (!isset($fileName)) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-b: ".($execution_time4*1000)." Milliseconds\r\n";
+
+				$time_start4 = microtime(true);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$tempResponse = $dataResponse->getResponseData($fileContent);
-				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse);
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-c: ".($execution_time4*1000)." Milliseconds\r\n";
 
+				$time_start4 = microtime(true);
+				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse);
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-d: ".($execution_time4*1000)." Milliseconds\r\n";
+
+				$time_start4 = microtime(true);
 				$tempResponse[37] = $forcedUpdate;
 				//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
 				$response = $dataResponse->getDate($tempResponse);
@@ -413,14 +430,27 @@ class CommandDetect extends AbstractController {
 				$response[63] = chr($pinCode/256);
 				$response[64] = chr($pinCode%256);
 				$commentsString="Update version \nMaj touch and go";
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-e: ".($execution_time4*1000)." Milliseconds\r\n";
+
+				$time_start4 = microtime(true);
 				for($i = 0; $i < strlen($commentsString) ; $i++)
 				{				
 					$response[70 + $i] = $commentsString[$i];
 				}
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-f: ".($execution_time4*1000)." Milliseconds\r\n";
+
+				$time_start4 = microtime(true);
 				for($i=6; $i<strlen($response); $i++)
 				{
 					$response[$i] = chr(hexdec(bin2hex($response[$i])) + $this->getserverCesarMatrixTxArray[($i-6)%214]);
-				}	
+				}
+				$time_end4 = microtime(true);
+				$execution_time4 = ($time_end4 - $time_start4);
+				echo "\r\nTotal Execution Time DE-g: ".($execution_time4*1000)." Milliseconds\r\n";	
 				//echo("\r\nDE - TX data : ".bin2hex($response)."\r\n");
 				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDE - TX data : ".bin2hex($response)."\r\n");
 				break;	
@@ -462,18 +492,9 @@ class CommandDetect extends AbstractController {
 				$time_start4 = microtime(true);
 				//$time_start4 = microtime(true);
 				$logFile = $this->writeLog($sn, $deviceType);
-				
 				$time_end4 = microtime(true);
 				$execution_time4 = ($time_end4 - $time_start4);
 				echo "\r\nTotal Execution Time 4-a: ".($execution_time4*1000)." Milliseconds\r\n";
-				/*
-				$time_start4 = microtime(true);
-				$request->setLogFile($sn, $logFile);
-				//$request->setConnect('1', $sn);
-				$time_end4 = microtime(true);
-				$execution_time4 = ($time_end4 - $time_start4);
-				echo "\r\nTotal Execution Time 4-b: ".($execution_time4*1000)." Milliseconds\r\n";
-				*/
 			case "D9":	//resend logs pointer
 				
 				//$time_start5 = microtime(true);
