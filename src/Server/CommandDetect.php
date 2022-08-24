@@ -120,8 +120,6 @@ class CommandDetect extends AbstractController {
 		$output = new ConsoleOutput();
 
 		if(!empty($data)){
-			
-			//$this->dataReceive = $data;
             if(isset($data[0])){
                 $command = (isset($data[20]) && isset($data[21]) !== "aa") ? $data[20].$data[21] : '';
 				// Get command in data received
@@ -170,9 +168,10 @@ class CommandDetect extends AbstractController {
 				//$fileName = $dataResponse->checkFile($deviceType, $boardType);
 				//echo "\r\nfilename : ".$fileName."\r\n";
 				//$deviceObj["Filename"] = $fileName;
+				
 				$forcedUpdate = 0;
 				$deviceObj["Forced Update"] = $forcedUpdate;
-
+				
 				
 				if($command ==='D8' || $command === 'CE')
 				{
@@ -227,7 +226,7 @@ class CommandDetect extends AbstractController {
 							$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
 							$deviceObj["Device Version"] = $version;
 							//echo "\r\nVersion : ".$version."\r\n";
-							$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
+							//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
 						}
 					}
 					
@@ -284,8 +283,6 @@ class CommandDetect extends AbstractController {
 		$forcedUpdate = $deviceObj["Forced Update"];
 		$boardType = $deviceObj["boardType"];
 
-		$time_start1 = microtime(true);
-
 		$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
 		$dbHandle = $request->dbConnect();
 		if($dbHandle){
@@ -297,13 +294,7 @@ class CommandDetect extends AbstractController {
             $request->setIpAddr($ipAddr, $sn);
 			$request->setUpdatedAt($sn, date("Y-m-d | H:i:s"));
         }
-		$time_end1 = microtime(true);
-		$execution_time1 = ($time_end1 - $time_start1);
-		echo "\r\nTotal Execution Time 1: ".($execution_time1*1000)." Milliseconds\r\n";
-
-		$time_start2 = microtime(true);
-		//TODO keep forced?
-		/*
+		
 		if(isset($deviceInfo[FORCED_UPDATE]) && (($deviceInfo[FORCED_UPDATE] === '1') || ($deviceInfo[FORCED_UPDATE] === 1)))
 		{
 			$forcedUpdate = 1;
@@ -314,7 +305,7 @@ class CommandDetect extends AbstractController {
 			$forcedUpdate = 0;
 			$request->setForced($sn, $forcedUpdate);
 		}
-		*/
+		
        	if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768))
 		{	
 				
@@ -331,9 +322,6 @@ class CommandDetect extends AbstractController {
                 return FALSE;
             }
         }
-		$time_end2 = microtime(true);
-		$execution_time2 = ($time_end2 - $time_start2);
-		echo "\r\nTotal Execution Time 2: ".($execution_time2*1000)." Milliseconds\r\n";
 		
 
 		//$fileName = $dataResponse->setFileName($fileName);
@@ -349,13 +337,13 @@ class CommandDetect extends AbstractController {
 		if(!isset($fileName)){
 			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 			//echo "filename after checkfile: ".$fileName;
-			$dataResponse->writeCommandLog($sn, $deviceType, "filename after checkfile: ".$fileName);
+			//$dataResponse->writeCommandLog($sn, $deviceType, "filename after checkfile: ".$fileName);
 		}
 		$deviceObj["Filename"] = $fileName;
 		
 		$dataResponse->getFileContent($deviceType, $fileName);
 		//echo "filename after dataresponse: ".$fileName;
-		$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename after dataresponse: ".$fileName."\r\n");
+		//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename after dataresponse: ".$fileName."\r\n");
 
         switch ($command) {
 			///*
@@ -397,7 +385,7 @@ class CommandDetect extends AbstractController {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
 				//echo "\r\nfilename: ".$fileName."\r\n";
-				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename: ".$fileName."\r\n");
+				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename: ".$fileName."\r\n");
 				$startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset, $fileName);
 				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $dataResponse->getFileContent($deviceType, $fileName), $forcedUpdate);
@@ -416,7 +404,7 @@ class CommandDetect extends AbstractController {
 				//$indexToGet = hexdec(substr($data, 36, 8));
 				$request->setConnect('1', $sn);
 				//echo("\r\nVersion: ".$version."\r\n");
-				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
+				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
 				$request->setVersion($version, $sn);
 				
 				// TODO set version upload
@@ -467,14 +455,28 @@ class CommandDetect extends AbstractController {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				} 
 				//$fileSize = strlen();
+				$time_start5 = microtime(true);
 				$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType, $fileName), $indexToGet);
+				$time_end5 = microtime(true);
+				$execution_time5 = ($time_end5 - $time_start5);
+				echo "\r\nTotal Execution Time step 1: ".($execution_time5*1000)." Milliseconds\r\n";
+
+				$time_start5 = microtime(true);
 				$fileContent = $fileContentArray[0];
 				$nbDataToSend = $fileContentArray[1];
-				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFile Size : ".$nbDataToSend."\r\n");
+				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFile Size : ".$nbDataToSend."\r\n"); //4096
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $nbDataToSend);
+				$time_end5 = microtime(true);
+				$execution_time5 = ($time_end5 - $time_start5);
+				echo "\r\nTotal Execution Time step 2: ".($execution_time5*1000)." Milliseconds\r\n";
+
+				$time_start5 = microtime(true);
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getResponseData($fileContent)
 				);
+				$time_end5 = microtime(true);
+				$execution_time5 = ($time_end5 - $time_start5);
+				echo "\r\nTotal Execution Time step 3: ".($execution_time5*1000)." Milliseconds\r\n";
 				//TODO $dataResponse->writeCommandLog($sn, $deviceType, "\r\nIndex : ".$indexToGet."\r\n");
 				//echo "\r\n"."TX data : ".bin2hex($response)."\r\n";
 				//$output->writeln("\r\nDC - TX data : ".bin2hex($response)."\r\n");
@@ -524,10 +526,7 @@ class CommandDetect extends AbstractController {
 				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDB - TX data : ".bin2hex($response)."\r\n");
 				//TODO $output->writeln("\r\n"."TX data size: ".strlen(bin2hex($response))."\r\n");
 				break;
-			//*/
 
-			//TODO work on getPubsData in dataResponse !
-			///*
 			case "DA": //Pubs ask date
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 9);
 				//$response = $dataResponse->getCesarMatrix($temporaryResponse);
@@ -536,10 +535,7 @@ class CommandDetect extends AbstractController {
 				);
 				//TODO $output->writeln("\r\n"."TX data size: ".strlen(bin2hex($response))."\r\n");
 				break;
-			//*/
 
-			//TODO work on getPubsFile in dataResponse !
-			///*
 		    case "D8": //Download PUBS
 				//$indexToGet = hexdec(substr($data, 24, 8));
 				$size = (filesize(PUB_PATH.deviceTypeArray[$deviceType]."PUBS.bin")-$indexToGet);
