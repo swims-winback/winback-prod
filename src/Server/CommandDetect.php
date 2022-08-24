@@ -322,17 +322,6 @@ class CommandDetect extends AbstractController {
                 return FALSE;
             }
         }
-		
-
-		//$fileName = $dataResponse->setFileName($fileName);
-        //$dataResponse->getAllFileContent($deviceType, $fileName);
-		/*
-		$dataResponse->fileContent(
-			$deviceType, 
-			$dataResponse->setFileName($fileName)
-		);
-		*/
-		//var_dump($fileName);
 
 		if(!isset($fileName)){
 			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
@@ -403,16 +392,13 @@ class CommandDetect extends AbstractController {
 		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
 				//$indexToGet = hexdec(substr($data, 36, 8));
 				$request->setConnect('1', $sn);
-				//echo("\r\nVersion: ".$version."\r\n");
+				$logFile = LOG_PATH.deviceTypeArray[$deviceType].trim($sn)."txt";
+				$request->setLogFile($sn, $logFile);
 				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion from deviceObj: ".$version."\r\n");
 				$request->setVersion($version, $sn);
-				
-				// TODO set version upload
 				if (!isset($fileName)) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				
-				//echo "\r\nfilename: ".$fileName."\r\n";
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$tempResponse = $dataResponse->getResponseData($fileContent);
@@ -424,29 +410,19 @@ class CommandDetect extends AbstractController {
 				$pinCode = intval($request->getDevice($sn, PIN_CODE));
 				//echo "\r\nPin code : ".$pinCode;
 				$response[62] = chr(intval($request->getDevice($sn, PUB_ACCEPTED)));
-				//$response[62] = chr(1);
 				$response[63] = chr($pinCode/256);
 				$response[64] = chr($pinCode%256);
-
-				//TODO comment
-				$commentsString="Update version \nMaj touch and go"; 
-				//echo $commentsString;
+				$commentsString="Update version \nMaj touch and go";
 				for($i = 0; $i < strlen($commentsString) ; $i++)
 				{				
 					$response[70 + $i] = $commentsString[$i];
 				}
-				//echo "DE Response: ".bin2hex($response);
 				for($i=6; $i<strlen($response); $i++)
 				{
 					$response[$i] = chr(hexdec(bin2hex($response[$i])) + $this->getserverCesarMatrixTxArray[($i-6)%214]);
-				}
-				//$this->$fileSize = bin2hex($this->Response[4].$this->Response[5].$this->Response[6].$this->Response[7]); 
-				//echo "\r\n"."TX data : ".$response."\r\n";	
+				}	
 				//echo("\r\nDE - TX data : ".bin2hex($response)."\r\n");
-				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDE - TX data : ".bin2hex($response)."\r\n");
-				//echo "\r\n"."TX data : ".$response."\r\n";
-				//echo "\r\n"."TX data : ".bin2hex($response)."\r\n";
-				//echo '....'.$this->indexToGet.'.....';
+				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDE - TX data : ".bin2hex($response)."\r\n");
 				break;	
 
 			case "DC": //Download BOARD //Download Version
@@ -486,16 +462,18 @@ class CommandDetect extends AbstractController {
 				$time_start4 = microtime(true);
 				//$time_start4 = microtime(true);
 				$logFile = $this->writeLog($sn, $deviceType);
-				/*
+				
 				$time_end4 = microtime(true);
 				$execution_time4 = ($time_end4 - $time_start4);
-				echo "\r\nTotal Execution Time 4: ".($execution_time4*1000)." Milliseconds\r\n";
-				*/
+				echo "\r\nTotal Execution Time 4-a: ".($execution_time4*1000)." Milliseconds\r\n";
+				/*
+				$time_start4 = microtime(true);
 				$request->setLogFile($sn, $logFile);
 				//$request->setConnect('1', $sn);
 				$time_end4 = microtime(true);
 				$execution_time4 = ($time_end4 - $time_start4);
-				echo "\r\nTotal Execution Time 4: ".($execution_time4*1000)." Milliseconds\r\n";
+				echo "\r\nTotal Execution Time 4-b: ".($execution_time4*1000)." Milliseconds\r\n";
+				*/
 			case "D9":	//resend logs pointer
 				
 				//$time_start5 = microtime(true);
