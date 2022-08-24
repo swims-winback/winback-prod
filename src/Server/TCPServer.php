@@ -498,6 +498,7 @@ class TCPServer extends AbstractController
 							}
 							else
 							{
+								//if((strlen($data) > 20))
 								$sn = substr($data, 0, 20);
 								//$deviceType = hexdec($data[3].$data[4]);
 								//$dataToSend = substr($data, 20);
