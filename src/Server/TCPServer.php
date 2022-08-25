@@ -34,7 +34,7 @@ class TCPServer extends AbstractController
 	private $linkConnection = [];
 	private $key1;
 	private $read;
-	private $time_array = [];
+	private $time_array = 0;
 
 	function __construct()
 	{
@@ -144,7 +144,7 @@ class TCPServer extends AbstractController
 
 		}
 		$logFile = date("Y-m-d").".txt";
-		if (file_exists(LOG_PATH."server/".$logFile) && filesize(LOG_PATH."server/".$logFile) < 40000) {
+		if (file_exists(LOG_PATH."server/".$logFile) && filesize(LOG_PATH."server/".$logFile) < 200000) {
 			$fd = fopen(LOG_PATH."server/".$logFile, "a+");
 			if($fd){
 				fwrite($fd, $logTxt);
@@ -315,7 +315,7 @@ class TCPServer extends AbstractController
 			//TODO 
 			foreach ($read as $read_sock)
 			{
-					//$time_start4 = microtime(true);
+					$time_start_device = microtime(true);
 					// read until newline or 1024 bytes
 					$data = @socket_read($read_sock, 4096, PHP_BINARY_READ);// or die("Could not read input\n");
 					/*
@@ -338,8 +338,10 @@ class TCPServer extends AbstractController
 					{
 						reset($clientsInfo);
 						//TODO 
+						$time_start_connected = microtime(true);
 						$output->writeln("\r\n********************* Connected list *****************************\r\n");
-						//TODO $this->writeServerLog("\r\n********************* Connected list *****************************\r\n");
+						//TODO 
+						$this->writeServerLog("\r\n********************* Connected list *****************************\r\n");
 						//=> Initiate client info (id, sn, ip, time) and update it at each iteration
 						//$request->setConnectAll(0);
 						// if sn or ip from db not in connected list
@@ -351,7 +353,8 @@ class TCPServer extends AbstractController
 							if (isset(current($clientsInfo)[1])) {
 								//TODO 
 								$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
-								//TODO $this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
+								//TODO 
+								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 								
 								if (array_key_exists(current($clientsInfo)[0], $this->linkConnection)) {
 									//echo array_key_exists(current($clientsInfo)[0], $this->linkConnection);
@@ -599,16 +602,20 @@ class TCPServer extends AbstractController
 								$response = $task->start($data, $clientsInfo[$key][3]);
 								$time_end_command = microtime(true);
 								$execution_time_command = ($time_end_command - $time_start_command)*1000;
-								echo "\r\nTotal Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
-								if ($execution_time_command > 70) {
-									$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 70 ms:".$execution_time_command."\r\n");
+								echo "\r\n".$deviceCommand.": Total Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
+								$this->writeServerLog("\r\n".current($clientsInfo)[0]." : ".$deviceCommand.": Execution Time Command: ".$execution_time_command." Milliseconds\r\n");
+								if ($execution_time_command > 30) {
+									$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 								}
-								/*
+								
 								if ($deviceCommand == "DC") {
 									//echo "\r\nTotal Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
 									$this->time_array += $execution_time_command;
 								}
-								*/
+								//print_r($time_array);
+								if ($this->time_array != 0) {
+									$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$this->time_array."\r\n");
+								}
 								/*
 								if (!isset($total_execution_time)) {
 									$total_execution_time = 0;
@@ -622,7 +629,6 @@ class TCPServer extends AbstractController
 								$affResponse = bin2hex($response);
 								$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".$affResponse." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 								//echo "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n";
-								echo "\r\n".$deviceCommand."\r\n";
 								$output->writeln("\r\nSN : ".$clientsInfo[$key][0]."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$deviceCommand." from server");
 								//$output->writeln("\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 								//echo "\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n";
@@ -738,6 +744,10 @@ class TCPServer extends AbstractController
 							
 						}
 						
+						$time_end_connected = microtime(true);
+						$execution_time_connected = ($time_end_connected - $time_start_connected);
+						//echo "\r\nTotal Execution Time after connected: ".($execution_time_connected*1000)." Milliseconds\r\n";
+						$this->writeServerLog("\r\nTotal Execution Time after connected: ".($execution_time_connected*1000)." Milliseconds\r\n");
 					}
 					/*
 					else
@@ -747,11 +757,12 @@ class TCPServer extends AbstractController
 					}
 					*/
 
-				/*
-				$time_end4 = microtime(true);
-				$execution_time4 = ($time_end4 - $time_start4);
-				echo "\r\nTotal Execution Time 4: ".($execution_time4*1000)." Milliseconds\r\n";
-				*/
+				
+				$time_end_device = microtime(true);
+				$execution_time_device = ($time_end_device - $time_start_device);
+				//echo "\r\nTotal Execution Time Device: ".($execution_time_device*1000)." Milliseconds\r\n";
+				$this->writeServerLog("\r\nTotal Execution Time after Device: ".($execution_time_device*1000)." Milliseconds\r\n");
+				
 			} 
 			
 			//$memory_end = memory_get_usage(true);
