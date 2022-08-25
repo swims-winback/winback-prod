@@ -355,7 +355,7 @@ class CommandDetect extends AbstractController {
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$response = $dataResponse->getResponseData($fileContent);
                 break;
-            case "FD": //UART_CMD_UPDATE_PICTURES
+            case "FD": //UART_CMD_UPDATE_PICTURES //update version
 				//$indexToGet = hexdec(substr($data, 24, 8));
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
@@ -460,7 +460,9 @@ class CommandDetect extends AbstractController {
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				} 
-				//$fileSize = strlen();
+				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
+				$fileSize = strlen($totalFileContent);
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$indexToGet."/".$fileSize."\r\n");
 				$time_start5 = microtime(true);
 				$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType, $fileName), $indexToGet);
 				$time_end5 = microtime(true);
