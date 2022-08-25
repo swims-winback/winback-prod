@@ -34,6 +34,7 @@ class TCPServer extends AbstractController
 	private $linkConnection = [];
 	private $key1;
 	private $read;
+	private $time_array = [];
 
 	function __construct()
 	{
@@ -193,7 +194,7 @@ class TCPServer extends AbstractController
 
 		while (true)
 		{
-			$time_start3 = microtime(true);
+			//$time_start3 = microtime(true);
 			//echo ("-----------AAAAAAAAAAAAAAAAAAAAA-----------");
 			// get a list of all the clients that have data to be read from
 			// if there are no clients with data, go to next iteration
@@ -305,10 +306,12 @@ class TCPServer extends AbstractController
 			//TODO if read > 1 -->
 			//$output->writeln("\r\nRead type : ".gettype($read));
 			//$output->writeln("\r\nRead size : ".sizeof($read));
+			//TODO
+			/*
 			$time_end3 = microtime(true);
 			$execution_time3 = ($time_end3 - $time_start3);
 			echo "\r\nTotal Execution Time 3: ".($execution_time3*1000)." Milliseconds\r\n";
-			
+			*/
 			//TODO 
 			foreach ($read as $read_sock)
 			{
@@ -399,11 +402,7 @@ class TCPServer extends AbstractController
 							//echo "\r\n{$clientsInfo[$key][1]} send {$data} to {} with SN ".$clientsInfo[$key][0]."\r\n";
 							//echo "\r\n{$ip}:{$port} send {$data} to IP ".$clientsInfo[$key][1]."\r\n";
 							//TODO Device send data to computer
-							//echo "\r\n{$ip}:{$port} send {$data}\r\n";
-							//echo "\r\n{$clientsInfo[$key][3]} send {$data} to computer.\r\n";
 							echo "\r\n{$clientsInfo[$key][0]} send {$data} to computer.\r\n";
-							
-							//$clientsInfo[$key][3]
 
 							//echo "\r\n{$ip} send {$data} from {$read_sock} to ?? with SN ".$clientsInfo[$key][0]."\r\n";
 							//echo "\r\nData length : ".strlen($data)."\r\n"; // check data length
@@ -590,43 +589,36 @@ class TCPServer extends AbstractController
 								$task = new CommandDetect();
 								$sn = substr($data, 0, 20);
 								$deviceType = hexdec($data[3].$data[4]);
-								//echo "Device Type ".$deviceType;
-								// TODO Uncomment to test function
-								
 								
 								$clientsInfo[$key][0] = $sn; // Show serial number in terminal
 
 								$dataResponse = new DataResponse();
-								//$utils = new Utils($deviceType);
-								//$device = $task->getDeviceVariables($data, $dataResponse);
-								//$deviceCommand = $device["Command"];
 								$deviceCommand = $data[20].$data[21];
-								//echo("IP before asking command: ".$ip);
-								//echo("IP before asking command: ".$clientsInfo[$key][3]);
-								
-								//$response = $task->start($data, $ip);
+
 								$time_start_command = microtime(true);
-								// TODO symfony process
-								/*
-								$process = new Process([$task->start($data, $clientsInfo[$key][3])]);
-								$process->run();
-
-								// executes after the command finishes
-								if (!$process->isSuccessful()) {
-									throw new ProcessFailedException($process);
-								}
-
-								echo $process->getOutput();
-								*/
-								//TODO $response = $process->getOutput();
 								$response = $task->start($data, $clientsInfo[$key][3]);
 								$time_end_command = microtime(true);
-								$execution_time_command = ($time_end_command - $time_start_command);
-								echo "\r\nTotal Execution Time Command: ".($execution_time_command*1000)." Milliseconds\r\n";
-								//$cmdRec = $data[20].$data[21];
-								
-								//echo $deviceCommand." ".$cmdRec;
-								
+								$execution_time_command = ($time_end_command - $time_start_command)*1000;
+								echo "\r\nTotal Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
+								if ($execution_time_command > 70) {
+									$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 70 ms:".$execution_time_command."\r\n");
+								}
+								/*
+								if ($deviceCommand == "DC") {
+									//echo "\r\nTotal Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
+									$this->time_array += $execution_time_command;
+								}
+								*/
+								/*
+								if (!isset($total_execution_time)) {
+									$total_execution_time = 0;
+								}
+								while ($deviceCommand == "DC" || $deviceCommand == "FD") {
+									$total_execution_time += $execution_time_command;
+									$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTotal Execution Time : ".$total_execution_time." Milliseconds\r\n");
+								}
+								*/
+
 								$affResponse = bin2hex($response);
 								$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".$affResponse." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n");
 								//echo "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$clientsInfo[$key][0]."\n| Command : ".$deviceCommand." from server\r\n";
