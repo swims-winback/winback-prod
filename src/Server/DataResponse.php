@@ -98,7 +98,7 @@ class DataResponse extends Utils
         echo "\r\ngetIndexForImg function is working correctly !\r\n";
         echo "\r\n #################### \r\n";
         */
-        echo "\r\nstartOffset : ".$startOffset."\r\n";
+        //echo "\r\nstartOffset : ".$startOffset."\r\n";
         return $startOffset;
     }
     
@@ -134,6 +134,23 @@ class DataResponse extends Utils
 		return strlen($this->getContentFromIndex);
     }
 	*/
+    function exportFile($directory, $sn, $logTxt) {
+        //$path = LOG_PATH."dc_file/";
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+        $logFile = trim($sn).".txt";
+        //if (file_exists($directory.$logFile)) {
+            $fd = fopen($directory.$logFile, "a+");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        //}
+    }
     /**
      * Extract content from file, between startOffset and 4096
      */
@@ -142,6 +159,8 @@ class DataResponse extends Utils
         $startOffset += $fromIndex;
         //$fileContent = $this->getFileContent($deviceType);
         $fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset, 4096);
+        //Export to a new file
+
         //echo "\r\nfile content length : ".strlen($fileContentFromIndex);
         $resultArray = array($fileContentFromIndex, strlen($fileContentFromIndex));
 		return $resultArray;
@@ -243,7 +262,8 @@ class DataResponse extends Utils
 			mkdir($path, 0777, true);
 		}
 		$logFile = trim($sn).".txt";
-        if (file_exists($path.$logFile) && filesize($path.$logFile) < 20000) {
+        //if (file_exists($path.$logFile) && filesize($path.$logFile) < 60000) {
+        if (file_exists($path.$logFile) && filesize($path.$logFile) < 1000000000) {
             $fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "a+");
             if($fd){
                 fwrite($fd, $logTxt);
@@ -255,6 +275,34 @@ class DataResponse extends Utils
         }
         else {
             $fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "w");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+	}
+
+    function writeDcLog(string $sn, string $deviceType, string $logTxt){
+        $path = LOG_PATH."dc/".deviceType[$deviceType];
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
+		}
+		$logFile = trim($sn).".txt";
+        if (file_exists($path.$logFile) && filesize($path.$logFile) < 60000) {
+            $fd = fopen(LOG_PATH."dc/".deviceType[$deviceType].$logFile, "a+");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+        else {
+            $fd = fopen(LOG_PATH."dc/".deviceType[$deviceType].$logFile, "w");
             if($fd){
                 fwrite($fd, $logTxt);
                 fclose($fd);
