@@ -128,8 +128,8 @@ class CommandDetect extends AbstractController {
 
 				if($command === "DE" || $command === "DD" || $command === "DC" || $command === "DB" || $command === "D8" || $command === "CF" || $command === "CE" || $command === "CD"){
 					for($i=28; $i<(28+206); $i++){
-						//$dataTemp = hexdec(bin2hex($data[$i]));
-						$dataTemp = $data[$i];
+						$dataTemp = hexdec(bin2hex($data[$i]));
+						//$dataTemp = $data[$i];
 						if($dataTemp === 127)
 						{
 							$dataTemp = 92 - 35 - $this->getserverCesarMatrixRxArray[($i-28)];
@@ -137,7 +137,7 @@ class CommandDetect extends AbstractController {
 						else 
 						{
 							$dataTemp = ((hexdec(bin2hex($data[$i]))-35) - $this->getserverCesarMatrixRxArray[($i-28)]);
-							
+							/*
 							if($dataTemp < 0)
 							{
 								$data[$i] = chr($dataTemp+127);
@@ -146,8 +146,9 @@ class CommandDetect extends AbstractController {
 							{
 								$data[$i] = chr($dataTemp+35);
 							}
+							*/
 						}
-						/*
+						
 						if($dataTemp < 0)
 						{
 							$data[$i] = chr($dataTemp+127);
@@ -156,7 +157,7 @@ class CommandDetect extends AbstractController {
 						{
 							$data[$i] = chr($dataTemp+35);
 						}
-						*/
+						
 					}
 				}
 
