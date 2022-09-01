@@ -513,7 +513,7 @@ class DbRequest {
     /* ##### TREATMENT ###### */
     
     function delete_rshock_treatment_table(){
-        $req="TRUNCATE `softwinback`.`rshock_treatment`";
+        $req="TRUNCATE `winback_test`.`rshock_treatment`";
         $res = $this->sendRq($req); 	
     }
     
