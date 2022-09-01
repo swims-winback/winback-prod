@@ -308,17 +308,19 @@ class DbRequest {
         return false;
     }
     */
-
+    /*
     function insertNewDevice(string $sn, $vers, $devType) : string
     {
         //$date = date("Y-m-d H:i:s");
         $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','0','0','0','0','".date("Y-m-d | H:i:s")."')";
         return $req;
     }
-    
-    function initDeviceInDB($sn, $vers, $devType){
-        if ($sn!="" && $vers!="" && $devType!="") {
-            $req = $this->insertNewDevice($sn, $vers, $devType);
+    */
+
+    function initDeviceInDB($sn, $vers, $devType, $ipAddr){
+        if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="") {
+            //$req = $this->insertNewDevice($sn, $vers, $devType);
+            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."')";
             //$res = $this->sendRq($req);
             if ($res = $this->sendRq($req)) {
                 return $res;
@@ -327,20 +329,24 @@ class DbRequest {
         echo "\r\nSN: {$sn}\r\n";
         echo "\r\nVers: {$vers}\r\n";
         echo "\r\nDevType: {$devType}\r\n";
+        echo "\r\nIpAddr: {$ipAddr}\r\n";
         echo "\r\nSN empty or vers empty or devType empty !\r\n";
-        
     }
     
-    function setDeviceInfo($sn, $vers, $devType)
+    /**
+     * If sn exists in db, select & return row
+     * else, init device in db
+     */
+    function setDeviceInfo($sn, $vers, $devType, $ipAddr)
     {
         $whereCond = SN."='$sn'";
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
-        $res = $this->sendRq($req);
-        if($res){
+        //$res = $this->sendRq($req);
+        if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
                 return $row;
             }else{
-                $res = $this->initDeviceInDB($sn, $vers, $devType);
+                $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr);
             }
         }
         else {

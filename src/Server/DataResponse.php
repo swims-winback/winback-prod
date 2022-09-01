@@ -173,7 +173,7 @@ class DataResponse extends Utils
         //$fileContent = $this->getFileContent($deviceType);
         //$fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset, 4096);
         //Export to a new file
-        $fileContentFromIndex = file_get_contents($fileName, $startOffset, 4096);
+        $fileContentFromIndex = file_get_contents($fileName, $use_include_path=false, $context=null, $offset=$startOffset, $length=4096);
         //echo "\r\nfile content length : ".strlen($fileContentFromIndex);
         $resultArray = array($fileContentFromIndex, strlen($fileContentFromIndex));
 		return $resultArray;
