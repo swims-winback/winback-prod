@@ -154,6 +154,7 @@ class DataResponse extends Utils
     /**
      * Extract content from file, between startOffset and 4096
      */
+    /*
 	function setFileContent4096Bytes($fileContent, $fromIndex = 0, $startOffset = 0){
         //$startOffset = 0;
         $startOffset += $fromIndex;
@@ -161,6 +162,18 @@ class DataResponse extends Utils
         $fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset, 4096);
         //Export to a new file
 
+        //echo "\r\nfile content length : ".strlen($fileContentFromIndex);
+        $resultArray = array($fileContentFromIndex, strlen($fileContentFromIndex));
+		return $resultArray;
+    }
+    */
+    function setFileContent4096Bytes($fileName, $fromIndex = 0, $startOffset = 0){
+        //$startOffset = 0;
+        $startOffset += $fromIndex;
+        //$fileContent = $this->getFileContent($deviceType);
+        //$fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset, 4096);
+        //Export to a new file
+        $fileContentFromIndex = file_get_contents($fileName, $startOffset, 4096);
         //echo "\r\nfile content length : ".strlen($fileContentFromIndex);
         $resultArray = array($fileContentFromIndex, strlen($fileContentFromIndex));
 		return $resultArray;
