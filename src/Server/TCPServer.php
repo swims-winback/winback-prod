@@ -61,8 +61,6 @@ class TCPServer extends AbstractController
 		$this->clients = array($sock);
 		$resultArray = array($this->clients, $sock);
 		return $resultArray;
-		
-		//return $sock;
 	}
 
 	// Verify if command in data exists in command array
@@ -143,12 +141,10 @@ class TCPServer extends AbstractController
 		
 		$resultArray = $this->createServer();
 		$clients = $resultArray[0];
-		$sock = $resultArray[1];
 
-		//$sock = $this->createServer();
-		//$clients = array($sock);
 		$clientsInfo = array(array("sn unknown","ip unknown",hrtime(true)));
 		$this->timeOut = 300000000000;
+		$sock = $resultArray[1];
 		while (true)
 		{
 			
@@ -232,7 +228,6 @@ class TCPServer extends AbstractController
 				$clientsInfo[$key][7] = array(); //time while
 				$clientsInfo[$key][8] = array(); //time foreach
 				$clientsInfo[$key][9] = array(); //dc index
-				
 				//echo "\n"."There are ".count($clients)." client(s) connected to the server\n";
 				//$sockData = socket_read($newsock, 4096, PHP_BINARY_READ) or die("Could not read input\n");
 				//echo "\r\nData : ".$sockData;
@@ -245,10 +240,10 @@ class TCPServer extends AbstractController
 			foreach ($read as $read_sock)
 			{
 				$time_start_device = microtime(true);	
-					// read until newline or 1024 bytes
-					$data = @socket_read($read_sock, 4096, PHP_BINARY_READ);// or die("Could not read input\n");
+				// read until newline or 1024 bytes
+				$data = @socket_read($read_sock, 4096, PHP_BINARY_READ);// or die("Could not read input\n");
 
-					$request = new DbRequest();
+				$request = new DbRequest();
 
 					//=> If data exists
 					if (!empty($data))
@@ -264,23 +259,17 @@ class TCPServer extends AbstractController
 						//$request->setConnectAll(0);
 						// if sn or ip from db not in connected list
 						for($i=1; $i<count($clients); $i++){
-						//foreach ($clients as $i => $client){
+							//foreach ($clients as $sock){
 							next($clientsInfo);
 							//echo "\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n";
 							//$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 							if (isset(current($clientsInfo)[1]) && isset(current($clientsInfo)[0])) {
-							//if (isset($clientsInfo[$i])) {
-							//if ($i != 0) {
-								//if (isset($clientsInfo[$i][0]) && isset($clientsInfo[$i][1])) {
-									//TODO 
-									$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")." | Time : ".end(current($clientsInfo)[7])." | Cmd : ".end(current($clientsInfo)[5])."\r\n");
-									//$output->writeln("\r\n".$i." | SN : ".$clientsInfo[$i][0]." | IP : ".$clientsInfo[$i][1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
-									//TODO 
-									$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
-									//$this->writeServerLog("\r\n".$i." | SN : ".$clientsInfo[$i][0]." | IP : ".$clientsInfo[$i][1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
-								//}
+								//TODO 
+								$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")." | Time : ".end(current($clientsInfo)[7])." | Cmd : ".end(current($clientsInfo)[5])."\r\n");
+								//TODO 
+								$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
+								
 							}
-							//}
 							/*
 							else {
 								//TODO 
@@ -291,7 +280,6 @@ class TCPServer extends AbstractController
 								}
 							}
 							*/
-							
 						}
 						
 						//$this->writeServerLog("\r\nThere are ".count($clients)."clients connected.\r\n");
@@ -634,7 +622,6 @@ class TCPServer extends AbstractController
 										$this->linkConnection[$sn][0] = $read_sock;
 									}
 								}
-								
 								if ($responseArray != False) {
 									if (array_key_exists(0, $responseArray)) {
 										$indexToGet = $responseArray[0];
@@ -651,8 +638,6 @@ class TCPServer extends AbstractController
 								else {
 									$this->writeServerLog("\r\nResponse is empty! Please check that your device can connect to the server!\r\n");
 								}
-
-								//socket_write($this->linkConnection[$sn][0], $response);
 								
 								$time_end_socket = microtime(true);
 								$execution_time_socket = ($time_end_socket - $time_start_socket);
@@ -667,27 +652,13 @@ class TCPServer extends AbstractController
 								if($key){
 									//socket_close($clients[$this->key1]);
 									socket_close($clients[$key]);
-									//$request->setConnect(0, current($clientsInfo)[0]);
-									//$this->writeServerLog("\nsetConnect 0".current($clientsInfo)[0]."\n");
-									//$this->writeServerLog("\r\nSocket closed ! Data doesn't come from a device !\r\n");
 									$output->writeln("\r\nSocket closed ! Data doesn't come from a device !\r\n");
-									
 									unset($clients[$this->key1]);
 									unset($clientsInfo[$this->key1]);
-									/*
-									unset($clients[$key]);
-									unset($clientsInfo[$key]);
-									*/
 								}				
 							}
 							
 						}
-						/*
-						$time_end_connected = microtime(true);
-						$execution_time_connected = ($time_end_connected - $time_start_connected);
-						//echo "\r\nTotal Execution Time after connected: ".($execution_time_connected*1000)." Milliseconds\r\n";
-						$this->writeServerLog("\r\nTotal Execution Time after connected: ".($execution_time_connected*1000)." Milliseconds\r\n");
-						*/
 					}
 
 				
@@ -703,21 +674,11 @@ class TCPServer extends AbstractController
 			//echo "\r\nTotal Execution Time of while iter: ".($execution_time_while)." Milliseconds\r\n";
 			//$this->writeServerLog("\r\nTotal Execution Time of while iter: ".($execution_time_while)." Milliseconds\r\n");
 			//$clientsInfo[$key][7][] = $execution_time_while;
-			//$memory_end = memory_get_usage(true);
 			
-
-			//$output->writeln("\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n");
-			//$execution_memory = ($memory_end - $memory_start);
-			//echo "\r\nTotal Execution Memory: ".($execution_memory)." \r\n";
-			//$output->writeln("\r\nTotal Execution Memory: ".($execution_memory)." \r\n");
 			// end of reading foreach
 		}
 		// close the listening socket
 		socket_close($sock);
-		//var_dump(current($clientsInfo)[0]);
-		//$request->setConnect(0, current($clientsInfo)[0]);
-		//$this->writeServerLog("\nsetConnect 0 ".$sn."\n");
-		//$this->writeServerLog("\r\nSocket closed ! Something is false.\r\n");
 		$output->writeln("\r\nSocket closed ! Something is false.\r\n");
 	}
 }
