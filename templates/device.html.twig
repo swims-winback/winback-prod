@@ -19,15 +19,19 @@
                 {{ form(searchform) }}
 
                 <!-- Button to add device table -->
-                <button id="floatingBtn" class="btn bg-orange btn-outline-orange" 
-                style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
-                type="button"
-                data-bs-target="#modal_upload"
-                data-id="{{device.id}}"
-                data-title="{{device.sn}}"
-                data-bs-toggle="modal">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                {% if is_granted("ROLE_ADMIN") %}
+                    <button id="floatingBtn" class="btn bg-orange btn-outline-orange" 
+                    style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
+                    type="button"
+                    data-bs-target="#modal_upload"
+                    data-id="{{device.id}}"
+                    data-title="{{device.sn}}"
+                    data-bs-toggle="modal">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                {% endif %}
+                
+
                 <!-- ===== UPLOAD MODALS ===== -->
                 {% include 'device/upload_modals.html.twig' %}
                 
@@ -70,6 +74,8 @@
                                 </th>
                                 -->
                                 <th class="text-center">
+                                {% if is_granted("ROLE_ADMIN") %}
+                                                                    
                                     {{ form_start(checkform) }}
                                         <div class="row">
                                             <div class="col form-field form-inline">
@@ -77,6 +83,8 @@
                                             </div>
                                         </div>
                                     {{ form_end(checkform) }}
+                                {% endif %}
+
                                 </th>
                                 <th></th>
                                 <th></th>
@@ -87,7 +95,9 @@
                                             {{form_widget(form.versionInput)}}
                                             {{form_widget(form.Save)}}
                                             #}
+                                        {% if is_granted("ROLE_ADMIN") %}
                                             {{form(form)}}
+                                        {% endif %}
                                     <!--</div>-->
                                 </th>
                                 <th></th>
@@ -267,6 +277,7 @@
         }
         */
     </script>
+    <script type="text/javascript" src="{{ asset('js/scripts.js')}}"></script>
     <script type="text/javascript" src="{{ asset('js/winback.js')}}"></script>
     <script type="text/javascript" src="{{ asset('js/socket.js')}}"></script>
 {% endblock %}
