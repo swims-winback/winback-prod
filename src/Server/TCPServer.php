@@ -141,10 +141,10 @@ class TCPServer extends AbstractController
 		
 		$resultArray = $this->createServer();
 		$clients = $resultArray[0];
-
+		$sock = $resultArray[1];
 		$clientsInfo = array(array("sn unknown","ip unknown",hrtime(true)));
 		$this->timeOut = 300000000000;
-		$sock = $resultArray[1];
+		
 		while (true)
 		{
 			
@@ -340,43 +340,6 @@ class TCPServer extends AbstractController
 										
 									}
 									
-									//TODO
-									//$key = array_key_exists($data, $this->linkConnection);
-									//echo "\r\n Add link connection >>>>>>>>>>>>>>>>>>>>> ".$key." !!!!!!!\n";
-									//$output->writeln("\r\n Add link connection >>>>>>>>>>>>>>>>>>>>> ".$key." !!!!!!!\n");
-									//if($key)
-									//{
-										/*
-										if(isset($this->linkConnection[$data][0]) && !empty($this->linkConnection[$data][0]))
-										{
-											$this->key1 = array_search($this->linkConnection[$data][0], $clients);
-											if($this->key1)
-											{
-												socket_close($clients[$this->key1]);
-												$request->setConnect(0, current($clientsInfo)[0]);
-												$output->writeln("\r\nSocket closed !\r\n");
-												unset($clients[$this->key1]);
-												unset($clientsInfo[$this->key1]);	
-											}
-										}
-										*/
-										/*
-										if(isset($this->linkConnection[$data][1]) && !empty($this->linkConnection[$data][1]))
-										{
-											$this->key1 = array_search($this->linkConnection[$data][1], $clients);
-											if($this->key1)
-											{
-												socket_close($clients[$this->key1]);
-												$request->setConnect(0, current($clientsInfo)[0]);
-												$output->writeln("\r\nSocket closed !\r\n");
-												unset($clients[$this->key1]);
-												unset($clientsInfo[$this->key1]);	
-											}
-										}
-										$this->linkConnection[$data][1] = $read_sock;
-										*/
-										//var_dump($this->linkConnection);
-									//}
 								}
 								//$dataResponse->writeLog("SEND MSG TO $sn >>>>>>>>>>>>>>>>>>>>> $key\n");
 								//$task->writeLog($key);
@@ -551,59 +514,21 @@ class TCPServer extends AbstractController
 								//echo "\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n";
 								//$output->writeln("\r\nTotal Execution Time: ".($execution_time*1000)." Milliseconds\r\n");
 
-								//$this->writeServerLog("\r\nThere are ".count($clients)."clients connected.\r\n");
-
 								if (($deviceCommand === 'F9') || ($deviceCommand === 'FA') || ($deviceCommand === 'FE') || ($deviceCommand === 'DE')){
 									
-									//var_dump($this->linkConnection[$sn]);
-									//if(isset($this->linkConnection[$sn]) && !empty($this->linkConnection[$sn][0])){
 									if(isset($this->linkConnection[$clientsInfo[$key][0]]) && !empty($this->linkConnection[$clientsInfo[$key][0]][0])){
-										//$key = array_search($this->linkConnection[$sn][0], $clients);
-										//$key = array_search($sn, $this->linkConnection);
-										//$key = array_keys($this->linkConnection, $sn);
-										//echo "key1: ".$key1;
-										//echo "key: ".$key;
-										//var_dump($key);
+
 										for ($i=1; $i < count($clientsInfo); $i++) {
-										//foreach(range(0, count($clientsInfo)) as $i) {
 											if( isset($clientsInfo[$i][0]) && $clientsInfo[$i][0] == $clientsInfo[$key][0])
 											{
-												/*
-												var_dump($i);
-												var_dump($clientsInfo[$i][0]);
-												var_dump($this->linkConnection[$sn][0]);
-												var_dump($clients[$i]);
-												*/
+												
 												if($this->linkConnection[$clientsInfo[$key][0]][0]!=$clients[$i] && $i!=$key)
 												{
 	
-													//$output->writeln($clientsInfo[$key][0]);
-													//$output->writeln(" key i:".$i);
-													//$output->writeln(" key :".$key);
 													$output->writeln("socket is closed :");
 													$key2del = array_search($this->linkConnection[$clientsInfo[$key][0]][0], $clients);
-													//var_dump($clients[$i]);
-													//var_dump($clientsInfo[$i][1]);
-													/*
-													var_dump($clients[$key2del]);
-													var_dump($clients[$i]);
-													*/
-													/*
-													socket_close($clients[$i]);
-													$request->setConnect(0, current($clientsInfo)[0]);
-													unset($clients[$i]);
-													unset($clientsInfo[$i]);
-													*/
+
 													$request->setConnect(0, $clientsInfo[$key][0]);
-													//$this->writeServerLog("\nsetConnect 0 ".$clientsInfo[$key][0]."\n");
-													
-													//array_splice($clients, $key2del, 1);
-													//array_splice($clientsInfo, $key2del, 1);
-													/*
-													socket_close($clients[$key2del]);
-													unset($clients[$key2del]);
-													unset($clientsInfo[$key2del]);
-													*/
 													socket_close($clients[$i]);
 													unset($clients[$i]);
 													unset($clientsInfo[$i]);
@@ -616,7 +541,6 @@ class TCPServer extends AbstractController
 
 											
 										}
-										//var_dump($read_sock);
 										$this->linkConnection[$sn][0] = $read_sock;
 									}else{
 										$this->linkConnection[$sn][0] = $read_sock;
