@@ -287,7 +287,7 @@ class CommandDetect extends AbstractController {
 		$boardType = $deviceObj["boardType"];
 		// WRITE CMD LOG + CONNECT DB //
 		$time_start4 = microtime(true);
-		$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
+		//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
 		$dbHandle = $request->dbConnect();
 		if($dbHandle){
 			$deviceTypeId = deviceTypeId[$deviceType];
