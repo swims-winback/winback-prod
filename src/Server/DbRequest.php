@@ -176,6 +176,9 @@ class DbRequest {
         */
     }
     
+    /**
+     * Update logfile in db
+     */
     function setLogFile($sn, $logFile){
         $where = SN."='".$sn."'";
         $req = $this->update(LOG_FILE, $logFile, DEVICE_TABLE, $where);
@@ -393,6 +396,9 @@ class DbRequest {
 
 	}		
 
+    /**
+     * Update pointeur in db
+     */
 	function setLog($sn, $newPointeur){
         $whereCond = SN."='$sn'";
         $req = $this->update(LOG_POINTEUR, $newPointeur, DEVICE_TABLE, $whereCond);
