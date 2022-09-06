@@ -444,7 +444,7 @@ class TCPServer extends AbstractController
 							//$time_end = microtime(true);
 							//$execution_time = ($time_end - $time_start);
 							//echo "\r\nTotal Execution Time after command: ".($execution_time*1000)." Milliseconds\r\n";
-							if(substr($data, 0, 1) == 'W'){ // Verify that data comes from a device (all devices start with W)
+							if(substr($data, 0, 1) == 'W' && array_key_exists(hexdec($data[3].$data[4]), deviceType)){ // Verify that data comes from a device (all devices start with W)
 								$time_start_socket = microtime(true);
 								$task = new CommandDetect();
 								$sn = substr($data, 0, 20);
@@ -535,15 +535,7 @@ class TCPServer extends AbstractController
 												if($this->linkConnection[$clientsInfo[$key][0]][0]!=$clients[$i] && $i!=$key)
 												{
 	
-<<<<<<< HEAD
 													$output->writeln("socket is closed :");
-=======
-													//$output->writeln($clientsInfo[$key][0]);
-													//$output->writeln(" key i:".$i);
-													//$output->writeln(" key :".$key);
-													//$output->writeln("socket is closed :");
-													echo "socket is closed :";
->>>>>>> 2727cab1cfcf9155b2fccf110656fc3f9f74a583
 													$key2del = array_search($this->linkConnection[$clientsInfo[$key][0]][0], $clients);
 
 													$request->setConnect(0, $clientsInfo[$key][0]);
@@ -592,12 +584,10 @@ class TCPServer extends AbstractController
 							{
 								$key = array_search($read_sock, $clients);
 								if($key){
-									//socket_close($clients[$this->key1]);
 									socket_close($clients[$key]);
-									//$output->writeln("\r\nSocket closed ! Data doesn't come from a device !\r\n");
 									echo "\r\nSocket closed ! Data doesn't come from a device !\r\n";
-									unset($clients[$this->key1]);
-									unset($clientsInfo[$this->key1]);
+									unset($clients[$key]);
+									unset($clientsInfo[$key]);
 								}				
 							}
 							
