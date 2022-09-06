@@ -24,7 +24,7 @@ $(document).ready(function (){
 
 
   /* set device active in db to show connect button and allow connection*/
-  //setInterval(function (){
+  setInterval(function (){
     let deviceArray = document.querySelectorAll(".info_device")
     for (let device of deviceArray) {
       var deviceId = $(device).data("id");
@@ -57,7 +57,7 @@ $(document).ready(function (){
       document.location.reload();
     }, 3000);
     */
-  //}, 1000);
+  }, 1000);
 
 
 	// ######## Validate version ######## //
