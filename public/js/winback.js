@@ -231,31 +231,31 @@ function startTest(action, sn, nameTouchTag, tagValue, trackerValue){
 let connectButton = document.getElementsByClassName('connect_command');
 
 for(let e of connectButton){
-	console.log(e);
+	//console.log(e);
 	//e.onclick = function() {
 	e.addEventListener("click", function(e){
-		console.log(e);
+		//console.log(e);
 		//if(e.target && e.target.id){
 			/*
 			idElt = e.target.id;
 			console.log(e.target.id);
 			*/
 			idElt = e.id;
-			console.log(e.id);
-			console.log(typeof(sn));
+			//console.log(e.id);
+			//console.log(typeof(sn));
 			if(typeof(sn) === 'undefined'){
 			//data-sn="1234"
 			//if(typeof(sn) != string || !sn){
 				sn = trunkId(idElt);
-				console.log("undefined: ".sn);
+				//console.log("undefined: ".sn);
 			}else{
 				sn = $("#screenDevice").attr("data-sn");
 				//sn = $(".screenDevice").value;
 				//console.log("screenDevice: ".sn);
-				console.log(sn);
+				//console.log(sn);
 				//value = e.target.value;
 				value = e.value;
-				console.log(idElt[0]);
+				//console.log(idElt[0]);
 				if (idElt[0] === 'd'){
 					//nameTouchTag = e.target.name;
 					nameTouchTag = e.name;
