@@ -18,6 +18,9 @@ class DbRequest {
     function __construct() {
     }
     
+    /**
+     * Connect to DB & return connexion
+     */
     public function dbConnect(){
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $connexion = mysqli_connect(HOSTNAME, ADMIN, PWD, DB);
@@ -26,11 +29,14 @@ class DbRequest {
             exit();
         }
         else {
-            //printf("\r\n"."Success... %s\n", mysqli_get_host_info($connexion));
             return $connexion;
         }
     }
 
+    /**
+     * Check connexion & send request to DB
+     * return query result
+     */
     function sendRq($request){
         $connexion = $this->dbConnect();
         $result = mysqli_query($connexion, $request);
@@ -38,6 +44,9 @@ class DbRequest {
         return $result;
     }
 
+    /**
+     * Select row in DB based on req, return req
+     */
     function select($attr, $from, $where = ""){
         $req = "SELECT $attr FROM $from";
         if(!empty($where)){
@@ -47,6 +56,9 @@ class DbRequest {
         return $req;
     }
 
+    /**
+     * Delete row in DB based on req, return req
+     */
     function delete($from, $where = ""){
         $req = "DELETE FROM $from";
         if(!empty($where)){
@@ -56,6 +68,9 @@ class DbRequest {
         return $req;
     }
 
+    /**
+     * Modify row in DB based on req, return req
+     */
     function update($column, $value, $table, $where=''){
         $req = "UPDATE ".$table." SET ".$column." = '".$value."'";
         if(!empty($where)){
@@ -134,6 +149,9 @@ class DbRequest {
     }
     
     /* ####### DEVICE REQUEST ####### */
+
+    // NOT USED
+    /*
     function getElemBy($key, $table, $res){
         $req = "SELECT * FROM {$table} WHERE {$key}='{$res}'";
         $res = $this->sendRq($req);
@@ -144,7 +162,10 @@ class DbRequest {
             return false;
         }
     }
+    */
 
+    // NOT USED
+    /*
     function getListSn($sn = ''){
         $whereCond = '';
         if(!empty($sn)){
@@ -160,7 +181,11 @@ class DbRequest {
         }
         return false;
     }
+    */
 
+    /**
+     * Modify (update or create) forced column in DB
+     */
     function setForced($sn, $forced){
         $where = SN."='".$sn."'";
         $req = $this->update(FORCED_UPDATE, $forced, DEVICE_TABLE, $where);
@@ -177,7 +202,7 @@ class DbRequest {
     }
     
     /**
-     * Update logfile in db
+     * Modify (update or create) logfile column in DB
      */
     function setLogFile($sn, $logFile){
         $where = SN."='".$sn."'";
@@ -194,6 +219,8 @@ class DbRequest {
         */
     }
 
+    //NOT USED
+    /*
     function updateData($sn, $value){
         $where = SN."='".$sn."'";
         if (($value === '0') || ($value === '0.0')|| ($value === ''))
@@ -208,7 +235,10 @@ class DbRequest {
         
         return true;
     }
-    
+    */
+
+    // NOT USED
+    /*
     function updateMassData($aAttrTable){
         $where = "";
         foreach ($aAttrTable as $key => $value) {
@@ -249,6 +279,10 @@ class DbRequest {
         
         return true;
     }
+    */
+
+    // NOT USED
+    /*
     function searchDevice($sn = ''){
         $whereExist = false;
         $where = '';
@@ -256,19 +290,6 @@ class DbRequest {
             $where .= SN." LIKE '%$sn%' ";
             $whereExist = true;
         }
-        /*
-        if(!empty($device)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= DEVICE_TYPE." LIKE '%$device%' ";
-            $whereExist = true;
-        }
-        if(!empty($version)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= DEVICE_VERSION." LIKE '%$version%' ";
-        }
-        */
         $req = $this->select("*", DEVICE_TABLE, $where);
         echo $req;
         $res = $this->sendRq($req);
@@ -279,52 +300,12 @@ class DbRequest {
             return $result;
         }
         return false;
-    }
-    /*
-    function searchDevice($sn = '', $device='', $version=''){
-        $whereExist = false;
-        $where = '';
-        if(!empty($sn)){
-            $where .= SN." LIKE '%$sn%' ";
-            $whereExist = true;
-        }
-        if(!empty($device)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= DEVICE_TYPE." LIKE '%$device%' ";
-            $whereExist = true;
-        }
-        if(!empty($version)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= DEVICE_VERSION." LIKE '%$version%' ";
-        }
-        $req = $this->select("*", DEVICE_TABLE, $where);
-        echo $req;
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            while($row = mysqli_fetch_assoc($res)){
-                $result[] = $row;
-            }
-            return $result;
-        }
-        return false;
-    }
-    */
-    /*
-    function insertNewDevice(string $sn, $vers, $devType) : string
-    {
-        //$date = date("Y-m-d H:i:s");
-        $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','0','0','0','0','".date("Y-m-d | H:i:s")."')";
-        return $req;
     }
     */
 
     function initDeviceInDB($sn, $vers, $devType, $ipAddr){
         if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="") {
-            //$req = $this->insertNewDevice($sn, $vers, $devType);
             $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."')";
-            //$res = $this->sendRq($req);
             if ($res = $this->sendRq($req)) {
                 return $res;
             }
@@ -344,7 +325,6 @@ class DbRequest {
     {
         $whereCond = SN."='$sn'";
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
-        //$res = $this->sendRq($req);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
                 return $row;
