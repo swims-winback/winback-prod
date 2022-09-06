@@ -19,7 +19,7 @@
                 {{ form(searchform) }}
 
                 <!-- Button to add device table -->
-                {% if is_granted("ROLE_ADMIN") %}
+                {% if is_granted("ROLE_SUPER") %}
                     <button id="floatingBtn" class="btn bg-orange btn-outline-orange" 
                     style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
                     type="button"
@@ -74,7 +74,7 @@
                                 </th>
                                 -->
                                 <th class="text-center">
-                                {% if is_granted("ROLE_ADMIN") %}
+                                {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER") %}
                                                                     
                                     {{ form_start(checkform) }}
                                         <div class="row">
@@ -95,7 +95,7 @@
                                             {{form_widget(form.versionInput)}}
                                             {{form_widget(form.Save)}}
                                             #}
-                                        {% if is_granted("ROLE_ADMIN") %}
+                                        {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER")%}
                                             {{form(form)}}
                                         {% endif %}
                                     <!--</div>-->
