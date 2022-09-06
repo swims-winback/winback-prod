@@ -470,8 +470,7 @@ class TCPServer extends AbstractController
 							//$time_end = microtime(true);
 							//$execution_time = ($time_end - $time_start);
 							//echo "\r\nTotal Execution Time after command: ".($execution_time*1000)." Milliseconds\r\n";
-							if(substr($data, 0, 1) == 'W' && array_key_exists(hexdec($data[3].$data[4]), deviceType)){
-							//if(substr($data, 0, 1) == 'W'){ // Verify that data comes from a device (all devices start with W)
+							if(substr($data, 0, 1) == 'W' && array_key_exists(hexdec($data[3].$data[4]), deviceType)){ // Verify that data comes from a device (all devices start with W)
 								$time_start_socket = microtime(true);
 								$task = new CommandDetect();
 								$sn = substr($data, 0, 20);

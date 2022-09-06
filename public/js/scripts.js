@@ -14,7 +14,7 @@ $(document).ready(function (){
       button.checked = false;
       let xmlhttp = new XMLHttpRequest;
       if (id != 0) {
-        xmlhttp.open("GET", `/admin/device/selected/${id}/${0}`)
+        xmlhttp.open("GET", `/selected/${id}/${0}`)
         xmlhttp.send()
       }
     }
@@ -24,13 +24,13 @@ $(document).ready(function (){
 
 
   /* set device active in db to show connect button and allow connection*/
-  setInterval(function (){
+  //setInterval(function (){
     let deviceArray = document.querySelectorAll(".info_device")
     for (let device of deviceArray) {
       var deviceId = $(device).data("id");
       $.ajax({    
         type: "GET", 
-        url: `/admin/device/isactive/${deviceId}`,          
+        url: `/isactive/${deviceId}`,          
         dataType: "html",                  
         success: function(data){ 
           if ($.trim(data)==1){   
@@ -57,7 +57,7 @@ $(document).ready(function (){
       document.location.reload();
     }, 3000);
     */
-  }, 1000);
+  //}, 1000);
 
 
 	// ######## Validate version ######## //
@@ -69,7 +69,7 @@ $(document).ready(function (){
 			//id_substr = id.substr(7);
 			version = zone.value;
 			//url = `{{path('updated', {'id': ${id}, 'version': ${version}})}}`
-			url = `/admin/device/updated/${id}/${version}`
+			url = `/updated/${id}/${version}`
 			document.querySelector(`#update_${id}`).href = url;
 		})
 	}
@@ -80,33 +80,61 @@ $(document).ready(function (){
 	for(let button of forcedButton){
 		let substr_id = button.getAttribute("data-id");
 		let vButton = document.getElementById(`update_${substr_id}`)
-		vButton.addEventListener("click", function(){
+		//vButton.addEventListener("click", function(){
+    button.addEventListener("click", function(){  
 			let $id = button.getAttribute("data-id");
 			if (button.checked == true) {
+        console.log(button.checked);
 			  	let xmlhttp = new XMLHttpRequest;
-			  	xmlhttp.open("GET", `/admin/device/forced/${$id}/${1}`)
+			  	xmlhttp.open("GET", `/forced/${$id}/${1}`)
 			  	xmlhttp.send()
 			}
 			else{
 			  	let xmlhttp = new XMLHttpRequest;
-			  	xmlhttp.open("GET", `/admin/device/forced/${$id}/${0}`)
+			  	xmlhttp.open("GET", `/forced/${$id}/${0}`)
 			  	xmlhttp.send()
 			}
 		})
 	}
 
+	// ######### Selected function ######### //
+	/* select devices in db */
+	// if button clicked & button checked, item selected in db
+	//let selectedButton = document.querySelectorAll(".form-check-input");
+	let selectedButton = document.getElementsByClassName('form-check-input');
+	for(let button of selectedButton){
+		let substr_id = button.getAttribute("id");
+		let id = substr_id.substr(9);
+		//console.log(button);
+		//button.addEventListener("click", function(){
+		button.onclick = function() {
+			let xmlhttp = new XMLHttpRequest;
+			//console.log(button);
+			if (id != 0 && button.checked == true) {
+				
+				xmlhttp.open("GET", `/selected/${id}/${1}`)
+				xmlhttp.send()
+			}
+			else if (id != 0 && button.checked == false) {
+				xmlhttp.open("GET", `/selected/${id}/${0}`)
+				xmlhttp.send()
+			}
+		}
+	}
+
+
 	/* if checkbox_0 is clicked and is checked, query all checkbox in html, change checkbox.checked's value according to value for checkbox_0, select item in db */
 	let checkbox_0 = document.querySelector('#checkbox_0');
 	checkbox_0.onclick = function() {
 	  if (checkbox_0.checked == true) {
-		var checkboxes = document.getElementsByClassName('form-check-input');
-		for (var i=1; i < checkboxes.length; i++) {
-		  let id = checkboxes[i].getAttribute("data-id");
-		  checkboxes[i].checked = true;
-		  let xmlhttp = new XMLHttpRequest;
-		  xmlhttp.open("GET", `/admin/device/selected/${id}/${1}`)
-		  xmlhttp.send()
-		}
+      var checkboxes = document.getElementsByClassName('form-check-input');
+      for (var i=1; i < checkboxes.length; i++) {
+        let id = checkboxes[i].getAttribute("data-id");
+        checkboxes[i].checked = true;
+        let xmlhttp = new XMLHttpRequest;
+        xmlhttp.open("GET", `/selected/${id}/${1}`)
+        xmlhttp.send()
+      }
 	  }
 	  else {
 		var checkboxes = document.getElementsByClassName('form-check-input');
@@ -114,36 +142,13 @@ $(document).ready(function (){
 		  let id = checkboxes[i].getAttribute("data-id");
 		  checkboxes[i].checked = false;
 		  let xmlhttp = new XMLHttpRequest;
-		  xmlhttp.open("GET", `/admin/device/selected/${id}/${0}`)
+		  xmlhttp.open("GET", `/selected/${id}/${0}`)
 		  xmlhttp.send()
 		}
 	  }
 	}
 
-
-	// ######### Selected function ######### //
-  	/* select devices in db */
-  	// if button clicked & button checked, item selected in db
-  	let selectedButton = document.querySelectorAll(".form-check-input");
-  	for(let button of selectedButton){
-        button.addEventListener("click", function(){
-          	let substr_id = button.getAttribute("id");
-          	let id = substr_id.substr(9);
-          	let xmlhttp = new XMLHttpRequest;
-          	if (id != 0 && button.checked == true) {
-            	xmlhttp.open("GET", `/admin/device/selected/${id}/${1}`)
-            	xmlhttp.send()
-          	}
-          	else if (id != 0 && button.checked == false) {
-            	xmlhttp.open("GET", `/admin/device/selected/${id}/${0}`)
-            	xmlhttp.send()
-          	}
-
-      	})
-  	}
-
 });
-
 
 //window.onload = () => {
 
