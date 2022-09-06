@@ -381,9 +381,13 @@ class CommandDetect extends AbstractController {
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-                $startOffset = $dataResponse->getIndexForImg($dataResponse->getFileContent($deviceType, $fileName));
+				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$fileName . ': ' .$indexToGet."/".strlen($totalFileContent) . ' bytes'."\r\n");
+				$percentage = intval($indexToGet/strlen($totalFileContent));
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$percentage." %\r\n");
+                $startOffset = $dataResponse->getIndexForImg($totalFileContent);
 				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
-				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName), $indexToGet, $startOffset);
+				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
                 $response = $dataResponse->getResponseData($fileContent);
                 break;
