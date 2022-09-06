@@ -159,30 +159,40 @@ class TCPServer extends AbstractController
 			//TODO Close socket automatically after too much time without receiving data
 			//$request->setConnectAll(0);
 			// 
+			//foreach ($clients as $i=>$client)
 			for($i=1; $i<count($clients); $i++)
 			{
-				//echo current($clientsInfo[0]);
 				next($clients);
 				next($clientsInfo);
-				//echo current($clientsInfo[0]);
 				if(isset(current($clientsInfo)[2])){
 					// If process takes too much time, close socket ?
-					if(current($clientsInfo)[2] < hrtime(true)){
-						//echo "\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($this->clients)." disconnected.\n";
-						//TODO $output->writeln("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
-						//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
-						$key = key($clients);
-						//$this->closeSocket($key, $clients, $clientsInfo);
-						
-						$request->setConnect(0, current($clientsInfo)[0]);
-						//$this->writeServerLog("\nsetConnect 0 ".current($clientsInfo)[0]."\n");
-						socket_close($clients[$key]);
-						//TODO $output->writeln("\r\nSocket closed !\r\n");
-						$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
-						unset($clients[$key]);	
-						unset($clientsInfo[$key]);
-										
-					}
+					//if ($i > 0) {
+					//if($clientsInfo[$i][2] < hrtime(true)){
+						if(current($clientsInfo)[2] < hrtime(true)){
+							//echo "\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($this->clients)." disconnected.\n";
+							//TODO $output->writeln("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
+							//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
+							
+							$key = key($clients);
+							//$request->setConnect(0, current($clientsInfo)[0]);
+							socket_close($clients[$key]);
+							//socket_close($clients[$i]);
+							//TODO $output->writeln("\r\nSocket closed !\r\n");
+							$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
+							echo "\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n";
+							//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".[$i]." disconnected.\n");
+							/*
+							print_r($clientsInfo[$i][0]);
+							print_r($clientsInfo[$i][1]);
+							var_dump($i);
+							*/
+							unset($clients[$key]);	
+							unset($clientsInfo[$key]);
+							//unset($clients[$i]);	
+							//unset($clientsInfo[$i]);			
+						}
+					//}
+
 				}	
 			}
 			
@@ -213,7 +223,9 @@ class TCPServer extends AbstractController
 				// remove the listening socket from the clients-with-data array
 				$key = array_search($sock, $read); 
 				//$output->writeln("\r\nRead size : ".sizeof($read));
+				//print_r($read);
 				unset($read[$key]);
+				//print_r($read);
 				//array_splice($read, $key, 1);
 				$key = array_search($newsock, $clients);
 				//$output->writeln("\r\nRead size : ".sizeof($read));
@@ -238,6 +250,7 @@ class TCPServer extends AbstractController
 			//print_r($clientsInfo);
 			// loop through all the clients that have data to read from
 			
+			//foreach ($read as $i=>$read_sock)
 			foreach ($read as $read_sock)
 			{
 				$time_start_device = microtime(true);	
@@ -259,11 +272,21 @@ class TCPServer extends AbstractController
 						echo "\r\n********************* Connected list *****************************\r\n";
 						//TODO 
 						$this->writeServerLog("\r\n********************* Connected list *****************************\r\n");
+						/*
+						if ($i > 0) {
+							echo "\r\n".$i." | SN : ".$clientsInfo[$i][0]." | IP : ".$clientsInfo[$i][1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")." | Time : ".end($clientsInfo[$i][7])." | Cmd : ".end($clientsInfo[$i][5])."\r\n";
+						}
+						*/
 						//=> Initiate client info (id, sn, ip, time) and update it at each iteration
 						//$request->setConnectAll(0);
 						// if sn or ip from db not in connected list
 						for($i=1; $i<count($clients); $i++){
-							//foreach ($clients as $sock){
+
+						//TODO
+						//foreach ($clients as $i=>$client){
+
+
+							
 							next($clientsInfo);
 							//echo "\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n";
 							//$output->writeln("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
@@ -275,6 +298,7 @@ class TCPServer extends AbstractController
 								//$this->writeServerLog("\r\n".$i." | SN : ".current($clientsInfo)[0]." | IP : ".current($clientsInfo)[1]." | \r\nTime : ".date("H:i:s")." | Date : ".date("Y-m-d")."\r\n");
 								
 							}
+							
 							/*
 							else {
 								//TODO 
@@ -286,7 +310,8 @@ class TCPServer extends AbstractController
 							}
 							*/
 						}
-						
+						//print_r($clients);
+						//print_r($clientsInfo);
 						//$this->writeServerLog("\r\nThere are ".count($clients)."clients connected.\r\n");
 						//=> if no commands are returned from data device
 						$time_end_step1 = microtime(true);
@@ -380,6 +405,7 @@ class TCPServer extends AbstractController
 										//$request->setConnect(0, current($clientsInfo)[0]);
 										$request->setConnect(0, $sn);
 										$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$key][0]." ip ".$clientsInfo[$key][3]." with key ".key($clients)." disconnected.\n");
+
 										$output->writeln("\r\nSocket closed !\r\n");
 										//array_splice($clients, $key, 1);
 										//array_splice($clientsInfo, $key, 1);
@@ -527,7 +553,7 @@ class TCPServer extends AbstractController
 								if (($deviceCommand === 'F9') || ($deviceCommand === 'FA') || ($deviceCommand === 'FE') || ($deviceCommand === 'DE')){
 									
 									if(isset($this->linkConnection[$clientsInfo[$key][0]]) && !empty($this->linkConnection[$clientsInfo[$key][0]][0])){
-
+										
 										for ($i=1; $i < count($clientsInfo); $i++) {
 											if( isset($clientsInfo[$i][0]) && $clientsInfo[$i][0] == $clientsInfo[$key][0])
 											{
@@ -535,7 +561,7 @@ class TCPServer extends AbstractController
 												if($this->linkConnection[$clientsInfo[$key][0]][0]!=$clients[$i] && $i!=$key)
 												{
 	
-													$output->writeln("socket is closed :");
+													echo("socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
 													$key2del = array_search($this->linkConnection[$clientsInfo[$key][0]][0], $clients);
 
 													$request->setConnect(0, $clientsInfo[$key][0]);
@@ -543,14 +569,10 @@ class TCPServer extends AbstractController
 													unset($clients[$i]);
 													unset($clientsInfo[$i]);
 	
-													
-													
 												}
 											}
-											
-
-											
 										}
+										
 										$this->linkConnection[$sn][0] = $read_sock;
 									}else{
 										$this->linkConnection[$sn][0] = $read_sock;

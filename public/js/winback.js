@@ -252,10 +252,10 @@ for(let e of connectButton){
 				sn = $("#screenDevice").attr("data-sn");
 				//sn = $(".screenDevice").value;
 				//console.log("screenDevice: ".sn);
-				console.log(sn);
+				//console.log(sn);
 				//value = e.target.value;
 				value = e.value;
-				console.log(idElt[0]);
+				//console.log(idElt[0]);
 				if (idElt[0] === 'd'){
 					//nameTouchTag = e.target.name;
 					nameTouchTag = e.name;

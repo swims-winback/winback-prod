@@ -359,25 +359,10 @@ class CommandDetect extends AbstractController {
         switch ($command) {
             case "FC": //prog
             case "F8": //prog
-				//$indexToGet = hexdec(substr($data, 24, 8));
             case "F7": //prog
-				//$indexToGet = hexdec(substr($data, 24, 8));
             case "F6": //prog
-				//$indexToGet = hexdec(substr($data, 24, 8));
             case "F5": //UART_CMD_UPDATE_SUBPROG4
-				//$indexToGet = hexdec(substr($data, 24, 8));
 				// if filename has not been defined by upload version
-				if (!$fileName) {
-					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-				}
-                $startOffset = $dataResponse->getIndexForProg($command, $dataResponse->getFileContent($deviceType, $fileName));
-				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
-				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName), $indexToGet, $startOffset);
-				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
-				$response = $dataResponse->getResponseData($fileContent);
-                break;
-            case "FD": //UART_CMD_UPDATE_PICTURES //update version
-				//$indexToGet = hexdec(substr($data, 24, 8));
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
@@ -385,8 +370,22 @@ class CommandDetect extends AbstractController {
 				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$fileName . ': ' .$indexToGet."/".strlen($totalFileContent) . ' bytes'."\r\n");
 				$percentage = intval($indexToGet/strlen($totalFileContent));
 				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$percentage." %\r\n");
+
+                $startOffset = $dataResponse->getIndexForProg($command, $totalFileContent);
+				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
+				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
+				$response = $dataResponse->getResponseData($fileContent);
+                break;
+            case "FD": //UART_CMD_UPDATE_PICTURES //update version
+				if (!$fileName) {
+					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
+				}
+				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$fileName . ': ' .$indexToGet."/".strlen($totalFileContent) . ' bytes'."\r\n");
+				$percentage = intval($indexToGet/strlen($totalFileContent));
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".$percentage." %\r\n");
+				
                 $startOffset = $dataResponse->getIndexForImg($totalFileContent);
-				//echo "\r\nstartOffset : {$startOffset}, indexToGet : {$this->indexToGet}\r\n";
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
                 $response = $dataResponse->getResponseData($fileContent);
