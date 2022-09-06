@@ -39,7 +39,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 class DeviceController extends AbstractController
 {
     /**
-     * @Route("/admin/device/", name="device")
+     * @Route("/user/device/", name="device")
      */
     public function index(DeviceRepository $deviceRepository, DeviceFamilyRepository $deviceFamilyRepository, SoftwareRepository $softwareRepository, Request $request, ManagerRegistry $doctrine, DbRequest $dbrequest): Response
     {
@@ -148,7 +148,7 @@ class DeviceController extends AbstractController
         ]);
     }
     /**
-     * @Route("/admin/device/add", name="device_add")
+     * @Route("/add", name="device_add")
     */
     /*
     public function addDevice(Request $request, ManagerRegistry $doctrine, FileUploader $fileUploader, DeviceFamilyRepository $deviceFamilyRepository): Response
@@ -260,7 +260,7 @@ class DeviceController extends AbstractController
 
 
     /**
-     * @Route("/admin/device/addmultiple", name="device_add_multiple")
+     * @Route("/addmultiple", name="device_add_multiple")
     */
     /*
     public function addMultipleDevice(Request $request, ManagerRegistry $doctrine, FileUploader $fileUploader): Response
@@ -302,7 +302,7 @@ class DeviceController extends AbstractController
 
 
     /**
-     * @Route("/admin/device/edit/{id}", name="device_edit")
+     * @Route("/edit/{id}", name="device_edit")
     */
     public function editDevice(Request $request, ManagerRegistry $doctrine, Device $device): Response
     {
@@ -328,7 +328,7 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * @Route("/admin/device/edit/multiple{id}", name="device_edit_multiple")
+     * @Route("/edit/multiple{id}", name="device_edit_multiple")
     */
     public function editMultipleDevice(Request $request, ManagerRegistry $doctrine, Device $device, DeviceRepository $deviceRepository): Response
     {
@@ -369,7 +369,7 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * @Route("/admin/device/delete/{id}", name="device_delete")
+     * @Route("/delete/{id}", name="device_delete")
     */    
     public function deleteDevice(Device $device, ManagerRegistry $doctrine)
     {
@@ -383,11 +383,10 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * @Route("/admin/device/forced/{id}/{select_bool}", name="forced")
+     * @Route("/forced/{id}/{select_bool}", name="forced")
      */
     public function forced(Device $device, ManagerRegistry $doctrine, $select_bool)
     {
-        //$device->setForced(($device->getForced())?false:true);
         $device->setForced(($select_bool==0)?0:1);
         $em = $doctrine->getManager();
         $em->persist($device);
@@ -398,20 +397,18 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * @Route("/admin/device/isactive/{id}", name="isactive")
+     * @Route("/isactive/{id}", name="isactive")
      */
     public function isActive(Device $device)
     {
-        //$result = ($device->getForced())?true:false;
-        //$device->setForced(($device->getForced())?false:true);
         if ($device->getIsActive()) {
             return new Response($device->getIsActive());
         }
         return new Response(false);
-        //return $this->redirectToRoute('device');
     }
+
     /**
-     * @Route("/admin/device/selected/{id}/{select_bool}", name="selected")
+     * @Route("/selected/{id}/{select_bool}", name="selected")
      */
     public function selected(Device $device, ManagerRegistry $doctrine, $select_bool)
     {
@@ -422,13 +419,12 @@ class DeviceController extends AbstractController
         $em->persist($device);
         $em->flush();
 
-        //return new Response("true");
         return $this->redirectToRoute('device');
     }
 
 
     /**
-     * @Route("/admin/device/updated/{id}/{version}/", name="updated")
+     * @Route("/updated/{id}/{version}/", name="updated")
      */
     
     public function updated(Device $device, ManagerRegistry $doctrine, $version)

@@ -330,6 +330,9 @@ class SoftwareController extends AbstractController
         if (file_exists($this->getParameter('softwares_directory').'/'.$deviceType."/".$name)) {
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
+        if (file_exists($this->getParameter('archives_directory').'/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('archives_directory').'/'.$deviceType."/".$name);
+        }
         //unlink(PACK_PATH.$deviceType.$name);
 
         $em = $doctrine->getManager();

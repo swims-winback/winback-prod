@@ -119,7 +119,9 @@ class DeviceRepository extends ServiceEntityRepository
         */
         //}
         //var_dump($category);
-        return $query->getQuery()
+        return $query
+        ->orderBy('d.sn', 'ASC')
+        ->getQuery()
         //->getOneOrNullResult()
         ->getResult()
     ;
@@ -236,6 +238,23 @@ class DeviceRepository extends ServiceEntityRepository
         //->getOneOrNullResult()
     ;
     }
+
+    /**
+      * @return Device[] Returns an array of Software objects
+      */
+    
+      public function findAll()
+      {
+          return $this->createQueryBuilder('d')
+              //->andWhere('s.createdAt = :val')
+              //->setParameter('val', $value)
+              //->orderBy('s.created_at', 'DESC')
+              ->orderBy('d.sn', 'ASC')
+              //->setMaxResults(10)
+              ->getQuery()
+              ->getResult()
+          ;
+      }
 
     // /**
     //  * @return Device[] Returns an array of Device objects
