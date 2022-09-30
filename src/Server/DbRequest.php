@@ -303,9 +303,9 @@ class DbRequest {
     }
     */
 
-    function initDeviceInDB($sn, $vers, $devType, $ipAddr){
-        if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="") {
-            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."')";
+    function initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile){
+        if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="" && $logFile!="") {
+            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.",".LOG_FILE.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '1','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."', '".$logFile."')";
             if ($res = $this->sendRq($req)) {
                 return $res;
             }
@@ -321,15 +321,19 @@ class DbRequest {
      * If sn exists in db, select & return row
      * else, init device in db
      */
-    function setDeviceInfo($sn, $vers, $devType, $ipAddr)
+    function setDeviceInfo($sn, $vers, $devType, $ipAddr, $logFile)
     {
         $whereCond = SN."='$sn'";
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
+                $this->setUpdatedAt($sn, date("Y-m-d | H:i:s"));
+                $this->setConnect(1, $sn);
+                $this->setVersion($vers, $sn);
+                $this->setLogFile($sn, $logFile);
                 return $row;
             }else{
-                $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr);
+                $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile);
             }
         }
         else {
@@ -344,8 +348,6 @@ class DbRequest {
         if(!empty($where)){
             $req .= " WHERE $where";
         }
-        
-        //return $req;
         $res = $this->sendRq($req);
 
 	}
@@ -416,6 +418,11 @@ class DbRequest {
         $res = $this->sendRq($req);
     }
     
+    function setDownload($sn, $percentage){
+        $whereCond = SN."='$sn'";
+        $req = $this->update('download', $percentage, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
     /*
     function addSN($data){
         $req = "SELECT SN FROM sn WHERE SN = '".$data['SN']."'";
@@ -501,7 +508,25 @@ class DbRequest {
         $res = $this->sendRq($req);
 	}
     */
+    /*
+    function setIndex($sn, $index){
+        $whereCond = SN."='$sn'";
+        $req = $this->update('indextoget', $index, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
 
+    function getIndex($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select("indextoget", DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row["indextoget"];
+            }
+        }
+        return 0;
+    }
+    */
     /* ##### TREATMENT ###### */
     
     function delete_rshock_treatment_table(){

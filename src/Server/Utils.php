@@ -130,8 +130,10 @@ class Utils {
 
         if(count($scanPackFile) === count($scanArchFile))
         {
-            $lastVersUp = $this->getVersion($scanPackFile);
-            $lastVersArch = $this->getVersion($scanArchFile);
+            $lastVersUp = $this->getVersion2($scanPackFile);
+            //$lastVersUp = $this->getVersion2(array_diff(scandir(PACK_PATH.deviceTypeArray[$deviceType]), array('..', '.')));
+            $lastVersArch = $this->getVersion2($scanArchFile);
+            //$lastVersArch = $this->getVersion2(array_diff(scandir(PACK_ARCH_PATH.deviceTypeArray[$deviceType]), array('..', '.')));
 
             if($lastVersArch === $lastVersUp)
             {
@@ -206,9 +208,15 @@ class Utils {
 		}
         else
         {
+            
 			$aValue = explode('_', $fileName);
             echo "\r\naValue: ".$aValue[2];
 			return file_get_contents($this->checkFile($deviceType, $aValue[2]));
+            
+            /*
+            echo "\r\nFile does not exist. Please check your files ! \r\n";
+            return false;
+            */
 		}
     }
 
@@ -237,14 +245,15 @@ $utils->getContentFromIndex($deviceType, $index=10, $length=FW_OCTETS);
 //$utils->getVersion($deviceType, $boardType = '2');
 // verify if check file & set version filename return the same thing
 /*
-$deviceType = "12";
+$deviceType = "13";
 $utils = new Utils($deviceType);
 echo "\r\n".$utils->checkFile($deviceType)."\r\n";
 echo "\r\n".$utils->setVersionFilename($deviceType)."\r\n";
 */
 /*
-$deviceType = "12";
+$deviceType = "13";
 $utils = new Utils($deviceType);
 $path=PACK_PATH;
 echo ($utils->getVersion(array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'))));
+echo ($utils->getVersion2(array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'))));
 */
