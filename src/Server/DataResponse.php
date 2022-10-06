@@ -585,7 +585,6 @@ class DataResponse extends Utils
         //echo "\r\nNew Pointeur = {$newPointeur}\r\n";
         return $newPointeur;
     }
-
     function getPointeur2($sn, $deviceType)
     {
         $path = LOG_PATH.deviceTypeArray[$deviceType].trim($sn).".txt";

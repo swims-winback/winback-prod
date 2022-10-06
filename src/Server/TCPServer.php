@@ -346,8 +346,8 @@ class TCPServer extends AbstractController
 
 										if( isset($clientsInfo[$i][0]) && isset($clientsInfo[$deviceKey][0]) && $clientsInfo[$i][0] == $clientsInfo[$deviceKey][0])
 										{
-											var_dump($i);
-											var_dump($deviceKey);
+											//var_dump($i);
+											//var_dump($deviceKey);
 											if($i!=$deviceKey)
 											//if($this->linkConnection[$clientsInfo[$key][0]][0]!=$clients[$i] && $i!=$key)
 											{
@@ -424,14 +424,14 @@ class TCPServer extends AbstractController
 									$keyLink = array_key_exists($data, $this->linkConnection);
 									echo 'Add link connection >>>>>>>>>>>>>>>>>>>>> '.$keyLink." !!!!!!!\n";
 									if($keyLink){
-										print_r($this->linkConnection);
+										//print_r($this->linkConnection);
 										
 										if(isset($this->linkConnection[$data][1]) && !empty($this->linkConnection[$data][1])){
 											//Check if sn exists in clients
 											$key1 = array_search($this->linkConnection[$data][1], $clients);
 											
 											if($key1){
-												print_r($clientsInfo[$key1]);
+												//print_r($clientsInfo[$key1]);
 												echo "Socket close !!!!!!!\n";
 												//$this->writeServerLog("\r\nSocket close :".$data."\r\n");
 												$request->setConnect(0, $data);
@@ -466,15 +466,15 @@ class TCPServer extends AbstractController
 									echo "\r\nsize of linkConnection : ".sizeof($this->linkConnection)."\r\n";
 									$keyCanal = array_search($this->linkConnection[$sn][1], $clients);
 									if($keyCanal){
-										print_r($clients);
+										//print_r($clients);
 										socket_close($clients[$keyCanal]);
-										print_r($clients[$keyCanal]);
+										//print_r($clients[$keyCanal]);
 										//$request->setConnect(0, $sn);
 										echo "\r\nSocket closed with Sn ".$sn." and keyCanal: ".$keyCanal." !\r\n";
 										//array_splice($clients, $keyCanal, 1);
 										//array_splice($clientsInfo, $keyCanal, 1);
-										print_r($clientsInfo);
-										print_r($clients);
+										//print_r($clientsInfo);
+										//print_r($clients);
 										unset($clients[$keyCanal]);
 										unset($clientsInfo[$keyCanal]);	
 									}
@@ -491,7 +491,7 @@ class TCPServer extends AbstractController
 												socket_close($clients[$key]);
 												$request->setConnect(0, $sn);
 												//array_splice($clients, $key, 1);
-												var_dump($clientsInfo[$key]);
+												//var_dump($clientsInfo[$key]);
 												unset($clients[$key]);
 												echo "\r\nSocket closed with Sn ".$sn." and keyFalse: ".$key." !\r\n";
 											}

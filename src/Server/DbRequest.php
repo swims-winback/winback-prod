@@ -357,8 +357,6 @@ class DbRequest {
         if(!empty($where)){
             $req .= " WHERE $where";
         }
-        
-        //return $req;
         $res = $this->sendRq($req);
 
 	}
@@ -537,7 +535,25 @@ class DbRequest {
         $res = $this->sendRq($req);
 	}
     */
+    /*
+    function setIndex($sn, $index){
+        $whereCond = SN."='$sn'";
+        $req = $this->update('indextoget', $index, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
 
+    function getIndex($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select("indextoget", DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row["indextoget"];
+            }
+        }
+        return 0;
+    }
+    */
     /* ##### TREATMENT ###### */
     
     function delete_rshock_treatment_table(){

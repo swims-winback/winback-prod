@@ -258,8 +258,6 @@ class CommandDetect extends AbstractController {
 		$boardType = $deviceObj["boardType"];
 
 		if ($command == 'DE' || $command == 'FE') {
-			
-		
 			// WRITE CMD LOG + CONNECT DB //
 			//$time_start4 = microtime(true);
 			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
@@ -305,7 +303,6 @@ class CommandDetect extends AbstractController {
 			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 		}
 		$deviceObj["Filename"] = $fileName;
-		//$dataResponse->getFileContent($deviceType, $fileName);
 
 		//$time_start4 = microtime(true);
         switch ($command) {
@@ -321,7 +318,6 @@ class CommandDetect extends AbstractController {
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
-				echo "\r\n".$indexToGet."/".$filesize ."\r\n";
 				if ($percentage == 0 || $percentage == 99) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
 				}
@@ -338,7 +334,6 @@ class CommandDetect extends AbstractController {
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
-				echo "\r\n".$indexToGet."/".$filesize ."\r\n";
 				if ($percentage == 0 || $percentage == 99) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
 				}
@@ -358,13 +353,12 @@ class CommandDetect extends AbstractController {
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
-				
 				$fileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$startOffset = $dataResponse->getIndexForImg($fileContent);
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset, $fileName);
 				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $fileContent, $forcedUpdate);
                 $response = $dataResponse->getAutoDetectResponse($tempResponse);
-				//echo "\r\nMsg send: ".bin2hex($response)."\r\n";
+				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFE - TX : ".bin2hex($response)."\r\n");
                 break;
 		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
 				if (!isset($fileName)) {
@@ -403,6 +397,7 @@ class CommandDetect extends AbstractController {
 					$request->setForced($sn, 0);
 					$deviceInfo[FORCED_UPDATE] = 0;
 				}
+				//* return index in tcpserver to not send response if index is repeated*//
 				$this->responseArray[0] = $indexToGet;
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
@@ -481,7 +476,6 @@ class CommandDetect extends AbstractController {
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 11);
                 //$dataResponse->initAutoDetectResponse(11);
 				$response = $dataResponse->getLogByPointer($newPointeur);
-				echo "\r\nMsg send: ".bin2hex($response)."\r\n";
 				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nF9 - TX : ".bin2hex($response)."\r\n");
 				break;
 
@@ -495,7 +489,6 @@ class CommandDetect extends AbstractController {
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 11);
                 //$dataResponse->initAutoDetectResponse(11);
 				$response = $dataResponse->getLogByPointer($newPointeur);
-				echo "\r\nMsg send: ".bin2hex($response)."\r\n";
 				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nF3 - TX : ".bin2hex($response)."\r\n");
 				break;
 
@@ -512,7 +505,7 @@ class CommandDetect extends AbstractController {
                 //$request->setIpAddr($ipAddr, $sn);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
 				$response = $dataResponse->getResponseData();
-				$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFA - TX : ".bin2hex($response)."\r\n");
+				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFA - TX : ".bin2hex($response)."\r\n");
                 break;
 
             default:
@@ -520,13 +513,13 @@ class CommandDetect extends AbstractController {
 
 		
 		}
-
-		//if (isset($response)) {
-			$sFooter = $dataResponse->setFooter($response);
-			$this->responseArray[1] = $response.$sFooter;
-			//$affResponse = bin2hex($response.$sFooter);
-			//echo "\r\nSN : ".$sn."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$command." from server";
-			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$sn."\n| Command : ".$command." from server\r\n");
+		
+		$sFooter = $dataResponse->setFooter($response);
+		$this->responseArray[1] = $response.$sFooter;
+		$affResponse = bin2hex($response.$sFooter);
+		//echo "\r\nSN : ".$sn."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$command." from server";
+		//$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$sn."\n| Command : ".$command." from server\r\n");
+		
 		//return $response.$sFooter;
 		
 		$time_end_command = microtime(true);
@@ -536,7 +529,6 @@ class CommandDetect extends AbstractController {
 			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 			echo "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n";
 		}
-
 		return $this->responseArray;
     }
 }
