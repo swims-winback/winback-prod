@@ -303,9 +303,9 @@ class DbRequest {
     }
     */
 
-    function initDeviceInDB($sn, $vers, $devType, $ipAddr){
-        if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="") {
-            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '0','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."')";
+    function initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile){
+        if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="" && $logFile!="") {
+            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.",".LOG_FILE.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '1','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."', '".$logFile."')";
             if ($res = $this->sendRq($req)) {
                 return $res;
             }
@@ -321,15 +321,28 @@ class DbRequest {
      * If sn exists in db, select & return row
      * else, init device in db
      */
-    function setDeviceInfo($sn, $vers, $devType, $ipAddr)
+    function setDeviceInfo($sn, $vers, $devType, $ipAddr, $logFile)
     {
         $whereCond = SN."='$sn'";
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
+                /*
+                $this->setUpdatedAt($sn, date("Y-m-d | H:i:s"));
+                $this->setConnect(1, $sn);
+                $this->setVersion($vers, $sn);
+                $this->setLogFile($sn, $logFile);
+                $this->setDownload($sn, 0);
+                */
+                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date("Y-m-d | H:i:s")."'";
+                //$req = "UPDATE ".DEVICE_TABLE." SET ".DOWNLOAD." = 0";
+                if(!empty($whereCond)){
+                    $req .= " WHERE $whereCond";
+                }
+                $res = $this->sendRq($req);
                 return $row;
             }else{
-                $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr);
+                $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile);
             }
         }
         else {
@@ -415,7 +428,30 @@ class DbRequest {
         $req = $this->update(UPDATED_AT, $date, DEVICE_TABLE, $whereCond);
         $res = $this->sendRq($req);
     }
+
+    function setDownload($sn, $percentage){
+        $whereCond = SN."='$sn'";
+        $req = $this->update('download', $percentage, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
     
+    function setIndex($sn, $index){
+        $whereCond = SN."='$sn'";
+        $req = $this->update('indextoget', $index, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
+
+    function getIndex($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select("indextoget", DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row["indextoget"];
+            }
+        }
+        return 0;
+    }
     /*
     function addSN($data){
         $req = "SELECT SN FROM sn WHERE SN = '".$data['SN']."'";

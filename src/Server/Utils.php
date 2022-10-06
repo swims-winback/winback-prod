@@ -130,8 +130,8 @@ class Utils {
 
         if(count($scanPackFile) === count($scanArchFile))
         {
-            $lastVersUp = $this->getVersion($scanPackFile);
-            $lastVersArch = $this->getVersion($scanArchFile);
+            $lastVersUp = $this->getVersion2($scanPackFile);
+            $lastVersArch = $this->getVersion2($scanArchFile);
 
             if($lastVersArch === $lastVersUp)
             {
@@ -202,6 +202,7 @@ class Utils {
     {
         //$fileName = $this->setVersionFilename($deviceType, $boardType = '2');
 		if(file_exists(PACK_PATH.deviceTypeArray[$deviceType].$fileName)){
+            echo "\r\nbValue: ".PACK_PATH.deviceTypeArray[$deviceType].$fileName."\r\n";
 			return file_get_contents(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
 		}
         else
