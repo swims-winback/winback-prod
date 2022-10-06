@@ -153,15 +153,6 @@ class CommandDetect extends AbstractController {
 					$boardType = 2;
 					$deviceObj["boardType"] = $boardType;
 				}
-
-				//$fileName = $dataResponse->checkFile($deviceType, $boardType);
-				//echo "\r\nfilename : ".$fileName."\r\n";
-				//$deviceObj["Filename"] = $fileName;
-				
-				/*
-				$forcedUpdate = 0;
-				$deviceObj["Forced Update"] = $forcedUpdate;
-				*/
 				
 				if($command ==='D8' || $command === 'CE')
 				{
@@ -224,6 +215,7 @@ class CommandDetect extends AbstractController {
 					else if($command === "DE" || $command === "DD" || $command === "DC" || $command === 'CD')
 					{
 						$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
+						//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
 						$boardType = hexdec(substr($data, 32, 4));
 						$indexToGet = hexdec(substr($data, 36, 8));
 						$deviceObj["Device Version"] = $version;
@@ -248,7 +240,7 @@ class CommandDetect extends AbstractController {
 	/**
 	 * Create Database connection, get device information
 	 */
-    public function start($data, $ipAddr, $sock, $deviceInfo)
+    public function start($data, $ipAddr, $deviceInfo)
 	{
 		$time_start_command = microtime(true);
 
@@ -265,18 +257,18 @@ class CommandDetect extends AbstractController {
 		$indexToGet = $deviceObj["Index"];
 		$boardType = $deviceObj["boardType"];
 
-	if ($command == 'DE' || $command == 'FE') {
-		// WRITE CMD LOG + CONNECT DB //
-		$time_start4 = microtime(true);
-		//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
-		//$dbHandle = $request->dbConnect();
-		//if($dbHandle){
-			$deviceTypeId = deviceTypeId[$deviceType];
-			$logFile = trim($sn).".txt";
-			$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
-			$this->responseArray[2] = $deviceInfo;
-        //}
-	}
+		if ($command == 'DE' || $command == 'FE') {
+			// WRITE CMD LOG + CONNECT DB //
+			//$time_start4 = microtime(true);
+			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
+			//$dbHandle = $request->dbConnect();
+			//if($dbHandle){
+				$deviceTypeId = deviceTypeId[$deviceType];
+				$logFile = trim($sn).".txt";
+				$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
+				$this->responseArray[2] = $deviceInfo;
+			//}
+		}
 
 		// SET FORCED //
 		if(isset($deviceInfo[FORCED_UPDATE]) && (($deviceInfo[FORCED_UPDATE] === '1') || ($deviceInfo[FORCED_UPDATE] === 1)))
@@ -290,30 +282,29 @@ class CommandDetect extends AbstractController {
 			//$request->setForced($sn, $forcedUpdate);
 		}
 
-
 		// SET VERSION UPLOAD //
-       	if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768))
-		{	
-				
+		if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768))
+		{
 			$versionData = explode(".",$deviceInfo[VERSION_UPLOAD],8);
 			$versionString = str_pad($versionData[0], 3 , "0" , STR_PAD_LEFT);
 			$revisionString = str_pad($versionData[1], 3 , "0" , STR_PAD_LEFT);
 			$fileName = stFILENAME."_".$deviceType."_".$boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
 			$fileArch = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName;
 			$fileUp = PACK_PATH.deviceTypeArray[$deviceType].$fileName;
-            $cmpFile = $dataResponse->compareFile($fileArch, $fileUp);
-            if(!$cmpFile){
-                return FALSE;
-            }
-        }
+			$cmpFile = $dataResponse->compareFile($fileArch, $fileUp);
+			if(!$cmpFile){
+				return FALSE;
+			}
+		}
 
+		
 		// SET FILENAME //
 		if(!isset($fileName)){
 			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 		}
 		$deviceObj["Filename"] = $fileName;
 
-		$time_start4 = microtime(true);
+		//$time_start4 = microtime(true);
         switch ($command) {
             case "FC": //prog
             case "F8": //prog
@@ -330,7 +321,7 @@ class CommandDetect extends AbstractController {
 				if ($percentage == 0 || $percentage == 99) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
 				}
-
+				//$this->responseArray[3] = $percentage;
                 $startOffset = $dataResponse->getIndexForProg($command, $totalFileContent);
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
@@ -346,14 +337,18 @@ class CommandDetect extends AbstractController {
 				if ($percentage == 0 || $percentage == 99) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
 				}
-				
+				//$this->responseArray[3] = $percentage;
                 $startOffset = $dataResponse->getIndexForImg($totalFileContent);
+				echo "\r\nstartOfsset: ".$startOffset."\r\n";
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
+				echo "\r\nfileContent: ".$fileContent."\r\n";
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
                 $response = $dataResponse->getResponseData($fileContent);
+				echo "\r\nMsg send: ".$response."\r\n";
                 break;
 			// create device in db if not exist
             case "FE": //UART_CMD_AUTODETECT
+				//$time_start4 = microtime(true);
                 $dataResponse->setHeader(cmdByte[$command], $this->reqId, 39);
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
@@ -370,36 +365,23 @@ class CommandDetect extends AbstractController {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
-
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$tempResponse = $dataResponse->getResponseData($fileContent);
 
-				$time_start4 = microtime(true);
 				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse);
-				$time_end4 = microtime(true);
-				$execution_time4 = ($time_end4 - $time_start4);
-				//echo "\r\nTotal Execution Time DE-d: ".($execution_time4*1000)." Milliseconds\r\n";
 
-				$time_start4 = microtime(true);
 				$tempResponse[37] = $forcedUpdate;
 				$response = $dataResponse->getDate($tempResponse);
-				//$pinCode = intval($request->getDevice($sn, PIN_CODE));
 				$pinCode = intval($deviceInfo[PIN_CODE]);
-				//echo "\r\nPin code : ".$pinCode;
-				//$response[62] = chr(intval($request->getDevice($sn, PUB_ACCEPTED)));
 				$response[62] = chr(intval($deviceInfo[PUB_ACCEPTED]));
 				$response[63] = chr($pinCode/256);
 				$response[64] = chr($pinCode%256);
 				$commentsString="Update version \nMaj touch and go";
-				$time_end4 = microtime(true);
-				$execution_time4 = ($time_end4 - $time_start4);
-				//echo "\r\nTotal Execution Time DE-e: ".($execution_time4*1000)." Milliseconds\r\n";
-
+				
 				for($i = 0; $i < strlen($commentsString) ; $i++)
 				{				
 					$response[70 + $i] = $commentsString[$i];
 				}
-
 				for($i=6; $i<strlen($response); $i++)
 				{
 					$response[$i] = chr(hexdec(bin2hex($response[$i])) + $this->getserverCesarMatrixTxArray[($i-6)%214]);
@@ -424,10 +406,14 @@ class CommandDetect extends AbstractController {
 				$percentage = intval(($indexToGet/$filesize)*100);
 				if ($percentage == 0 && $indexToGet == 4096 || $percentage == 99 && ($filesize-$indexToGet) < 4096) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".filesize(PACK_PATH.deviceTypeArray[$deviceType].$fileName) . ' bytes - '.$percentage." %\r\n");
+					if ($percentage == 99 && ($filesize-$indexToGet) < 4096) {
+						$request->setDownload($sn, 100);
+						$percentage = 100;
+					}
 				}
+				$this->responseArray[3] = $percentage;
 
 				$fileContentArray = $dataResponse->setFileContent4096Bytes(PACK_PATH.deviceTypeArray[$deviceType].$fileName, $indexToGet);
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTotal Execution Time step 1: ".($execution_time5*1000)." Milliseconds\r\n");
 				$fileContent = $fileContentArray[0];
 				$nbDataToSend = $fileContentArray[1];
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $nbDataToSend);
@@ -445,9 +431,6 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getLogByPointer($newPointeur)
 				);
-				//$output->writeln("\r\nDB - TX data : ".bin2hex($response)."\r\n");
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDB - TX data : ".bin2hex($response)."\r\n");
-				//TODO $output->writeln("\r\n"."TX data size: ".strlen(bin2hex($response))."\r\n");
 				break;
 
 			case "DA": //Pubs ask date
@@ -456,11 +439,9 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getPubsData(deviceTypeArray[$deviceType])
 				);
-				//TODO $output->writeln("\r\n"."TX data size: ".strlen(bin2hex($response))."\r\n");
 				break;
 
 		    case "D8": //Download PUBS
-				//$indexToGet = hexdec(substr($data, 24, 8));
 				$size = (filesize(PUB_PATH.deviceTypeArray[$deviceType]."PUBS.bin")-$indexToGet);
 				if($size>4096)$size=4096;
 				//echo '....'.$this->indexToGet.'.....'.$size.'.....';
@@ -536,7 +517,7 @@ class CommandDetect extends AbstractController {
 		$sFooter = $dataResponse->setFooter($response);
 		$this->responseArray[1] = $response.$sFooter;
 		$affResponse = bin2hex($response.$sFooter);
-		echo "\r\nSN : ".$sn."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$command." from server";
+		//echo "\r\nSN : ".$sn."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$command." from server";
 		//$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$sn."\n| Command : ".$command." from server\r\n");
 		
 		//return $response.$sFooter;
@@ -548,7 +529,6 @@ class CommandDetect extends AbstractController {
 			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 			echo "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n";
 		}
-		
 		return $this->responseArray;
     }
 }

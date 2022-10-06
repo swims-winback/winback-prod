@@ -402,17 +402,12 @@ class DataResponse extends Utils
     function getCRCAutoDetect(string $deviceType, $startOffset, $fileName)
     //function getCRCAutoDetect($startOffset, $crcFileContent)
     {
-        //echo "\r\nGetCRCAutoDetect...\r\n";
-        //$fileName = $this->checkFile($deviceType, $boardType = '2');
         $crcFileContent = $this->getFileContent($deviceType, $fileName);
         $fileContentCRC = substr($crcFileContent, $startOffset, strlen($crcFileContent) - $startOffset);
         $sizeContent = 0;
         for($parse = 0; $parse < strlen($fileContentCRC); $parse++){
             $sizeContent = $sizeContent + (hexdec(bin2hex($fileContentCRC[$parse])));
         }
-        //$sizeContent = chr($sizeContent);
-        //echo "sizeContent : ".chr($sizeContent);
-        //echo "size content type: ".gettype($sizeContent);
         return chr($sizeContent);
     }
 
@@ -590,7 +585,6 @@ class DataResponse extends Utils
         //echo "\r\nNew Pointeur = {$newPointeur}\r\n";
         return $newPointeur;
     }
-            
     function getPointeur2($sn, $deviceType)
     {
         $path = LOG_PATH.deviceTypeArray[$deviceType].trim($sn).".txt";

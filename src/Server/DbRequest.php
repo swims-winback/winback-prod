@@ -327,10 +327,19 @@ class DbRequest {
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
+                /*
                 $this->setUpdatedAt($sn, date("Y-m-d | H:i:s"));
                 $this->setConnect(1, $sn);
                 $this->setVersion($vers, $sn);
                 $this->setLogFile($sn, $logFile);
+                $this->setDownload($sn, 0);
+                */
+                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date("Y-m-d | H:i:s")."'";
+                //$req = "UPDATE ".DEVICE_TABLE." SET ".DOWNLOAD." = 0";
+                if(!empty($whereCond)){
+                    $req .= " WHERE $whereCond";
+                }
+                $res = $this->sendRq($req);
                 return $row;
             }else{
                 $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile);
@@ -417,11 +426,29 @@ class DbRequest {
         $req = $this->update(UPDATED_AT, $date, DEVICE_TABLE, $whereCond);
         $res = $this->sendRq($req);
     }
-    
+
     function setDownload($sn, $percentage){
         $whereCond = SN."='$sn'";
         $req = $this->update('download', $percentage, DEVICE_TABLE, $whereCond);
         $res = $this->sendRq($req);
+    }
+    
+    function setIndex($sn, $index){
+        $whereCond = SN."='$sn'";
+        $req = $this->update('indextoget', $index, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+    }
+
+    function getIndex($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select("indextoget", DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row["indextoget"];
+            }
+        }
+        return 0;
     }
     /*
     function addSN($data){
