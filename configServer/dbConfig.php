@@ -28,6 +28,7 @@ define('STATUS', 'status');
 define('SERVER_DATE', 'server_date');
 define('IS_CONNECT', 'is_active');
 define('CONNECTED', 'connected');
+define('DOWNLOAD', 'download');
 /* Define User Table properties */
 
 define('LOGIN', 'username');
