@@ -25,7 +25,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class SoftwareController extends AbstractController
 {
     /**
-     * @Route("/admin/software/", name="software")
+     * @Route("/user/software/", name="software")
      */
     /*     
     public function index(SoftwareRepository $softwareRepository, Request $request): Response
@@ -197,7 +197,7 @@ class SoftwareController extends AbstractController
     }
 
     /**
-     * @Route("/admin/software/add", name="software_add")
+     * @Route("/user/software/add", name="software_add")
      * Upload new software with form
     */
     public function addSoftware(Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, FileUploader $fileUploader, DeviceFamilyRepository $deviceFamilyRepository): Response
@@ -301,7 +301,7 @@ class SoftwareController extends AbstractController
     }
 
     /**
-     * @Route("/admin/software/delete/{id}", name="software_delete")
+     * @Route("/user/software/delete/{id}", name="software_delete")
     */    
     public function deleteSoftware(Software $software, ManagerRegistry $doctrine)
     {

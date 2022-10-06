@@ -1,5 +1,11 @@
-$(document).ready(function (){
-  
+let checkbox_0 = document.querySelector('#checkbox_0');
+var checkboxes = document.getElementsByClassName('device-check');
+let selectedButton = document.querySelectorAll(".device-check");
+let selectedZone = document.getElementById('selectedZone');
+let updateZone = document.querySelectorAll(".update-zone");
+//let forcedButton = document.getElementsByName("switchbox");
+let deviceArray = document.querySelectorAll(".info_device"); //get all the info modals
+
   /* when page refreshed, cancel selection */
   if (window.performance) {
     console.info("window.performance works fine on this browser");
@@ -7,7 +13,6 @@ $(document).ready(function (){
   //console.info(performance.navigation.type);
   if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
     //console.info( "This page is reloaded" );
-    let selectedButton = document.querySelectorAll(".form-check-input");
     for(let button of selectedButton){
       let substr_id = button.getAttribute("id");
       let id = substr_id.substr(9);
@@ -18,6 +23,7 @@ $(document).ready(function (){
         xmlhttp.send()
       }
     }
+    checkbox_0.checked = false;
   } else {
     console.info( "This page is not reloaded");
   }
@@ -25,33 +31,70 @@ $(document).ready(function (){
 
   /* set device active in db to show connect button and allow connection*/
   setInterval(function (){
-    let deviceArray = document.querySelectorAll(".info_device")
     for (let device of deviceArray) {
       var deviceId = $(device).data("id");
-      $.ajax({    
+      var deviceElem = document.getElementById(`info_device_${deviceId}`);
+      var request = $.ajax({    
         type: "GET", 
         url: `/isactive/${deviceId}`,          
         dataType: "html",                  
         success: function(data){ 
-          if ($.trim(data)==1){   
-            $(device).addClass('bg-green btn-outline-green')
+          if (data == 1){  
+            //$(device).addClass('bg-green btn-outline-green')
             var deviceSn = $(device).data("title");
-            //document.getElementById(`c_sn_${deviceSn}`).classList.remove("none");
+            //print(deviceSn);
             document.getElementById(`c_sn_${deviceSn}`).style.display = "block";
+            //$(deviceElem).removeClass('bg-orange').addClass('bg-green');
+            $(deviceElem).addClass('bg-green');
           } 
           else  
-          {    
-            $(device).addClass('bg-orange btn-outline-orange')
+          {   
             var deviceSn = $(device).data("title");
-            //console.log(document.getElementById(`c_sn_${deviceSn}`));
             if (deviceSn && document.getElementById(`c_sn_${deviceSn}`)) {
               document.getElementById(`c_sn_${deviceSn}`).style.display = "none";
             }
-            
+            //$(deviceElem).removeClass('bg-green').addClass('bg-orange');
+            //$(deviceElem).addClass('bg-orange');
+            //$(deviceElem).removeClass('bg-green')
           }                 
         }
       });
+
     }
+
+    /*
+    let downloadArray = document.querySelectorAll(".progress-bar")
+    for (let download of downloadArray) {
+      //var downloadValue = $(download).data("value");
+      $.ajax({    
+        type: "GET", 
+        url: `/download/${deviceId}`,          
+        dataType: "html",                  
+        success: function(data){ 
+          if (data != 0) {
+            $(download).width(data+"%");
+            $(download).html(data+"%");
+          }
+          if (data == 100) {
+            $(download).addClass('bg-green')
+          }               
+        }
+      });
+    }
+    */
+
+    /*
+    var request = $.ajax({    
+      type: "GET", 
+      url: `/selected/`,          
+      dataType: "html",                  
+      success: function(data){
+        console.log(data);
+        selectedZone.innerHTML = data+" devices selected !";
+      }
+    });
+    */
+
     /*
     setTimeout(() => {
       document.location.reload();
@@ -61,61 +104,52 @@ $(document).ready(function (){
 
 
 	// ######## Validate version ######## //
-	//let updateButton = document.querySelectorAll(".update")
-	let updateZone = document.querySelectorAll(".update-zone")
+  
 	for(let zone of updateZone) {
 		zone.addEventListener("change", function() {
 			id = zone.getAttribute('data-id');
-			//id_substr = id.substr(7);
 			version = zone.value;
-			//url = `{{path('updated', {'id': ${id}, 'version': ${version}})}}`
 			url = `/updated/${id}/${version}`
 			document.querySelector(`#update_${id}`).href = url;
 		})
 	}
-
-
+  
 	// ######### Switch function ######### //
-	let forcedButton = document.getElementsByName("switchbox")
+  
+  let forcedButton = document.getElementsByName("switchbox");
 	for(let button of forcedButton){
-		let substr_id = button.getAttribute("data-id");
-		let vButton = document.getElementById(`update_${substr_id}`)
-		//vButton.addEventListener("click", function(){
     button.addEventListener("click", function(){  
 			let $id = button.getAttribute("data-id");
 			if (button.checked == true) {
         console.log(button.checked);
-			  	let xmlhttp = new XMLHttpRequest;
-			  	xmlhttp.open("GET", `/forced/${$id}/${1}`)
-			  	xmlhttp.send()
+        let xmlhttp = new XMLHttpRequest;
+        xmlhttp.open("GET", `/forced/${$id}/${1}`)
+        xmlhttp.send()
 			}
 			else{
-			  	let xmlhttp = new XMLHttpRequest;
-			  	xmlhttp.open("GET", `/forced/${$id}/${0}`)
-			  	xmlhttp.send()
+        let xmlhttp = new XMLHttpRequest;
+        xmlhttp.open("GET", `/forced/${$id}/${0}`)
+        xmlhttp.send()
 			}
 		})
 	}
-
+  
 	// ######### Selected function ######### //
 	/* select devices in db */
 	// if button clicked & button checked, item selected in db
-	//let selectedButton = document.querySelectorAll(".form-check-input");
-	let selectedButton = document.getElementsByClassName('form-check-input');
+
 	for(let button of selectedButton){
-		let substr_id = button.getAttribute("id");
-		let id = substr_id.substr(9);
-		//console.log(button);
-		//button.addEventListener("click", function(){
 		button.onclick = function() {
-			let xmlhttp = new XMLHttpRequest;
-			//console.log(button);
+      let substr_id = button.getAttribute("id");
+		  let id = substr_id.substr(9);
 			if (id != 0 && button.checked == true) {
-				
+				//console.log(button.checked);
+        let xmlhttp = new XMLHttpRequest;
 				xmlhttp.open("GET", `/selected/${id}/${1}`)
 				xmlhttp.send()
 			}
 			else if (id != 0 && button.checked == false) {
+        let xmlhttp = new XMLHttpRequest;
 				xmlhttp.open("GET", `/selected/${id}/${0}`)
 				xmlhttp.send()
 			}
@@ -124,31 +158,30 @@ $(document).ready(function (){
 
 
 	/* if checkbox_0 is clicked and is checked, query all checkbox in html, change checkbox.checked's value according to value for checkbox_0, select item in db */
-	let checkbox_0 = document.querySelector('#checkbox_0');
-	checkbox_0.onclick = function() {
-	  if (checkbox_0.checked == true) {
-      var checkboxes = document.getElementsByClassName('form-check-input');
-      for (var i=1; i < checkboxes.length; i++) {
-        let id = checkboxes[i].getAttribute("data-id");
-        checkboxes[i].checked = true;
-        let xmlhttp = new XMLHttpRequest;
-        xmlhttp.open("GET", `/selected/${id}/${1}`)
-        xmlhttp.send()
+  if (checkbox_0) {
+    checkbox_0.onclick = function() {
+      if (checkbox_0.checked == true) {
+        for (var i=0; i < checkboxes.length; i++) {
+          let id = checkboxes[i].getAttribute("data-id");
+          checkboxes[i].checked = true;
+          let xmlhttp = new XMLHttpRequest;
+          xmlhttp.open("GET", `/selected/${id}/${1}`)
+          xmlhttp.send()
+        }
       }
-	  }
-	  else {
-		var checkboxes = document.getElementsByClassName('form-check-input');
-		for (var i=1; i < checkboxes.length; i++) {
-		  let id = checkboxes[i].getAttribute("data-id");
-		  checkboxes[i].checked = false;
-		  let xmlhttp = new XMLHttpRequest;
-		  xmlhttp.open("GET", `/selected/${id}/${0}`)
-		  xmlhttp.send()
-		}
-	  }
-	}
-
-});
+      else {
+        for (var i=0; i < checkboxes.length; i++) {
+          let id = checkboxes[i].getAttribute("data-id");
+          checkboxes[i].checked = false;
+          let xmlhttp = new XMLHttpRequest;
+          xmlhttp.open("GET", `/selected/${id}/${0}`)
+          xmlhttp.send()
+        }
+      }
+    }
+  }
+  
+//});
 
 //window.onload = () => {
 

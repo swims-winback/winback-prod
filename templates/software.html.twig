@@ -7,12 +7,14 @@
         <section id="softwareSearch">
             <h1 class="text-center mt-4 mb-4">Software</h1>
             <!-- ===== NEW SOFTWARE ===== -->
+            {% if is_granted("ROLE_ADMIN") %}
             <a class="btn shadow-1 bg-orange btn-outline-orange floatingBtn" 
             href="{{path('software_add')}}"
             style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999; padding: 1em;" 
             type="button">
                 <i class="fa-solid fa-plus"></i>
             </a>
+            {% endif %}
             <!--
             <button href="" id="floatingBtn" class="btn bg-orange btn-outline-orange floatingBtn" 
             style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
@@ -75,18 +77,26 @@
                                                 </div>
                                             </th>
                                             <th>Creation date</th>
+                                            {% if is_granted("ROLE_ADMIN") %}
                                             <th></th>
+                                            {% endif %}
                                         </tr>
                                     </thead>
                                     <tbody class="accordion-body">   
                                     {% for software in softwares %}
                                         {% if software.family == family.name %}
                                             <tr>
-                                                <td><a download href="{{ asset('uploads/softwares/' ~ software.family ~ "/" ~ software.name) }}">{{software.name}}</a></td>
+                                                <td>
+                                                    {% if is_granted("ROLE_ADMIN") %}
+                                                        <a 'download' href="{{ asset('uploads/softwares/' ~ software.family ~ '/' ~ software.name) }}">{{software.name}}</a>
+                                                    {% else %}
+                                                        {{software.name}}
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{software.version}}</td>
                                                 <td>{{software.createdAt|date}}</td>
-                                                <!--TODO-->
                                                 {#<td>{{software.updatedAt|date}}</td>#}
+                                                {% if is_granted("ROLE_ADMIN") %}
                                                 <td class="text-center">
                                                     <a href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger" 
                                                     data-bs-target="#modal_delete_{{software.id}}"
@@ -94,6 +104,7 @@
                                                     data-title="{{software.name}}"
                                                     data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
                                                 </td>
+                                                {% endif %}
                                                 <!--
                                                 <td class="text-center">
                                                     <a href="{{path('software_edit', {'id': software.id})}}" class="btn rounded-1 bg-orange press modal-trigger" 

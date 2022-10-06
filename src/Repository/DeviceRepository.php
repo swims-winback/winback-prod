@@ -2,12 +2,16 @@
 
 namespace App\Repository;
 
+use App\Class\SearchData;
 use App\Entity\Device;
 use App\Server\DbRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 
 require_once dirname(__FILE__, 3).'/configServer/config.php';
 require_once dirname(__FILE__, 3).'/configServer/dbConfig.php';
@@ -19,9 +23,10 @@ require_once dirname(__FILE__, 3).'/configServer/dbConfig.php';
  */
 class DeviceRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Device::class);
+        $this->paginator = $paginator;
     }
 
     /*
@@ -251,6 +256,105 @@ class DeviceRepository extends ServiceEntityRepository
               //->orderBy('s.created_at', 'DESC')
               ->orderBy('d.sn', 'ASC')
               //->setMaxResults(10)
+              ->getQuery()
+              ->getResult()
+          ;
+      }
+
+      public function findAll2($page=1)
+      {
+        $query = $this->createQueryBuilder('d')
+        //->andWhere('s.createdAt = :val')
+        //->setParameter('val', $value)
+        //->orderBy('s.created_at', 'DESC')
+        ->orderBy('d.sn', 'ASC');
+        //->setMaxResults(10);
+        $paginator = new Paginator($query);
+        $pageSize = '10';
+        $totalItems = count($paginator);
+        $pageCount = ceil($totalItems/$pageSize);
+        var_dump($pageCount);
+        return 
+        [
+            $pageCount,
+            $paginator->getQuery()
+            ->setFirstResult($pageSize*($page-1)) //set the Offset
+            ->setMaxResults($pageSize) //set the limit
+            ->getResult()
+        ];
+      }
+
+      /**
+       * Get devices after filter search
+       * @return PaginationInterface
+       */
+      public function findSearch(SearchData $search): PaginationInterface
+      {
+
+        $query = $this->getSearchQuery($search)->getQuery();
+        
+        return $this->paginator->paginate(
+            $query,
+            $search->page,
+            10
+        );
+      }
+
+    private function getSearchQuery(SearchData $search): ORMQueryBuilder
+      {
+        $query = $this
+        ->createQueryBuilder('d')
+        ->orderBy('d.sn', 'ASC')
+        ->select('c', 'd')
+        ->join('d.deviceFamily', 'c');
+        //->setMaxResults(10);
+
+        if (!empty($search->q)) {
+            $query = $query
+                ->andWhere('d.sn LIKE :q')
+                ->setParameter('q', "%{$search->q}%");
+        }
+        
+        if (!empty($search->version)) {
+            $query = $query
+                ->andWhere('d.version = :version')
+                ->setParameter('version', $search->version);
+        }
+
+        if (!empty($search->version_upload)) {
+            $query = $query
+                ->andWhere('d.versionUpload = :versionUpload')
+                ->setParameter('versionUpload', $search->version_upload);
+        }
+
+        
+        if (!empty($search->forced)) {
+            $query = $query
+                ->andWhere('d.forced = 1');
+        }
+
+        if (!empty($search->connected)) {
+            $query = $query
+                ->andWhere('d.isActive = 1');
+        }
+        
+        
+        if (!empty($search->categories)) {
+            $query = $query
+                ->andWhere('c.id IN (:deviceFamily)')
+                ->setParameter('deviceFamily', $search->categories);
+        }
+        
+          return $query;
+      }
+
+      /**
+       * @return Device[] Returns an array of Device objects selected
+       */
+      public function findAllSelected()
+      {
+          return $this->createQueryBuilder('d')
+              ->andWhere('d.selected = 1')
               ->getQuery()
               ->getResult()
           ;

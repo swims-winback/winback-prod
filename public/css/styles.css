@@ -195,4 +195,11 @@ table.dataTable thead .sorting_desc_disabled:before {
   border: none; /* Remove borders */
   outline: none; /* Remove outline */
   cursor: pointer; /* Add a mouse pointer on hover */
+}
+
+#filter {
+  display: block;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px;
 }/*# sourceMappingURL=styles.css.map */

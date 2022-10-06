@@ -94,6 +94,9 @@ class Device
     #[ORM\Column(type: 'boolean')]
     private $connected = false;
 
+    #[ORM\Column(type: 'integer')]
+    private $download;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
@@ -384,6 +387,18 @@ class Device
     public function setConnected(bool $connected): self
     {
         $this->connected = $connected;
+
+        return $this;
+    }
+
+    public function getDownload(): ?int
+    {
+        return $this->download;
+    }
+
+    public function setDownload(int $download): self
+    {
+        $this->download = $download;
 
         return $this;
     }

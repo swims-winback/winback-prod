@@ -206,3 +206,9 @@ table.dataTable thead .sorting_desc_disabled:before {
     outline: none; /* Remove outline */
     cursor: pointer; /* Add a mouse pointer on hover */
   }
+
+  #filter {
+    display: block;
+    position: sticky;
+    top: 80px;
+}

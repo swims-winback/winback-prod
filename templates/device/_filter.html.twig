@@ -1,0 +1,15 @@
+{{ form_start(form, {attr: { id: 'filter'}}) }}
+    {{ form_row(form.q) }}
+    <h4>Device Type</h4>
+    {{ form_row(form.categories) }}
+
+    <h4>Device Version</h4>
+    {{ form_row(form.version) }}
+    {{ form_row(form.version_upload) }}
+
+    <h4>Status</h4>
+    {{ form_row(form.forced) }}
+    {{ form_row(form.connected) }}
+
+    <button type="submit" class="btn bg-orange btn-outline-orange">Search</button>
+{{ form_end(form) }}
