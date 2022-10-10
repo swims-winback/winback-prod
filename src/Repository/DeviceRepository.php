@@ -311,7 +311,7 @@ class DeviceRepository extends ServiceEntityRepository
 
         if (!empty($search->q)) {
             $query = $query
-                ->andWhere('d.sn LIKE :q')
+                ->andWhere('d.sn LIKE :q OR d.comment LIKE :q')
                 ->setParameter('q', "%{$search->q}%");
         }
         

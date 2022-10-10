@@ -25,7 +25,7 @@ class SearchDeviceType extends AbstractType
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Enter serial number',
+                    'placeholder' => 'Search',
                 ],
                 'required' => false,
             ])

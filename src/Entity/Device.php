@@ -97,6 +97,9 @@ class Device
     #[ORM\Column(type: 'integer')]
     private $download;
 
+    #[ORM\Column(type: 'string', length: 400, nullable: true)]
+    private $comment;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
@@ -399,6 +402,18 @@ class Device
     public function setDownload(int $download): self
     {
         $this->download = $download;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(int $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap");
-body, html {
+html {
   width: 100%;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -10,8 +10,15 @@ body, html {
   padding: 0 !important;
 }
 
-container {
+body {
+  font-family: "Open Sans", sans-serif;
+  color: black;
+  width: 100%;
   height: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 !important;
 }
 
 a {
@@ -22,11 +29,6 @@ a {
 .primary {
   /*background-color: #f0780e;*/
   background-color: transparent;
-}
-
-body {
-  font-family: "Open Sans", sans-serif;
-  color: black;
 }
 
 .bg-orange {
@@ -64,7 +66,7 @@ body {
   color: crimson;
 }
 
-.header, .footer {
+.footer {
   width: 100%;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -73,11 +75,14 @@ body {
 }
 
 .header {
-  padding: 2em;
-  justify-content: space-between;
-  font-family: "Open Sans", sans-serif;
+  width: 100%;
   height: -webkit-fit-content;
   height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+  padding: 1em;
+  justify-content: space-between;
+  font-family: "Open Sans", sans-serif;
   height: fit-content;
 }
 .header .navbar-brand {
@@ -101,7 +106,6 @@ body {
 }
 .navbar .nav-link:hover {
   border-bottom: solid white 1px;
-  box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0, 0, 0, 0);
 }
 .navbar #logo {
   height: 15px !important;
@@ -157,10 +161,9 @@ td {
 }
 
 #softwareSearch {
-  height: 70vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -198,6 +201,13 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 
 #filter {
+  display: block;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px;
+}
+
+.sticky-scroll {
   display: block;
   position: -webkit-sticky;
   position: sticky;

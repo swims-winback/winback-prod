@@ -23,7 +23,9 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
         xmlhttp.send()
       }
     }
-    checkbox_0.checked = false;
+    if (checkbox_0) {
+      checkbox_0.checked = false;
+    }
   } else {
     console.info( "This page is not reloaded");
   }

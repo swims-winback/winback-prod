@@ -1,13 +1,13 @@
-{{ form_start(form, {attr: { id: 'filter'}}) }}
+{{ form_start(form, {attr: { id: 'filter', class: 'sticky-scroll'}}) }}
     {{ form_row(form.q) }}
-    <h4>Device Type</h4>
+    <h6>Device Type</h6>
     {{ form_row(form.categories) }}
 
-    <h4>Device Version</h4>
+    <h6>Device Version</h6>
     {{ form_row(form.version) }}
     {{ form_row(form.version_upload) }}
 
-    <h4>Status</h4>
+    <h6>Status</h6>
     {{ form_row(form.forced) }}
     {{ form_row(form.connected) }}
 
