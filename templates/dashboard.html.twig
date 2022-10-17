@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-4">
+        <h3>Total Devices</h3>
+        <canvas id="myChart" width="400" height="400"></canvas>
+        <div id="total_count">{{countDevices}}</div>
+        </div>
+
+        <div class="col-md-8 d-flex flex-wrap align-items-center justify-content-evenly">
+            {% for deviceFamily in devicesFamily %}
+                <div class="col-md-4 mx-md-2">
+                    <h6 class="device_family">{{deviceFamily}}</h6>
+                    <canvas id="myChart2_{{deviceFamily}}" width="50" height="50"></canvas>
+                    <div class="device_count" id="count_{{deviceFamily}}">{{deviceFamily.devices.count}}</div>
+                    <div class="device_count_version" id="count_version_{{deviceFamily}}">Count Version: </div>
+                    {% for key, item in deviceArray %}
+                    {% if key == deviceFamily %}
+                        {{item}}
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for key, items in softwareArray %}
+                    {% if key == deviceFamily %}
+                    <select class="form-select" name="" id="">
+                    {% for item in items %}
+                        <option value={{item}} class="select-version" data-devicefamily="{{deviceFamily}}">
+                        {{item}}
+                        </option>
+                    {% endfor %}
+                    </select>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/dashboard.js')}}"></script>
+{% endblock %}
