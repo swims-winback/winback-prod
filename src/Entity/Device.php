@@ -107,6 +107,11 @@ class Device
         $this->software = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->version;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

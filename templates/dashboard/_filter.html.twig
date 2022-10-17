@@ -1,0 +1,8 @@
+{{ form_start(form, {attr: { id: 'filter', class: 'sticky-scroll'}}) }}
+
+    <h6>Device Version</h6>
+    {{ form_row(form.version) }}
+    {{ form_row(form.version_upload) }}
+
+    <button type="submit" class="btn bg-orange btn-outline-orange">Search</button>
+{{ form_end(form) }}

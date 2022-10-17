@@ -1,5 +1,11 @@
 {{ form_start(form, {attr: { id: 'filter', class: 'sticky-scroll'}}) }}
-    {{ form_row(form.q) }}
+    <div class="input-group flex-nowrap">
+    <span class="input-group-text mb-3" id="addon-wrapping" style='border-right-style: none; border-right-radius: 0; background-color: white;'>
+    <i class="fa-solid fa-magnifying-glass"></i>
+    </span>
+    {{ form_row(form.q, {attr: { style: 'border-left-style: none; border-left-radius: 0'}}) }}
+    </div>
+
     <h6>Device Type</h6>
     {{ form_row(form.categories) }}
 
