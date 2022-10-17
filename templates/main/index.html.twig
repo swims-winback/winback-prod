@@ -1,21 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bonjour utilisateur{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
     <div class="grix xs4 container">
         <div class="col-xs4">
-            <h1>Bonjour {{app.user.username}}</h1>
+            <h1>Welcome {{app.user.username}}</h1>
         </div>
         <div class="col-xs4 d-flex">
             <div class="card shadow-1 hoverable-1 rounded-3 white mx-1">
-                <div class="card-header">Software</div>
+                <div class="card-header"><a href="{{path('software')}}">Software</a></div>
             </div>
             <div class="card shadow-1 hoverable-1 rounded-3 white mx-1">
-                    <div class="card-header">Device</div>
+                    <div class="card-header"><a href="{{path('device')}}">Device</a></div>
             </div>
             <div class="card shadow-1 hoverable-1 rounded-3 white mx-1">
-                    <div class="card-header">Analytics</div>
+                <div class="card-header"><a href="{{path('dashboard')}}">Dashboard</a></div>
             </div>
         </div>
 
