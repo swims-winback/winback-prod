@@ -11,13 +11,11 @@
                     {{ form(searchform) }}
                     #}
                     <!-- Button to add device table -->
-                    {% if is_granted("ROLE_SUPER") %}
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
                         <button id="floatingBtn" class="btn bg-orange btn-outline-orange  d-flex align-items-center justify-content-center" 
                         style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
                         type="button"
                         data-bs-target="#modal_upload"
-                        data-id="{{device.id}}"
-                        data-title="{{device.sn}}"
                         data-bs-toggle="modal">
                             <i class="fa-solid fa-plus"></i>
                         </button>
@@ -52,7 +50,7 @@
                                         <th scope="col" class="text-center">Version</th>
                                         <th scope="col" class="text-center">Upload Version</th>
                                         <th scope="col" class="text-center">Download status</th>
-                                        {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SAV") %}
+                                        {% if is_granted("ROLE_SAV") %}
                                         <th scope="col" class="text-center">Log files</th>
                                         {% endif %}
                                         <th scope="col" class="text-center">Forced</th>
@@ -62,7 +60,7 @@
                                     </tr>
                                     <tr class="w-100 align-bottom">
                                         <th class="text-center">
-                                        {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER") or is_granted("ROLE_SAV") %}
+                                        {% if is_granted("ROLE_SAV") %}
                                                                         
                                             {{ form_start(checkform) }}
                                                 <div class="row">
@@ -79,7 +77,7 @@
                                         <th></th>
                                         <th></th>
                                         <th id='test_zone_0'>
-                                            {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER") or is_granted("ROLE_SAV")%}
+                                            {% if is_granted("ROLE_SAV")%}
                                                 {{ form_start(versionform) }}
                                                     <div class="input-group d-flex flex-nowrap">
                                                     {{form_row(versionform.versionUpload, {attr: { style: 'border-right-style: none; border-right-radius: 0', class: 'flex-grow:1'}})}}
@@ -103,7 +101,7 @@
                                             <td class="text-center">
                                                 <div class="form-field text-center align-middle">
                                                 <label class="form-check text-center align-middle">
-                                                {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SAV")%}
+                                                {% if is_granted("ROLE_SAV")%}
                                                     <input type="checkbox" 
                                                     id="checkbox_{{device.id}}" 
                                                     data-id="{{device.id}}" 
@@ -124,7 +122,7 @@
                                                     <div class="progress-bar viride dark-1"></div>
                                                 </div>
                                             </td>
-                                            {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SAV")%}
+                                            {% if is_granted("ROLE_SAV")%}
                                             <td class="text-center">
                                                 <a download href="{{ asset('Ressource/logs/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">
                                                 <i class="fa-solid fa-download"></i>

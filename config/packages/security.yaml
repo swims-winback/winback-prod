@@ -8,6 +8,9 @@ security:
         App\Entity\Admin:
             algorithm: auto
 
+    role_hierarchy:
+        ROLE_ADMIN:       [ROLE_USER, ROLE_SAV]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
@@ -36,9 +39,9 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 target: app_login
-            #remember_me:
-                #secret:   '%kernel.secret%' # required
-                #lifetime: 604800 # 1 week in seconds
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 604800 # 1 week in seconds
                 # by default, the feature is enabled by checking a
                 # checkbox in the login form (see below), uncomment the
                 # following line to always enable it.

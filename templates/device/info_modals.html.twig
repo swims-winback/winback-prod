@@ -80,7 +80,7 @@
                         </tr>
                         {% endif %}
 
-                        {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SAV")%}
+                        {% if is_granted("ROLE_SAV")%}
                         
                         <tr>
                             <th>Forced :</th>
@@ -137,7 +137,7 @@
             </div>
             <div class="divider"></div>
             <div class="modal-footer">
-                {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_SAV")%}
+                {% if is_granted("ROLE_SAV")%}
                 <div>
                     <a href="" 
                     class="update btn btn-outline-dark red shadow-1 rounded-1 small" 
