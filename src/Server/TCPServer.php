@@ -272,7 +272,7 @@ class TCPServer extends AbstractController
 								$clientsInfo[$deviceKey][0] = $sn; // Show serial number in terminal
 								$deviceCommand = $data[20].$data[21];
 								
-								$responseArray = $task->start($data, $clientsInfo[$deviceKey][3], $clients[$deviceKey], $clientsInfo[$deviceKey][7]);
+								$responseArray = $task->start($data, $clientsInfo[$deviceKey][3], $clientsInfo[$deviceKey][7]);
 
 								if ($responseArray != False) {
 									// récupérer deviceInfo
