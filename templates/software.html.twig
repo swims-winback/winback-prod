@@ -3,50 +3,40 @@
 {% block title %}Software{% endblock %}
 
 {% block content %}
-    <div class="container d-flex flex-column space-between align-items-center">
-        <section id="softwareSearch">
-            <h1 class="text-center mt-4 mb-4">Software</h1>
-            <!-- ===== NEW SOFTWARE ===== -->
-            <a class="btn shadow-1 bg-orange btn-outline-orange floatingBtn" 
-            href="{{path('software_add')}}"
-            style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999; padding: 1em;" 
-            type="button">
-                <i class="fa-solid fa-plus"></i>
-            </a>
-            <!--
-            <button href="" id="floatingBtn" class="btn bg-orange btn-outline-orange floatingBtn" 
-            style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
-            type="button"
-            data-bs-target="#modal_upload_soft"
-            data-id="{{device.id}}"
-            data-title="{{device.sn}}"
-            data-bs-toggle="modal">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-            -->
-            <!-- ===== UPLOAD MODALS ===== -->
-            {% include 'software/upload_modals.html.twig' %}
-
-            <!-- ===== ALERT MESSAGES ===== -->
-            {% for message in app.flashes('errorSoftware') %}
-                <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
-            {% endfor %}
-            {% for message in app.flashes('message') %}
-                <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message }}</div>
-            {% endfor %}
-            {% for message in app.flashes('infoSoftware') %}
-                <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
-            {% endfor %}
-            <!-- ===== SEARCH SOFTWARE IN DB ===== -->
-            {{ form(searchform) }}
-        </section>
-
-        <!-- ===== SOFTWARE TABLE PER FAMILY ===== -->
-        <div class="d-flex flex-column space-between">
-        {% for family in families %}
-            
-            {#{% for software in family.software %}#}
-                {#{% if software %}#}
+    <div class="container d-flex flex-column justify-content-between align-items-center w-100">
+        <h1 class="text-center mt-4 mb-4">Software</h1>
+        <section id="softwareSearch"></section>
+        <!-- ===== ALERT MESSAGES ===== -->
+        {% for message in app.flashes('errorSoftware') %}
+            <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('message') %}
+            <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('infoSoftware') %}
+            <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
+        {% endfor %}
+        <div class="row w-100">
+            <div class="col-md-3">
+                <!-- ===== NEW SOFTWARE ===== -->
+                {% if is_granted("ROLE_ADMIN") %}
+                <a class="btn shadow-1 bg-orange btn-outline-orange floatingBtn d-flex align-items-center justify-content-center" 
+                    href="{{path('software_add')}}"
+                    style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999; padding: 1em;" 
+                    type="button">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+                {% endif %}
+                <!-- ===== UPLOAD MODALS ===== -->
+                {% include 'software/upload_modals.html.twig' %}
+                <!-- ===== SEARCH SOFTWARE IN DB ===== -->
+                {{ form(searchform) }}
+            </div>
+            <div class="col-md-9">
+                <!-- ===== SOFTWARE TABLE PER FAMILY ===== -->
+                <div class="d-flex flex-column space-between">
+                {% for family in families %}
+                    
                     <div class="accordion mt-2 mb-4" id="accordionSoftware">
                         
                         <div class="accordion-item">
@@ -75,18 +65,26 @@
                                                 </div>
                                             </th>
                                             <th>Creation date</th>
+                                            {% if is_granted("ROLE_ADMIN") %}
                                             <th></th>
+                                            {% endif %}
                                         </tr>
                                     </thead>
                                     <tbody class="accordion-body">   
                                     {% for software in softwares %}
                                         {% if software.family == family.name %}
                                             <tr>
-                                                <td><a download href="{{ asset('uploads/softwares/' ~ software.family ~ "/" ~ software.name) }}">{{software.name}}</a></td>
+                                                <td>
+                                                    {% if is_granted("ROLE_ADMIN") %}
+                                                        <a 'download' href="{{ asset('uploads/softwares/' ~ software.family ~ '/' ~ software.name) }}">{{software.name}}</a>
+                                                    {% else %}
+                                                        {{software.name}}
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{software.version}}</td>
                                                 <td>{{software.createdAt|date}}</td>
-                                                <!--TODO-->
                                                 {#<td>{{software.updatedAt|date}}</td>#}
+                                                {% if is_granted("ROLE_ADMIN") %}
                                                 <td class="text-center">
                                                     <a href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger" 
                                                     data-bs-target="#modal_delete_{{software.id}}"
@@ -94,6 +92,7 @@
                                                     data-title="{{software.name}}"
                                                     data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
                                                 </td>
+                                                {% endif %}
                                                 <!--
                                                 <td class="text-center">
                                                     <a href="{{path('software_edit', {'id': software.id})}}" class="btn rounded-1 bg-orange press modal-trigger" 
@@ -112,10 +111,9 @@
 
                         </div>
                     </div>
-
-                {#{% endif %}#}
-            {#{% endfor %}#}
-        {% endfor %}
+                {% endfor %}
+                </div>
+            </div>
         </div>
 
         {# ===== DELETE MODALS ===== #}
@@ -126,36 +124,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        // ######### Delete function ######### //
-
-        window.onload = () => {
-            /*
-            let deleteButton = document.querySelectorAll(".modal-trigger")
-            for(let button of deleteButton) {
-                button.addEventListener("click", function() {
-                    $id = button.getAttribute("data-id");
-                    $sn = button.getAttribute("data-title");
-                    console.log($id)
-                    document.querySelector(".modal-footer a").href = `/admin/software/delete/${$id}`
-                    document.querySelector(".modal-content").innerText = `Are you sure to delete software `+$sn
-                })
-            }
-            */
-            /*
-            let editButton = document.querySelectorAll(".modal-trigger")
-            for(let button of editButton) {
-                button.addEventListener("click", function() {
-                    $id = button.getAttribute("data-id");
-                    $sn = button.getAttribute("data-title");
-                    console.log($id)
-                    document.querySelector(".modal-footer a").href = `/admin/software/edit/${$id}`
-                    document.querySelector(".modal-content").innerText = `Are you sure to edit software `+$sn
-                })
-            }
-            */
-
-        }
-    </script>
     <script src="{{ asset('js/software.js')}}"></script>
 {% endblock %}

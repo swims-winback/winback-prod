@@ -1,35 +1,17 @@
 <!-- ### DEVICE ACTION ### -->
 
 <div id="deviceAction">
-
+    <!--
     <div id="listDevice">
         <fieldset>
-            {#
-            <legend>Filter:</legend>
-            #}
-            <form action="./filter.php" method="post">
-                
-                {% for hardware in families %}
-                    
-                <label>
-                {#
-                    <input type="checkbox" value="{{ key }}" name="hardware"/>{{hardware | slice(0, {{hardware |length}} - 1)}}
 
-                #}
-                </label>
-                    {% endfor %}
-                {#
-                <label for="sn">Sn:</label>
-                #}
+            <form action="./filter.php" method="post">
                 <input type="text" id="sn" name="sn" visibility="hidden"/>
-                {#
-                <input type="submit" value="Search" />
-                #}
             </form>
         </fieldset>
 
     </div>
-
+    -->
     <!-- ### SCREEN DEVICE ### -->
     
     <div id="screenDevice" data-sn="1234" value="1234" class="screenDevice">

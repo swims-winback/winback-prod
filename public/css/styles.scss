@@ -1,33 +1,66 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap');
 $color1 : #f18841;
 $color2 : #f18741c4;
+$color3 : #ffffff;
+$color4 : #000000;
 
-body, html {
+html {
     width: 100%;
-    height: fit-content;
+    height: 100%;
+    //height: fit-content;
     align-items: center;
     justify-content: center;
     margin: 0;
     padding: 0 !important;
 }
 
-container {
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: $color4;
+    width: 100%;
+    //height: fit-content;
+    //height: 100%;
+    //height: 100vh;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0 !important;
+    background-color: $color3;
+}
+
+h1, h2, h3, h4, h5, h6 {
+
+}
+
+h1, h2 {
+    font-weight: bold;
+    font-size:xx-large;
+    font-style: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+main {
+    width: 100%;
+    //min-height: 80%;
+    //height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 a {
     color: black;
     text-decoration: none !important;
 }
+
 .primary {
     /*background-color: #f0780e;*/
     background-color: transparent;
 
-}
-
-body {
-    font-family: 'Open Sans', sans-serif;
-    color: black;
 }
 
 .bg-orange {
@@ -69,14 +102,42 @@ body {
     color:crimson;
 }
 
-.header, .footer {
+.footer {
     width: 100%;
     height: fit-content;
     text-align: center;
 }
 
+/*
+.custom-class {
+    display: none;
+  }
+  @include media-breakpoint-up(sm) {
+
+  }
+*/
+
+// Small devices (landscape phones, 576px and up)
+//@media (min-width: 576px) { ... }
+
+// Medium devices (tablets, 768px and up)
+//@media (min-width: 768px) { ... }
+
+// Large devices (desktops, 992px and up)
+//@media (min-width: 992px) { ... }
+
+// X-Large devices (large desktops, 1200px and up)
+
+// XX-Large devices (larger desktops, 1400px and up)
+//@media (min-width: 1400px) { ... }
+
+  
 .header {
-    padding: 2em;
+    display: block !important;
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+    padding: 1em;
     justify-content: space-between;
     font-family: 'Open Sans', sans-serif;
     height: fit-content;
@@ -90,14 +151,33 @@ body {
         text-transform: uppercase;
     }
 }
+
+@media (max-width: 800px) { 
+    .header {
+        display: none !important;
+      }
+ }
+
+.navbar-toggler {
+    &:focus {
+        box-shadow: none;
+    }
+}
+
 .navbar {
     //padding: 2em;
     font-family: 'Open Sans', sans-serif;
     //color: black !important;
     display: flex;
     justify-content: space-between;
+    flex-wrap: nowrap;
     .nav-link {
         text-transform: uppercase;
+        font-family: 'NotoSansExtraCondensedBold';
+        //font-weight: 100;
+        font-size: larger;
+        font-style: normal;
+        letter-spacing: 2px;
         margin: 0 1em 0 1em;
         color: white;
         //border-bottom: solid white 1px;
@@ -105,8 +185,15 @@ body {
             //color: #f18841;
             //background-color: none;
             border-bottom: solid white 1px;
-            -webkit-box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0); 
-            box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0);
+            //-webkit-box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0); 
+            //box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0);
+        }
+        &:active {
+            //color: #f18841;
+            //background-color: none;
+            border-bottom: solid white 1px;
+            //-webkit-box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0); 
+            //box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0);
         }
         
     }
@@ -166,10 +253,10 @@ td {
 }
 
 #softwareSearch {
-    height: 70vh;
+    //height: 70vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -206,3 +293,25 @@ table.dataTable thead .sorting_desc_disabled:before {
     outline: none; /* Remove outline */
     cursor: pointer; /* Add a mouse pointer on hover */
   }
+
+  #filter {
+    display: block;
+    position: sticky;
+    top: 80px;
+}
+
+.sticky-scroll {
+    display: block;
+    position: sticky;
+    top: 80px;
+}
+
+.login {
+    //background-color:#dcdcdc;
+    //color: #686868;
+    border-radius: 5px;
+    width: fit-content;
+    height: fit-content;
+    -webkit-box-shadow: 5px 5px 15px 5px #acabab; 
+    box-shadow: 5px 5px 15px 5px #acabab;
+}

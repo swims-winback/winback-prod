@@ -3,22 +3,39 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container d-flex justify-content-center align-items-center">
         {% for flash_error in app.flashes('verify_email_error') %}
             <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
         {% endfor %}
 
-        <h1>Register</h1>
+        
 
-        {{ form_start(registrationForm) }}
-            {{ form_row(registrationForm.username) }}
-            {{ form_row(registrationForm.email) }}
-            {{ form_row(registrationForm.plainPassword, {
-                label: 'Password'
-            }) }}
+        {{ form_start(registrationForm, {'attr': {'class': 'd-flex flex-column align-items-center justify-content-around mt-2 mb-2 mt-sm-2 mb-sm-2 pt-1 pb-1 pt-sm-2 pb-sm-2 px-2 login'}}) }}
+            <span class="fa-stack fa-3x" style="position: relative; top: -40px;">
+                <i class="fa-solid fa-circle fa-stack-2x" style="color: #f18841;"></i>
+                <i class="fa-regular fa-user fa-stack-1x fa-inverse"></i>
+            </span>
+            <h2 class="mb-1 mb-sm-2">Register</h2>
+            <div class="input-group flex-nowrap">
+                <span class="input-group-text mb-3" id="addon-wrapping">
+                <i class="fa-solid fa-user"></i>
+                </span>
+                {{ form_row(registrationForm.username, {'attr': {'placeholder': 'Username'}}) }}
+            </div>
+            <div class="input-group flex-nowrap">
+                <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-envelope"></i></span>
+                {{ form_row(registrationForm.email, {'attr': {'placeholder': 'Email'}}) }}
+            </div>
+            <div class="input-group flex-nowrap">
+                <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
+                {{ form_row(registrationForm.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+            </div>
             {{ form_row(registrationForm.agreeTerms) }}
 
-            <button type="submit" class="btn">Register</button>
+            <button type="submit" class="btn txt-white bg-orange btn-outline-orange">Register</button>
+
+            <hr style="height:2px; width:75%; border-width:0; color:gray; background-color:gray" class="mt-1 mb-1 mt-sm-2 mb-sm-2">
+            <div class="d-flex justify-content-around align-items-center w-100 p-0"><p class="mb-0">Already registered ?</p><a class="btn btn-secondary txt-white" href="{{ path('app_login') }}">Sign In</a></div>
         {{ form_end(registrationForm) }}
     </div>
 {% endblock %}

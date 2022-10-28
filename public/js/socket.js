@@ -6,7 +6,6 @@
 
 
 $(document).ready(function(){
-    //var timeDelay = 5000;           // MILLISECONDS (5 SECONDS).
     
     setInterval(function (){
         if ((CTD == true) && (readyRq == 0)){
@@ -16,8 +15,6 @@ $(document).ready(function(){
             $.ajax({
                 type:"POST",
                 cache:false,
-                //url:"../src/Class/TCPClient.php",
-                //url: `/admin/tcpclient/`,
                 url: path,
                 data:{action: 'test', sn:sn, page:page},   // multiple data sent using ajax
                 success: function (data) {
@@ -53,16 +50,6 @@ $(document).ready(function(){
                             switch (key){
                                 case 'Menu':
                                     if(jsonData[key] == 'Debug'){
-                                        /*
-                                        $("#listDevice").css('visibility', 'hidden');
-                                        $("#listDevice").css('display', 'none');
-                                        */
-                                        $("#listDeviceSearch").css('visibility', 'hidden');
-                                        $("#listDeviceSearch").css('display', 'none');
-                                        
-                                        $("#listDeviceTable").css('visibility', 'hidden');
-                                        $("#listDeviceTable").css('display', 'none');
-
                                         $("#screenDevice").css('visibility', 'hidden');
                                         $("#screenDevice").css('display', 'none');
                                     }else{
@@ -160,10 +147,16 @@ $(document).ready(function(){
                         }
                         html += '</tr>';
                     }
-                    console.log("infoList :".html);
+                    //console.log("infoList :".html);
                     $("#infoList").html(html);
                 }
             }).done(function(){readyRq = 0;});
         }
+        /*
+        setTimeout(() => {
+            console.log("server is paused");
+            //document.location.reload();
+        }, 3000);
+        */
     }, 1000);
 });
