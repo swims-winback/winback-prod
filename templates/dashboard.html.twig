@@ -3,38 +3,48 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mt-4">
+<div style="" class="mt-5 mb-5 p-5">
+    <div class="container row">
         <div class="col-md-4">
-        <h3>Total Devices</h3>
-        <canvas id="myChart" width="400" height="400"></canvas>
-        <div id="total_count">{{countDevices}}</div>
+            <div class="card dashboard-card">
+                <h3 class="card-header"><strong>Total Devices</strong></h3>
+                <canvas id="myChart" width="400" height="400" class="card-img-top"></canvas>
+                <div id="total_count" style="display: none;">{{countDevices}}</div>
+            </div>
         </div>
 
         <div class="col-md-8 d-flex flex-wrap align-items-center justify-content-evenly">
             {% for deviceFamily in devicesFamily %}
-                <div class="col-md-4 mx-md-2">
-                    <h6 class="device_family">{{deviceFamily}}</h6>
-                    <canvas id="myChart2_{{deviceFamily}}" width="50" height="50"></canvas>
-                    <div class="device_count" id="count_{{deviceFamily}}">{{deviceFamily.devices.count}}</div>
-                    <div class="device_count_version" id="count_version_{{deviceFamily}}">Count Version: </div>
-                    {% for key, item in deviceArray %}
-                    {% if key == deviceFamily %}
-                        {{item}}
-                    {% endif %}
-                    {% endfor %}
+                <div class="col-md-4 m-md-2 card dashboard-card">
+                    <div class="card-header">
+                    <div class="device_family" id="{{deviceFamily}}"><strong>{{deviceFamily}}</strong></div>
+                    </div>
+                    <canvas id="myChart2_{{deviceFamily}}" class="card-img-top" width="50" height="50"></canvas>
+                    <div class="card-body">
+                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                        <strong>Total</strong> : <div class="device_count" id="count_{{deviceFamily}}">{{deviceFamily.devices.count}}</div>
+                        </div>
+                        <div class="d-flex flex-nowrap justify-content-between">Count Version : <div class="device_count_version" id="count_version_{{deviceFamily}}"></div></div>
+                        {% for key, item in deviceArray %}
+                        {% if key == deviceFamily %}
+                            {{item}}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
 
-                    {% for key, items in softwareArray %}
-                    {% if key == deviceFamily %}
-                    <select class="form-select" name="" id="">
-                    {% for item in items %}
-                        <option value={{item}} class="select-version" data-devicefamily="{{deviceFamily}}">
-                        {{item}}
-                        </option>
-                    {% endfor %}
-                    </select>
-                    {% endif %}
-                    {% endfor %}
+                    <div class="card-footer">
+                        {% for key, items in softwareArray %}
+                        {% if key == deviceFamily %}
+                        <select class="form-select" name="" id="">
+                        {% for item in items %}
+                            <option value={{item}} class="select-version" data-devicefamily="{{deviceFamily}}">
+                            {{item}}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             
             {% endfor %}

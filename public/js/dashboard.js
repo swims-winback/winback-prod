@@ -20,13 +20,8 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: [
-              'Rschock',
-              'Back 4',
-            'Cryoback',
-            'Back 2',
-              'Bioback'
-            ],
+          labels:
+          family_array,
             datasets: [{
               label: 'Total Devices',
               data: count_array,
@@ -48,16 +43,40 @@ const myChart = new Chart(ctx, {
             hoverOffset: 4
             }]
         },
-        options: {
+  options: {
+    responsive: true,
           plugins: {
               title: {
                   display: true,
                   text: 'Total Devices'
               }
           }
-      }
+  },
+  plugins: [{
+    id: 'text',
+    beforeDraw: function(chart, a, b) {
+      var width = chart.width,
+        height = chart.height,
+        ctx = chart.ctx;
+
+      ctx.restore();
+      var fontSize = (height / 114).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      var text = total_devices,
+        textX = Math.round((width - ctx.measureText(text).width) / 2),
+        textY = height / 2;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  }]
+  
 });
 
+
+myChartArray = []
 for (const key in result) {
   //const element = object[key];
   let substr_devices = total_devices - result[key];
@@ -67,36 +86,60 @@ for (const key in result) {
   //this[type+"_"+key] = 1000;
   this[type+"_"+key] = document.getElementById(`myChart2_${key}`).getContext('2d');
   //this[type2+"_"+key] = new Chart(this[type+"_"+key], {
-    myChart2 = new Chart(this[type+"_"+key], {
+    myChartArray[key] = new Chart(this[type+"_"+key], {
           type: 'doughnut',
           data: {
-            labels: [
-                'Updated',
-                'Not Updated',
-              ],
+            labels: ['Not Updated', 'Updated'],
               datasets: [{
                 label: `${key}`,
-                data: [versionZoneValue.textContent, result[key]],
+                data: [result[key], versionZoneValue.textContent],
+                //data: [versionZoneValue.textContent],
                 backgroundColor: [
-                  'rgba(54, 162, 235, 0.2)',
-                  'white'
+                  'white',
+                  'rgba(54, 162, 235, 0.2)'
+                  
                 ],
                 borderColor: [
+                  'grey',
                   'rgba(54, 162, 235, 1)',
-                  'grey'
               ],
               borderWidth: 1,
               hoverOffset: 4
               }]
-          },
-          options: {
-            plugins: {
+            },
+          
+      options: {
+        responsive: true,
+        plugins: {
+              /*
                 title: {
                     display: true,
                     text: `${key}`
                 }
+              */
             }
-        }
+          },
+          
+          plugins: [{
+            id: 'text',
+            beforeDraw: function(chart, a, b) {
+              var width = chart.width,
+                height = chart.height,
+                ctx = chart.ctx;
+        
+              ctx.restore();
+              var fontSize = (height / 200).toFixed(2);
+              ctx.font = fontSize + "em sans-serif";
+              ctx.textBaseline = "middle";
+        
+              var text = versionZoneValue.textContent,
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2;
+        
+              ctx.fillText(text, textX, textY);
+              ctx.save();
+            }
+          }]
   });
 
 }
@@ -135,12 +178,10 @@ for (let select of select_options) {
         url: `/version/${deviceFamily}/${version}/`,
         dataType: "html",                  
         success: function (data) { 
-          versionZone.innerHTML += data;
-          console.log(data);
-          console.log(deviceFamily);
-          let substr_devices = total_devices - result[deviceFamily];
-          let versionZoneValue = document.getElementById(`count_version_${deviceFamily}`);
-          addData(myChart2, ['Updated', 'Not Updated'], [result[deviceFamily], data]);
+          versionZone.innerHTML = data;
+          myChartArray[deviceFamily].data.datasets[0].data[0] = result[deviceFamily]-data;
+          myChartArray[deviceFamily].data.datasets[0].data[1] = data;
+          myChartArray[deviceFamily].update();
         }
       });
     });
