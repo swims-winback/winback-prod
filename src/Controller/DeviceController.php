@@ -21,13 +21,8 @@ use App\Form\DeviceVersionType;
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\SoftwareRepository;
-use App\Server\DbRequest;
 use App\Services\FileUploader;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
@@ -49,7 +44,6 @@ class DeviceController extends AbstractController
     /**
      * @Route("/user/device/", name="device")
      */
-
     public function index(DeviceRepository $deviceRepository, Request $request, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger)  
     {
         $data = new SearchData();
@@ -174,7 +168,6 @@ class DeviceController extends AbstractController
         
         $family = $deviceFamilyRepository->findFamilyByName($familyName);
         $familyType = $family->getNumberId();
-        $device->setType($familyType);
 
         //$version = $form->get('version')->getData();
         //$version;
@@ -279,10 +272,12 @@ class DeviceController extends AbstractController
                 $category = $device->getDeviceFamily();
                 $version_software = $softwareRepository->findSoftwareByVersion($version_input, $category->getId());
                 if($device->getSelected() ) {
-                    if ($version_software) {
-                        $user = $this->getUser();
-                        $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
+                    if ($version_software  or $version_input == 0) {
+                        //$user = $this->getUser();
+                        //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
                         $device->setVersionUpload($version_input);
+                        //TODO ici il faudrait envoyer un "socket_close()" au server et fermer la bonne socket
+                        //TODO ici il faudrait créer une notif de machines updatées
                         /*
                         $this->addFlash(
                             'infoDevice', 'Device '.$device->getSn().' updated !'
@@ -400,7 +395,7 @@ class DeviceController extends AbstractController
     public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger, $version)
     //public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger)
     {
-        $user = $this->getUser();
+        //$user = $this->getUser();
         /*
         $versionform = $this->createForm(InfoVersionType::class);
         $versionform->handleRequest($request);
@@ -431,8 +426,8 @@ class DeviceController extends AbstractController
 
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findSoftwareByVersion($version, $category->getId());
-        if ($version_software) {
-            $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+        if ($version_software or $version == 0) {
+            //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
             $device->setVersionUpload($version);
             $em = $doctrine->getManager();
             $em->persist($device);
@@ -464,6 +459,5 @@ class DeviceController extends AbstractController
 
         
     }
-    
 }
 
