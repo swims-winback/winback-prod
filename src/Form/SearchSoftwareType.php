@@ -17,16 +17,16 @@ class SearchSoftwareType extends AbstractType
     {
         $builder
             ->add('value', SearchType::class, [
-                'label' => 'Search Software',
+                'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Enter software name'
+                    'placeholder' => 'Software'
                 ],
                 'required' => false,
             ])
               ->add('category', EntityType::class, [
                 'class' => DeviceFamily::class,
-                'label' => 'Device Type :',
+                'label' => false,
                 'attr' => [
                     'class' => 'form-control',
                 ],
@@ -43,11 +43,13 @@ class SearchSoftwareType extends AbstractType
                 'required' => false,
             ]) 
             */
+            /*
             ->add('Search', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn bg-orange',
                 ]
             ])
+            */
 
         ;
     }

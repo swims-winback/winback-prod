@@ -42,7 +42,7 @@ class SoftwareType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control',
                 ],
                  'constraints' => [
                     new File([
@@ -59,7 +59,7 @@ class SoftwareType extends AbstractType
             ])
             ->add('Submit', SubmitType::class, [
                 'attr' => [
-                    'class' => 'bg-orange'
+                    'class' => 'bg-orange btn-outline-orange'
                 ]
             ])
         ;

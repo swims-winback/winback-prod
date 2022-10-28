@@ -1,21 +1,27 @@
 {{ form_start(form, {attr: { id: 'filter', class: 'sticky-scroll'}}) }}
     <div class="input-group flex-nowrap">
-    <span class="input-group-text mb-3" id="addon-wrapping" style='border-right-style: none; border-right-radius: 0; background-color: white;'>
+    <span class="input-group-text mb-3" id="addon-wrapping" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; background-color: white;'>
     <i class="fa-solid fa-magnifying-glass"></i>
     </span>
-    {{ form_row(form.q, {attr: { style: 'border-left-style: none; border-left-radius: 0'}}) }}
+    {{ form_row(form.q, {attr: { style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
     </div>
-
-    <h6>Device Type</h6>
-    {{ form_row(form.categories) }}
-
-    <h6>Device Version</h6>
-    {{ form_row(form.version) }}
-    {{ form_row(form.version_upload) }}
-
-    <h6>Status</h6>
-    {{ form_row(form.forced) }}
-    {{ form_row(form.connected) }}
+    <!-- Device Type -->
+        <h6 class="mt-2">Device Type</h6>
+        <div class="border border-0" id="collapseDeviceType">
+            {{ form_row(form.categories) }}
+        </div>
+    <!-- Device Version -->
+        <h6 class="mt-2">Device Version</h6>
+        <div class="border border-0" id="collapseDeviceVersion">
+            {{ form_row(form.version) }}
+            {{ form_row(form.version_upload) }}
+        </div>
+    <!-- Status -->
+        <h6 class="mt-2">Status</h6>
+        <div class="border border-0" id="collapseStatus">
+            {{ form_row(form.forced) }}
+            {{ form_row(form.connected) }}
+        </div>
 
     <button type="submit" class="btn bg-orange btn-outline-orange">Search</button>
 {{ form_end(form) }}

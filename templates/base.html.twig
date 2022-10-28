@@ -3,38 +3,54 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
         <title>{% block title %}Welcome!{% endblock %}</title>
         <!--
         <link rel="icon" type="image/png" href="{{ asset('img/Logo Winback.png') }}" />
         -->
         <link rel="icon" type="image/png" href="{{ asset('img/favicon.ico') }}" />
         {% block stylesheets %}
+        <!--
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        -->
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
-        {% endblock %}
         <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/noto-sans-extracondensed" type="text/css"/>
+        {% endblock %}
+
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js')}}"></script>
         <script src="https://kit.fontawesome.com/06466c4cae.js" crossorigin="anonymous"></script>
+        <!--
+        <script type="text/javascript" defer>
+        var path = "{{ asset('js/TCPClient2.php')}}";
+        </script>
+        -->
         
         <script type="text/javascript" src="{{ asset('js/winback.js')}}" defer></script>
         <script type="text/javascript" src="{{ asset('js/socket.js')}}" defer></script>
         <script type="text/javascript" src="{{ asset('js/scripts.js')}}" defer></script>
+        
     </head>
 
     <body>
         {% include 'includes/_header.html.twig' %}
-        <main class="container-fluid">
+        <main>
             {% block content %}
             {% endblock %}
         </main>
         {% include 'includes/_footer.html.twig' %}
-        
+        <!--
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+        -->
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
         <!--<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>-->
         {% block javascripts %}
         <!--<script src="https://cdn.jsdelivr.net/npm/axentix@1.3.3/dist/js/axentix.min.js"></script>-->

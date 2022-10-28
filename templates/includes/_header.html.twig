@@ -1,10 +1,11 @@
 <div class="w-100">
+    <!--
     <header class="header shadow d-flex justify-content-center">
             <div data-target="example-sidenav" class="press sidenav-trigger flex-1">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
             </div>
             <a class="navbar-logo w-100 flex-2" href="{{path('home')}}">
-                <img src="{{asset('img/winback-logo.webp')}}" alt="Logo" class="logo" style="height: 50px;">
+                {#<img src="{{asset('img/winback-logo.webp')}}" alt="Logo" class="logo" style="height: 50px;">#}
             </a>
             <div class="navbar-menu flex-1">
                 <a class="navbar-link" href="{{path('app_logout')}}">
@@ -12,22 +13,39 @@
                 </a>
             </div>
     </header>
-    <nav class="navbar navbar-expand-md sticky-top shadow primary bg-orange">
+    -->
+    <nav class="navbar navbar-expand-md shadow primary bg-orange px-3 fixed-top">
+        <!--
+        <a class="navbar-brand" href="{{path('home')}}"><img src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto"></a>
+        -->
+        <img class="navbar-brand" src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"><i class="fa-solid fa-bars text-white"></i></span>
+        <span><i class="fa-solid fa-bars text-white"></i></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+            {% if is_granted('ROLE_USER') %}
+
             <ul class="navbar-nav">
+                <!--
                 <li><a class="nav-link" href="{{path('home')}}"><i class="fa-solid fa-house"></i></a></li>
+                -->
                 <li><a class="nav-link" href="{{path('software')}}">Software</a></li>
                 <li><a class="nav-link" href="{{path('device')}}">Device</a></li>
                 <li><a class="nav-link" href="{{path('dashboard')}}">Dashboard</a></li>
                 <!--<a class="nav-link" href="{{path('statistics')}}">Statistics</a>-->
                 <!--<a class="nav-link" href="">Maintenance</a>-->
             </ul>
-            <a class="nav-link" href="{{path('app_logout')}}">
-                <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
-            </a>
+
+            
+            <div class="d-flex flex-nowrap">
+                <div>
+                    Welcome {{ app.user }}
+                </div>
+                <a class="nav-link" href="{{path('app_logout')}}">
+                    <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
+                </a>
+            </div>
+            {% endif %}
         </div>
 
     </nav>

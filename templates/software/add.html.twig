@@ -5,28 +5,37 @@
 {% block content %}
     <div class="container">
         <h1>New Software</h1>
-        
-        {{ form_start(form) }}
-            <div class="">
-                {{ form_errors(form) }}
-            </div>
+        <b class="text-secondary">Drag and Drop your files here.</b>
+        <div style="border: 4px dashed #E6E9EC;" class="p-5 mt-2" id="uploadZone">
+            {{ form_start(form) }}
+                <div class="">
+                    {{ form_errors(form) }}
+                </div>
 
-            <div class="row">
-                <!--
-                <div class="col form-field form-inline">
-                    {# {{ form_row(form.name) }} #}
+                <div class="row">
+                    <!--
+                    <div class="col form-field form-inline">
+                        {# {{ form_row(form.name) }} #}
+                    </div>
+                    <div class="col form-field" id="">
+                        {# {{ form_row(form.version) }} #}
+                    </div>
+                    <div class="col form-field" id="">
+                        {# {{ form_row(form.family) }} #}
+                    </div>
+                    -->
+                    <div class="form-field" id="">
+                        {{ form_row(form.file) }}
+                    </div>
+
+                    <div class="form-field d-flex flex-nowrap justify-content-end" id="">
+                        <a class="btn btn-secondary mb-3 me-2" href="{{path('software')}}" style="width: fit-content">
+                        Cancel
+                        </a>
+                        {{ form_row(form.Submit) }}
+                    </div>
                 </div>
-                <div class="col form-field" id="">
-                    {# {{ form_row(form.version) }} #}
-                </div>
-                <div class="col form-field" id="">
-                    {# {{ form_row(form.family) }} #}
-                </div>
-                -->
-                <div class="col form-field" id="">
-                    {{ form_row(form.file) }}
-                </div>
-            </div>
-        {{ form_end(form) }}
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}
