@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block content %}
+    <span class="fa-stack fa-2xl mb-3">
+        <i class="fa-solid fa-circle fa-stack-2x" style="color: #f18841;"></i>
+        <i class="fa-solid fa-lock fa-stack-1x fa-inverse"></i>
+    </span>
+    <h1>Reset your password</h1>
+
+    {{ form_start(resetForm) }}
+        {{ form_row(resetForm.plainPassword) }}
+        <button class="btn btn-primary bg-orange btn-outline-orange w-100">Reset password</button>
+    {{ form_end(resetForm) }}
+{% endblock %}

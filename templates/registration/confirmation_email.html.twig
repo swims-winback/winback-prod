@@ -1,3 +1,5 @@
+
+<!--
 <h1>Hi! Please confirm your email!</h1>
 
 <p>
@@ -8,4 +10,29 @@
 
 <p>
     Cheers!
+</p>
+-->
+<!--
+<h1>Welcome !</h1>
+
+<p>Thanks for signing up to the Winback Platform. Welcome on our services.<br><br>
+You can now access your data by clicking the following link and login with your credentials : <br>
+<a href="">Enter</a><br><br>
+Don't hesitate to contact us with your feedback.<br><br>
+The Winback Team<br>
+
+</p>
+-->
+
+<img src="{{ email.image('@images/winback_logo.svg') }}" alt="Logo">
+<h1>Welcome {{ email.toName }}!</h1>
+
+<p>
+    You signed up as {{ username }} the following email:
+</p>
+<p><code>{{ email.to[0].address }}</code></p>
+
+<p>
+    <a href="">Click here to activate your account</a>
+    (this link is valid until {{ expiration_date|date('F jS') }})
 </p>
