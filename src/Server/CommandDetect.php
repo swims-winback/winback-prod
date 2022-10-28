@@ -239,8 +239,15 @@ class CommandDetect extends AbstractController {
 	
 	/**
 	 * Create Database connection, get device information
+	 * @param string $data
+	 * @param string $ipAddr
+	 * @param array $deviceInfo
+	 * $this->responseArray[0] = $indexToGet;
+	 * $this->responseArray[1] = $response.$footer;
+	 * $this->responseArray[2] = $deviceInfo;
+	 * $this->responseArray[3] = $percentage;
 	 */
-    public function start($data, $ipAddr, $deviceInfo)
+    public function start(string $data, string $ipAddr, array $deviceInfo) : false|array
 	{
 		$time_start_command = microtime(true);
 
@@ -274,11 +281,15 @@ class CommandDetect extends AbstractController {
 		if(isset($deviceInfo[FORCED_UPDATE]) && (($deviceInfo[FORCED_UPDATE] === '1') || ($deviceInfo[FORCED_UPDATE] === 1)))
 		{
 			$forcedUpdate = 1;
+			//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
+			//echo "\r\nFORCED_UPDATE: ".$deviceInfo[FORCED_UPDATE]."\r\n";
 			//$request->setForced($sn, $forcedUpdate);
 		}
 		else
 		{
 			$forcedUpdate = 0;
+			//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
+			//echo "\r\nFORCED_UPDATE: ".$deviceInfo[FORCED_UPDATE]."\r\n";
 			//$request->setForced($sn, $forcedUpdate);
 		}
 
@@ -318,9 +329,9 @@ class CommandDetect extends AbstractController {
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
-				if ($percentage == 0 || $percentage == 99) {
+				//if ($percentage == 0 || $percentage == 99) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
-				}
+				//}
 				//$this->responseArray[3] = $percentage;
                 $startOffset = $dataResponse->getIndexForProg($command, $totalFileContent);
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
@@ -328,23 +339,27 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->getResponseData($fileContent);
                 break;
             case "FD": //UART_CMD_UPDATE_PICTURES //update version
+				if ($deviceInfo[FORCED_UPDATE] == 1) {
+					$request->setForced($sn, 0);
+					$deviceInfo[FORCED_UPDATE] = 0;
+					$forcedUpdate = 0;
+				}
 				if (!$fileName) {
 					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
 				}
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
-				if ($percentage == 0 || $percentage == 99) {
+				//if ($percentage == 0 || $percentage == 99) {
 					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
-				}
-				//$this->responseArray[3] = $percentage;
+				//}
                 $startOffset = $dataResponse->getIndexForImg($totalFileContent);
-				echo "\r\nstartOfsset: ".$startOffset."\r\n";
+				//echo "\r\nstartOfsset: ".$startOffset."\r\n";
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
-				echo "\r\nfileContent: ".$fileContent."\r\n";
+				//echo "\r\nfileContent: ".$fileContent."\r\n";
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
                 $response = $dataResponse->getResponseData($fileContent);
-				echo "\r\nMsg send: ".$response."\r\n";
+				//echo "\r\nMsg send: ".$response."\r\n";
                 break;
 			// create device in db if not exist
             case "FE": //UART_CMD_AUTODETECT
@@ -393,10 +408,14 @@ class CommandDetect extends AbstractController {
 			case "DC": //Download BOARD //Download Version
 			case "CD": //Download BOARD //Download Version
 				// * Empêche la machine de rester forcée après un 1er téléchargement *//
+				
 				if ($deviceInfo[FORCED_UPDATE] == 1) {
 					$request->setForced($sn, 0);
 					$deviceInfo[FORCED_UPDATE] = 0;
+					$forcedUpdate = 0;
 				}
+				//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
+				//echo "\r\nFORCED_UPDATE: ".$deviceInfo[FORCED_UPDATE]."\r\n";
 				//* return index in tcpserver to not send response if index is repeated*//
 				$this->responseArray[0] = $indexToGet;
 				if (!$fileName) {
@@ -524,10 +543,15 @@ class CommandDetect extends AbstractController {
 		
 		$time_end_command = microtime(true);
 		$execution_time_command = ($time_end_command - $time_start_command)*1000;
-		echo "\r\n".$command.": Total Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
+		//echo "\r\n".$command.": Total Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
+		if ($command != "DC" and $command != "CD" and $command != "FD" and $command != "FC") {
+			$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")." \n| SN : ".$sn."\n| Command : ".$command."\r\n");
+		}
+
 		if ($execution_time_command > 100) {
 			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 			echo "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n";
+			$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 		}
 		return $this->responseArray;
     }
