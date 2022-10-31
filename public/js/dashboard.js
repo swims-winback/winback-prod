@@ -58,7 +58,7 @@ const myChart = new Chart(ctx, {
       var width = chart.width,
         height = chart.height,
         ctx = chart.ctx;
-
+      console.log(height);
       ctx.restore();
       var fontSize = (height / 114).toFixed(2);
       ctx.font = fontSize + "em sans-serif";
@@ -66,8 +66,8 @@ const myChart = new Chart(ctx, {
 
       var text = total_devices,
         textX = Math.round((width - ctx.measureText(text).width) / 2),
-        textY = height / 2;
-
+        textY = (height / 3)+(height / 3);
+      console.log(textY);
       ctx.fillText(text, textX, textY);
       ctx.save();
     }
@@ -126,7 +126,7 @@ for (const key in result) {
               var width = chart.width,
                 height = chart.height,
                 ctx = chart.ctx;
-        
+              
               ctx.restore();
               var fontSize = (height / 200).toFixed(2);
               ctx.font = fontSize + "em sans-serif";
@@ -134,8 +134,8 @@ for (const key in result) {
         
               var text = versionZoneValue.textContent,
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
-                textY = height / 2;
-        
+                textY = (height / 3)+(height / 3);
+              
               ctx.fillText(text, textX, textY);
               ctx.save();
             }
@@ -187,4 +187,5 @@ for (let select of select_options) {
     });
   });
 }
+
 
