@@ -190,3 +190,6 @@ $RECYCLE.BIN/
 todel.txt
 configServer/config.php
 configServer/config.php
+composer.json
+composer.lock
+symfony.lock
