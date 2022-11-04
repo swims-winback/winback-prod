@@ -49,7 +49,7 @@
                             <div class="card-footer w-100">
                                 {% for key, items in softwareArray %}
                                 {% if key == deviceFamily %}
-                                <select class="form-select w-50" name="" id="">
+                                <select class="form-select w-50" id="dashSelect_{{deviceFamily}}">
                                 {% for item in items %}
                                     <option value={{item}} class="select-version" data-devicefamily="{{deviceFamily}}">
                                     {{item}}
