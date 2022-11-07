@@ -114,6 +114,22 @@ class SoftwareRepository extends ServiceEntityRepository
         ;
     }
 
+     /**
+      * @return Software[] Returns an array of Software objects
+      */
+    public function findByDeviceFamily($value)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.deviceFamily = :val')
+            ->setParameter('val', $value)
+            //->orderBy('s.created_at', 'DESC')
+            ->orderBy('s.version', 'DESC')
+            //->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException

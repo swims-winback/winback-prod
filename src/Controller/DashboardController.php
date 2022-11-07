@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
-
+use App\Repository\SoftwareRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +19,7 @@ class DashboardController extends AbstractController
     /**
      * @Route("/user/dashboard/", name="dashboard")
      */
-    public function dashboard(DeviceRepository $deviceRepository, DeviceFamilyRepository $deviceFamilyRepository) {
+    public function dashboard(DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository) {
         //$data = new SearchVersion();
         $devicesFamily = $deviceFamilyRepository->findAll();
         $devices = $deviceRepository->findAll();
@@ -38,7 +38,8 @@ class DashboardController extends AbstractController
         */
         foreach ($devicesFamily as $deviceFamily) {
             //$devices = $deviceRepository->findDeviceByCriteria($version=3.6, null, $family=$deviceFamily, null);
-            $softwares = $deviceFamily->getSoftware();
+            //$softwares = $deviceFamily->getSoftware();
+            $softwares = $softwareRepository->findByDeviceFamily($deviceFamily);
             $softwareArray[$deviceFamily->getName()] = $softwares;
             //$deviceArray[$deviceFamily->getName()] = count($devices);
         }

@@ -45,11 +45,13 @@ const myChart = new Chart(ctx, {
         },
   options: {
     responsive: true,
-          plugins: {
+    plugins: {
+            /*
               title: {
                   display: true,
                   text: 'Total Devices'
               }
+            */
           }
   },
   plugins: [{
@@ -165,13 +167,15 @@ $(document).ready(function() {
     $(`#dashSelect_${family_array[fam]}`).on('change', () => {
       let version = $( `#dashSelect_${family_array[fam]} option:selected` ).val();
         let deviceFamily = $( `#dashSelect_${family_array[fam]} option:selected` ).data("devicefamily");
-        let versionZone = document.getElementById(`count_version_${deviceFamily}`);
+      let versionZone = document.getElementById(`count_version_${deviceFamily}`);
+      let notUpdatedZone = document.getElementById(`count_not_${deviceFamily}`);
         $.ajax({    
           type: "GET",
           url: `/version/${deviceFamily}/${version}/`,
           dataType: "html",                  
           success: function (data) { 
             versionZone.innerHTML = data;
+            notUpdatedZone.innerHTML = result[deviceFamily]-data;
             myChartArray[deviceFamily].data.datasets[0].data[0] = result[deviceFamily]-data;
             myChartArray[deviceFamily].data.datasets[0].data[1] = data;
             myChartArray[deviceFamily].update();
