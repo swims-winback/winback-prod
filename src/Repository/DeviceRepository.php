@@ -29,43 +29,6 @@ class DeviceRepository extends ServiceEntityRepository
         $this->paginator = $paginator;
     }
 
-    /*
-    function searchDevice(DbRequest $dbRequest, $sn = '', $device='', $version=''){
-        $whereExist = false;
-        $where = '';
-        if(!empty($sn)){
-            $where .= SN." LIKE '%$sn%' ";
-            $whereExist = true;
-        }
-        if(!empty($device)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= DEVICE_TYPE." LIKE '%$device%' ";
-            $whereExist = true;
-        }
-        if(!empty($version)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= DEVICE_VERSION." LIKE '%$version%' ";
-        }
-        if(!empty($uploadVersion)){
-            if($whereExist)
-                $where .= ' AND ';
-            $where .= VERSION_UPLOAD." LIKE '%$uploadVersion%' ";
-        }
-        $req = $dbRequest->select("*", DEVICE_TABLE, $where);
-        echo $req;
-        $res = $dbRequest->sendRq($req);
-        if($res != FALSE){
-            while($row = mysqli_fetch_assoc($res)){
-                $result[] = $row;
-            }
-            return $result;
-        }
-        return false;
-    }
-    */
-
     /**
      * Recherche les devices en fonction du formulaire
      *
@@ -74,23 +37,11 @@ class DeviceRepository extends ServiceEntityRepository
     public function search($value = null, $limit = null, $category = null, $version = null, $versionUpload = null, $forced = null) {
         
         $query = $this->createQueryBuilder('d');
-        //$dbrequest->searchDevice($value);
-        /*
-        if ($value != null) {
-            $dbrequest->searchDevice($value);
-        }
-        */
-        
         
         if($value != null){
-            //$query->where('d.sn = :val OR d.type = :val OR d.version = :val OR d.ipAddr = :val OR d.logPointeur = :val')
-            //->setParameter('value', $value);
-            //$query->where('d.sn = :value OR d.version = :value')
-            //$query->where('d.sn = :value OR d.version = :value')
             $query->where('d.sn LIKE :value')
             ->setParameter(':value', '%'.$value.'%');
         }
-        
         
         if($limit != null){
             $query->setMaxResults($limit);
@@ -123,11 +74,9 @@ class DeviceRepository extends ServiceEntityRepository
         }
         */
         //}
-        //var_dump($category);
         return $query
         ->orderBy('d.sn', 'ASC')
         ->getQuery()
-        //->getOneOrNullResult()
         ->getResult()
     ;
     }
@@ -210,6 +159,7 @@ class DeviceRepository extends ServiceEntityRepository
         if ($version != null) {
             $query->where('m.version = :val')
             ->setParameter('val', $version);
+            //->orderBy('m.version', 'DESC');
         }
         if ($uploadVersion != null) {
             $query->andWhere('m.versionUpload = :val2')
@@ -231,21 +181,8 @@ class DeviceRepository extends ServiceEntityRepository
     ;
     }
 
-    public function findDeviceByForced($value = null)
-    {
-        $query = $this->createQueryBuilder('m');
-        if ($value != null) {
-            $query->where('m.forced = :val')
-            ->setParameter('val', $value);
-        }
-        return $query->getQuery()
-        ->getResult()
-        //->getOneOrNullResult()
-    ;
-    }
-
     /**
-      * @return Device[] Returns an array of Software objects
+      * @return Device[] Returns an array of Device objects
       */
     
       public function findAll()
@@ -259,29 +196,6 @@ class DeviceRepository extends ServiceEntityRepository
               ->getQuery()
               ->getResult()
           ;
-      }
-
-      public function findAll2($page=1)
-      {
-        $query = $this->createQueryBuilder('d')
-        //->andWhere('s.createdAt = :val')
-        //->setParameter('val', $value)
-        //->orderBy('s.created_at', 'DESC')
-        ->orderBy('d.sn', 'ASC');
-        //->setMaxResults(10);
-        $paginator = new Paginator($query);
-        $pageSize = '10';
-        $totalItems = count($paginator);
-        $pageCount = ceil($totalItems/$pageSize);
-        var_dump($pageCount);
-        return 
-        [
-            $pageCount,
-            $paginator->getQuery()
-            ->setFirstResult($pageSize*($page-1)) //set the Offset
-            ->setMaxResults($pageSize) //set the limit
-            ->getResult()
-        ];
       }
 
       /**

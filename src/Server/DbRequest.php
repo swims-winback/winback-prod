@@ -515,6 +515,20 @@ class DbRequest {
         return false;
     }
 
+    function getUpdateComment($sn)
+    {
+        $whereCond = SN."='$sn'";
+        $req = $this->select(UPDATE_COMMENT, DEVICE_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                print_r ($row[UPDATE_COMMENT]);
+                return $row[UPDATE_COMMENT];
+                //return $row[$rowName];
+            }
+        }
+        return false;
+    }
     /*
     function getLogPtFrom($sn){
         $whereCond = SN."='$sn'";

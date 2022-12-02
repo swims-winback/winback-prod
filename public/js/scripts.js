@@ -32,6 +32,7 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
 
 
   /* set device active in db to show connect button and allow connection*/
+  /*
   setInterval(function (){
     for (let device of deviceArray) {
       var deviceId = $(device).data("id");
@@ -45,9 +46,12 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
             //$(device).addClass('bg-green btn-outline-green')
             var deviceSn = $(device).data("title");
             //print(deviceSn);
-            document.getElementById(`c_sn_${deviceSn}`).style.display = "block";
-            //$(deviceElem).removeClass('bg-orange').addClass('bg-green');
-            $(deviceElem).addClass('bg-green');
+            if (deviceSn && document.getElementById(`c_sn_${deviceSn}`)) {
+              document.getElementById(`c_sn_${deviceSn}`).style.display = "block";
+              //$(deviceElem).removeClass('bg-orange').addClass('bg-green');
+              $(deviceElem).addClass('bg-green');
+            }
+
           } 
           else  
           {   
@@ -63,6 +67,7 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
       });
 
     }
+    */
 
     /*
     let downloadArray = document.querySelectorAll(".progress-bar")
@@ -102,7 +107,7 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
       document.location.reload();
     }, 3000);
     */
-  }, 1000);
+  //}, 3000);
 
 
 	// ######## Validate version ######## //
@@ -183,8 +188,58 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
     }
   }
   
-//});
+  function addComment(id, comment) {
 
+    $.ajax({
+      type:"POST",
+      cache:false,
+      url: `/addComment/${id}/${comment}`,
+      //data: {id:id, comment:comment},
+      success: function () {
+        console.log("comment added");
+        console.log(comment);
+      }
+    });
+}
+function addUpdateComment(id, comment) {
+
+  $.ajax({
+    type:"POST",
+    cache:false,
+    url: `/addUpdateComment/${id}/${comment}`,
+    //data: {id:id, comment:comment},
+    success: function () {
+      console.log("comment added");
+      console.log(comment);
+    }
+  });
+}
+let commentButtons = document.getElementsByClassName("comment_button");
+let commentInputs = document.getElementsByClassName("comment_input");
+let updateCommentButtons = document.getElementsByClassName("comment_update_button");
+let updateCommentInputs = document.getElementsByClassName("comment_update_input");
+for (let element of commentInputs) {
+  element.onclick = function () {
+    $(element).addClass('border-dark');
+  }
+}
+
+for(let element of commentButtons){
+  element.onclick = function() {
+    let id = $(element).data("id");
+    let comment = element.previousElementSibling.value;
+    addComment(id, comment);
+  };
+}
+
+for(let element of updateCommentButtons){
+  element.onclick = function() {
+    let id = $(element).data("id");
+    let comment = element.previousElementSibling.value;
+    console.log(comment)
+    addUpdateComment(id, comment);
+  };
+}
 //window.onload = () => {
 
 

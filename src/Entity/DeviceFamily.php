@@ -22,6 +22,9 @@ class DeviceFamily
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class)]
+    /**
+     * @ORM\OrderBy({"version" = "DESC"})
+     */
     private $software;
 
     #[ORM\Column(type: 'string', nullable: true, length: 255)]
@@ -71,8 +74,9 @@ class DeviceFamily
 
     /**
      * @return Collection<int, Software>
+     * 
      */
-
+    
     public function getSoftware(): Collection
     {
         return $this->software;
