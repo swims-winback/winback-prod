@@ -29,7 +29,7 @@
                                     <tr class="h-100 w-100 align-middle" id="deviceTableTitle">
                                         <th scope="col"></th>
                                         <th scope="col" class="h-100 p-0">
-                                            <div class="h-100 d-flex justify-content-between input-group flex-no-wrap text-center align-items-center ps-2">
+                                            <div class="h-100 d-flex justify-content-between input-group flex-nowrap text-center align-items-center ps-2">
                                                 Serial Number
                                                 <span class="btn btn-light text-dark h-100 p-1" style="border-radius: 0;" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
                                             </div>
@@ -45,7 +45,7 @@
                                         <th scope="col" class="text-center">Forced</th>
                                         <th scope="col" class="text-center">Info</th>
                                         <th scope="col" class="text-center">Comment</th>
-                                        
+                                        <th scope="col" class="text-center">Update Comment</th>
                                     </tr>
                                     <tr class="w-100 align-bottom">
                                         <th class="text-center">
@@ -78,8 +78,9 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        <th>
-                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 
@@ -133,8 +134,17 @@
                                                 <i class="fa-solid fa-circle-info"></i>
                                                 </a>
                                             </td>
-                                            <td class="text-break overflow-hidden">
-                                                {{device.comment}}
+                                            <td class="">
+                                                <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-form">
+                                                    <input class="comment_input border border-0" type="text" name="nm" value="{{device.comment}}">
+                                                    <button class="comment_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button> 
+                                                </div> 
+                                            </td>
+                                            <td class="">
+                                                <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-update-form">
+                                                    <input class="comment_update_input border border-0" type="text" name="nm" value="{{device.updateComment}}">
+                                                    <button class="comment_update_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button>
+                                                </div> 
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -146,7 +156,6 @@
                     </div>
 
                     {{ knp_pagination_render(devices) }}
-                    
                 </div>
 
                 <!-- Button to add device table -->
@@ -177,14 +186,16 @@
             #}
 
             <!-- ===== DEVICE ACTION ===== -->
+            {#
             {% include 'device/device_action.html.twig' %}
-
+            #}
             
-            <div id="errorDeviceConnect alert alert-danger"></div>
+            <div id="errorDeviceConnect" class="alert alert-danger"></div>
 
             <!-- ===== ACCESS MODALS ===== -->
+            {#
             {% include 'device/acces_modals.html.twig' %}
-
+            #}
         </div>
 
     </div>
@@ -254,5 +265,7 @@
     
     <script type="text/javascript" src="{{ asset('js/scripts.js')}}"></script>
     -->
-
+    <script type="text/javascript" src="{{ asset('js/scripts.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/winback.js')}}"></script>
+    
 {% endblock %}

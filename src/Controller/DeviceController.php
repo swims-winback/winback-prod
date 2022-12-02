@@ -4,8 +4,7 @@ namespace App\Controller;
 use App\Class\SearchData;
 use App\Entity\Device;
 use App\Entity\User;
-use App\Form\DeviceCheckType;
-use App\Form\SearchDeviceType;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -16,8 +15,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 use App\Form\Type\DeviceType;
 use App\Form\DeviceEditType;
-use App\Form\DevicePageType;
+//use App\Form\DevicePageType;
 use App\Form\DeviceVersionType;
+use App\Form\DeviceCheckType;
+use App\Form\DeviceCommentType;
+use App\Form\SearchDeviceType;
+
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\SoftwareRepository;
@@ -52,7 +55,7 @@ class DeviceController extends AbstractController
         $form->handleRequest($request);
         $devices = $deviceRepository->findSearch($data);
         /*
-        if ($devices['items'] == null) {
+        if ($devices == null) {
             $this->addFlash(
                 'error', 'Device not found, please try again !'
             );
@@ -62,97 +65,29 @@ class DeviceController extends AbstractController
         // Check-all form 
         $checkform = $this->createForm(DeviceCheckType::class);
         // input text version form
-        //dd($data);
         $versionform = $this->editDeviceVersion($request, $deviceRepository, $softwareRepository, $doctrine, $logger);
         return $this->render('device.html.twig', [
             'devices' => $devices,
             'form' => $form->createView(),
             'checkform' => $checkform->createView(),
             'versionform' => $versionform,
-            //'infoversionform' => $infoversionform,
         ]);
 
     }
-
     /**
-     * @Route("/info/{id}/", name="info")
+     * @Route("/connect/{id}", name="connect")
      */
     /*
-    public function showInfo()
+    public function connect(Device $device, DeviceRepository $deviceRepository)  
     {
-        $infoversionform = $this->updated($request, $device, $doctrine, $softwareRepository, $logger);
-        return $this->render('info_modals.html.twig', [
-            'infoversionform' => $infoversionform,
+        //$device = $deviceRepository->findDeviceById($id);
+        return $this->render('device/_acces.html.twig', [
+            'device'=> $device,
         ]);
+
     }
     */
-    /**
-     * @Route("/add", name="device_add")
-    */
-    /*
-    public function addDevice(Request $request, ManagerRegistry $doctrine, FileUploader $fileUploader, DeviceFamilyRepository $deviceFamilyRepository): Response
-    {
-        $device = new Device;
-        $form = $this->createForm(DeviceType::class, $device);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $familyName = $form->get('deviceFamily')->getData();
-            
-            $family = $deviceFamilyRepository->findFamilyByName($familyName);
-            $familyType = $family->getNumberId();
-            $device->setType($familyType);
-
-            $version = $form->get('version')->getData();
-            $device->setVersionUpload($version);
-            ///*
-            $deviceFile = $form->get('file')->getData();
-
-            if ($deviceFile) {
-                $originalFilename = $fileUploader->upload($deviceFile, 'devices/');
-                //$deviceName = $originalFilename;
-
-                $device->setDeviceFile($originalFilename);
-                $fileFolder = __DIR__.'/../../public/uploads/devices/';
-                $spreadsheet = IOFactory::load($fileFolder . $originalFilename); // Here we are able to read from the excel file 
-                $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
-                $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
-                $sheetDataSlice = array_slice($sheetData, 0, 10);
-                //dd(array_slice($sheetData, 0, 10));
-
-                foreach ($sheetDataSlice as $Row)
-                {
-
-                    $familyName = $Row['A'];
-                    $sn = $Row['B'];
-                    $family = $deviceFamilyRepository->findFamilyByName($familyName);
-                    $device->setSn($sn);
-                    $device->setDeviceFamily($family);
-
-                    $em = $doctrine->getManager();
-                    $device = $form->getData();
-                    $em->persist($device);
-                    //$em->flush();
-                }
-
-            }
-            //TODO Comment here
-
-              
-            $em = $doctrine->getManager();
-            $device = $form->getData();
-            $em->persist($device);
-            $em->flush();
-            
-
-            return $this->redirectToRoute('device');
-        }
-
-        return $this->render('device/add.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-    */
+    
     public function addDevice(ManagerRegistry $doctrine, DeviceFamilyRepository $deviceFamilyRepository, $familyName, $version)
     {
         $device = new Device;
@@ -195,48 +130,6 @@ class DeviceController extends AbstractController
 
 
     /**
-     * @Route("/addmultiple", name="device_add_multiple")
-    */
-    /*
-    public function addMultipleDevice(Request $request, ManagerRegistry $doctrine, FileUploader $fileUploader): Response
-    {
-        $device = new Device;
-
-        $form = $this->createForm(DeviceType::class, $device);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $deviceFile = $form->get('file')->getData();
-
-            if ($deviceFile) {
-                $originalFilename = $fileUploader->upload($deviceFile, 'devices/');
-                //$deviceName = $originalFilename;
-
-                $device->setDeviceFile($originalFilename);
-                $fileFolder = __DIR__.'/../../public/uploads/devices/';
-                $spreadsheet = IOFactory::load($fileFolder . $originalFilename); // Here we are able to read from the excel file 
-                $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
-                $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
-                dd(array_slice($sheetData, 0, 10));
-            }
-
-            $em = $doctrine->getManager();
-            $device = $form->getData();
-            $em->persist($device);
-            $em->flush();
-
-            return $this->redirectToRoute('device');
-        }
-        return $this->renderForm('device/add.html.twig', [
-            'form' => $form,
-        ]);
-    }
-    */
-
-
-    /**
      * @Route("/edit/{id}", name="device_edit")
     */
     public function editDevice(Request $request, ManagerRegistry $doctrine, Device $device): Response
@@ -261,7 +154,7 @@ class DeviceController extends AbstractController
 
     public function editDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger)
     {
-        
+        $user = $this->getUser();
         $devices = $deviceRepository->findAll();
         $versionform = $this->createForm(DeviceVersionType::class);
         $versionform->handleRequest($request);
@@ -274,10 +167,10 @@ class DeviceController extends AbstractController
                 if($device->getSelected() ) {
                     if ($version_software  or $version_input == 0) {
                         //$user = $this->getUser();
-                        //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
+                        $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
                         $device->setVersionUpload($version_input);
                         //TODO ici il faudrait envoyer un "socket_close()" au server et fermer la bonne socket
-                        //TODO ici il faudrait créer une notif de machines updatées
+                        
                         /*
                         $this->addFlash(
                             'infoDevice', 'Device '.$device->getSn().' updated !'
@@ -350,11 +243,6 @@ class DeviceController extends AbstractController
      */
     public function isActive(Device $device)
     {
-        /*
-        if ($device->getIsActive()) {
-            return new Response($device->getIsActive());
-        }
-        */
         return new Response($device->getIsActive());
     }
 
@@ -395,39 +283,11 @@ class DeviceController extends AbstractController
     public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger, $version)
     //public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger)
     {
-        //$user = $this->getUser();
-        /*
-        $versionform = $this->createForm(InfoVersionType::class);
-        $versionform->handleRequest($request);
-        */
-        /*
-        if($versionform->isSubmitted() && $versionform->isValid()) {
-            $version_input = $versionform->get('versionUpload')->getData();
-            $forced = $versionform->get('forced')->getData();
-            $category = $device->getDeviceFamily();
-            $version_software = $softwareRepository->findSoftwareByVersion($version_input, $category->getId());
-            if ($version_software) {
-                $user = $this->getUser();
-                $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
-                $device->setVersionUpload($version_input);
-                $device->setForced($forced);
-            }
-            else {
-                $this->addFlash(
-                    'error', 'Software '.$version_input.' not found, please try again !'
-                );
-            }
-            $em = $doctrine->getManager();
-            $em->persist($device);
-            $em->flush();
-        }
-        return $versionform->createView();
-        */
-
+        $user = $this->getUser();
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findSoftwareByVersion($version, $category->getId());
         if ($version_software or $version == 0) {
-            //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+            $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
             $device->setVersionUpload($version);
             $em = $doctrine->getManager();
             $em->persist($device);
@@ -458,6 +318,34 @@ class DeviceController extends AbstractController
         }
 
         
+    }
+
+    /**
+     * @Route("/addComment/{id}/{comment}", name="add_comment")
+     */
+    public function addComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment) {
+        $device = $deviceRepository->findOneBy(array('id' => $id));
+        $device->setComment($comment);
+
+        $em = $doctrine->getManager();
+        $em->persist($device);
+        $em->flush();
+
+        return new Response("true");
+    }
+
+    /**
+     * @Route("/addUpdateComment/{id}/{comment}", name="add_update_comment")
+     */
+    public function addUpdateComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment) {
+        $device = $deviceRepository->findOneBy(array('id' => $id));
+        $device->setUpdateComment($comment);
+
+        $em = $doctrine->getManager();
+        $em->persist($device);
+        $em->flush();
+
+        return new Response("true");
     }
 }
 

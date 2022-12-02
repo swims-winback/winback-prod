@@ -49,14 +49,6 @@ class Device
     #[ORM\JoinColumn(nullable: false)]
     private $deviceFamily;
 
-    /*
-    #[ORM\ManyToOne(targetEntity: DeviceFamily::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $type;
-    */
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $type;
-
     #[ORM\Column(type: 'boolean')]
     private $selected = false;
 
@@ -69,9 +61,10 @@ class Device
     #[ORM\Column(name: 'updated_at', type: "datetime", nullable: true)]
     private $updated_at;
 
-    #[ORM\OneToMany(mappedBy: 'sn', targetEntity: Statistics::class)]
-    private $statistics;
-
+    
+    //#[ORM\OneToMany(mappedBy: 'sn', targetEntity: Statistics::class)]
+    //private $statistics;
+    
     #[ORM\Column(type: 'boolean')]
     private $isActive = false;
 
@@ -80,9 +73,6 @@ class Device
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $logFile;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $status = 'inactive';
 
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: 'date', nullable: true)]
@@ -100,10 +90,13 @@ class Device
     #[ORM\Column(type: 'string', length: 400, nullable: true)]
     private $comment;
 
+    #[ORM\Column(type: 'string', length: 400, nullable: true)]
+    private $update_comment;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
-        $this->statistics = new ArrayCollection();
+        //$this->statistics = new ArrayCollection();
         $this->software = new ArrayCollection();
     }
 
@@ -226,30 +219,6 @@ class Device
 
         return $this;
     }
-    /*
-    public function getType(): ?DeviceFamily
-    {
-        return $this->type;
-    }
-    */
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-    /*
-    public function setType(?DeviceFamily $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-    */
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
 
     public function getSelected(): ?bool
     {
@@ -273,9 +242,11 @@ class Device
         return $this->updated_at;
     }
 
-    /**
-     * @return Collection<int, Statistics>
+    
+    /*
+    @return Collection<int, Statistics>
      */
+    /*
     public function getStatistics(): Collection
     {
         return $this->statistics;
@@ -302,7 +273,7 @@ class Device
 
         return $this;
     }
-
+    */
     public function getIsActive(): ?bool
     {
         return $this->isActive;
@@ -335,18 +306,6 @@ class Device
     public function setLogFile(?string $logFile): self
     {
         $this->logFile = $logFile;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -416,9 +375,21 @@ class Device
         return $this->comment;
     }
 
-    public function setComment(int $comment): self
+    public function setComment(string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getUpdateComment(): ?string
+    {
+        return $this->update_comment;
+    }
+
+    public function setUpdateComment(string $update_comment): self
+    {
+        $this->update_comment = $update_comment;
 
         return $this;
     }
