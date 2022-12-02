@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SN{% endblock %}
+
+{% block content %}
+    <div class="container-fluid d-flex flex-column justify-content-between align-items-center vh-80 mt-5 mb-5">
+            <div class="row w-100 h-100 mt-4">
+                <div class="col-md-3">
+                {% include "sn/_filter.html.twig" %}
+                </div>
+                <!-- ===== SN TABLE ===== -->
+                <div class="col-md-9 h-100">
+                    <h1 class="text-center mb-4">Serial Numbers</h1>
+                       
+                    <div id="listSn" class="w-100">
+                        <div id="listSnTable" class="table-responsive w-100 h-100">
+                            <table class="table table-striped table-bordered table-hover w-100" id="snTable" style="height: 100px;">
+                                
+                                <thead class="w-100 align-middle">
+                                    <tr class="h-100 w-100 align-middle" id="">
+                                        <th scope="col" class="h-100 p-0">
+                                            <div class="h-100 d-flex justify-content-between input-group flex-nowrap text-center align-items-center ps-2">
+                                                Serial Number
+                                                <span class="btn btn-light text-dark h-100 p-1" style="border-radius: 0;" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
+                                            </div>
+                                        
+                                        </th>
+                                        <th scope="col" class="text-center">Device Type</th>
+                                        <th scope="col" class="text-center">Date</th>
+                                        
+                                    </tr>
+                                </thead>
+                                
+                                <tbody class="w-100 overflow-scroll" style="height: 15em">
+
+                                    {% for item in sn %}
+                                        
+                                        <tr scope="row" class="w-100">
+                                            <td class="text-center text-nowrap">{{item.SN}}</td>
+                                            <td class="text-center">{{item.Device}}</td>
+                                            <td class="text-center">{{item.Date|format_datetime('short', 'none', locale='fr')}}</td>
+                                        </tr>
+                                        
+
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+
+                    
+                    {{ knp_pagination_render(sn) }}
+                    
+                </div>
+
+                <!-- Button to add device table -->
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <button id="floatingBtn" class="btn bg-orange btn-outline-orange  d-flex align-items-center justify-content-center" 
+                    style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
+                    type="button"
+                    data-bs-target="#"
+                    data-bs-toggle="modal">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                {% endif %}
+
+
+            </div>
+            <!-- ===== /SN TABLE ===== -->
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    
+    <script>
+
+    // ######### Sort Table by alphabetical order ######### //
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("snTable");
+        switching = true;
+        // Set the sorting direction to ascending:
+        dir = "asc";
+        while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length -1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+            }
+            } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+            }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+            }
+        }
+        }
+    }
+    </script>
+{% endblock %}
