@@ -261,7 +261,7 @@ class DeviceController extends AbstractController
 
     public function editDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger)
     {
-        
+        $user = $this->getUser();
         $devices = $deviceRepository->findAll();
         $versionform = $this->createForm(DeviceVersionType::class);
         $versionform->handleRequest($request);
@@ -274,7 +274,7 @@ class DeviceController extends AbstractController
                 if($device->getSelected() ) {
                     if ($version_software  or $version_input == 0) {
                         //$user = $this->getUser();
-                        //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
+                        $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
                         $device->setVersionUpload($version_input);
                         //TODO ici il faudrait envoyer un "socket_close()" au server et fermer la bonne socket
                         //TODO ici il faudrait créer une notif de machines updatées
@@ -395,7 +395,7 @@ class DeviceController extends AbstractController
     public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger, $version)
     //public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger)
     {
-        //$user = $this->getUser();
+        $user = $this->getUser();
         /*
         $versionform = $this->createForm(InfoVersionType::class);
         $versionform->handleRequest($request);
@@ -427,7 +427,7 @@ class DeviceController extends AbstractController
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findSoftwareByVersion($version, $category->getId());
         if ($version_software or $version == 0) {
-            //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+            $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
             $device->setVersionUpload($version);
             $em = $doctrine->getManager();
             $em->persist($device);
