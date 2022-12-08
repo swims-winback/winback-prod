@@ -174,7 +174,7 @@ class TCPServer extends AbstractController
 								//TODO $output->writeln("\r\nSocket closed !\r\n");
 								//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".$i." disconnected.\n");
 								//echo "\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".$i." disconnected.\n";
-								//echo "\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.\n";
+								echo "\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.\n";
 								$logger->info("client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.");
 								//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".[$i]." disconnected.\n");
 								unset($clients[$i]);	
@@ -204,7 +204,7 @@ class TCPServer extends AbstractController
 				$newsock = socket_accept($sock);
 				$clients[] = $newsock;
 				socket_getpeername($newsock, $ip, $port);
-				//echo "\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n";
+				echo "\r\n".date("Y-m-d H:i:s | ")."New client connected: {$ip} : {$port}\r\n";
 				$logger->info("New client connected: {$ip} : {$port}");
 				// remove the listening socket from the clients-with-data array
 				$key = array_search($sock, $read); 
@@ -228,8 +228,10 @@ class TCPServer extends AbstractController
 			foreach ($read as $read_sock)
 			{
 				// read until newline or 1024 bytes
-				$data = @socket_read($read_sock, 4096, PHP_BINARY_READ);// or die("Could not read input\n");
+				//$data = @socket_read($read_sock, 4096, PHP_BINARY_READ) or socket_strerror(socket_last_error());//die("Could not read input\n");
+				//$data = @socket_read($read_sock, 4096, PHP_BINARY_READ);
 
+				$data = @socket_read($read_sock, 4096, PHP_BINARY_READ);
 					//=> If data exists
 					if (!empty($data))
 					{
@@ -357,7 +359,7 @@ class TCPServer extends AbstractController
 											//if($this->linkConnection[$clientsInfo[$key][0]][0]!=$clients[$i] && $i!=$key)
 											{
 
-												//echo("socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
+												echo("socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
 												$logger->info("Socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
 												//$this->writeServerLog("socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
 												$key2del = array_search($this->linkConnection[$clientsInfo[$deviceKey][0]][0], $clients);
@@ -398,7 +400,7 @@ class TCPServer extends AbstractController
 							
 						}
 						//=> if no commands are returned from data device
-						else //=> msg to Device
+						else //=> msg between Device & Computer
 						{	
 							//if ($read_sock!=false && array_key_exists($read_sock, $clients)) {
 							if ($read_sock!=false && in_array($read_sock, $clients)) {
@@ -406,141 +408,175 @@ class TCPServer extends AbstractController
 								//$clientsInfo[$key][0] = "Computer ".$i;
 								//echo "\r\n{$clientsInfo[$key][1]} send {$data} to {} with SN ".$clientsInfo[$key][0]."\r\n";
 								//echo "\r\n{$ip}:{$port} send {$data} to IP ".$clientsInfo[$key][1]."\r\n";
-								//echo "\r\n{$clientsInfo[$key][0]} send {$data} to computer.\r\n";
+								echo "\r\nComputer with IP {$clientsInfo[$key][1]} send {$data} to device.\r\n";
 								$logger->info("Computer with IP {$clientsInfo[$key][1]} send {$data} to device.");
 								//echo "\r\n{$ip} send {$data} from {$read_sock} to ?? with SN ".$clientsInfo[$key][0]."\r\n";
 								//echo "\r\nData length : ".strlen($data)."\r\n"; // check data length
 	
-								// check data is a device & contains serial number
-	
-								//$this->linkConnection[$data][1] = $read_sock;
-								if(($data[0] == 'W') && (strlen($data) == 20)) 
-								{
-									//$output->writeln(strlen($data1));
-									//$key = 0;
-									$sn = substr($data, 0, 20);
-									//TODO find if $this->linkConnection exists & what to do if $this->linkConnection is not defined?
-									//TODO change key 0 --> 1 if needed
-									//$this->linkConnection[$data][0] = $read_sock;
-									if(isset($this->linkConnection)){
-										//TODO old version
-										//echo $this->linkConnection;
-										$keyLink = array_key_exists($data, $this->linkConnection);
-										echo 'Add link connection >>>>>>>>>>>>>>>>>>>>> '.$keyLink." !!!!!!!\n";
-										if($keyLink){
-											//print_r($this->linkConnection);
+								// check data starts with serial number
+								if (($data[0] == 'W')) {
+									//$this->linkConnection[$data][1] = $read_sock;
+									if(($data[0] == 'W') && (strlen($data) == 20)) 
+									{
+										//$output->writeln(strlen($data1));
+										//$key = 0;
+										$sn = substr($data, 0, 20);
+										//TODO find if $this->linkConnection exists & what to do if $this->linkConnection is not defined?
+										//TODO change key 0 --> 1 if needed
+										//$this->linkConnection[$data][0] = $read_sock;
+										if(isset($this->linkConnection)){
+											//TODO old version
+											print_r($this->linkConnection);
+											$keyLink = array_key_exists($data, $this->linkConnection);
 											
-											if(isset($this->linkConnection[$data][1]) && !empty($this->linkConnection[$data][1])){
-												//Check if sn exists in clients
-												$key1 = array_search($this->linkConnection[$data][1], $clients);
-												
-												if($key1){
-													//print_r($clientsInfo[$key1]);
-													echo "Socket close !!!!!!!\n";
-													$logger->info("Socket is closed :".$clientsInfo[$i][1]);
-													//$this->writeServerLog("\r\nSocket close :".$data."\r\n");
-													$request->setConnect(0, $data);
-													//$this->writeServerLog("\nsetConnect 0 ".$data."\n");
-													socket_close($clients[$key1]);
-													//TODO $this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$key1][0]." ip ".$clientsInfo[$key1][3]." with key ".key($clients)." disconnected.\n");
-													unset($clients[$key1]);
-													unset($clientsInfo[$key1]);	
-	
+											if($keyLink){
+												//print_r($this->linkConnection);
+												echo 'Add link connection >>>>>>>>>>>>>>>>>>>>> '.$keyLink." !!!!!!!\n";
+												if(isset($this->linkConnection[$data][1]) && !empty($this->linkConnection[$data][1])){
+													//Check if sn exists in clients
+													$key1 = array_search($this->linkConnection[$data][1], $clients);
+													
+													if($key1){
+														//print_r($clientsInfo[$key1]);
+														echo "\nSocket is closed with key1:".$clientsInfo[$key1][1]."\n";
+														$logger->info("Socket is closed :".$clientsInfo[$key1][1]);
+														//$this->writeServerLog("\r\nSocket close :".$data."\r\n");
+														$request->setConnect(0, $data);
+														//$this->writeServerLog("\nsetConnect 0 ".$data."\n");
+														socket_close($clients[$key1]);
+														//TODO $this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$key1][0]." ip ".$clientsInfo[$key1][3]." with key ".key($clients)." disconnected.\n");
+														unset($clients[$key1]);
+														unset($clientsInfo[$key1]);	
+		
+													}
 												}
+												//var_dump($read_sock);
+												//var_dump($clientsInfo[$key][1]);
+												$this->linkConnection[$data][1] = $read_sock;
+												socket_write($read_sock, $keyLink);
+												print_r($read_sock);
+												//echo "SEND MSG TO >>>>>>>>>>>>>>>>>>>>> $key\n";
+												echo "SEND ".$keyLink." TO ".$data." >>>>>>>>>>>>>>>>>>>>>\n";
 											}
-											//var_dump($read_sock);
-											//var_dump($clientsInfo[$key][1]);
-											$this->linkConnection[$data][1] = $read_sock;
+											else {
+												//TODO
+												// close computer connexion
+												socket_close($clients[$key]);
+												echo "\nWarning: LinkConnection not found. Socket is closed with key:".$clientsInfo[$key][1]."\n";
+												unset($clients[$key]);
+												unset($clientsInfo[$key]);
+											}
 											
 										}
-										
+										/*
+										socket_write($read_sock, $keyLink);
+										print_r($read_sock);
+										//echo "SEND MSG TO >>>>>>>>>>>>>>>>>>>>> $key\n";
+										echo "SEND ".$keyLink." TO ".$data." >>>>>>>>>>>>>>>>>>>>>\n";
+										*/
 									}
-									//echo "SEND MSG TO >>>>>>>>>>>>>>>>>>>>> $key\n";
-									echo "SEND ".$keyLink." TO ".$data." >>>>>>>>>>>>>>>>>>>>>\n";
-									
-									socket_write($read_sock, $keyLink);
-								}
-								else
-								{
-									if (strlen($data)<=20) {
-										socket_close($read_sock);
-										unset($clients[$key]);
-										unset($clientsInfo[$key]);
-										//TODO $output->writeln("\r\nData : ".bin2hex($data)."\r\n");
-									}
-									elseif (strlen($data) > 20 && ord($data[21]) != 0) {
-										
-										$sn = substr($data, 0, 20);
-										$canal = ord($data[21]);
-										echo "\r\nCanal : {$canal}\r\n";
-										if($canal === 255){
-											echo "\r\nReplace sock 1\r\n";
-											echo "\r\nsize of linkConnection : ".sizeof($this->linkConnection)."\r\n";
-											//if (array_key_exists($this->linkConnection[$sn][1], $clients)) {
-											if (in_array($this->linkConnection[$sn][1], $clients)) {
-												$keyCanal = array_search($this->linkConnection[$sn][1], $clients);
-												if($keyCanal){
-													//print_r($clients);
-													socket_close($clients[$keyCanal]);
-													//print_r($clients[$keyCanal]);
-													//$request->setConnect(0, $sn);
-													echo "\r\nSocket closed with Sn ".$sn." and keyCanal: ".$keyCanal." !\r\n";
-													//array_splice($clients, $keyCanal, 1);
-													//array_splice($clientsInfo, $keyCanal, 1);
-													//print_r($clientsInfo);
-													//print_r($clients);
-													unset($clients[$keyCanal]);
-													unset($clientsInfo[$keyCanal]);	
+									else
+									{
+										if (strlen($data)<=20) {
+											socket_close($read_sock);
+											unset($clients[$key]);
+											unset($clientsInfo[$key]);
+											//TODO $output->writeln("\r\nData : ".bin2hex($data)."\r\n");
+										}
+										elseif (strlen($data) > 20 && ord($data[21]) != 0) {
+											
+											$sn = substr($data, 0, 20);
+											$canal = ord($data[21]);
+											echo "\r\nCanal : {$canal}\r\n";
+
+											//TODO in_array($sn, $this->linkConnection)
+											if($canal === 255) {
+												echo "\r\nReplace sock 1\r\n";
+												echo "\r\nsize of linkConnection : ".sizeof($this->linkConnection)."\r\n";
+												//if (array_key_exists($this->linkConnection[$sn][1], $clients)) {
+
+												if (in_array($this->linkConnection[$sn][1], $clients)) {
+													$keyCanal = array_search($this->linkConnection[$sn][1], $clients);
+													if($keyCanal){
+														socket_close($clients[$keyCanal]);
+														//$request->setConnect(0, $sn);
+														echo "\r\nSocket closed with Sn ".$clientsInfo[$keyCanal][1]." and keyCanal: ".$keyCanal." !\r\n";
+														unset($clients[$keyCanal]);
+														unset($clientsInfo[$keyCanal]);	
+													}
 												}
-											}
-		
-											$this->linkConnection[$sn][1] = $read_sock;
-											echo 'SEND MSG TO RSHOCK >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
-		
-		
+												
+												$this->linkConnection[$sn][1] = $read_sock;
+												echo 'SEND MSG TO RSHOCK >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
+			
+												//print_r($this->linkConnection[$sn][0]);
+												//socket_write($this->linkConnection[$sn][0], $data);
+												
+												if((socket_write($this->linkConnection[$sn][0], $data)) === false)
 												//if(FALSE === socket_write($this->linkConnection[$sn][0], $data))
-												//if(socket_write($this->linkConnection[$sn][0], $data) === false)
-												if ($this->linkConnection[$sn][0] == null or socket_write($this->linkConnection[$sn][0], $data) === false)
+												//socket_write($this->linkConnection[$sn][0], $data);
+												//if(socket_read($this->linkConnection[$sn][0], 4096, PHP_BINARY_READ) === false)
+												
+												//if((socket_write($this->linkConnection[$sn][0], $data)) === false)
+												//if ($this->linkConnection[$sn][0] == null and socket_write($this->linkConnection[$sn][0], $data) === false)
+												//if ($this->linkConnection[$sn][0] == null)
+												// If connexion is lost with device when on connect interface, close socket
+												
 												{
 													$key = array_search($this->linkConnection[$sn][0], $clients);
 													if($key){
 														socket_close($clients[$key]);
-														$request->setConnect(0, $sn);
+														echo "\r\nSocket closed with Sn ".$clientsInfo[$key][1]." and keyFalse: ".$key." !\r\n";
+														//$request->setConnect(0, $sn);
 														//array_splice($clients, $key, 1);
 														//var_dump($clientsInfo[$key]);
 														unset($clients[$key]);
 														unset($clientsInfo[$key]);
-														echo "\r\nSocket closed with Sn ".$sn." and keyFalse: ".$key." !\r\n";
 													}
 												}
-											
-										} 
-										else 
-										{
-											//$key = array_search($this->linkConnection[$sn][0], $clients);
-											echo 'SEND MSG TO OTHER >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
-											//if (isset($this->linkConnection[$sn])) {
-												//print_r($this->linkConnection[$sn]);
-											//}
-											if (isset($this->linkConnection[$sn][1])) {
-												//print_r($this->linkConnection[$sn]);
-												socket_write($this->linkConnection[$sn][1], $data);
-												echo 'SEND MSG TO '.$sn.' >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
-												//socket_close($this->linkConnection[$sn][1]);
-												//unset($clients[$key]);
-												//unset($clientsInfo[$key]);
-												//echo 'SOCKET 1 CLOSED'."\n";
+												
+											} 
+											else 
+											{
+												//$key = array_search($this->linkConnection[$sn][0], $clients);
+												echo 'SEND MSG TO OTHER >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
+												//if (isset($this->linkConnection[$sn])) {
+													//print_r($this->linkConnection[$sn]);
+												//}
+												if (isset($this->linkConnection[$sn][1])) {
+													//print_r($this->linkConnection[$sn]);
+													socket_write($this->linkConnection[$sn][1], $data);
+													echo 'SEND MSG TO '.$sn.' >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
+													/*
+													$key = array_search($this->linkConnection[$sn][0], $clients);
+													if($key){
+														socket_close($this->linkConnection[$sn][0]);
+														unset($clients[$key]);
+														unset($clientsInfo[$key]);
+														echo 'SOCKET 1 CLOSED'."\n";
+													}
+													*/
+												}
+												else {
+													echo 'Device is not connected';
+													//unset($data);
+												}
+												
 											}
-											else {
-												echo 'Device is not connected';
-											}
-											
+		
 										}
-	
+		
 									}
-	
+									unset($data);
 								}
-								unset($data);
+								else // data sent by unknown device or data is incorrect
+								{
+									socket_close($read_sock);
+									echo "\nWarning: Device is unknown or data is incorrect. Socket is closed with key:".$clientsInfo[$key][1]."\n";
+									unset($clientsInfo[$key]);
+									unset($clients[$key]);
+
+								}
 							}
 						}
 					}
@@ -550,8 +586,8 @@ class TCPServer extends AbstractController
 			// end of reading foreach
 		}
 		// close the listening socket
-		socket_close($sock);
+		//socket_close($sock);
 		//$output->writeln("\r\nSocket closed ! Something is false.\r\n");
-		echo "\r\nSocket closed ! Something is false.\r\n";
+		//echo "\r\nSocket closed ! Something is false.\r\n";
 	}
 }
