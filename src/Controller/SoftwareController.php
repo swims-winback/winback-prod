@@ -43,7 +43,7 @@ class SoftwareController extends AbstractController
             // On recherche les annonces correspondant aux mots clefs
             $softwares = $softwareRepository->search(
                 $software_name = $search->get('value')->getData(),
-                $search->get('category')->getData(),
+                //$search->get('category')->getData(),
                 $family_name = $search->get('category')->getData(),
             );
             if ($softwares == null) {
@@ -225,5 +225,32 @@ class SoftwareController extends AbstractController
         $logger->info($user." has deleted ".$name);
         $this->addFlash('message', 'Software '.$name.' deleted with success !');
         return $this->redirectToRoute('software');
+    }
+
+    /**
+     * @Route("/addUpdateComment/{id}/{comment}", name="add_update_comment")
+     */
+    public function addUpdateComment(ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, $id, $comment, LoggerInterface $logger) {
+        $user = $this->getUser();
+        $software = $softwareRepository->findOneBy(array('id' => $id));
+        if ($comment == "null") {
+            $comment = "";
+            $logger->info($user." has deleted comment.");
+            $this->addFlash('message', 'Comment deleted with success !');
+        }
+        else {
+            $logger->info($user." has added comment ".$comment);
+            $this->addFlash('message', 'Comment '.$comment.' added with success !');
+        }
+        $software->setUpdateComment($comment);
+
+        $em = $doctrine->getManager();
+        $em->persist($software);
+        $em->flush();
+        
+
+        //return new Response("true");
+        return $this->redirectToRoute('software');
+        
     }
 }

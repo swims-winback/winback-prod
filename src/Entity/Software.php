@@ -48,6 +48,9 @@ class Software
     #[ORM\ManyToMany(targetEntity: Device::class, mappedBy: 'software')]
     private $devices;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $update_comment;
+
     public function __construct()
     {
         $this->devices = new ArrayCollection();
@@ -158,6 +161,18 @@ class Software
         if ($this->devices->removeElement($device)) {
             $device->removeSoftware($this);
         }
+
+        return $this;
+    }
+
+    public function getUpdateComment(): ?string
+    {
+        return $this->update_comment;
+    }
+
+    public function setUpdateComment(string $update_comment): self
+    {
+        $this->update_comment = $update_comment;
 
         return $this;
     }

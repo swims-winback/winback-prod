@@ -87,7 +87,7 @@ class DeviceController extends AbstractController
 
     }
     */
-    
+
     public function addDevice(ManagerRegistry $doctrine, DeviceFamilyRepository $deviceFamilyRepository, $familyName, $version)
     {
         $device = new Device;
@@ -323,8 +323,18 @@ class DeviceController extends AbstractController
     /**
      * @Route("/addComment/{id}/{comment}", name="add_comment")
      */
-    public function addComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment) {
+    public function addComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment, LoggerInterface $logger) {
+        $user = $this->getUser();
         $device = $deviceRepository->findOneBy(array('id' => $id));
+        if ($comment == "null") {
+            $comment = "";
+            $logger->info($user." has deleted comment.");
+            $this->addFlash('message', 'Comment deleted with success !');
+        }
+        else {
+            $logger->info($user." has added comment ".$comment);
+            $this->addFlash('message', 'Comment '.$comment.' added with success !');
+        }
         $device->setComment($comment);
 
         $em = $doctrine->getManager();
@@ -334,9 +344,9 @@ class DeviceController extends AbstractController
         return new Response("true");
     }
 
-    /**
-     * @Route("/addUpdateComment/{id}/{comment}", name="add_update_comment")
-     */
+    
+    //@Route("/addUpdateComment/{id}/{comment}", name="add_update_comment")
+    /*
     public function addUpdateComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment) {
         $device = $deviceRepository->findOneBy(array('id' => $id));
         $device->setUpdateComment($comment);
@@ -347,5 +357,6 @@ class DeviceController extends AbstractController
 
         return new Response("true");
     }
+    */
 }
 

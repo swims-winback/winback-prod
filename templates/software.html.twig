@@ -66,6 +66,7 @@
                                                 <th>Creation date</th>
                                                 {% if is_granted("ROLE_ADMIN") %}
                                                 <th></th>
+                                                <th>Update Comment</th>
                                                 {% endif %}
                                             </tr>
                                         </thead>
@@ -90,6 +91,12 @@
                                                         data-id="delete_{{software.id}}"
                                                         data-title="{{software.name}}"
                                                         data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-update-form">
+                                                            <input class="comment_update_input border border-0" type="text" name="nm" value="{{software.updateComment}}">
+                                                            <button class="comment_update_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{software.id}}"><i class="fa-solid fa-check"></i></button>
+                                                        </div>
                                                     </td>
                                                     {% endif %}
                                                 </tr>

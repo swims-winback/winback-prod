@@ -45,7 +45,6 @@
                                         <th scope="col" class="text-center">Forced</th>
                                         <th scope="col" class="text-center">Info</th>
                                         <th scope="col" class="text-center">Comment</th>
-                                        <th scope="col" class="text-center">Update Comment</th>
                                     </tr>
                                     <tr class="w-100 align-bottom">
                                         <th class="text-center">
@@ -75,7 +74,6 @@
                                                 {{ form_end(versionform) }}
                                             {% endif %}
                                         </th>
-                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -138,12 +136,6 @@
                                                 <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-form">
                                                     <input class="comment_input border border-0" type="text" name="nm" value="{{device.comment}}">
                                                     <button class="comment_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button> 
-                                                </div> 
-                                            </td>
-                                            <td class="">
-                                                <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-update-form">
-                                                    <input class="comment_update_input border border-0" type="text" name="nm" value="{{device.updateComment}}">
-                                                    <button class="comment_update_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button>
                                                 </div> 
                                             </td>
                                         </tr>

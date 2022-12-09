@@ -387,7 +387,7 @@ class Device
         return $this->update_comment;
     }
 
-    public function setUpdateComment(string $update_comment): self
+    public function setUpdateComment($update_comment): self
     {
         $this->update_comment = $update_comment;
 

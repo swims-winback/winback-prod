@@ -32,10 +32,6 @@ class SoftwareRepository extends ServiceEntityRepository
         if($value != null){
             $query->where('d.name LIKE :value OR d.softwareFile LIKE :value')
             ->setParameter(':value', '%'.$value.'%');
-            /*
-            $query->where('d.name = :value OR d.softwareFile = :value')
-            ->setParameter('value', $value);
-            */
         }
         if($category != null){
             $query->leftJoin('d.deviceFamily', 'c');

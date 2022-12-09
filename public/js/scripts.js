@@ -218,24 +218,30 @@ let commentButtons = document.getElementsByClassName("comment_button");
 let commentInputs = document.getElementsByClassName("comment_input");
 let updateCommentButtons = document.getElementsByClassName("comment_update_button");
 let updateCommentInputs = document.getElementsByClassName("comment_update_input");
+
 for (let element of commentInputs) {
   element.onclick = function () {
     $(element).addClass('border-dark');
   }
 }
-
 for(let element of commentButtons){
   element.onclick = function() {
     let id = $(element).data("id");
     let comment = element.previousElementSibling.value;
+    if (comment == "") {
+      comment = null
+    }
     addComment(id, comment);
   };
 }
 
-for(let element of updateCommentButtons){
+for (let element of updateCommentButtons) {
   element.onclick = function() {
     let id = $(element).data("id");
     let comment = element.previousElementSibling.value;
+    if (comment == "") {
+      comment = null
+    }
     console.log(comment)
     addUpdateComment(id, comment);
   };
