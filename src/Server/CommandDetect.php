@@ -264,7 +264,7 @@ class CommandDetect extends AbstractController {
 		$indexToGet = $deviceObj["Index"];
 		$boardType = $deviceObj["boardType"];
 
-		if ($command == 'DE' || $command == 'FE') {
+		if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 			// WRITE CMD LOG + CONNECT DB //
 			//$time_start4 = microtime(true);
 			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
@@ -391,7 +391,12 @@ class CommandDetect extends AbstractController {
 				$response[62] = chr(intval($deviceInfo[PUB_ACCEPTED]));
 				$response[63] = chr($pinCode/256);
 				$response[64] = chr($pinCode%256);
-				$commentsString="Update version \nMaj touch and go";
+
+				//TODO $commentsString in database
+				$commentsString = $request->getUpdateComment($request->getDeviceTypeId($deviceType), $version);
+				echo('Comment string: '.$commentsString);
+				//TODO Instead search for software corresponding to update version & device type and return update_comment
+				//$commentsString="Update version \nMaj touch and go";
 				
 				for($i = 0; $i < strlen($commentsString) ; $i++)
 				{				
@@ -401,10 +406,12 @@ class CommandDetect extends AbstractController {
 				{
 					$response[$i] = chr(hexdec(bin2hex($response[$i])) + $this->getserverCesarMatrixTxArray[($i-6)%214]);
 				}
-				//echo("\r\nDE - TX data : ".bin2hex($response)."\r\n");
+				echo("\r\nDE - TX data : ".bin2hex($response)."\r\n");
 				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDE - TX data : ".bin2hex($response)."\r\n");
 				break;	
-
+			//case "CC": //synchro directory prtocol
+			//case "CB": //download protocol
+				
 			case "DC": //Download BOARD //Download Version
 			case "CD": //Download BOARD //Download Version
 				// * Empêche la machine de rester forcée après un 1er téléchargement *//
