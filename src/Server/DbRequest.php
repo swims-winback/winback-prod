@@ -515,6 +515,22 @@ class DbRequest {
         return false;
     }
 
+    function getDeviceTypeId($deviceType)
+    {
+        $whereCond = "number_id='$deviceType'";
+        $req = $this->select('id', DEVICE_FAMILY_TABLE, $whereCond);
+        //print_r($req);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                //print_r($row['id']);
+                return $row['id'];
+            }
+        }
+        return false;
+    }
+
+    /*
     function getUpdateComment($sn)
     {
         $whereCond = SN."='$sn'";
@@ -529,6 +545,23 @@ class DbRequest {
         }
         return false;
     }
+    */
+    function getUpdateComment($deviceType, $version)
+    {
+        $whereCond = DEVICE_TYPE." = {$deviceType} AND ".DEVICE_VERSION." = '$version'";
+        $req = $this->select(UPDATE_COMMENT, SOFTWARE_TABLE, $whereCond);
+        //print_r($req);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                //print_r ($row[UPDATE_COMMENT]);
+                return $row[UPDATE_COMMENT];
+                //return $row[$rowName];
+            }
+        }
+        return false;
+    }
+
     /*
     function getLogPtFrom($sn){
         $whereCond = SN."='$sn'";
