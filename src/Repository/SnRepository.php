@@ -70,7 +70,7 @@ class SnRepository extends ServiceEntityRepository
 
         if (!empty($search->q)) {
             $query = $query
-                ->andWhere('d.SN LIKE :q')
+                ->andWhere('d.SN LIKE :q or d.Device LIKE :q')
                 ->setParameter('q', "%{$search->q}%");
         }
         
