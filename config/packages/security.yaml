@@ -7,9 +7,12 @@ security:
              algorithm: auto
         App\Entity\Admin:
             algorithm: auto
+        App\Entity\Client:
+            algorithm: auto
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USER, ROLE_SAV]
+        ROLE_SAV:         [ROLE_USER, ROLE_GOE]
+        ROLE_ADMIN:       [ROLE_SAV]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -19,13 +22,46 @@ security:
             entity:
                 #class: App\Entity\Admin
                 class: App\Entity\User
-                property: username
+                property: email
+        #app_client_provider:
+            #entity:
+                #class: App\Entity\Client
+                #property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
+            
             security: false
+        #client_secured_area:
+            #pattern: ^/client
+            #lazy: true
+            #provider: app_client_provider
+            #custom_authenticator: App\Security\Client\AppAuthenticator
+            #entry_point: App\Security\Client\AuthenticationEntryPoint
+            #access_denied_handler: App\Security\Client\AccessDeniedHandler
+            #form_login:
+                #login_path: app_client_login
+                #check_path: app_client_login
+                #enable_csrf: true
+            #logout:
+                #path: app_logout
+                # where to redirect after logout
+                #target: app_client_login
+            #remember_me:
+                #secret:   '%kernel.secret%' # required
+                #lifetime: 604800 # 1 week in seconds
+                # by default, the feature is enabled by checking a
+                # checkbox in the login form (see below), uncomment the
+                # following line to always enable it.
+                #always_remember_me: true
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
         main:
+        #admin_secured_area:
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\AppAuthenticator
@@ -45,20 +81,21 @@ security:
                 # by default, the feature is enabled by checking a
                 # checkbox in the login form (see below), uncomment the
                 # following line to always enable it.
-                #always_remember_me: true
+                ####always_remember_me: true
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/super, roles: ROLE_SUPER }
+         - { path: ^/user/client, roles: ROLE_CLIENT }
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/sav, roles: ROLE_SAV }
          - { path: ^/user, roles: ROLE_USER }
+         
 
 when@test:
     security:

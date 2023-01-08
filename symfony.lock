@@ -107,6 +107,9 @@
     "guzzlehttp/psr7": {
         "version": "2.2.1"
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.9.0"
+    },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
@@ -137,20 +140,8 @@
     "phar-io/version": {
         "version": "3.2.1"
     },
-    "phpdocumentor/reflection-common": {
-        "version": "2.2.0"
-    },
-    "phpdocumentor/reflection-docblock": {
-        "version": "5.3.0"
-    },
-    "phpdocumentor/type-resolver": {
-        "version": "1.6.1"
-    },
     "phpoffice/phpspreadsheet": {
         "version": "1.22.0"
-    },
-    "phpspec/prophecy": {
-        "version": "v1.15.0"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.15"
@@ -636,6 +627,18 @@
     "symfony/yaml": {
         "version": "v6.0.3"
     },
+    "symfonycasts/reset-password-bundle": {
+        "version": "1.14",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "97c1627c0384534997ae1047b93be517ca16de43"
+        },
+        "files": [
+            "./config/packages/reset_password.yaml"
+        ]
+    },
     "symfonycasts/verify-email-bundle": {
         "version": "v1.10.0"
     },
@@ -647,8 +650,5 @@
     },
     "twig/twig": {
         "version": "v3.3.8"
-    },
-    "webmozart/assert": {
-        "version": "1.10.0"
     }
 }

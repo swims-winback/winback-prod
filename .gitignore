@@ -187,8 +187,6 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/symfony,visualstudiocode,macos,windows,git
 
 todel.txt
-configServer/config.php
-configServer/config.php
 composer.json
 composer.lock
 symfony.lock
