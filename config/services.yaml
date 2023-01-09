@@ -39,3 +39,6 @@ imports:
     #- { resource: '../config.php' }
     #- { resource: '../dataConfig.php' }
     - { resource: '../configServer/*.php' }
+when@prod:
+    imports:
+        - { resource: '../configProd/*.php' }

@@ -43,6 +43,7 @@ when@prod:
             main:
                 #type: fingers_crossed
                 type: rotating_file
+                #path: var/log/prod.log
                 action_level: error
                 handler: nested
                 #excluded_http_codes: [404, 405]
@@ -58,8 +59,18 @@ when@prod:
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
+                channels: ["!event", "!doctrine", "!console"]
             deprecation:
                 type: stream
                 channels: [deprecation]
                 path: php://stderr
+            filter_for_errors:
+                type: fingers_crossed
+                action_level: error
+                handler: error_log_handler
+                excluded_404s:
+                    # regex: exclude all 404 errors from the logs
+                    - ^/
+            error_log_handler:
+                type: error_log
+                level: info
