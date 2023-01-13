@@ -3,10 +3,10 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+
 parameters:
-    # softwares_directory: '%kernel.project_dir%/public/uploads/softwares'
+     app.supported_locales: 'en|fr'
      statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
-    # uploads_directory: '%kernel.project_dir%/public/uploads/'
      uploads_directory: '%kernel.project_dir%/public/Ressource/'
      packages_directory: '%kernel.project_dir%/src/Ressource/package'
      class_directory: '%kernel.project_dir%/src/Class'
@@ -34,11 +34,11 @@ services:
     App\Services\FileUploader:
         arguments:
             $targetDirectory: '%uploads_directory%'
-
-imports:
-    #- { resource: '../config.php' }
-    #- { resource: '../dataConfig.php' }
-    - { resource: '../configServer/*.php' }
+when@dev:       
+    imports:
+        #- { resource: '../config.php' }
+        #- { resource: '../dataConfig.php' }
+        - { resource: '../configServer/*.php' }
 when@prod:
     imports:
         - { resource: '../configProd/*.php' }

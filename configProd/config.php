@@ -179,6 +179,7 @@ if (!defined('PACK_ARCH_PATH')) define("PACK_ARCH_PATH", ARCH_PATH.'package/');
 if (!defined('deviceType')) define('deviceType', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
 if (!defined('deviceTypeName')) define('deviceTypeName', array(10 => 'RSHOCK', 11 => 'CRYOBACK4', 12 => 'BACK4', 13 => 'BIOBACK', 14 => 'BACK3'));
 if (!defined('deviceTypeArray')) define('deviceTypeArray', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
+if (!defined('DEVICE_TYPE_ARRAY')) define('DEVICE_TYPE_ARRAY', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
 if (!defined('deviceTypeId')) define('deviceTypeId', array(10 => 1, 12 => 3, 11 => 4, 14 => 5, 13 => 6)); //Ids corresponding to Ids automatically created in SQLdb
 if (!defined('deviceIdType')) define('deviceIdType', array(1 => 10, 3 => 12, 4 => 11, 5 => 14, 6 => 13));
 if (!defined('deviceId')) define('deviceId', array('RSHOCK/' => 10, 'CRYOBACK4/' => 11, 'BACK4/' => 12 , 'BIOBACK/' => 13, 'BACK3/' => 14));
@@ -202,12 +203,16 @@ if (!defined('LOG_PATH')) define("LOG_PATH", RESSOURCE_PATH."logs/");
 /* ================================ */
 
 /* Define DB Info */
-
+if (!defined('DB')) define('DB', $_ENV['DB']);
+if (!defined('ADMIN')) define('ADMIN', $_ENV['ADMIN']);
+if (!defined('PWD')) define("PWD", $_ENV['PWD']);
+if (!defined('HOSTNAME')) define('HOSTNAME', $_ENV['HOSTNAME']);
+/*
 if (!defined('DB')) define('DB', 'winback');
 if (!defined('ADMIN')) define('ADMIN', "root");
 if (!defined('PWD')) define("PWD", "");
 if (!defined('HOSTNAME')) define('HOSTNAME', 'localhost');
-
+*/
 /*
 define('DB', 'winback');
 define('ADMIN', "root");
@@ -249,4 +254,5 @@ if (!defined('SERVER_HOSTNAME')) define('SERVER_HOSTNAME', PTF_ADDR);
 if (!defined('ADDRESS')) define('ADDRESS', "51.91.18.215");
 //define('ADDRESS', "192.168.1.127"); // wb wifi IP Adress used in socket config //win0C
 //define('ADDRESS', "10.0.0.78"); // winback wifi //win0A
-if (!defined('PORT')) define('PORT', 5006); // Port used in socket config
+//if (!defined('PORT')) define('PORT', 5005); // Port used in socket config
+if (!defined('PORT')) define('PORT', $_ENV['PORT']);
