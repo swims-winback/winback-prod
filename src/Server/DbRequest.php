@@ -80,74 +80,6 @@ class DbRequest {
         return $req;
     }
 
-    /* ###### USER OPERATIONS ##### */
-
-    function createInsert($login, $pwd, $email, $role, $table){
-        $req = "INSERT INTO ".$table." (login, pwd, email, role, activated) VALUES ('".$login."','".$pwd."','".$email."',".$role.",0)";
-        
-        return $req;
-    }
-
-	function checkUserActif($login){
-        $whereCondition = LOGIN."='$login'";
-        $req = $this->select('activated', USER_TABLE, $whereCondition);
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            if($row = mysqli_fetch_assoc($res)){
-                if (($row['activated'] === '1') || ($row['activated'] === 1)){
-                    return true;
-                }
-            }
-        }
-
-        return false;
-	}
-	
-    function checkUser($login, $pwd){
-        $whereCondition = "login='$login'";
-        $req = $this->select("pwd", USER_TABLE, $whereCondition);
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            if($row = mysqli_fetch_assoc($res)){
-                if(password_verify($pwd, $row['pwd'])){
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-        
-    function createUser($user, $encryptPwd, $email, $role){
-        $req = $this->createInsert($user, $encryptPwd, $email, $role, USER_TABLE);
-        $res = $this->sendRq($req);
-        
-    }
-
-    public function checkExistUser($login) {
-        $whereCondition = "login='$login'";
-        $req = $this->select("login", USER_TABLE,$whereCondition);
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            if($row = mysqli_fetch_assoc($res)){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public function getTeamId($login){
-        $whereCondition = "login='$login'";
-        $req = $this->select("role", USER_TABLE,$whereCondition);
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            if($row = mysqli_fetch_assoc($res)){
-                return $row['role'];
-            }
-        }
-        return 0;
-    }
-    
     /* ####### DEVICE REQUEST ####### */
 
     // NOT USED
@@ -317,6 +249,15 @@ class DbRequest {
         echo "\r\nSN empty or vers empty or devType empty !\r\n";
     }
     
+    function initDeviceInSN($sn, $devType){
+        if ($sn!="" && $devType!="") {
+            $req = "INSERT INTO ".SN_TABLE." (".SN_DEVICE.", ".SN_ID.", ".SN_DATE.") VALUES ('".$devType."', '".$sn."', '".date("Y-m-d | H:i:s")."')";
+            if ($res = $this->sendRq($req)) {
+                return $res;
+            }
+        }
+    }
+        
     /**
      * If sn exists in db, select & return row
      * else, init device in db
@@ -350,6 +291,30 @@ class DbRequest {
                 if($row = mysqli_fetch_assoc($res2)){
                     return $row;
                 }
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    function setDeviceToSN(string $sn, string $devType)
+    {
+        $whereCond = SN_ID." = '".$sn."'";
+        
+        $req = $this->select('*', SN_TABLE, $whereCond);
+        if($res = $this->sendRq($req)){
+            
+            if($row = mysqli_fetch_assoc($res)){
+            }else{
+                echo ("Device not found in DB.");
+                $res = $this->initDeviceInSN($sn, $devType);
+                $res2 = $this->sendRq($req);
+                if($row = mysqli_fetch_assoc($res2)){
+                    echo ("Device added in DB.");
+                    return $row;
+                }
+                
             }
         }
         else {
@@ -530,33 +495,28 @@ class DbRequest {
         return false;
     }
 
-    /*
-    function getUpdateComment($sn)
+    function getDeviceTypeName($deviceType)
     {
-        $whereCond = SN."='$sn'";
-        $req = $this->select(UPDATE_COMMENT, DEVICE_TABLE, $whereCond);
+        
+        $whereCond = "number_id='$deviceType'";
+        $req = $this->select('name', DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
-                print_r ($row[UPDATE_COMMENT]);
-                return $row[UPDATE_COMMENT];
-                //return $row[$rowName];
+                return $row['name'];
             }
         }
         return false;
     }
-    */
+
     function getUpdateComment($deviceType, $version)
     {
-        $whereCond = DEVICE_TYPE." = {$deviceType} AND ".DEVICE_VERSION." = '$version'";
+        $whereCond = DEVICE_TYPE." = '$deviceType' AND ".DEVICE_VERSION." = '$version'";
         $req = $this->select(UPDATE_COMMENT, SOFTWARE_TABLE, $whereCond);
-        //print_r($req);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
-                //print_r ($row[UPDATE_COMMENT]);
                 return $row[UPDATE_COMMENT];
-                //return $row[$rowName];
             }
         }
         return false;

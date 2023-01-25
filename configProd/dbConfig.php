@@ -6,7 +6,7 @@ if (!defined('DEVICE_TABLE')) define('DEVICE_TABLE', 'device');
 if (!defined('DEVICE_FAMILY_TABLE')) define('DEVICE_FAMILY_TABLE', 'device_family');
 if (!defined('SOFTWARE_TABLE')) define('SOFTWARE_TABLE', 'software');
 if (!defined('TREATMENT_TABLE')) define('TREATMENT_TABLE', 'treatment');
-if (!defined('SN_TABLE')) define('SN_TABLE', 'sn_copy');
+if (!defined('SN_TABLE')) define('SN_TABLE', 'sn');
 
 /* Define Device Table properties */
 
@@ -45,3 +45,8 @@ define("SOFT_CREATED_AT", "created_at");
 /* Define Device Type properties */
 define('ID', 'id');
 define('NUMBER_ID', 'number_id');
+
+/* Define SN Table properties */
+if (!defined('SN_ID')) define('SN_ID', 'SN');
+if (!defined('SN_DEVICE')) define('SN_DEVICE', 'Device');
+if (!defined('SN_DATE')) define('SN_DATE', 'Date');

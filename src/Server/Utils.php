@@ -202,14 +202,14 @@ class Utils {
     {
         //$fileName = $this->setVersionFilename($deviceType, $boardType = '2');
 		if(file_exists(PACK_PATH.deviceTypeArray[$deviceType].$fileName)){
-            echo "\r\nbValue: ".PACK_PATH.deviceTypeArray[$deviceType].$fileName."\r\n";
+            //echo "\r\nbValue: ".PACK_PATH.deviceTypeArray[$deviceType].$fileName."\r\n";
 			return file_get_contents(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
 		}
         else
         {
             
 			$aValue = explode('_', $fileName);
-            echo "\r\naValue: ".$aValue[2];
+            //echo "\r\naValue: ".$aValue[2];
 			return file_get_contents($this->checkFile($deviceType, $aValue[2]));
             
             /*
