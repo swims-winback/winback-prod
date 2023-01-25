@@ -152,9 +152,15 @@ define('FC', 252);
 define('DE', 222);
 */
 
+/*
 if (!defined('cmdByte')) define('cmdByte', array('FE' => 254, 'FD' => 253,'FC' => 252,'FA' => 250,'F9' => 249,'F8' => 248,'F7' => 247,'F6' => 246,'F5' => 245,'F4' => 244,'F3' => 243,'F2' => 242,'DE' => 222,'DD' => 221,'DC' => 220,'DB' => 219,'DA' => 218,'D9' => 217,'D8' => 216,'CF' => 207,'CE' => 206, 'CD' => 205, 'CC' => 204, 'CB' => 203));
 if (!defined('cmdSoft')) define('cmdSoft', array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
 if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
+*/
+if (!defined('cmdByte')) define('cmdByte', array('FE' => 254, 'FD' => 253,'FC' => 252,'FA' => 250,'F9' => 249,'F8' => 248,'F7' => 247,'F6' => 246,'F5' => 245,'F4' => 244,'F3' => 243,'F2' => 242,'DE' => 222,'DD' => 221,'DC' => 220,'DB' => 219,'DA' => 218,'D9' => 217,'D8' => 216,'CF' => 207,'CE' => 206, 'CD' => 205, 'CC' => 204, 'CB' => 203));
+if (!defined('cmdSoft')) define('cmdSoft', array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD'));
+if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
+
 /* Define PATH */
 
 //define( 'ROOT_DIR', dirname(__FILE__, 2) );
