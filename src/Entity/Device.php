@@ -79,7 +79,7 @@ class Device
     private $serverDate;
 
     #[ORM\ManyToMany(targetEntity: Software::class, inversedBy: 'devices')]
-    private $software;
+    private $softwares;
 
     #[ORM\Column(type: 'boolean')]
     private $connected = false;
@@ -97,7 +97,7 @@ class Device
     {
         $this->versionUpload = new ArrayCollection();
         //$this->statistics = new ArrayCollection();
-        $this->software = new ArrayCollection();
+        $this->softwares = new ArrayCollection();
     }
 
     public function __toString()
@@ -325,15 +325,15 @@ class Device
     /**
      * @return Collection<int, Software>
      */
-    public function getSoftware(): Collection
+    public function getSoftwares(): Collection
     {
-        return $this->software;
+        return $this->softwares;
     }
 
     public function addSoftware(Software $software): self
     {
-        if (!$this->software->contains($software)) {
-            $this->software[] = $software;
+        if (!$this->softwares->contains($software)) {
+            $this->softwares[] = $software;
         }
 
         return $this;
@@ -341,7 +341,7 @@ class Device
 
     public function removeSoftware(Software $software): self
     {
-        $this->software->removeElement($software);
+        $this->softwares->removeElement($software);
 
         return $this;
     }
@@ -382,6 +382,7 @@ class Device
         return $this;
     }
 
+    /*
     public function getUpdateComment(): ?string
     {
         return $this->update_comment;
@@ -393,4 +394,5 @@ class Device
 
         return $this;
     }
+    */
 }

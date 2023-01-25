@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 class DeviceController extends AbstractController
 {
     /**
-     * @Route("/user/device/", name="device")
+     * @Route("/{_locale<%app.supported_locales%>}/user/device/", name="device")
      */
     public function index(DeviceRepository $deviceRepository, Request $request, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger)  
     {
@@ -75,7 +75,7 @@ class DeviceController extends AbstractController
 
     }
     /**
-     * @Route("/connect/{id}", name="connect")
+     * @Route("/{_locale<%app.supported_locales%>}/connect/{id}", name="connect")
      */
     /*
     public function connect(Device $device, DeviceRepository $deviceRepository)  
@@ -130,7 +130,7 @@ class DeviceController extends AbstractController
 
 
     /**
-     * @Route("/edit/{id}", name="device_edit")
+     * @Route("/{_locale<%app.supported_locales%>}/edit/{id}", name="device_edit")
     */
     public function editDevice(Request $request, ManagerRegistry $doctrine, Device $device): Response
     {
@@ -329,11 +329,11 @@ class DeviceController extends AbstractController
         if ($comment == "null") {
             $comment = "";
             $logger->info($user." has deleted comment.");
-            $this->addFlash('message', 'Comment deleted with success !');
+            $this->addFlash('infoDevice', 'Comment deleted with success !');
         }
         else {
             $logger->info($user." has added comment ".$comment);
-            $this->addFlash('message', 'Comment '.$comment.' added with success !');
+            $this->addFlash('infoDevice', 'Comment '.$comment.' added with success to '.$device->getSn().'!');
         }
         $device->setComment($comment);
 
@@ -341,22 +341,8 @@ class DeviceController extends AbstractController
         $em->persist($device);
         $em->flush();
 
-        return new Response("true");
+        //return new Response("true");
+        return $this->redirectToRoute('device');
     }
-
-    
-    //@Route("/addUpdateComment/{id}/{comment}", name="add_update_comment")
-    /*
-    public function addUpdateComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment) {
-        $device = $deviceRepository->findOneBy(array('id' => $id));
-        $device->setUpdateComment($comment);
-
-        $em = $doctrine->getManager();
-        $em->persist($device);
-        $em->flush();
-
-        return new Response("true");
-    }
-    */
 }
 

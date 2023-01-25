@@ -13,13 +13,15 @@ use App\Repository\DeviceRepository;
 use App\Repository\SoftwareRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 class DashboardController extends AbstractController
 {
     /**
-     * @Route("/user/dashboard/", name="dashboard")
+     * @Route("/{_locale<%app.supported_locales%>}/user/dashboard/", name="dashboard")
      */
-    public function dashboard(DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository) {
+    public function dashboard(DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository, ChartBuilderInterface $chartBuilder) {
         //$data = new SearchVersion();
         $devicesFamily = $deviceFamilyRepository->findAll();
         $devices = $deviceRepository->findAll();
@@ -27,23 +29,50 @@ class DashboardController extends AbstractController
         $deviceArray = array();
         //$form = $this->createForm(DashboardVersionType::class, $data);
         
-        /*
         foreach ($devicesFamily as $deviceFamily) {
-            $devices = $deviceRepository->findDeviceByCriteria($version=3.6, null, $family=$deviceFamily, null);
-            //count($devices);
-            //$deviceArray[`$deviceFamily`] = count($devices);
-            //$deviceArray = array($deviceFamily->getName());
-            $deviceArray[$deviceFamily->getName()] = count($devices);
-        }
-        */
-        foreach ($devicesFamily as $deviceFamily) {
-            //$devices = $deviceRepository->findDeviceByCriteria($version=3.6, null, $family=$deviceFamily, null);
             //$softwares = $deviceFamily->getSoftware();
             $softwares = $softwareRepository->findByDeviceFamily($deviceFamily);
             $softwareArray[$deviceFamily->getName()] = $softwares;
             //$deviceArray[$deviceFamily->getName()] = count($devices);
         }
 
+        /* TEST */
+        $labels = [];
+        $data = [];
+
+        foreach ($devicesFamily as $deviceFamily) {
+            $labels[] = $deviceFamily->getName();
+            $data[] = count($deviceFamily->getDevices());
+        }
+
+        $chart = $chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
+        $chart->setData([
+            'labels'=> $labels,
+            'datasets'=> [
+                [
+                    'label'=> 'Total Devices 2',
+                    'backgroundColor'=> [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                      ],
+                    'borderColor' => [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    'data'=>$data,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([]);
+
+        /* TEST */
         //TODO find devices updated by version
         return $this->render('dashboard.html.twig', [
             'devicesFamily'=> $devicesFamily,
@@ -53,6 +82,7 @@ class DashboardController extends AbstractController
             //'deviceArrayVersion'=> $deviceArrayVersion,
             //'result'=> $result
             'softwareArray'=> $softwareArray,
+            //'chart'=>$chart,
         ]);
     }
 
@@ -62,7 +92,8 @@ class DashboardController extends AbstractController
     public function getVersion($deviceFamily, $version, DeviceRepository $deviceRepository, DeviceFamilyRepository $deviceFamilyRepository)
     {
         $deviceFamilyId = $deviceFamilyRepository->findFamilyByName($deviceFamily)->getId();
-        $devices = $deviceRepository->findDeviceByCriteria($version=$version, null, $family=$deviceFamilyId, null);
+        //$devices = $deviceRepository->findDeviceByCriteria($version=$version, null, $family=$deviceFamilyId, null);
+        $devices = $deviceRepository->findBy(array('version' => $version, 'deviceFamily' => $deviceFamilyId));
         return new Response(count($devices));
     }
 

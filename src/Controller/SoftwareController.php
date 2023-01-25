@@ -26,26 +26,56 @@ use Symfony\Component\Filesystem\Filesystem;
 class SoftwareController extends AbstractController
 {
     /**
-     * @Route("/user/software/", name="software")
+     * @Route("/{_locale<%app.supported_locales%>}/user/software/", name="software")
      */    
     public function index(SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository, Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
     {
+        /*
+        $families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
+        $searchform = $this->createForm(SearchSoftwareType::class);
+        $search = $searchform->handleRequest($request);
+        foreach ($families as $fam) {
+            $softwares = $fam->getSoftwares();
+            $soft = $softwares->get(0);
+            echo ($soft);
+            //$softwares = $deviceFamilyRepository->findby(array('name' => 'ASC'), array('softwares' => 'ASC'));
+            
+            $filteredCollection = $softwares->filter(function($element) {
+                return $element = "WLE256_11_2_v003.007.bin";
+            });
+            
+            //print_r($filteredCollection);
+        }
+        */
 
+        // je veux créer un families array avec les softwares sélectionnés en value
+
+        
         $software = null;
         $softwares = $softwareRepository->findAll();
-        $families = $deviceFamilyRepository->findFamilyByNameAlpha();
+        //$softwares = $softwareRepository->findBy(array(), array('name' => 'DESC'));
+        $families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
+        //$families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
 
         $searchform = $this->createForm(SearchSoftwareType::class);
-        
         $search = $searchform->handleRequest($request);
         
         if($searchform->isSubmitted() && $searchform->isValid()) {
             // On recherche les annonces correspondant aux mots clefs
+            
+            $software_name = $search->get('value')->getData();
+            $family_name = $search->get('category')->getData();
+            
+            //echo ($software_name);
+            
             $softwares = $softwareRepository->search(
-                $software_name = $search->get('value')->getData(),
-                //$search->get('category')->getData(),
-                $family_name = $search->get('category')->getData(),
+                $software_name,
+                $family_name,
             );
+            
+            //$families = $deviceFamilyRepository->findBy(array('softwares' => $software_name), array('name' => 'ASC'));
+            //$softwares = $softwareRepository->findBy(array('name' => $software_name), array('name' => 'ASC'));
+            
             if ($softwares == null) {
                 $this->addFlash(
                     'errorSoftware', 'Software '.$software_name.' not found, please try again !'
@@ -55,9 +85,12 @@ class SoftwareController extends AbstractController
             
             if ($family_name != null) {
                 $families = $deviceFamilyRepository->findFamilyByNameAll($family_name->getName());
+                //$families = $deviceFamilyRepository->findBy(array('name' => $family_name->getName()));
             }
             //return $this->redirectToRoute('software');
         }
+        
+
 
         //$uploadform = $this->addSoftware($request, $dbRequest, $doctrine, $fileUploader, $deviceFamilyRepository);
         $this->addDirectorySoftware($dbRequest);
@@ -99,27 +132,30 @@ class SoftwareController extends AbstractController
         return false;
     }
 
-    // Check Directory is copied in db
+    /**
+     * Check Directory is copied in db
+     * @param DbRequest $request
+     * @return void
+     */
     public function addDirectorySoftware(DbRequest $request)
     {
         // for each device type in device type array
         foreach (deviceType as $key => $deviceType) {
             if (file_exists(PACK_PATH.$deviceType)) {
-                $this->aVersion[$deviceType] = array_diff(scandir(PACK_PATH.$deviceType), array('.'));
-                array_shift($this->aVersion[$deviceType]);
+                $arrayVersion[$deviceType] = array_diff(scandir(PACK_PATH.$deviceType), array('.'));
+
+                array_shift($arrayVersion[$deviceType]);
                 if (!file_exists(UPLOAD_PATH."softwares/".$deviceType)) {
                     mkdir(UPLOAD_PATH."softwares/".$deviceType);
                 }
-                //array_shift($this->aVersion[$device]);
                 //if record not in db, add record
                 // for each file in device type folder, create record in db if not exists
-                foreach ($this->aVersion[$deviceType] as $key => $file) {
-                    //var_dump($file);
+                foreach ($arrayVersion[$deviceType] as $key => $file) {
                     if (str_ends_with($file, ".bin")) {
                         $fileArray = explode("v", $file);
                         $version = substr($fileArray[1], -11, 7);
                         $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], ID);
-                        //$this->request->initSoftwareInDB($name=$this->aVersion[$deviceType][0], $devType=$deviceType, $version="0", $date=date("Y-m-d | H:i:s"));
+                        //$deviceTypeName = str_replace('/', '', $deviceType);
                         if (!file_exists(UPLOAD_PATH."softwares/".$deviceType.$file)) {
                             copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
                         }
@@ -134,7 +170,7 @@ class SoftwareController extends AbstractController
     }
 
     /**
-     * @Route("/user/software/add", name="software_add")
+     * @Route("/{_locale<%app.supported_locales%>}/user/software/add", name="software_add")
      * Upload new software with form
     */
     public function addSoftware(Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, FileUploader $fileUploader, DeviceFamilyRepository $deviceFamilyRepository, LoggerInterface $logger): Response
@@ -145,12 +181,11 @@ class SoftwareController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
             $softwareFile = $form->get('file')->getData();
-            //echo($form->get('file')->getData()->getClientOriginalName());
             if ($softwareFile) {
                 $fileName = $form->get('file')->getData()->getClientOriginalName();
                 $deviceType = substr($fileName, 7, 2);
-                $family = $deviceFamilyRepository->findFamilyByNumberId($deviceType);
-                $originalFilename = $fileUploader->upload($softwareFile, "package/".deviceTypeArray[$deviceType]);
+                $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
+                $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
                 $softwareVersion = substr($fileName, -11, 7);
                 $softwareName = $originalFilename;
                 $pattern2 = '/-/i';
@@ -159,14 +194,16 @@ class SoftwareController extends AbstractController
                 $pattern4 = "/\.0{1,2}/";
                 $softwareVersionModified2 = preg_replace($pattern3, '', $softwareVersionModified);
                 $softwareVersionModified3 = preg_replace($pattern4, '.', $softwareVersionModified2);
-
-                $software->setFamily($family);
+                
+                $software->setDeviceFamily($family);
                 $software->setName($fileName);
                 $software->setSoftwareFile($fileName);
                 $software->setVersion($softwareVersionModified3);
+                
                 $user = $this->getUser();
                 $logger->info($user." has uploaded ".$fileName);
-                $this->updateSoftwareInDB($name=$fileName, $devType=deviceTypeId[$deviceType], $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
+                $this->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
+                
             }
             $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
             return $this->redirectToRoute('software');
@@ -177,7 +214,7 @@ class SoftwareController extends AbstractController
     }
 
     /**
-     * @Route("/admin/software/edit/{id}", name="software_edit")
+     * @Route("/{_locale<%app.supported_locales%>}/admin/software/edit/{id}", name="software_edit")
     */
     public function editSoftware(Request $request, ManagerRegistry $doctrine, Software $software): Response
     {
@@ -203,24 +240,36 @@ class SoftwareController extends AbstractController
     }
 
     /**
-     * @Route("/user/software/delete/{id}", name="software_delete")
+     * @Route("/{_locale<%app.supported_locales%>}/user/software/delete/{deviceFamily}/{id}", name="software_delete")
     */    
-    public function deleteSoftware(Software $software, ManagerRegistry $doctrine, LoggerInterface $logger)
+    public function deleteSoftware(Software $software, ManagerRegistry $doctrine, LoggerInterface $logger, DeviceFamily $deviceFamily, $id)
     {
         $filesystem = new Filesystem();
         // récupère le nom du software
-        $name = $software->getName();
-        $deviceType = $software->getFamily()->getName();
+        $softwares = $deviceFamily->getSoftwares();
+        /*
+        $indexOf = $softwares->indexOf($software);
+        echo($indexOf);
+        $soft = $softwares->get($indexOf);
+        */
+        $soft = $software;
+        $name = $soft->getName();
+        $deviceType = $soft->getDeviceFamily()->getName();
         if (file_exists($this->getParameter('softwares_directory').'/'.$deviceType."/".$name)) {
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
         if (file_exists($this->getParameter('archives_directory').'/'.$deviceType."/".$name)) {
             unlink($this->getParameter('archives_directory').'/'.$deviceType."/".$name);
         }
+        if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name);
+        }
 
         $em = $doctrine->getManager();
+        $deviceFamily->removeSoftware($soft);
         $em->remove($software);
         $em->flush();
+
         $user = $this->getUser();
         $logger->info($user." has deleted ".$name);
         $this->addFlash('message', 'Software '.$name.' deleted with success !');

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="nWMiwfT" resname="Login">
+        <source>Login</source>
+        <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="acVpEs4" resname="You are logged in as">
+        <source>You are logged in as</source>
+        <target>Vous êtes connecté en tant que</target>
+      </trans-unit>
+      <trans-unit id="dcJ8U0Q" resname="Logout ?">
+        <source>Logout ?</source>
+        <target>Se déconnecter ?</target>
+      </trans-unit>
+      <trans-unit id="lpzL089" resname="Email">
+        <source>Email</source>
+        <target>Email</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>Mot de Passe</target>
+      </trans-unit>
+      <trans-unit id="_TJnqhH" resname="Remember me">
+        <source>Remember me</source>
+        <target>Se Souvenir de Moi</target>
+      </trans-unit>
+      <trans-unit id="Zxb5CLy" resname="Forgot Password ?">
+        <source>Forgot Password ?</source>
+        <target>Mot de passe oublié ?</target>
+      </trans-unit>
+      <trans-unit id="v9QCsvb" resname="Sign in">
+        <source>Sign in</source>
+        <target>S'identifier</target>
+      </trans-unit>
+      <trans-unit id="BWi9A7j" resname="Or">
+        <source>Or</source>
+        <target>Ou</target>
+      </trans-unit>
+      <trans-unit id="g_WFa1q" resname="Not registered yet ?">
+        <source>Not registered yet ?</source>
+        <target>Pas encore inscrit ?</target>
+      </trans-unit>
+      <trans-unit id="R94jWG5" resname="Sign Up">
+        <source>Sign Up</source>
+        <target>S'inscrire</target>
+      </trans-unit>
+      <trans-unit id="a6C97Mt" resname="Device">
+        <source>Device</source>
+        <target>Machine</target>
+      </trans-unit>
+      <trans-unit id="FLGzxbF" resname="Serial Number">
+        <source>Serial Number</source>
+        <target>Numéro de Série</target>
+      </trans-unit>
+      <trans-unit id="JGtxITx" resname="Device Type">
+        <source>Device Type</source>
+        <target>Type de Machine</target>
+      </trans-unit>
+      <trans-unit id="3RZ5Bd4" resname="Version">
+        <source>Version</source>
+        <target>Version actuelle</target>
+      </trans-unit>
+      <trans-unit id="8al8m0W" resname="Upload Version">
+        <source>Upload Version</source>
+        <target>Version téléchargeable</target>
+      </trans-unit>
+      <trans-unit id="coo.QQi" resname="Download status">
+        <source>Download status</source>
+        <target>Status de téléchargement</target>
+      </trans-unit>
+      <trans-unit id="QJhq2mp" resname="Log files">
+        <source>Log files</source>
+        <target>Fichiers log</target>
+      </trans-unit>
+      <trans-unit id="71ZyWF0" resname="Forced">
+        <source>Forced</source>
+        <target>Forcée</target>
+      </trans-unit>
+      <trans-unit id="FwMioy8" resname="Info">
+        <source>Info</source>
+        <target>Info</target>
+      </trans-unit>
+      <trans-unit id="RPXj__x" resname="Comment">
+        <source>Comment</source>
+        <target>Commentaire</target>
+      </trans-unit>
+      <trans-unit id="3AdIpxI" resname="Device Version">
+        <source>Device Version</source>
+        <target>Version de Machine</target>
+      </trans-unit>
+      <trans-unit id="kg5BPH1" resname="Status">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="ScJmuqq" resname="Search">
+        <source>Search</source>
+        <target>Recherche</target>
+      </trans-unit>
+      <trans-unit id="qCM0e7V" resname="Device Info">
+        <source>Device Info</source>
+        <target>Info Machine</target>
+      </trans-unit>
+      <trans-unit id="PD3gyRx" resname="IP Address">
+        <source>IP Address</source>
+        <target>Adresse IP</target>
+      </trans-unit>
+      <trans-unit id="uWlwAzv" resname="Log Pointer">
+        <source>Log Pointer</source>
+        <target>Pointeur Log</target>
+      </trans-unit>
+      <trans-unit id="fFD4o4p" resname="Advertising">
+        <source>Advertising</source>
+        <target>Publicité</target>
+      </trans-unit>
+      <trans-unit id="Y3Ad.ca" resname="PIN code">
+        <source>PIN code</source>
+        <target>Code PIN</target>
+      </trans-unit>
+      <trans-unit id="b93npnx" resname="Creation Date">
+        <source>Creation Date</source>
+        <target>Date de Création</target>
+      </trans-unit>
+      <trans-unit id="nUTdOhD" resname="Server last activity">
+        <source>Server last activity</source>
+        <target>Dernière activité Serveur</target>
+      </trans-unit>
+      <trans-unit id="GiMD7eB" resname="Connect">
+        <source>Connect</source>
+        <target>__Connect</target>
+      </trans-unit>
+      <trans-unit id="QGEau92" resname="Validate">
+        <source>Validate</source>
+        <target>Valider</target>
+      </trans-unit>
+      <trans-unit id="su0AES3" resname="Softwares">
+        <source>Softwares</source>
+        <target>Logiciels</target>
+      </trans-unit>
+      <trans-unit id="S6USHU0" resname="Devices">
+        <source>Devices</source>
+        <target>Machines</target>
+      </trans-unit>
+      <trans-unit id="Z7aWRoY" resname="Dashboard">
+        <source>Dashboard</source>
+        <target>Tableau de bord</target>
+      </trans-unit>
+      <trans-unit id="Gax1MQH" resname="SN">
+        <source>SN</source>
+        <target>SN</target>
+      </trans-unit>
+      <trans-unit id="plYQfpn" resname="Statistics">
+        <source>Statistics</source>
+        <target>Statistiques</target>
+      </trans-unit>
+      <trans-unit id="lxuXQjW" resname="Filename">
+        <source>Filename</source>
+        <target>Nom de fichier</target>
+      </trans-unit>
+      <trans-unit id="bk0LHGc" resname="Creation date">
+        <source>Creation date</source>
+        <target>Date de Création</target>
+      </trans-unit>
+      <trans-unit id="cfOtuBG" resname="Update Comment">
+        <source>Update Comment</source>
+        <target>Commentaire MAJ</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>S'incrire</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>Utilisateur</target>
+      </trans-unit>
+      <trans-unit id="wpIhDEQ" resname="Confirm Password">
+        <source>Confirm Password</source>
+        <target>Confirmer Mot de Passe</target>
+      </trans-unit>
+      <trans-unit id="6O3a5Yv" resname="Already registered ?">
+        <source>Already registered ?</source>
+        <target>Déjà inscrit(e) ?</target>
+      </trans-unit>
+      <trans-unit id="vMC8yRQ" resname="Sign In">
+        <source>Sign In</source>
+        <target>S'identifier</target>
+      </trans-unit>
+      <trans-unit id="x5Pg2aH" resname="Registration">
+        <source>Registration</source>
+        <target>Inscription</target>
+      </trans-unit>
+      <trans-unit id="sTcemwY" resname="Welcome,">
+        <source>Welcome,</source>
+        <target>Bienvenue,</target>
+      </trans-unit>
+      <trans-unit id="1oGNqhR" resname="On your personnal dashboard">
+        <source>On your personnal dashboard</source>
+        <target>Sur votre tableau de bord</target>
+      </trans-unit>
+      <trans-unit id="mzKJo4W" resname="Software">
+        <source>Software</source>
+        <target>Logiciels</target>
+      </trans-unit>
+      <trans-unit id="BuYaPAp" resname="Manage the versions available in the database, add or delete a new software.">
+        <source>Manage the versions available in the database, add or delete a new software.</source>
+        <target>Gérer les versions disponibles dans la base de données, ajouter ou supprimer un nouveau logiciel.</target>
+      </trans-unit>
+      <trans-unit id="VlJg4Yd" resname="Manage the devices available on the server, edit an existing device.">
+        <source>Manage the devices available on the server, edit an existing device.</source>
+        <target>Gérer les machines disponibles sur le serveur, modifier une machine existante.</target>
+      </trans-unit>
+      <trans-unit id="NwaW7PP" resname="Visualize the number of devices updated in the database.">
+        <source>Visualize the number of devices updated in the database.</source>
+        <target>Visualiser le nombre de machines mises à jour dans la base de données.</target>
+      </trans-unit>
+      <trans-unit id="kCsvSRw" resname="You are not identified yet. Please enter your Info to verify your identity and find your device.">
+        <source>You are not identified yet. Please enter your Info to verify your identity and find your device.</source>
+        <target>Vous n'êtes pas encore identifié(e). Entrer votre info pour vérifier votre identité et trouver votre machine.</target>
+      </trans-unit>
+      <trans-unit id="Yk5ET_L" resname="Enter your SN">
+        <source>Enter your SN</source>
+        <target>Numéro de Série</target>
+      </trans-unit>
+      <trans-unit id="0BOvVoZ" resname="Enter your Username or Mail">
+        <source>Enter your Username or Mail</source>
+        <target>Nom d'utilisateur ou Email</target>
+      </trans-unit>
+      <trans-unit id="aw_aoc2" resname="Update Date">
+        <source>Update Date</source>
+        <target>Date MAJ</target>
+      </trans-unit>
+      <trans-unit id="c1prjRW" resname="Agree terms">
+        <source>Agree terms</source>
+        <target>Accepter termes</target>
+      </trans-unit>
+      <trans-unit id="3rvKedS" resname="Winback Interface">
+        <source>Winback Interface</source>
+        <target>Winback Interface</target>
+      </trans-unit>
+      <trans-unit id="ipdml7n" resname="Winback Interface | Client Access">
+        <source>Winback Interface | Client Access</source>
+        <target>Winback Interface | Accès client</target>
+      </trans-unit>
+      <trans-unit id="cyTBtDk" resname="Winback Interface | Login | Welcome!">
+        <source>Winback Interface | Login | Welcome!</source>
+        <target>Winback Interface | Connexion | Bienvenue !</target>
+      </trans-unit>
+      <trans-unit id="_n9uqBi" resname="Winback Interface | Register | Welcome !">
+        <source>Winback Interface | Register | Welcome !</source>
+        <target>Winback Interface | Inscription | Bienvenue !</target>
+      </trans-unit>
+      <trans-unit id="qiK0d8S" resname="Winback Interface | Client Device Access">
+        <source>Winback Interface | Client Device Access</source>
+        <target>Winback Interface | Accès client machine</target>
+      </trans-unit>
+      <trans-unit id="LmYzSio" resname="Winback Interface | Dashboard">
+        <source>Winback Interface | Dashboard</source>
+        <target>Winback Interface | Tableau de bord</target>
+      </trans-unit>
+      <trans-unit id="mURX9N0" resname="Winback Interface | New Device">
+        <source>Winback Interface | New Device</source>
+        <target>Winback Interface | Nouvelle Machine</target>
+      </trans-unit>
+      <trans-unit id="IF6lSJp" resname="Winback Interface | Access Connect">
+        <source>Winback Interface | Access Connect</source>
+        <target>Winback Interface | Accès connexion</target>
+      </trans-unit>
+      <trans-unit id="I.wWZ9t" resname="Winback Interface | Device">
+        <source>Winback Interface | Device</source>
+        <target>Winback Interface | Machines</target>
+      </trans-unit>
+      <trans-unit id="zF5HK4Y" resname="Winback Interface | Home | Welcome !">
+        <source>Winback Interface | Home | Welcome !</source>
+        <target>Winback Interface | Accueil | Bienvenue !</target>
+      </trans-unit>
+      <trans-unit id="EKLsN3B" resname="Winback Interface | Registration | Welcome !">
+        <source>Winback Interface | Registration | Welcome !</source>
+        <target>Winback Interface | Inscription | Bienvenue !</target>
+      </trans-unit>
+      <trans-unit id="sQHBwZr" resname="Winback Interface | Password Reset Email Sent">
+        <source>Winback Interface | Password Reset Email Sent</source>
+        <target>__Winback Interface | Password Reset Email Sent</target>
+      </trans-unit>
+      <trans-unit id="z_QZY7S" resname="Winback Interface | Reset your password">
+        <source>Winback Interface | Reset your password</source>
+        <target>Winback Interface | Réinitialisez votre mot de passe</target>
+      </trans-unit>
+      <trans-unit id="zU4Ir9p" resname="Winback Interface | Login | Welcome !">
+        <source>Winback Interface | Login | Welcome !</source>
+        <target>Winback Interface | Connexion | Bienvenue !</target>
+      </trans-unit>
+      <trans-unit id="NdMqGaE" resname="Winback Interface | SN">
+        <source>Winback Interface | SN</source>
+        <target>__Winback Interface | SN</target>
+      </trans-unit>
+      <trans-unit id="yT61PXj" resname="Winback Interface | New Software">
+        <source>Winback Interface | New Software</source>
+        <target>Winback Interface | Nouveau Logiciel</target>
+      </trans-unit>
+      <trans-unit id="AZffBXh" resname="Winback Interface | Softwares">
+        <source>Winback Interface | Softwares</source>
+        <target>Winback Interface | Logiciels</target>
+      </trans-unit>
+      <trans-unit id="8pVQl7r" resname="Winback Interface | Statistics">
+        <source>Winback Interface | Statistics</source>
+        <target>Winback Interface | Statistiques</target>
+      </trans-unit>
+      <trans-unit id="evoZ5iL" resname="Check your mail">
+        <source>Check your mail</source>
+        <target>Vérifier votre boîte mail</target>
+      </trans-unit>
+      <trans-unit id="dpAPG.0" resname="Back">
+        <source>Back</source>
+        <target>Retour</target>
+      </trans-unit>
+      <trans-unit id="WfpDeb4" resname="Reset your password">
+        <source>Reset your password</source>
+        <target>Réinitialiser votre mot de passe</target>
+      </trans-unit>
+      <trans-unit id="YTqKLEx" resname="Enter your email address and we will send you a&#10;                link to reset your password.">
+        <source>Enter your email address and we will send you a
+                link to reset your password.</source>
+        <target>Entrer votre adresse mail et nous vous enverrons un lien pour réinitialiser votre mot de passe</target>
+      </trans-unit>
+      <trans-unit id="Cb8l7zC" resname="Email Address">
+        <source>Email Address</source>
+        <target>Adresse email</target>
+      </trans-unit>
+      <trans-unit id="DWxVZkG" resname="Send Instructions">
+        <source>Send Instructions</source>
+        <target>Envoyer</target>
+      </trans-unit>
+      <trans-unit id="hwue_Nv" resname="If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.&#10;    This link will expire in">
+        <source>If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+    This link will expire in</source>
+        <target>Si un compte existe avec votre adresse mail, un mail contenant un lien de réinitialisation de mot de passe </target>
+      </trans-unit>
+      <trans-unit id="bs9avOq" resname="If you don't receive an email please check your spam folder or">
+        <source>If you don't receive an email please check your spam folder or</source>
+        <target>Si vous n'avez pas reçu d'email, vérifiez votre dossier de spam ou</target>
+      </trans-unit>
+      <trans-unit id="W13t7jL" resname="try again">
+        <source>try again</source>
+        <target>réessayer</target>
+      </trans-unit>
+      <trans-unit id="QCzeaEb" resname="Winback Interface | Check mail">
+        <source>Winback Interface | Check mail</source>
+        <target>Winback Interface | Check mail</target>
+      </trans-unit>
+      <trans-unit id="DiImtSN" resname="Welcome">
+        <source>Welcome</source>
+        <target>Bienvenue</target>
+      </trans-unit>
+      <trans-unit id="23YfAZX" resname="Software Type">
+        <source>Software Type</source>
+        <target>Type de Logiciel</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

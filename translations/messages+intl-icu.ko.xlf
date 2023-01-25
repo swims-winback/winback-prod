@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="ko" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="qCM0e7V" resname="Device Info">
+        <source>Device Info</source>
+        <target>장치 정보</target>
+      </trans-unit>
+      <trans-unit id="FLGzxbF" resname="Serial Number">
+        <source>Serial Number</source>
+        <target>일련 번호</target>
+      </trans-unit>
+      <trans-unit id="JGtxITx" resname="Device Type">
+        <source>Device Type</source>
+        <target>장치 유형</target>
+      </trans-unit>
+      <trans-unit id="3RZ5Bd4" resname="Version">
+        <source>Version</source>
+        <target>버전</target>
+      </trans-unit>
+      <trans-unit id="PD3gyRx" resname="IP Address">
+        <source>IP Address</source>
+        <target>IP 주소</target>
+      </trans-unit>
+      <trans-unit id="uWlwAzv" resname="Log Pointer">
+        <source>Log Pointer</source>
+        <target>__Log Pointer</target>
+      </trans-unit>
+      <trans-unit id="fFD4o4p" resname="Advertising">
+        <source>Advertising</source>
+        <target>광고</target>
+      </trans-unit>
+      <trans-unit id="Y3Ad.ca" resname="PIN code">
+        <source>PIN code</source>
+        <target>PIN 코드</target>
+      </trans-unit>
+      <trans-unit id="b93npnx" resname="Creation Date">
+        <source>Creation Date</source>
+        <target>생성 날짜</target>
+      </trans-unit>
+      <trans-unit id="nUTdOhD" resname="Server last activity">
+        <source>Server last activity</source>
+        <target>__Server last activity</target>
+      </trans-unit>
+      <trans-unit id="kg5BPH1" resname="Status">
+        <source>Status</source>
+        <target>상황</target>
+      </trans-unit>
+      <trans-unit id="GiMD7eB" resname="Connect">
+        <source>Connect</source>
+        <target>__Connect</target>
+      </trans-unit>
+      <trans-unit id="71ZyWF0" resname="Forced">
+        <source>Forced</source>
+        <target>__Forced</target>
+      </trans-unit>
+      <trans-unit id="8al8m0W" resname="Upload Version">
+        <source>Upload Version</source>
+        <target>버전 업로드</target>
+      </trans-unit>
+      <trans-unit id="QGEau92" resname="Validate">
+        <source>Validate</source>
+        <target>입증하다</target>
+      </trans-unit>
+      <trans-unit id="3AdIpxI" resname="Device Version">
+        <source>Device Version</source>
+        <target>장치 버전</target>
+      </trans-unit>
+      <trans-unit id="ScJmuqq" resname="Search">
+        <source>Search</source>
+        <target>찾다</target>
+      </trans-unit>
+      <trans-unit id="a6C97Mt" resname="Device">
+        <source>Device</source>
+        <target>장치</target>
+      </trans-unit>
+      <trans-unit id="coo.QQi" resname="Download status">
+        <source>Download status</source>
+        <target>다운로드 상태</target>
+      </trans-unit>
+      <trans-unit id="QJhq2mp" resname="Log files">
+        <source>Log files</source>
+        <target>장치 파일</target>
+      </trans-unit>
+      <trans-unit id="FwMioy8" resname="Info">
+        <source>Info</source>
+        <target>정보</target>
+      </trans-unit>
+      <trans-unit id="RPXj__x" resname="Comment">
+        <source>Comment</source>
+        <target>댓글</target>
+      </trans-unit>
+      <trans-unit id="su0AES3" resname="Softwares">
+        <source>Softwares</source>
+        <target>소프트웨어</target>
+      </trans-unit>
+      <trans-unit id="NBx0vcg" resname="Online Devices">
+        <source>Online Devices</source>
+        <target>장치들</target>
+      </trans-unit>
+      <trans-unit id="Z7aWRoY" resname="Dashboard">
+        <source>Dashboard</source>
+        <target>__Dashboard</target>
+      </trans-unit>
+      <trans-unit id="Gax1MQH" resname="SN">
+        <source>SN</source>
+        <target>__SN</target>
+      </trans-unit>
+      <trans-unit id="plYQfpn" resname="Statistics">
+        <source>Statistics</source>
+        <target>__Statistics</target>
+      </trans-unit>
+      <trans-unit id="sTcemwY" resname="Welcome,">
+        <source>Welcome,</source>
+        <target>환영합니다,</target>
+      </trans-unit>
+      <trans-unit id="1oGNqhR" resname="On your personnal dashboard">
+        <source>On your personnal dashboard</source>
+        <target>__On your personnal dashboard</target>
+      </trans-unit>
+      <trans-unit id="mzKJo4W" resname="Software">
+        <source>Software</source>
+        <target>소프트웨어</target>
+      </trans-unit>
+      <trans-unit id="BuYaPAp" resname="Manage the versions available in the database, add or delete a new software.">
+        <source>Manage the versions available in the database, add or delete a new software.</source>
+        <target>__Manage the versions available in the database, add or delete a new software.</target>
+      </trans-unit>
+      <trans-unit id="VlJg4Yd" resname="Manage the devices available on the server, edit an existing device.">
+        <source>Manage the devices available on the server, edit an existing device.</source>
+        <target>__Manage the devices available on the server, edit an existing device.</target>
+      </trans-unit>
+      <trans-unit id="NwaW7PP" resname="Visualize the number of devices updated in the database.">
+        <source>Visualize the number of devices updated in the database.</source>
+        <target>__Visualize the number of devices updated in the database.</target>
+      </trans-unit>
+      <trans-unit id="kCsvSRw" resname="You are not identified yet. Please enter your Info to verify your identity and find your device.">
+        <source>You are not identified yet. Please enter your Info to verify your identity and find your device.</source>
+        <target>__You are not identified yet. Please enter your Info to verify your identity and find your device.</target>
+      </trans-unit>
+      <trans-unit id="Yk5ET_L" resname="Enter your SN">
+        <source>Enter your SN</source>
+        <target>__Enter your SN</target>
+      </trans-unit>
+      <trans-unit id="0BOvVoZ" resname="Enter your Username or Mail">
+        <source>Enter your Username or Mail</source>
+        <target>__Enter your Username or Mail</target>
+      </trans-unit>
+      <trans-unit id="x5Pg2aH" resname="Registration">
+        <source>Registration</source>
+        <target>등록</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>등록하세요</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>사용자 이름</target>
+      </trans-unit>
+      <trans-unit id="lpzL089" resname="Email">
+        <source>Email</source>
+        <target>이메일</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>암호</target>
+      </trans-unit>
+      <trans-unit id="wpIhDEQ" resname="Confirm Password">
+        <source>Confirm Password</source>
+        <target>암호 확인</target>
+      </trans-unit>
+      <trans-unit id="BWi9A7j" resname="Or">
+        <source>Or</source>
+        <target>__Or</target>
+      </trans-unit>
+      <trans-unit id="6O3a5Yv" resname="Already registered ?">
+        <source>Already registered ?</source>
+        <target>이미 등록된 ?</target>
+      </trans-unit>
+      <trans-unit id="vMC8yRQ" resname="Sign In">
+        <source>Sign In</source>
+        <target>로그 인</target>
+      </trans-unit>
+      <trans-unit id="nWMiwfT" resname="Login">
+        <source>Login</source>
+        <target>로그 인</target>
+      </trans-unit>
+      <trans-unit id="acVpEs4" resname="You are logged in as">
+        <source>You are logged in as</source>
+        <target>__You are logged in as</target>
+      </trans-unit>
+      <trans-unit id="dcJ8U0Q" resname="Logout ?">
+        <source>Logout ?</source>
+        <target>로그오프하다 ?</target>
+      </trans-unit>
+      <trans-unit id="_TJnqhH" resname="Remember me">
+        <source>Remember me</source>
+        <target>나를 기억해줘</target>
+      </trans-unit>
+      <trans-unit id="Zxb5CLy" resname="Forgot Password ?">
+        <source>Forgot Password ?</source>
+        <target>암호 잊어버림 ?</target>
+      </trans-unit>
+      <trans-unit id="v9QCsvb" resname="Sign in">
+        <source>Sign in</source>
+        <target>로그 인</target>
+      </trans-unit>
+      <trans-unit id="g_WFa1q" resname="Not registered yet ?">
+        <source>Not registered yet ?</source>
+        <target>미등록 ?</target>
+      </trans-unit>
+      <trans-unit id="R94jWG5" resname="Sign Up">
+        <source>Sign Up</source>
+        <target>등록하세요</target>
+      </trans-unit>
+      <trans-unit id="lxuXQjW" resname="Filename">
+        <source>Filename</source>
+        <target>파일 이름</target>
+      </trans-unit>
+      <trans-unit id="bk0LHGc" resname="Creation date">
+        <source>Creation date</source>
+        <target>생성 날짜</target>
+      </trans-unit>
+      <trans-unit id="cfOtuBG" resname="Update Comment">
+        <source>Update Comment</source>
+        <target>최신 논평</target>
+      </trans-unit>
+      <trans-unit id="aw_aoc2" resname="Update Date">
+        <source>Update Date</source>
+        <target>업데이트 날짜</target>
+      </trans-unit>
+      <trans-unit id="c1prjRW" resname="Agree terms">
+        <source>Agree terms</source>
+        <target>조건에 동의하다</target>
+      </trans-unit>
+      <trans-unit id="3rvKedS" resname="Winback Interface">
+        <source>Winback Interface</source>
+        <target>Winback 인터페이스</target>
+      </trans-unit>
+      <trans-unit id="ipdml7n" resname="Winback Interface | Client Access">
+        <source>Winback Interface | Client Access</source>
+        <target>Winback 인터페이스 | Client Access</target>
+      </trans-unit>
+      <trans-unit id="cyTBtDk" resname="Winback Interface | Login | Welcome!">
+        <source>Winback Interface | Login | Welcome!</source>
+        <target>Winback 인터페이스 | Login | 환영합니다!</target>
+      </trans-unit>
+      <trans-unit id="_n9uqBi" resname="Winback Interface | Register | Welcome !">
+        <source>Winback Interface | Register | Welcome !</source>
+        <target>Winback 인터페이스 | Register | 환영합니다!</target>
+      </trans-unit>
+      <trans-unit id="qiK0d8S" resname="Winback Interface | Client Device Access">
+        <source>Winback Interface | Client Device Access</source>
+        <target>Winback 인터페이스 | Client Device Access</target>
+      </trans-unit>
+      <trans-unit id="LmYzSio" resname="Winback Interface | Dashboard">
+        <source>Winback Interface | Dashboard</source>
+        <target>Winback 인터페이스 | Dashboard</target>
+      </trans-unit>
+      <trans-unit id="mURX9N0" resname="Winback Interface | New Device">
+        <source>Winback Interface | New Device</source>
+        <target>Winback 인터페이스 | New Device</target>
+      </trans-unit>
+      <trans-unit id="IF6lSJp" resname="Winback Interface | Access Connect">
+        <source>Winback Interface | Access Connect</source>
+        <target>Winback 인터페이스 | Access Connect</target>
+      </trans-unit>
+      <trans-unit id="opr26vH" resname="Winback Interface | Devices">
+        <source>Winback Interface | Devices</source>
+        <target>Winback 인터페이스 | 장치들</target>
+      </trans-unit>
+      <trans-unit id="zF5HK4Y" resname="Winback Interface | Home | Welcome !">
+        <source>Winback Interface | Home | Welcome !</source>
+        <target>Winback 인터페이스 | Home | 환영합니다!</target>
+      </trans-unit>
+      <trans-unit id="S6USHU0" resname="Devices">
+        <source>Devices</source>
+        <target>장치들</target>
+      </trans-unit>
+      <trans-unit id="EKLsN3B" resname="Winback Interface | Registration | Welcome !">
+        <source>Winback Interface | Registration | Welcome !</source>
+        <target>Winback 인터페이스 | 등록 | 환영합니다!</target>
+      </trans-unit>
+      <trans-unit id="sQHBwZr" resname="Winback Interface | Password Reset Email Sent">
+        <source>Winback Interface | Password Reset Email Sent</source>
+        <target>Winback 인터페이스 | Password Reset Email Sent</target>
+      </trans-unit>
+      <trans-unit id="z_QZY7S" resname="Winback Interface | Reset your password">
+        <source>Winback Interface | Reset your password</source>
+        <target>Winback 인터페이스 | 암호 재설정</target>
+      </trans-unit>
+      <trans-unit id="zU4Ir9p" resname="Winback Interface | Login | Welcome !">
+        <source>Winback Interface | Login | Welcome !</source>
+        <target>Winback 인터페이스 | 로그 인 | 환영합니다!</target>
+      </trans-unit>
+      <trans-unit id="NdMqGaE" resname="Winback Interface | SN">
+        <source>Winback Interface | SN</source>
+        <target>Winback 인터페이스 | SN</target>
+      </trans-unit>
+      <trans-unit id="yT61PXj" resname="Winback Interface | New Software">
+        <source>Winback Interface | New Software</source>
+        <target>Winback 인터페이스 | 새로운 소프트웨어</target>
+      </trans-unit>
+      <trans-unit id="AZffBXh" resname="Winback Interface | Softwares">
+        <source>Winback Interface | Softwares</source>
+        <target>Winback 인터페이스 | 소프트웨어</target>
+      </trans-unit>
+      <trans-unit id="8pVQl7r" resname="Winback Interface | Statistics">
+        <source>Winback Interface | Statistics</source>
+        <target>Winback 인터페이스 | Statistics</target>
+      </trans-unit>
+      <trans-unit id="evoZ5iL" resname="Check your mail">
+        <source>Check your mail</source>
+        <target>이메일을 확인하다</target>
+      </trans-unit>
+      <trans-unit id="dpAPG.0" resname="Back">
+        <source>Back</source>
+        <target>뒤로</target>
+      </trans-unit>
+      <trans-unit id="WfpDeb4" resname="Reset your password">
+        <source>Reset your password</source>
+        <target>암호 재설정</target>
+      </trans-unit>
+      <trans-unit id="YTqKLEx" resname="Enter your email address and we will send you a&#10;                link to reset your password.">
+        <source>Enter your email address and we will send you a
+                link to reset your password.</source>
+        <target>이메일 주소를 입력하면 암호를 재설정할 수 있는 링크를 보내드립니다.</target>
+      </trans-unit>
+      <trans-unit id="Cb8l7zC" resname="Email Address">
+        <source>Email Address</source>
+        <target>이메일</target>
+      </trans-unit>
+      <trans-unit id="DWxVZkG" resname="Send Instructions">
+        <source>Send Instructions</source>
+        <target>지시사항 전송</target>
+      </trans-unit>
+      <trans-unit id="I.wWZ9t" resname="Winback Interface | Device">
+        <source>Winback Interface | Device</source>
+        <target>Winback 인터페이스 | 장치</target>
+      </trans-unit>
+      <trans-unit id="hwue_Nv" resname="If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.&#10;    This link will expire in">
+        <source>If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+    This link will expire in</source>
+        <target>__If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+    This link will expire in</target>
+      </trans-unit>
+      <trans-unit id="bs9avOq" resname="If you don't receive an email please check your spam folder or">
+        <source>If you don't receive an email please check your spam folder or</source>
+        <target>__If you don't receive an email please check your spam folder or</target>
+      </trans-unit>
+      <trans-unit id="W13t7jL" resname="try again">
+        <source>try again</source>
+        <target>__try again</target>
+      </trans-unit>
+      <trans-unit id="QCzeaEb" resname="Winback Interface | Check mail">
+        <source>Winback Interface | Check mail</source>
+        <target>Winback 인터페이스 | 이메일을 확인하다</target>
+      </trans-unit>
+      <trans-unit id="DiImtSN" resname="Welcome">
+        <source>Welcome</source>
+        <target>환영합니다</target>
+      </trans-unit>
+      <trans-unit id="23YfAZX" resname="Software Type">
+        <source>Software Type</source>
+        <target>소프트웨어 유형</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
