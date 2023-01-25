@@ -21,11 +21,6 @@ class DeviceFamily
     #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class)]
-    /**
-     * @ORM\OrderBy({"version" = "DESC"})
-     */
-    private $software;
 
     #[ORM\Column(type: 'string', nullable: true, length: 255)]
     private $therapyType;
@@ -39,9 +34,20 @@ class DeviceFamily
     #[ORM\Column(type: 'integer', nullable: true, unique: true)]
     private $numberId;
 
+    #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class, fetch:"EXTRA_LAZY", orphanRemoval:true)]
+    /**
+     * @ORM\OrderBy({"version" = "DESC"})
+     */
+    private $softwares;
+
+    /*
+    #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class)]
+    private Collection $softwares;
+    */
+
     public function __construct()
     {
-        $this->software = new ArrayCollection();
+        $this->softwares = new ArrayCollection();
         $this->devices = new ArrayCollection();
     }
     
@@ -72,38 +78,6 @@ class DeviceFamily
         return $this;
     }
 
-    /**
-     * @return Collection<int, Software>
-     * 
-     */
-    
-    public function getSoftware(): Collection
-    {
-        return $this->software;
-    }
-
-    public function addSoftware(Software $software): self
-    {
-        if (!$this->software->contains($software)) {
-            $this->software[] = $software;
-            $software->setFamily($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSoftware(Software $software): self
-    {
-        if ($this->software->removeElement($software)) {
-            // set the owning side to null (unless already changed)
-            if ($software->getFamily() === $this) {
-                $software->setFamily(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getTherapyType(): ?string
     {
         return $this->therapyType;
@@ -115,7 +89,39 @@ class DeviceFamily
 
         return $this;
     }
-
+    
+    /**
+     * @return Collection<int, Software>
+     */
+     
+     public function getSoftwares(): Collection
+     {
+         return $this->softwares;
+     }
+ 
+     public function addSoftware(Software $software): self
+     {
+         if (!$this->softwares->contains($software)) {
+             $this->softwares[] = $software;
+             $software->setDeviceFamily($this);
+         }
+ 
+         return $this;
+     }
+ 
+     public function removeSoftware(Software $software): self
+     {
+        
+        if ($this->softwares->removeElement($software)) {
+             // set the owning side to null (unless already changed)
+             if ($software->getDeviceFamily() === $this) {
+                 $software->setDeviceFamily(null);
+             }
+         }
+        
+         return $this;
+     }
+     
     /**
      * @return Collection<int, Device>
      */
@@ -170,4 +176,35 @@ class DeviceFamily
         return $this;
     }
 
+    
+    // @return Collection<int, Software>
+     
+    /*
+    public function getSoftwares(): Collection
+    {
+        return $this->softwares;
+    }
+
+    public function addSoftware(Software $software): self
+    {
+        if (!$this->softwares->contains($software)) {
+            $this->softwares->add($software);
+            $software->setDeviceFamily($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSoftware(Software $software): self
+    {
+        if ($this->softwares->removeElement($software)) {
+            // set the owning side to null (unless already changed)
+            if ($software->getDeviceFamily() === $this) {
+                $software->setDeviceFamily(null);
+            }
+        }
+
+        return $this;
+    }
+    */
 }

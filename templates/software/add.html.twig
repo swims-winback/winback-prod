@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Software{% endblock %}
+{% block title %}{{'Winback Interface | New Software'|trans}}{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1>New Software</h1>
-        <b class="text-secondary">Drag and Drop your files here.</b>
+        <h1>{{'New Software'|trans}}</h1>
+        <b class="text-secondary">{{'Drag and Drop your files here.'|trans}}</b>
         <div style="border: 4px dashed #E6E9EC;" class="p-5 mt-2" id="uploadZone">
             {{ form_start(form) }}
                 <div class="">
@@ -30,7 +30,7 @@
 
                     <div class="form-field d-flex flex-nowrap justify-content-end" id="">
                         <a class="btn btn-secondary mb-3 me-2" href="{{path('software')}}" style="width: fit-content">
-                        Cancel
+                        {{'Cancel'|trans}}
                         </a>
                         {{ form_row(form.Submit) }}
                     </div>

@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Device{% endblock %}
+{% block title %}{{ 'Winback Interface | Device'|trans }}{% endblock %}
 
 {% block content %}
-    <div class="container-fluid d-flex flex-column justify-content-between align-items-center vh-80 mt-5 mb-5">
+    <div class="container d-flex flex-column justify-content-between align-items-center">
             <div class="row w-100 h-100 mt-4">
                 <div class="col-md-3">
                     {% include "device/_filter.html.twig" %}
                 </div>
                 <!-- ===== DEVICE TABLE ===== -->
                 <div class="col-md-9 h-100">
-                    <h1 class="text-center mb-4">Device</h1>
+                    <h1 class="text-center mb-4">{{ 'Device'|trans }}</h1>
                     {% for message in app.flashes('error') %}
                         <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
                     {% endfor %}
@@ -28,23 +28,23 @@
                                 <thead class="w-100 align-middle">
                                     <tr class="h-100 w-100 align-middle" id="deviceTableTitle">
                                         <th scope="col"></th>
-                                        <th scope="col" class="h-100 p-0">
+                                        <th scope="col" class="h-100 p-0 text-nowrap">
                                             <div class="h-100 d-flex justify-content-between input-group flex-nowrap text-center align-items-center ps-2">
-                                                Serial Number
+                                                {{ 'Serial Number'|trans }}
                                                 <span class="btn btn-light text-dark h-100 p-1" style="border-radius: 0;" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
                                             </div>
                                         
                                         </th>
-                                        <th scope="col" class="text-center">Device Family</th>
-                                        <th scope="col" class="text-center">Version</th>
-                                        <th scope="col" class="text-center">Upload Version</th>
-                                        <th scope="col" class="text-center">Download status</th>
-                                        {% if is_granted("ROLE_SAV") %}
-                                        <th scope="col" class="text-center">Log files</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Device Type'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Version'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Upload Version'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Download status'|trans }}</th>
+                                        {% if is_granted("ROLE_GOE") %}
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Log files'|trans }}</th>
                                         {% endif %}
-                                        <th scope="col" class="text-center">Forced</th>
-                                        <th scope="col" class="text-center">Info</th>
-                                        <th scope="col" class="text-center">Comment</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Forced'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Info'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Comment'|trans }}</th>
                                     </tr>
                                     <tr class="w-100 align-bottom">
                                         <th class="text-center">
@@ -74,7 +74,6 @@
                                                 {{ form_end(versionform) }}
                                             {% endif %}
                                         </th>
-                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -111,7 +110,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            {% if is_granted("ROLE_SAV")%}
+                                            {% if is_granted("ROLE_GOE")%}
                                             <td class="text-center">
                                                 <a download href="{{ asset('Ressource/logs/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">
                                                 <i class="fa-solid fa-download"></i>
@@ -134,8 +133,8 @@
                                             </td>
                                             <td class="">
                                                 <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-form">
-                                                    <input class="comment_input border border-0" type="text" name="nm" value="{{device.comment}}">
-                                                    <button class="comment_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button> 
+                                                    <input class="comment_input border border-0" style="background-color:#f1874144;" type="text" name="nm" value="{{device.comment}}">
+                                                    <button class="comment_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button> 
                                                 </div> 
                                             </td>
                                         </tr>
@@ -199,7 +198,7 @@
 
     
     <script type="text/javascript">
-    var path = "{{ asset('js/TCPClient2.php')}}";
+    //var path = "{{ asset('js/TCPClient2.php')}}";
     </script>
     
     <script>

@@ -1,49 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}WINBACK - Login{% endblock %}
+{% block title %}{{'Winback Interface | Login | Welcome !'|trans}}{% endblock %}
 
 {% block content %}
    
-<div class="row d-flex justify-content-center align-items-center h-100 vh-sm-100 w-100 mt-5 mb-5 p-5">
+<div class="container row d-flex justify-content-center align-items-center vh-sm-100 p-5">
     <div class="col-md-9 col-lg-6 col-xl-5 p-5">
         <img src="{{ asset('img/winback-logo.webp') }}" class="img-fluid" alt="">
     </div>
     <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1 d-flex justify-content-center">
-        <form method="post" class="text-center row d-flex flex-column align-items-center justify-content-around mt-2 mb-2 mt-sm-2 mb-sm-2 pt-1 pb-3 pt-sm-2 px-sm-5 px-3 login">
-                <span class="fa-stack fa-2xl" style="position: relative; top: -40px;">
+
+        <form method="post" class="text-center row d-flex flex-column align-items-center justify-content-around mt-2 mb-2 mt-sm-2 mb-sm-2 pb-3 pt-1 px-sm-5 px-3 login">
+                <!--
+                <nav class="navbar-login">
+                <ul class="navbar-nav d-flex flex-row align-items-center">
+                    <li class="w-50"><a href=""><strong>{{"Login"|trans}}</strong></a></li>
+                    <li class="w-50"><a href=""><strong>{{"Register"|trans}}</strong></a></li>
+                </ul>
+                </nav>
+                -->
+                <span class="fa-stack fa-2xl">
                     <i class="fa-solid fa-circle fa-stack-2x" style="color: #f18841;"></i>
-                    <i class="fa-regular fa-user fa-stack-1x fa-inverse"></i>
+                    <i class="fa-regular fa-user fa-stack-1x fa-inverse" style="text-shadow: 2px 2px 2px rgba(0,0,0,0.5);"></i>
                 </span>
-                <h2 class="mt-1 mb-1 mt-sm-2 mb-sm-2">Login</h2>
+                <h2 class="">{{ 'Login'|trans }}</h2>
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {#{{ app.user.role }}#}
                 {% endif %}
 
                 {% if app.user %}
-                    <div class="mt-1 mb-1 mt-sm-2 mb-sm-2">
-                        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout ?</a>
+                    <div class="">
+                        {{ 'You are logged in as '|trans }}
+                        {{ app.user.username }} <a href="{{ path('app_logout') }}">
+                        {{ 'Logout ?'|trans }}
+                        </a>
                     </div>
                 {% endif %}
 
-                <div class="form-outline mt-1 mb-1 mt-sm-2 mb-sm-2">
-                    <!--
-                    <label for="inputUsername" class="form-label">Username</label>
-                    -->
-                    <!--<input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>-->
+                <div class="form-outline mb-1">
                     <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"><i class="fa-solid fa-user"></i></span>
-                    <input type="text" placeholder="Email" name="username" id="inputUsername" class="form-control" required autofocus>
+                    <input type="text" placeholder="{{ 'Email'|trans }}" name="username" id="inputUsername" class="form-control" required autofocus>
                     </div>
                 </div>
-                <div class="form-outline mt-1 mb-2 mt-sm-2">
-                    <!--
-                    <label for="inputPassword" class="form-label">Password</label>
-                    -->
-                    <!--<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>-->
+                <div class="form-outline">
                     <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
-                    <input type="password" placeholder="Password" name="password" id="inputPassword" class="form-control" required>
+                    <input type="password" placeholder="{{ 'Password'|trans }}" name="password" id="inputPassword" class="form-control" required>
                     </div>
                 </div>
                 
@@ -53,22 +57,24 @@
                 <div class="d-flex justify-content-around align-items-center text-center flex-wrap">
                     <div class="checkbox mb-sm-3 mb-1">
                         <label>
-                            <input type="checkbox" name="_remember_me" class="form-check-input me-2 text-break text-nowrap"> Remember me
+                            <input type="checkbox" name="_remember_me" class="form-check-input me-2 text-break text-nowrap">
+                            {{ 'Remember me'|trans }}
                         </label>
                     </div>
-                    <a class="mb-sm-3 mb-1" href="{{ path('app_forgot_password_request') }}"><u>Forgot Password ?</u></a>
+                    <a class="mb-sm-3 mb-1" href="{{ path('app_forgot_password_request') }}"><u>
+                    {{ 'Forgot Password ?'|trans }}</u></a>
                 </div>
                 
 
                 <button class="btn bg-orange btn-outline-orange mt-1 mb-1 mt-sm-2 mb-sm-2 w-100" type="submit">
-                    Sign in
+                {{ 'Sign in'|trans }}
                 </button>
-                <div class="divider d-flex align-items-center my-4">
-                    <p class="text-center fw-bold mx-3 mb-0">Or</p>
+                <div class="divider d-flex align-items-center mb-1">
+                    {#<p class="text-center fw-bold mx-3 mb-0">{{ 'Or'|trans }}</p>#}
                 </div>
                 <div class="d-flex justify-content-around align-items-center w-100 p-0 flex-wrap">
-                    <p class="mb-0 text-break text-nowrap mb-1">Not registered yet ?</p>
-                    <a class="btn btn-secondary txt-white text-break text-nowrap mb-1" href="{{ path('app_register') }}">Sign Up</a>
+                    <p class="mb-0 text-break text-nowrap mb-1">{{ 'Not registered yet ?'|trans }}</p>
+                    <a class="btn btn-secondary txt-white text-break text-nowrap mb-1" href="{{ path('app_register') }}">{{ 'Sign Up'|trans }}</a>
                 </div>
         </form>
     </div>

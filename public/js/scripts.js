@@ -133,7 +133,7 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
         xmlhttp.open("GET", `/forced/${$id}/${1}`)
         xmlhttp.send()
 			}
-			else{
+      else{
         let xmlhttp = new XMLHttpRequest;
         xmlhttp.open("GET", `/forced/${$id}/${0}`)
         xmlhttp.send()
@@ -219,11 +219,13 @@ let commentInputs = document.getElementsByClassName("comment_input");
 let updateCommentButtons = document.getElementsByClassName("comment_update_button");
 let updateCommentInputs = document.getElementsByClassName("comment_update_input");
 
+/*
 for (let element of commentInputs) {
   element.onclick = function () {
     $(element).addClass('border-dark');
   }
 }
+*/
 for(let element of commentButtons){
   element.onclick = function() {
     let id = $(element).data("id");

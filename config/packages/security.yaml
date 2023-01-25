@@ -11,6 +11,7 @@ security:
             algorithm: auto
 
     role_hierarchy:
+        ROLE_CLIENT:      [ROLE_USER]
         ROLE_SAV:         [ROLE_USER, ROLE_GOE]
         ROLE_ADMIN:       [ROLE_SAV]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
@@ -94,7 +95,7 @@ security:
          - { path: ^/user/client, roles: ROLE_CLIENT }
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/sav, roles: ROLE_SAV }
-         - { path: ^/user, roles: ROLE_USER }
+         - { path: ^/(en|fr|ko)/user, roles: ROLE_USER }
          
 
 when@test:

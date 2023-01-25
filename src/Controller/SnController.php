@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SnController extends AbstractController
 {
-    #[Route('/sn', name: 'app_sn')]
+    #[Route('/{_locale<%app.supported_locales%>}/sn', name: 'app_sn')]
     public function index(SnRepository $snRepository, Request $request): Response
     {
         //$sn = $snRepository->findAll();

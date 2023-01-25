@@ -6,10 +6,10 @@
     {{ form_row(searchform.value, {attr: { style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
     </div>
     <!-- Device Type -->
-        <h6 class="mt-2">Software Type</h6>
+        <h6 class="mt-2">{{"Software Type"|trans}}</h6>
         <div class="border border-0" id="collapseDeviceType">
             {{ form_row(searchform.category) }}
         </div>
 
-    <button type="submit" class="btn bg-orange btn-outline-orange">Search</button>
+    <button type="submit" class="btn bg-orange btn-outline-orange">{{"Search"|trans}}</button>
 {{ form_end(searchform) }}

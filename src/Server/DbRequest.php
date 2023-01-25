@@ -7,9 +7,6 @@ namespace App\Server;
  * @author Lea
  */
 
-//require_once ('config.php');
-//include_once "../Ressource/Config/dbConfig.php";
-//include_once "./Ressource/Config/dbConfig.php";
 require_once dirname(__FILE__, 3).'/configServer/config.php';
 require_once dirname(__FILE__, 3).'/configServer/dbConfig.php';
 
@@ -79,7 +76,7 @@ class DbRequest {
         
         return $req;
     }
-
+    
     /* ####### DEVICE REQUEST ####### */
 
     // NOT USED
@@ -122,96 +119,8 @@ class DbRequest {
         $where = SN."='".$sn."'";
         $req = $this->update(FORCED_UPDATE, $forced, DEVICE_TABLE, $where);
         $res = $this->sendRq($req);
-        /*
-        if($res != FALSE){
-            return true;
-        }else{
-            return false;
-        }
-        
-        return true;
-        */
-    }
-    
-    /**
-     * Modify (update or create) logfile column in DB
-     */
-    function setLogFile($sn, $logFile){
-        $where = SN."='".$sn."'";
-        $req = $this->update(LOG_FILE, $logFile, DEVICE_TABLE, $where);
-        $res = $this->sendRq($req);
-        /*
-        if($res != FALSE){
-            return true;
-        }else{
-            return false;
-        }
-        
-        return true;
-        */
     }
 
-    //NOT USED
-    /*
-    function updateData($sn, $value){
-        $where = SN."='".$sn."'";
-        if (($value === '0') || ($value === '0.0')|| ($value === ''))
-            $value = 'NULL';
-        $req = $this->update(VERSION_UPLOAD, $value, DEVICE_TABLE, $where);
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            return true;
-        }else{
-            return false;
-        }
-        
-        return true;
-    }
-    */
-
-    // NOT USED
-    /*
-    function updateMassData($aAttrTable){
-        $where = "";
-        foreach ($aAttrTable as $key => $value) {
-            switch ($key) {
-                case "deviceType":
-                    if($where !== ""){
-                        $where .= " AND ";
-                    }
-                    $idDevice = array_keys(deviceType, $value);
-                    $where .= DEVICE_TYPE." = ".$idDevice[0];
-                    break;
-                case "condSn":
-                    if($where !== ""){
-                        $where .= " AND ";
-                    }
-                    $where .= "sn ".$value;
-                    break;
-                case "softVers":
-                    if($where !== ""){
-                        $where .= " AND ";
-                    }
-                    $where .= DEVICE_VERSION." ".$aAttrTable['condVers']." '".$value."'";
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (($aAttrTable['updateVers'] === '0') || ($aAttrTable['updateVers'] === '0.0')|| ($aAttrTable['updateVers'] === ''))
-            $aAttrTable['updateVers'] = 'NULL';
-
-        $req = $this->update(VERSION_UPLOAD, $aAttrTable['updateVers'], DEVICE_TABLE, $where);
-        $res = $this->sendRq($req);
-        if($res != FALSE){
-            return true;
-        }else{
-            return false;
-        }
-        
-        return true;
-    }
-    */
 
     // NOT USED
     /*
@@ -235,7 +144,16 @@ class DbRequest {
     }
     */
 
-    function initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile){
+    /**
+     * init Device request In Device Table
+     * @param string $sn
+     * @param string $vers
+     * @param int $devType
+     * @param string $ipAddr
+     * @param string $logFile
+     * @return \mysqli_result|bool
+     */
+    function initDeviceInDB(string $sn, string $vers, int $devType, string $ipAddr, string $logFile){
         if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="" && $logFile!="") {
             $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.",".LOG_FILE.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '1','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."', '".$logFile."')";
             if ($res = $this->sendRq($req)) {
@@ -247,20 +165,35 @@ class DbRequest {
         echo "\r\nDevType: {$devType}\r\n";
         echo "\r\nIpAddr: {$ipAddr}\r\n";
         echo "\r\nSN empty or vers empty or devType empty !\r\n";
+        return false;
     }
-    
+        
+    /**
+     * init Device request In SN Table
+     * @param string $sn
+     * @param string $devType
+     * @return \mysqli_result|bool
+     */
     function initDeviceInSN($sn, $devType){
         if ($sn!="" && $devType!="") {
             $req = "INSERT INTO ".SN_TABLE." (".SN_DEVICE.", ".SN_ID.", ".SN_DATE.") VALUES ('".$devType."', '".$sn."', '".date("Y-m-d | H:i:s")."')";
             if ($res = $this->sendRq($req)) {
                 return $res;
             }
+            return false;
         }
+        return false;
     }
-        
+
     /**
-     * If sn exists in db, select & return row
-     * else, init device in db
+     * If device exists in device Table, select & return row
+     * Else, init device in db
+     * @param string $sn 20-length
+     * @param string $vers
+     * @param int $devType
+     * @param string $ipAddr
+     * @param string $logFile
+     * @return array|bool|null
      */
     function setDeviceInfo(string $sn, string $vers, int $devType, string $ipAddr, string $logFile)
     {
@@ -269,21 +202,12 @@ class DbRequest {
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
-                /*
-                $this->setUpdatedAt($sn, date("Y-m-d | H:i:s"));
-                $this->setConnect(1, $sn);
-                $this->setVersion($vers, $sn);
-                $this->setLogFile($sn, $logFile);
-                $this->setDownload($sn, 0);
-                */
                 
                 $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."'";
-                //$req = "UPDATE ".DEVICE_TABLE." SET ".DOWNLOAD." = 0";
                 if(!empty($whereCond)){
                     $req .= " WHERE ".$whereCond;
                 }
                 $res = $this->sendRq($req);
-                
                 return $row;
             }else{
                 $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile);
@@ -298,15 +222,20 @@ class DbRequest {
         }
     }
 
+    /**
+     * Insert Device to SN Table if not exists yet
+     * @param string $sn
+     * @param string $devType
+     * @return array|bool|null
+     */
     function setDeviceToSN(string $sn, string $devType)
     {
         $whereCond = SN_ID." = '".$sn."'";
         
         $req = $this->select('*', SN_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
-            
-            if($row = mysqli_fetch_assoc($res)){
-            }else{
+            if(!$row = mysqli_fetch_assoc($res)){
+            //if($row = mysqli_fetch_assoc($res)){
                 echo ("Device not found in DB.");
                 $res = $this->initDeviceInSN($sn, $devType);
                 $res2 = $this->sendRq($req);
@@ -314,7 +243,9 @@ class DbRequest {
                     echo ("Device added in DB.");
                     return $row;
                 }
-                
+            }else{
+
+                echo "\r\nrecord already exists !\r\n";
             }
         }
         else {
@@ -482,14 +413,14 @@ class DbRequest {
 
     function getDeviceTypeId($deviceType)
     {
-        $whereCond = "number_id='$deviceType'";
-        $req = $this->select('id', DEVICE_FAMILY_TABLE, $whereCond);
+        $whereCond = NUMBER_ID."='$deviceType'";
+        $req = $this->select(ID, DEVICE_FAMILY_TABLE, $whereCond);
         //print_r($req);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
                 //print_r($row['id']);
-                return $row['id'];
+                return $row[ID];
             }
         }
         return false;
@@ -498,12 +429,12 @@ class DbRequest {
     function getDeviceTypeName($deviceType)
     {
         
-        $whereCond = "number_id='$deviceType'";
-        $req = $this->select('name', DEVICE_FAMILY_TABLE, $whereCond);
+        $whereCond = NUMBER_ID."='$deviceType'";
+        $req = $this->select(NAME, DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
-                return $row['name'];
+                return $row[NAME];
             }
         }
         return false;

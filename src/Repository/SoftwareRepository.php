@@ -24,13 +24,12 @@ class SoftwareRepository extends ServiceEntityRepository
     /**
      * Recherche les softwares en fonction du formulaire
      *
-     * @return void
      */
     public function search($value = null, $category = null) {
-        //return $this->createQueryBuilder('d')
         $query = $this->createQueryBuilder('d');
         if($value != null){
-            $query->where('d.name LIKE :value OR d.softwareFile LIKE :value')
+            
+            $query->where('d.name LIKE :value')
             ->setParameter(':value', '%'.$value.'%');
         }
         if($category != null){
@@ -38,10 +37,10 @@ class SoftwareRepository extends ServiceEntityRepository
             $query->andWhere('c.id = :id')
             ->setParameter('id', $category);
         }
-        return $query->getQuery()
-        //->getOneOrNullResult()
-        ->getResult()
-    ;
+        //echo ($query);
+        return $query
+            ->getQuery()
+            ->getResult();
     }
 
     /*

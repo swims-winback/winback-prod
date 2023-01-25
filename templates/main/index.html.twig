@@ -1,23 +1,90 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}{{'Winback Interface | Home | Welcome !'|trans}}{% endblock %}
 
 {% block content %}
-    <div class="grix xs4 container">
-        <div class="col-xs4">
-            <h1>Welcome {{app.user.username}}</h1>
+    <div class="container py-5 bg-light rounded-3 d-flex flex-column align-items-center">
+        <div class="d-flex align-items-center">
+            <div><img src="{{asset('img/avatar.png')}}" alt="avatar" style="width: 5em; height: auto; border-radius: 50%; margin-right: 2em;" class="btn-shadow"></div>
+            <div style="color: #4f4f4f;">
+                <h2><span>{{ 'Welcome,'|trans }}</span> <span style="font-weight: 400">{{app.user.username}}</span></h2>
+                <div class="lead">{{ 'On your personnal dashboard'|trans }}</div>
+            </div>
         </div>
-        <div class="col-xs4 d-flex">
-            <div class="card shadow-1 hoverable-1 rounded-3 white mx-1">
-                <div class="card-header"><a href="{{path('software')}}">Software</a></div>
+        <hr style="width: 50%">
+        {% if is_granted("ROLE_GOE") %}
+        <div class="row d-flex align-items-stretch justify-space-between w-100">
+            
+            <div class="col-md-4 card shadow-1 hoverable-1 rounded-3 white card-index">
+                <a href="{{path('software')}}">
+                <div class="card-body">
+                <h4 class="text-nowrap">{{ 'Softwares'|trans }}</h4>
+                {{ 'Manage the versions available in the database, add or delete a new software.'|trans }}
+                </div>
+                </a>
             </div>
-            <div class="card shadow-1 hoverable-1 rounded-3 white mx-1">
-                    <div class="card-header"><a href="{{path('device')}}">Device</a></div>
+            
+            
+            <div class="col-md-4 card shadow-1 hoverable-1 rounded-3 white card-index">
+                <a href="{{path('device')}}">
+                    <div class="card-body">
+                    <h4 class="text-nowrap">{{ 'Devices'|trans }}</h4>
+                    {{ 'Manage the devices available on the server, edit an existing device.'|trans }}
+                    </div>
+                </a>   
             </div>
-            <div class="card shadow-1 hoverable-1 rounded-3 white mx-1">
-                <div class="card-header"><a href="{{path('dashboard')}}">Dashboard</a></div>
+            
+            
+            <div class="col-md-4 card shadow-1 hoverable-1 rounded-3 white card-index">
+            <a href="{{path('dashboard')}}">
+                <div class="card-body">
+                <h4 class="text-nowrap">{{ 'Dashboard'|trans }}</h4>
+                {{ 'Visualize the number of devices updated in the database.'|trans }}
+                </div>
+            </a>
             </div>
+            
+        </div>
+        
+        {% elseif is_granted("ROLE_CLIENT")%}
+        <div class="">
+            <!-- 
+            if user is role client &
+            if user is in client table, show sn + informations
+            -->
+            
+            <!--
+            if user doesn't exist in client table & is role client :
+            - show "register your device"
+            - valid form
+            - register user in client table
+            - in client table, link sn
+            -->
+            {% if clientIdentified %}
+            You are identified, well done !
+            {% for client in clientIdentified %}
+                {{client.serialNumber}}
+                
+            {% endfor %}
+            {% else %}
+            {{ 'You are not identified yet. Please enter your Info to verify your identity and find your device.'|trans }}
+            
+            <!-- when form is submitted, send automatically a mail to admin to request client registration -->
+            {{ form_start(clientRegistration) }}
+                {{ form_row(clientRegistration.email) }}
+                {{ form_row(clientRegistration.serial_number) }}
+                <button>Submit</button>
+            {{ form_end(clientRegistration) }}
+            <form action="">
+                <input type="text" placeholder="{{ 'Enter your SN'|trans }}">
+                <input type="text" placeholder="{{ 'Enter your Username or Mail'|trans }}">
+            </form>
+            <!--TODO Maybe send a recap mail with info -->
+            {% endif %}
         </div>
 
+        {% else %}
+        You have no permissions attributed yet, Please wait for the admin team to authorise access.
+        {% endif %}
     </div>
 {% endblock %}

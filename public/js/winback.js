@@ -48,7 +48,8 @@ function connect(datakey, sn, result){
     $.ajax({
         type:"POST",
         cache:false,
-		url: path,
+		//url: path,
+		url: "/tcpClient/",
 		timeout: 4000, /*Miliseconds*/
 		// multiple data sent using ajax
 		data: { action: datakey, sn: sn },
@@ -77,10 +78,11 @@ function connect(datakey, sn, result){
 				//alert("Device not available online !");
 				//$("#errorDeviceConnect").html(data);
 				console.log("errorDeviceConnect");
+				console.log(data);
 			}
 		},
 		error: function (xhr, status, error) {
-			alert("Error Winback Connect!" + xhr.status);
+			alert("Error Winback Connect: " + xhr.status);
 		}
 	});
 }
@@ -98,7 +100,8 @@ function socket(id, sn) {
 			$.ajax({
 				type:"POST",
 				cache:false,
-				url: path,
+				//url: path,
+				url: "/tcpClient/",
 				data:{action: 'test', sn:sn, page:page},   // multiple data sent using ajax
 				success: function (data) {
 					//sn = $("#screenDevice").attr("data-sn");
@@ -270,7 +273,8 @@ function disconnect(datakey){
     $.ajax({
         type:"POST",
         cache:false,
-		url: path,
+		//url: path,
+		url: "/tcpClient/",
 		data: { action: datakey },   // multiple data sent using ajax
 		timeout: 4000, /*Miliseconds*/
 		success: function () {
@@ -301,7 +305,8 @@ function command(action, sn, nameTouchTag, value){
     $.ajax({
         type:"POST",
         cache:false,
-		url: path,
+		//url: path,
+		url: "/tcpClient/",
         data:{action: action, sn: sn, cmd: nameTouchTag, tagTouch1:value, page:page},   // multiple data sent using ajax
 		success: function (data, sn) {
 			//console.log(data);
@@ -344,7 +349,8 @@ function startTest(action, sn, nameTouchTag, tagValue, trackerValue){
     $.ajax({
         type:"POST",
         cache:false,
-		url: path,
+		//url: path,
+		url: "/tcpClient/",
         data:{action: action, sn: sn, cmd: nameTouchTag, tagTouch:tagValue, trackerTouch:trackerValue, page:page},   // multiple data sent using ajax
         success: function (data) {
 			var tempData = JSON.parse(data);

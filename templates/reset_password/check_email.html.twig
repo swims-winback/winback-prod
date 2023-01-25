@@ -1,15 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Password Reset Email Sent{% endblock %}
+{% block title %}{{'Winback Interface | Check mail'|trans}}{% endblock %}
 
 {% block content %}
-<div class='container'>
+<div class='container d-flex flex-column justify-content-center align-items-left p-5'>
+<div class="fa-2xl fa-stack mb-3 align-self-center">
+    <i class="fa-solid fa-circle fa-stack-2x" style="color: #f18841;"></i>
+    <i class="fa-solid fa-envelope-open-text fa-stack-1x fa-inverse" style="color: #ffffff; text-shadow: 2px 2px 2px rgba(0,0,0,0.5);"></i>
+</div>
+<div>
+    <h1>{{'Check your mail'|trans}}</h1>
     <p>
-        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    {{'If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+    This link will expire in'|trans}}
+        {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
     </p>
     <!--<p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>-->
-    <p>If you don't receive an email please check your spam folder or <a href="https://51.91.18.215:8080/app_forgot_password_request">try again</a>.</p>
+    <p>{{'If you don\'t receive an email please check your spam folder or'|trans}} <a href="https://51.91.18.215:8001/".(en|fr|ko)."/app_forgot_password_request"><strong>{{'try again'|trans}}</strong></a>.</p>
+</div>
     
 </div>
 

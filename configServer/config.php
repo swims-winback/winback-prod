@@ -259,7 +259,7 @@ if (!defined('SERVER_HOSTNAME')) define('SERVER_HOSTNAME', PTF_ADDR);
 
 //define('ADDRESS', "192.168.1.193");
 if (!defined('ADDRESS')) define('ADDRESS', "51.91.18.215");
-//define('ADDRESS', "192.168.1.127"); // wb wifi IP Adress used in socket config //win0C
+//define('ADDRESS', "192.168.1.127"); // wb wifi IP Address used in socket config //win0C
 //define('ADDRESS', "10.0.0.78"); // winback wifi //win0A
 //if (!defined('PORT')) define('PORT', 5006); // Port used in socket config
 if (!defined('PORT')) define('PORT', $_ENV['PORT']);

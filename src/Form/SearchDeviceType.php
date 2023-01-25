@@ -64,12 +64,12 @@ class SearchDeviceType extends AbstractType
                 'label' => 'Forced',
                 'required' => false,
             ])
+            /*
             ->add('connected', CheckboxType::class, [
                 'label' => 'Connected',
                 'required' => false,
             ])
-            
-
+            */
         ;
     }
 

@@ -1,19 +1,100 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Statistics{% endblock %}
+{% block title %}{{'Winback Interface | Statistics'|trans}}{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container row">
+        <div class="col-md-3 sticky-scroll">
+            <!-- Select SN -->
+            <select name="" id="filterSn" class="filterStat w-100" data-category="sn">
+                <option value="" selected disabled hidden>Filter SN</option>
+                {% for device, key in deviceArray %}
+                <option value={{device}} class="" data-device="{{device}}">
+                {{device}}
+                </option>
+                {% endfor %}
+            </select>
+            <!-- Select PathoType -->
+            <select name="" id="filterPathoType" class="filterStat w-100" data-category="pathoType">
+                <option value="" selected disabled hidden>Filter PathoType</option>
+                {% for item, key in pathoTypeArray %}
+                <option value={{item}} class="" data-item="{{item}}">
+                {{item}}
+                </option>
+                {% endfor %}
+            </select>
+            <!-- Select Zone -->
+            <select name="" id="filterZone" class="filterStat w-100" data-category="zone">
+                <option value="" selected disabled hidden>Filter Zone</option>
+                {% for item, key in zoneArray %}
+                <option value={{item}} class="" data-item="{{item}}">
+                {{item}}
+                </option>
+                {% endfor %}
+            </select>
+            <!-- Select Patho -->
+            <select name="" id="filterPatho" class="filterStat w-100" data-category="patho">
+                <option value="" selected disabled hidden>Filter Patho</option>
+                {% for item, key in pathoArray %}
+                <option value={{item}} class="" data-item="{{item}}">
+                {{item}}
+                </option>
+                {% endfor %}
+            </select>
+            <!-- Select Accessoire -->
+            <select name="" id="filterTool" class="filterStat w-100" data-category="tool">
+                <option value="" selected disabled hidden>Filter Tools</option>
+                {% for item, key in toolArray %}
+                <option value={{item}} class="" data-item="{{item}}">
+                {{item}}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- ===== TREATMENTS GRAPH ===== -->
+        <div class="col-md-9 h-100">
             <h1 class="text-center mt-2 mb-2">Statistics</h1>
-
-
-            {{ form(form) }}
-        
-
+            <!-- Treatments by SN -->
+            <h4>Treatments by SN</h4>
+            {% for device, key in deviceArray %}
+                <div class="sn_list" style="display: none">{{ device }}</div>
+                <div class="sn_count" style="display: none">{{ key }}</div>
+            {% endfor %}
+            <canvas id="myChart"></canvas>
+            <!-- Treatments by PathoType -->
+            <h4>Treatments by PathoType</h4>
+            {% for item, key in pathoTypeArray %}
+                <div class="pathoType_list" style="display: none">{{ item }}</div>
+                <div class="pathoType_count" style="display: none">{{ key }}</div>
+            {% endfor %}
+            <canvas id="myChart2"></canvas>
+            <!-- Treatments by Zone -->
+            <h4>Treatments by Zone</h4>
+            {% for item, key in zoneArray %}
+                <div class="zone_list" style="display: none">{{ item }}</div>
+                <div class="zone_count" style="display: none">{{ key }}</div>
+            {% endfor %}
+            <canvas id="myChart3"></canvas>
+            <!-- Treatments by Patho -->
+            <h4>Treatments by Patho</h4>
+            {% for item, key in pathoArray %}
+                <div class="patho_list" style="">{{ item }}</div>
+                <div class="patho_count" style="">{{ key }}</div>
+            {% endfor %}
+            <canvas id="myChart4"></canvas>
+            <!-- Treatments by Tools -->
+            <h4>Treatments by Tools</h4>
+            {% for item, key in toolArray %}
+                <div class="tool_list" style="display: none">{{ item }}</div>
+                <div class="tool_count" style="display: none">{{ key }}</div>
+            {% endfor %}
+            <canvas id="myChart5"></canvas>
+        </div>
     </div>
     
 
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('js/statistic.js')}}"></script>
 {% endblock %}
