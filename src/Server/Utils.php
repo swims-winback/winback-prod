@@ -132,7 +132,6 @@ class Utils {
         {
             $lastVersUp = $this->getVersion2($scanPackFile);
             $lastVersArch = $this->getVersion2($scanArchFile);
-
             if($lastVersArch === $lastVersUp)
             {
                 $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
@@ -144,78 +143,43 @@ class Utils {
                 }
                 else
                 {
-					echo "error 1 ";
-                    echo "\r\nUhuh, something went wrong ! CompareFile doesn't work !\r\n";
-                    echo "\r\n #################### \r\n";
+					echo ("\r\nerror 1 :\r\n
+                    \r\nUhuh, something went wrong ! CompareFile doesn't work !\r\n
+                    \r\n####################\r\n");
                     return false;
                 }
             }
             else{
-				echo "error 2 ";
-                echo "\r\nUhuh, something went wrong ! Versions of package file and archive file are different, please check your files.\r\n";
-                echo "\r\n #################### \r\n";
+				echo ("\r\nerror 2 :\r\n
+                \r\nUhuh, something went wrong ! Versions of package file and archive file are different, please check your files.\r\n
+                \r\n####################\r\n");
                 return false;
             }
         }
-        else
-        {
-			echo "error 3 ";
-            echo "\r\nUhuh, something went wrong ! Package list and Archive list don't contain the same number of elements, please check your files lists.\r\n";
-            echo "\r\n #################### \r\n";
-            return false;
-        }
-		echo "error 4 ";
-        echo "\r\nUhuh, something went wrong !\r\n";
-        echo "\r\n #################### \r\n";
+        echo ("\r\nerror 3 :\r\n
+            \r\nUhuh, something went wrong ! Package list and Archive list don't contain the same number of elements, please check your files lists.\r\n
+            \r\n####################\r\n");
         return false;
     }
 
+
     /**
-     * Get list of software files, 
-     * Set software filename with version
-     *
-     * @param string $deviceType
-     * @param string $boardType
-     * @return string|boolean
-     */
-    /*
-    function setVersionFilename(string $deviceType, $boardType = '2') : string|bool
-    {
-        if($this->checkFile($deviceType, $boardType)){
-            //$arrayFiles = $this->checkFile($deviceType, $boardType);
-            $lastVerFile = $this->checkFile($deviceType, $boardType);
-            //echo "lastverfile: ".$lastVerFile;
-            return $lastVerFile;
-        }
-        else {
-            return false;
-        }
-    }
-    */
-    /**
-     * set software filename, verify if file exist in package folder, returns file content into a string
+     * set software filename, verify file exists in package folder, returns filecontent to string
      * equivalence of fileContent in original code
      * @param string $deviceType
-     * @return string|boolean
+     * @param string $fileName
+     * @return string|bool
      */
-    function getFileContent(string $deviceType, $fileName) : string|bool
+    function getFileContent(string $deviceType, string $fileName) : string|bool
     {
-        //$fileName = $this->setVersionFilename($deviceType, $boardType = '2');
 		if(file_exists(PACK_PATH.deviceTypeArray[$deviceType].$fileName)){
-            echo "\r\nbValue: ".PACK_PATH.deviceTypeArray[$deviceType].$fileName."\r\n";
 			return file_get_contents(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
 		}
         else
         {
-            
 			$aValue = explode('_', $fileName);
             echo "\r\naValue: ".$aValue[2];
 			return file_get_contents($this->checkFile($deviceType, $aValue[2]));
-            
-            /*
-            echo "\r\nFile does not exist. Please check your files ! \r\n";
-            return false;
-            */
 		}
     }
 

@@ -121,25 +121,6 @@ class DeviceFamilyRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-    * @return DeviceFamily[] Returns an array of DeviceFamily objects
-    * Find device family by name, in alphabetical order, to be used in software controller
-    */
-    
-    public function findFamilyByNameAlpha()
-    {
-        return $this->findBy(array(), array('name' => 'ASC'));
-        /*
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.name = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.name', 'ASC')
-            //->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-        */
-    }
     // /**
     //  * @return DeviceFamily[] Returns an array of DeviceFamily objects
     //  */
