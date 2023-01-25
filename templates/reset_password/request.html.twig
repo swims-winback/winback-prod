@@ -1,27 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}{{'Winback Interface | Reset your password'|trans}}{% endblock %}
 
 {% block content %}
+<div class="container p-5 d-flex flex-column justify-content-around">
+<a href="{{ path('app_login')}}" class="d-flex align-items-center flex-nowrap"><i class="fa-solid fa-arrow-left-long"></i><strong>{{'Back'|trans}}</strong></a>
     {% for flash_error in app.flashes('reset_password_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
     
-    <span class="fa-stack fa-2xl mb-3">
+    <span class="fa-stack fa-2xl mb-3 align-self-center">
         <i class="fa-solid fa-circle fa-stack-2x" style="color: #f18841;"></i>
-        <i class="fa-solid fa-lock fa-stack-1x fa-inverse"></i>
+        <i class="fa-solid fa-lock fa-stack-1x fa-inverse" style="text-shadow: 2px 2px 2px rgba(0,0,0,0.5);"></i>
     </span>
-    <h1>Reset your password</h1>
+    <h1>{{'Reset your password'|trans}}</h1>
 
     {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
         <div>
             <small>
-                Enter your email address and we will send you a
-                link to reset your password.
+            {{'Enter your email address and we will send you a
+                link to reset your password.'|trans}}
             </small>
         </div>
+        <label for="{{ requestForm.email.vars.id }}"
+            class="{{ requestForm.email.vars.required ? 'required' }} text-secondary mt-3">
+            {{'Email Address'|trans}}
+        </label>
+        {{ form_row(requestForm.email) }}
 
-        <button class="btn btn-primary mt-3 bg-orange btn-outline-orange">Send password reset email</button>
+        <button class="btn mt-3 btn-outline-orange btn-shadow">{{'Send Instructions'|trans}}</button>
     {{ form_end(requestForm) }}
+</div>
+
 {% endblock %}

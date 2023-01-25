@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Software{% endblock %}
+{% block title %}{{'Winback Interface | Softwares'|trans}}{% endblock %}
 
 {% block content %}
-    <div class="container-fluid d-flex flex-column justify-content-between align-items-center w-100 mt-5 mb-5 p-5">
-        <h1 class="text-center mt-4 mb-4">Software</h1>
+    <div class="container d-flex flex-column justify-content-between align-items-center">
+        <h1 class="text-center mt-4 mb-4">{{ 'Softwares'|trans }}</h1>
         <section id="softwareSearch"></section>
         <!-- ===== ALERT MESSAGES ===== -->
         {% for message in app.flashes('errorSoftware') %}
-            <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
+            <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message|trans }}</div>
         {% endfor %}
         {% for message in app.flashes('message') %}
-            <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message }}</div>
+            <div class="p-3 my-2 rounded-2 alert alert-warning">{{ message|trans }}</div>
         {% endfor %}
         {% for message in app.flashes('infoSoftware') %}
-            <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
+            <div class="p-3 my-2 rounded-2 alert alert-success">{{ message|trans }}</div>
         {% endfor %}
         <div class="row w-100">
             <div class="col-md-3">
@@ -38,7 +38,6 @@
                 <div class="d-flex flex-column space-between">
                 
                 {% for family in families %}
-                    
                     <div class="accordion mt-2 mb-4" id="accordionSoftware">
                         
                         <div class="accordion-item">
@@ -55,54 +54,64 @@
                                 <table class="table table-striped table-hover" id="softTable_{{ family.name }}">
                                         <thead class="accordion-item">
                                             <tr class="accordion-header">
-                                                <th>Filename</th>
-                                                <th>
-                                                    <div class="d-flex flex-nowrap input-group">
-                                                        <span>Version</span>
+                                                <th class="text-center">{{ 'Filename'|trans }}</th>
+                                                <th class="text-center">
+                                                    <div class="d-flex flex-nowrap input-group justify-content-center">
+                                                        <span>{{"Version"|trans}}</span>
                                                         {#<i class="fa-solid fa-arrow-up-a-z btn p-1 mx-1" onclick=sortTable(0)></i>#}
-                                                        <i id="softTableClick_{{ family.name }}" class="fa-solid fa-arrow-up-a-z btn p-1 mx-1 softTableClick"></i>
+                                                        <i id="softTableClick_{{ family.name }}" class="fa-solid fa-arrow-up-a-z py-1 softTableClick" style="margin-left: 2px;"></i>
                                                     </div>
                                                 </th>
-                                                <th>Creation date</th>
+                                                <th class="text-center">
+                                                {{ 'Creation date'|trans }}
+                                                </th>
                                                 {% if is_granted("ROLE_ADMIN") %}
-                                                <th></th>
-                                                <th>Update Comment</th>
+                                                <th class="text-center"><i class="fa-solid fa-trash"></i></th>
+                                                <th class="text-center">{{ 'Update Comment'|trans }}</th>
                                                 {% endif %}
                                             </tr>
                                         </thead>
-                                        <tbody class="accordion-body">   
-                                        {% for software in softwares %}
-                                            {% if software.family == family.name %}
-                                                <tr>
-                                                    <td>
-                                                        {% if is_granted("ROLE_ADMIN") %}
-                                                            <a 'download' href="{{ asset('uploads/softwares/' ~ software.family ~ '/' ~ software.name) }}">{{software.name}}</a>
-                                                        {% else %}
-                                                            {{software.name}}
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>{{software.version}}</td>
-                                                    <td>{{software.createdAt|date}}</td>
-                                                    {#<td>{{software.updatedAt|date}}</td>#}
-                                                    {% if is_granted("ROLE_ADMIN") %}
-                                                    <td class="text-center">
-                                                        <a href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger" 
-                                                        data-bs-target="#modal_delete_{{software.id}}"
-                                                        data-id="delete_{{software.id}}"
-                                                        data-title="{{software.name}}"
-                                                        data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-update-form">
-                                                            <input class="comment_update_input border border-0" type="text" name="nm" value="{{software.updateComment}}">
-                                                            <button class="comment_update_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{software.id}}"><i class="fa-solid fa-check"></i></button>
-                                                        </div>
-                                                    </td>
-                                                    {% endif %}
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
+                                        <tbody class="accordion-body">
+                                        
+                                        {% for soft in softwares %}
                                             
+                                            {% if family.name == soft.deviceFamily %}
+                                        
+                                            
+                                            <tr style="font-size: 12px;">
+                                                
+                                                <td class="text-center">
+                                                    {% if is_granted("ROLE_ADMIN") %}
+                                                        <a 'download' href="{{ asset('uploads/softwares/' ~ family.name ~ '/' ~ soft.name) }}">{{soft.name}}</a>
+                                                    {% else %}
+                                                        {{soft.name}}
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-center">{{soft.version}}</td>
+                                                <td class="text-center">{{soft.createdAt|format_datetime('medium', 'short')}}</td>
+                                                {% if is_granted("ROLE_ADMIN") %}
+                                                <td class="text-center">
+                                                    <a href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger" 
+                                                    data-bs-target="#modal_delete_{{soft.id}}"
+                                                    data-id="delete_{{soft.id}}"
+                                                    data-title="{{soft.name}}"
+                                                    data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-update-form">
+                                                        <input class="comment_update_input border border-0" type="text" name="nm" value="{{soft.updateComment}}">
+                                                        <button class="comment_update_button btn btn-outline-dark" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
+                                                    </div>
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            
+                                            
+                                            {% include 'software/delete_modals.html.twig' %}
+                                        {% endif %}
+                                        
+                                        {% endfor %}
+                                          
                                         </tbody>
                                 </table>
                                 
@@ -118,7 +127,9 @@
         </div>
 
         {# ===== DELETE MODALS ===== #}
+        {#
         {% include 'software/delete_modals.html.twig' %}
+        #}
     </div>
     
 

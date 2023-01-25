@@ -1,5 +1,5 @@
 
-<!--
+{#
 <h1>Hi! Please confirm your email!</h1>
 
 <p>
@@ -11,7 +11,7 @@
 <p>
     Cheers!
 </p>
--->
+#}
 <!--
 <h1>Welcome !</h1>
 
@@ -23,16 +23,45 @@ The Winback Team<br>
 
 </p>
 -->
+{% apply inline_css(source('@styles/email.css')) %}
 
-<img src="{{ email.image('@images/winback_logo.svg') }}" alt="Logo">
-<h1>Welcome {{ email.toName }}!</h1>
+<header class="header-mail"><img src="{{ email.image('@images/wk_mail/wk_logo_header.png') }}"{#src="{{asset('img/wk_mail/wk_logo_header.png')}}"#} alt="Logo Header"></header>
+<h1 class="h1-mail">Welcome {{ email.toName }}!</h1>
 
-<p>
-    You signed up as {{ username }} the following email:
-</p>
-<p><code>{{ email.to[0].address }}</code></p>
-
-<p>
+<p class="margin-bottom">
+Thanks for signing up to the <strong>Winback Platform</strong>. Welcome on our services.<br><br>
+You can now access your data by clicking the following link and login with your credentials : <br>
+<button class="button-mail"><a href="{{ url('home') }}">Enter</a></button><br><br>
+You signed up as {{ username }} with the following email:
+<code>{{ email.to[0].address }}</code>
+<br>
+{#
     <a href="">Click here to activate your account</a>
     (this link is valid until {{ expiration_date|date('F jS') }})
+#}
+    {#This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.#}
+Don't hesitate to contact us with your feedback or if you encounter any issues to access your data.<br><br>
+<strong>The Winback Team.</strong>
 </p>
+<br>
+
+<footer class="footer-mail" style="background-color: #000000">
+    <!-- Social Icons -->
+    <div class="footer-mail-icons">
+        <img src="{{ email.image('@images/wk_mail/wk_fb_icon.png') }}"{#src="{{asset('img/wk_mail/wk_fb_icon.png')}}"#} alt="Logo Fb">
+        <img src="{{ email.image('@images/wk_mail/wk_insta_icon.png') }}"{#src="{{asset('img/wk_mail/wk_insta_icon.png')}}"#} alt="Logo Insta">
+        <img src="{{ email.image('@images/wk_mail/wk_linkedin_icon.png') }}"{#src="{{asset('img/wk_mail/wk_linkedin_icon.png')}}"#} alt="Logo Link">
+    </div><br>
+    <div class="footer-mail-items"><img src="{{ email.image('@images/wk_mail/wk_logo_footer.png') }}"{#src="{{asset('img/wk_mail/wk_logo_footer.png')}}"#} alt="Logo Footer"></div>
+    <!-- Adress -->
+    <div class="footer-mail-items footer-mail-adress">
+        <div class="footer-mail-item">20 Avenue Victor Hugo</div>
+        <div class="footer-mail-item">64200 Biarritz - France</div>
+        <div class="footer-mail-item">0483661666</div>
+        <div class="footer-mail-item">hello@winback.com</div>
+    </div>
+    <!-- Copyright -->
+    <div class="footer-mail-items"><em>Copyright Winback©, All rights reserved</em></div>
+</footer>
+
+{% endapply %}

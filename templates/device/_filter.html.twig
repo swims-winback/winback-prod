@@ -6,22 +6,21 @@
     {{ form_row(form.q, {attr: { style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
     </div>
     <!-- Device Type -->
-        <h6 class="mt-2">Device Type</h6>
+        <h6 class="mt-2">{{ 'Device Type'|trans }}</h6>
         <div class="border border-0" id="collapseDeviceType">
             {{ form_row(form.categories) }}
         </div>
     <!-- Device Version -->
-        <h6 class="mt-2">Device Version</h6>
+        <h6 class="mt-2">{{ 'Device Version'|trans }}</h6>
         <div class="border border-0" id="collapseDeviceVersion">
             {{ form_row(form.version) }}
             {{ form_row(form.version_upload) }}
         </div>
     <!-- Status -->
-        <h6 class="mt-2">Status</h6>
+        <h6 class="mt-2">{{ 'Status'|trans }}</h6>
         <div class="border border-0" id="collapseStatus">
             {{ form_row(form.forced) }}
-            {{ form_row(form.connected) }}
         </div>
 
-    <button type="submit" class="btn bg-orange btn-outline-orange">Search</button>
+    <button type="submit" class="btn bg-orange btn-outline-orange">{{ 'Search'|trans }}</button>
 {{ form_end(form) }}
