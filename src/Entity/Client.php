@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email. Please, try again.')]
 class Client
 {
     #[ORM\Id]
@@ -17,49 +17,26 @@ class Client
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 200)]
-    private ?string $last_name = null;
-
-    #[ORM\Column(length: 200)]
-    private ?string $first_name = null;
-
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    /*
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Sn::class)]
+    private Collection $serial_number;
+    */
+
+    public function __construct()
+    {
+        //$this->serial_number = new ArrayCollection();
+    }
+
+    
     #[ORM\Column(length: 200)]
-    private ?string $password = null;
-
-    #[ORM\OneToOne(inversedBy: 'client', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Device $serial_number = null;
-
+    private ?string $serial_number = null;
+    
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->last_name;
-    }
-
-    public function setLastName(string $last_name): self
-    {
-        $this->last_name = $last_name;
-
-        return $this;
-    }
-
-    public function getFirstName(): ?string
-    {
-        return $this->first_name;
-    }
-
-    public function setFirstName(string $first_name): self
-    {
-        $this->first_name = $first_name;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -73,28 +50,47 @@ class Client
 
         return $this;
     }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getSerialNumber(): ?Device
+    
+    public function getSerialNumber(): ?string
     {
         return $this->serial_number;
     }
 
-    public function setSerialNumber(Device $serial_number): self
+    public function setSerialNumber(string $serial_number): self
     {
         $this->serial_number = $serial_number;
 
         return $this;
     }
+    
+
+    /*
+    public function getSerialNumber(): Collection
+    {
+        return $this->serial_number;
+    }
+
+    
+    public function addSerialNumber(Sn $serialNumber): self
+    {
+        if (!$this->serial_number->contains($serialNumber)) {
+            $this->serial_number->add($serialNumber);
+            $serialNumber->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSerialNumber(Sn $serialNumber): self
+    {
+        if ($this->serial_number->removeElement($serialNumber)) {
+            // set the owning side to null (unless already changed)
+            if ($serialNumber->getClient() === $this) {
+                $serialNumber->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+    */
 }
