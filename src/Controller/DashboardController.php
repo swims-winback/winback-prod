@@ -13,15 +13,16 @@ use App\Repository\DeviceRepository;
 use App\Repository\SoftwareRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+/*
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
-
+*/
 class DashboardController extends AbstractController
 {
     /**
      * @Route("/{_locale<%app.supported_locales%>}/user/dashboard/", name="dashboard")
      */
-    public function dashboard(DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository, ChartBuilderInterface $chartBuilder) {
+    public function dashboard(DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository) {
         //$data = new SearchVersion();
         $devicesFamily = $deviceFamilyRepository->findAll();
         $devices = $deviceRepository->findAll();
@@ -37,6 +38,7 @@ class DashboardController extends AbstractController
         }
 
         /* TEST */
+        /*
         $labels = [];
         $data = [];
 
@@ -71,7 +73,7 @@ class DashboardController extends AbstractController
         ]);
 
         $chart->setOptions([]);
-
+        */
         /* TEST */
         //TODO find devices updated by version
         return $this->render('dashboard.html.twig', [
