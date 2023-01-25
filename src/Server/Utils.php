@@ -178,7 +178,7 @@ class Utils {
         else
         {
 			$aValue = explode('_', $fileName);
-            echo "\r\naValue: ".$aValue[2];
+            //echo "\r\naValue: ".$aValue[2];
 			return file_get_contents($this->checkFile($deviceType, $aValue[2]));
 		}
     }

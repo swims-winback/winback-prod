@@ -167,7 +167,7 @@ class DbRequest {
         echo "\r\nSN empty or vers empty or devType empty !\r\n";
         return false;
     }
-    
+        
     /**
      * init Device request In SN Table
      * @param string $sn

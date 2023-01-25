@@ -6,7 +6,6 @@ if (!defined('DEVICE_TABLE')) define('DEVICE_TABLE', 'device');
 if (!defined('DEVICE_FAMILY_TABLE')) define('DEVICE_FAMILY_TABLE', 'device_family');
 if (!defined('SOFTWARE_TABLE')) define('SOFTWARE_TABLE', 'software');
 if (!defined('TREATMENT_TABLE')) define('TREATMENT_TABLE', 'treatment');
-//if (!defined('SN_TABLE')) define('SN_TABLE', 'sn_copy');
 if (!defined('SN_TABLE')) define('SN_TABLE', 'sn');
 
 /* Define Device Table properties */
