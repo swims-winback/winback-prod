@@ -19,61 +19,62 @@
         <!--
         <a class="navbar-brand" href="{{path('home')}}"><img src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto"></a>
         -->
-        <a href="{{path('home')}}">
-        <img class="navbar-brand" id="navbar-logo" src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <div class="w-100 d-flex flex-nowrap align-items-center">
+            <a href="{{path('home')}}">
+            <img class="navbar-brand" id="navbar-logo" src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto">
+            </a>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+                <ul class="navbar-nav d-flex align-items-center me-auto">
+                {% if is_granted('ROLE_GOE') %}
+                    <!--
+                    <li><a class="nav-link" href="{{path('home')}}"><i class="fa-solid fa-house"></i></a></li>
+                    -->
+                    <li><a class="nav-link" href="{{path('software')}}">{{ 'Softwares'|trans }}</a></li>
+                    <li><a class="nav-link" href="{{path('device')}}">{{ 'Devices'|trans }}</a></li>
+                    {% if is_granted("ROLE_ADMIN") %}
+                    <li><a class="nav-link" href="{{path('dashboard')}}">{{ 'Dashboard'|trans }}</a></li>
+                    {% endif %}
+                    <!--<a class="nav-link" href="">Maintenance</a>-->
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li><a class="nav-link" href="{{path('app_sn')}}">{{ 'SN'|trans }}</a></li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li><a class="nav-link" href="{{path('statistics')}}">{{ 'Statistics'|trans }}</a></li>
+                    {% endif %}
+                {% endif %}
+                    <li class="nav-item dropdown" style="width: fit-content;">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ app.request.locale|locale_name(app.request.locale) }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-language">
+                        <li><a class="dropdown-item" href="{{ path('device', {_locale: 'en'}) }}"><img class="icon-flags" src="{{asset('img/flags/uk.png')}}" alt=""> EN</a></li>
+                        <li><a class="dropdown-item" href="{{ path('device', {_locale: 'fr'}) }}"><img class="icon-flags" src="{{asset('img/flags/france.png')}}" alt=""> FR</a></li>
+                        <li><a class="dropdown-item" href="{{ path('device', {_locale: 'ko'}) }}"><img class="icon-flags" src="{{asset('img/flags/korea.png')}}" alt=""> KO</a></li>
+                        </ul>
+                    </li>
+                
+                </ul>
+                
+                {% if is_granted('ROLE_USER') %}
+                <div class="d-flex flex-nowrap justify-content-center">
+                    <div>
+                        {{"Welcome"|trans}} {{ app.user }}
+                    </div>
+                    <a class="nav-link" href="{{path('app_logout')}}" style="margin-left: 0.5em;">
+                        <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
+                    </a>
+                </div>
+                {% endif %}
+                
+
+                
+            </div>
+        </div>
+
+        <button class="navbar-toggler align-self-start border border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span><i class="fa-solid fa-bars text-white"></i></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-            
-
-            <ul class="navbar-nav d-flex align-items-center me-auto">
-            {% if is_granted('ROLE_GOE') %}
-                <!--
-                <li><a class="nav-link" href="{{path('home')}}"><i class="fa-solid fa-house"></i></a></li>
-                -->
-                <li><a class="nav-link" href="{{path('software')}}">{{ 'Softwares'|trans }}</a></li>
-                <li><a class="nav-link" href="{{path('device')}}">{{ 'Devices'|trans }}</a></li>
-                {% if is_granted("ROLE_ADMIN") %}
-                <li><a class="nav-link" href="{{path('dashboard')}}">{{ 'Dashboard'|trans }}</a></li>
-                {% endif %}
-                <!--<a class="nav-link" href="">Maintenance</a>-->
-                {% if is_granted('ROLE_ADMIN') %}
-                <li><a class="nav-link" href="{{path('app_sn')}}">{{ 'SN'|trans }}</a></li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                <li><a class="nav-link" href="{{path('statistics')}}">{{ 'Statistics'|trans }}</a></li>
-                {% endif %}
-            {% endif %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ app.request.locale|locale_name(app.request.locale) }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-language">
-                    <li><a class="dropdown-item" href="{{ path('device', {_locale: 'en'}) }}"><img class="icon-flags" src="{{asset('img/flags/uk.png')}}" alt=""> English</a></li>
-                    <li><a class="dropdown-item" href="{{ path('device', {_locale: 'fr'}) }}"><img class="icon-flags" src="{{asset('img/flags/france.png')}}" alt=""> Français</a></li>
-                    <li><a class="dropdown-item" href="{{ path('device', {_locale: 'ko'}) }}"><img class="icon-flags" src="{{asset('img/flags/korea.png')}}" alt=""> 한국어</a></li>
-                    </ul>
-                </li>
-            
-            </ul>
-            
-            {% if is_granted('ROLE_USER') %}
-            <div class="d-flex flex-nowrap">
-                <div>
-                    {{"Welcome"|trans}} {{ app.user }}
-                </div>
-                <a class="nav-link" href="{{path('app_logout')}}">
-                    <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
-                </a>
-            </div>
-            {% endif %}
-            
-
-            
-        </div>
 
     </nav>
 

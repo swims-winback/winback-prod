@@ -4,22 +4,19 @@
 
 {% block content %}
    
-<div class="container row d-flex justify-content-center align-items-center vh-sm-100 p-5">
+<div class="container row d-flex justify-content-center align-items-center vh-sm-100" style="padding-top: 2em; padding-bottom: 2em;">
+    <!--
     <div class="col-md-9 col-lg-6 col-xl-5 p-5">
         <img src="{{ asset('img/winback-logo.webp') }}" class="img-fluid" alt="">
     </div>
+    -->
     <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1 d-flex justify-content-center">
-
+        <!--
         <form method="post" class="text-center row d-flex flex-column align-items-center justify-content-around mt-2 mb-2 mt-sm-2 mb-sm-2 pb-3 pt-1 px-sm-5 px-3 login">
-                <!--
-                <nav class="navbar-login">
-                <ul class="navbar-nav d-flex flex-row align-items-center">
-                    <li class="w-50"><a href=""><strong>{{"Login"|trans}}</strong></a></li>
-                    <li class="w-50"><a href=""><strong>{{"Register"|trans}}</strong></a></li>
-                </ul>
-                </nav>
-                -->
-                <span class="fa-stack fa-2xl">
+        -->
+        <form method="post" class="text-center row d-flex flex-column align-items-center justify-content-around login">
+            <div class="w-50" style="margin-top: 1em; padding-bottom: 2em;">
+                <span class="fa-stack fa-3x" style="position: relative; top: -40px;">
                     <i class="fa-solid fa-circle fa-stack-2x" style="color: #f18841;"></i>
                     <i class="fa-regular fa-user fa-stack-1x fa-inverse" style="text-shadow: 2px 2px 2px rgba(0,0,0,0.5);"></i>
                 </span>
@@ -55,27 +52,31 @@
                     value="{{ csrf_token('authenticate') }}"
                 >
                 <div class="d-flex justify-content-around align-items-center text-center flex-wrap">
-                    <div class="checkbox mb-sm-3 mb-1">
+                    <div class="checkbox" style="margin-bottom: 0.5em; margin-top: 0.5em;">
                         <label>
                             <input type="checkbox" name="_remember_me" class="form-check-input me-2 text-break text-nowrap">
                             {{ 'Remember me'|trans }}
                         </label>
                     </div>
-                    <a class="mb-sm-3 mb-1" href="{{ path('app_forgot_password_request') }}"><u>
+                    <a style="margin-bottom: 0.5em; margin-top: 0.5em;" href="{{ path('app_forgot_password_request') }}"><u>
                     {{ 'Forgot Password ?'|trans }}</u></a>
                 </div>
                 
 
                 <button class="btn bg-orange btn-outline-orange mt-1 mb-1 mt-sm-2 mb-sm-2 w-100" type="submit">
                 {{ 'Sign in'|trans }}
+                <svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg>
                 </button>
                 <div class="divider d-flex align-items-center mb-1">
                     {#<p class="text-center fw-bold mx-3 mb-0">{{ 'Or'|trans }}</p>#}
                 </div>
                 <div class="d-flex justify-content-around align-items-center w-100 p-0 flex-wrap">
                     <p class="mb-0 text-break text-nowrap mb-1">{{ 'Not registered yet ?'|trans }}</p>
-                    <a class="btn btn-secondary txt-white text-break text-nowrap mb-1" href="{{ path('app_register') }}">{{ 'Sign Up'|trans }}</a>
+                    <a class="btn btn-secondary txt-white text-break text-nowrap mb-1 w-100" href="{{ path('app_register') }}">{{ 'Sign Up'|trans }}<svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg></a>
                 </div>
+            </div>
+
+
         </form>
     </div>
 

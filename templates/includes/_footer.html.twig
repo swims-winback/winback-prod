@@ -1,22 +1,43 @@
-<footer class="container-fluid footer mt-2 text-center text-white" style="background-color: #000000;">
-<div class="d-flex justify-content-around">
+<footer class="container-fluid footer text-center text-white">
+<div class="d-flex justify-content-around p-2">
     <!-- Social Icons -->
-    <div class="d-flex flex-column justify-content-between">
-    <img src="{{asset('img/wk_mail/wk_logo_footer.png')}}" alt="Logo Footer">
-    <div class="footer-mail-icons">
-        <img src="{{asset('img/wk_mail/wk_fb_icon.png')}}" alt="Logo Fb">
-        <img src="{{asset('img/wk_mail/wk_insta_icon.png')}}" alt="Logo Insta">
-        <img src="{{asset('img/wk_mail/wk_linkedin_icon.png')}}" alt="Logo Link">
-    </div>
+    <div class="d-flex flex-column justify-content-between align-items-center">
+
+        <img src="{{asset('img/LOGO_WK/wk_main.svg')}}" alt="Logo Footer" width="100em" height="auto">
+
+        <div class="footer-mail-icons text-center d-flex justify-content-around">
+                <!-- Facebook -->
+        <a class="btn btn-outline-light btn-floating btn-icon m-1 border border-0" href="#!" role="button"
+            ><i class="fab fa-facebook-f"></i
+        ></a>
+
+        <!-- Twitter -->
+        <a class="btn btn-outline-light btn-floating btn-icon m-1 border border-0" href="#!" role="button"
+            ><i class="fab fa-twitter"></i
+        ></a>
+
+        <!-- Instagram -->
+        <a class="btn btn-outline-light btn-floating btn-icon m-1 border border-0" href="#!" role="button"
+            ><i class="fab fa-instagram"></i
+        ></a>
+
+        <!-- Linkedin -->
+        <a class="btn btn-outline-light btn-floating btn-icon m-1 border border-0" href="#!" role="button"
+            ><i class="fab fa-linkedin-in"></i
+        ></a>
+        </div>
     </div>
     <!-- Adress -->
     <div class="footer-mail-items footer-mail-adress">
-        <div class="footer-mail-item">20 Avenue Victor Hugo</div>
-        <div class="footer-mail-item">64200 Biarritz - France</div>
-        <div class="footer-mail-item">0483661666</div>
-        <div class="footer-mail-item">hello@winback.com</div>
+        <h6 class="text-uppercase fw-bold mb-1">{{ "Contact"|trans}}</h6>
+        <div class="text-start">
+            <div class="footer-mail-item"><i class="fas fa-home me-3 text-secondary"></i> 20 Avenue Victor Hugo</div>
+            <div class="footer-mail-item"><i class="fas fa-home me-3" style="color: transparent;"></i> 64200 Biarritz - France</div>
+            <div class="footer-mail-item"><i class="fas fa-phone me-3 text-secondary"></i> 0483661666</div>
+            <div class="footer-mail-item"><i class="fas fa-envelope me-3 text-secondary"></i> hello@winback.com</div>
+        </div>
     </div>
 </div>
 <!-- Copyright -->
-<div class="footer-mail-items"><em>2023 Copyright <a class="text-reset fw-bold" href="https://winback.com/">Winback</a>©, All rights reserved</em></div>
+<div class="footer-mail-items text-center p-3 w-100" style="background-color: rgba(0, 0, 0, 0.2);"><em>2023 Copyright <a class="text-reset fw-bold" href="https://winback.com/">Winback</a>©, All rights reserved</em></div>
 </footer>

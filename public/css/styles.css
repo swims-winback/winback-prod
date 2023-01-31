@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.cdnfonts.com/css/gotham");
 .bg-orange {
   background-color: #f18841;
   color: white !important;
@@ -30,6 +31,7 @@
 }
 html {
   width: 100%;
+  min-height: 100vh;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
@@ -40,14 +42,20 @@ html {
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
-  color: #000000;
+  font-family: "Gotham", sans-serif;
+  color: #100c08 !important;
   width: 100%;
-  letter-spacing: -1px;
-  font-size: 1em;
+  letter-spacing: 0px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  min-height: 100vh;
   margin: 0;
   padding: 0 !important;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .container {
@@ -60,18 +68,15 @@ h1, h2 {
   font-size: xx-large;
   font-style: normal;
   letter-spacing: normal;
-  text-transform: uppercase;
 }
 
 main {
   width: 100%;
-  min-height: 100vh;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  overflow: scroll;
+  justify-content: space-around;
   padding-top: 1em;
   padding-bottom: 1em;
 }
@@ -84,6 +89,15 @@ a {
 .primary {
   /*background-color: #f0780e;*/
   background-color: transparent;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn:hover {
+  font-weight: bold;
 }
 
 .btn-outline-orange {
@@ -120,10 +134,17 @@ a {
   height: -moz-fit-content;
   height: fit-content;
   text-align: center;
-  padding-top: 1em;
+  padding: 0;
   display: flex;
   flex-direction: column;
   font-size: 10px;
+  background-color: rgba(0, 0, 0, 0.7843137255);
+}
+
+.btn-icon {
+  width: 3em;
+  display: flex;
+  justify-content: center;
 }
 
 /*
@@ -142,7 +163,7 @@ a {
   text-align: center;
   padding: 1em;
   justify-content: space-between;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Gotham", sans-serif;
   height: fit-content;
 }
 .header .navbar-brand {
@@ -174,7 +195,9 @@ a {
   */
   padding-left: 1em;
   padding-right: 1em;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Gotham", sans-serif;
+  font-size: medium;
+  font-weight: 500;
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
@@ -189,15 +212,12 @@ a {
   */
 }
 .navbar .nav-link {
-  text-transform: uppercase;
-  font-size: medium;
-  font-style: normal;
   letter-spacing: normal;
-  margin: 0 1em 0 1em;
   color: white;
 }
 .navbar .nav-link:hover {
   border-bottom: solid white 1px;
+  font-weight: bold;
 }
 .navbar .nav-link:active {
   color: #ffffff;
@@ -208,6 +228,9 @@ a {
 }
 .navbar #navbar-logo {
   transition: 0.4s;
+}
+.navbar .dropdown-menu {
+  position: absolute;
 }
 
 .navbar-logo {
@@ -290,17 +313,22 @@ table.dataTable thead .sorting_desc_disabled:before {
   cursor: pointer; /* Add a mouse pointer on hover */
 }
 
-#filter {
-  display: block;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 80px;
+/*
+  #filter {
+    display: block;
+    position: sticky;
+    top: 80px;
+}
+*/
+#filter div {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .sticky-scroll {
-  display: block;
-  position: -webkit-sticky;
   position: sticky;
+  position: -webkit-sticky;
   top: 80px;
 }
 
@@ -311,6 +339,7 @@ table.dataTable thead .sorting_desc_disabled:before {
   height: -moz-fit-content;
   height: fit-content;
   box-shadow: 5px 5px 15px 5px #acabab;
+  font-weight: 500;
 }
 
 .divider:after,
@@ -388,4 +417,9 @@ table.dataTable thead .sorting_desc_disabled:before {
 .example-wrapper code {
   background: #F5F5F5;
   padding: 2px 6px;
+}
+
+#listDeviceTable td {
+  color: #100c08;
+  font-family: "Gotham Medium", sans-serif;
 }/*# sourceMappingURL=styles.css.map */

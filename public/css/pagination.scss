@@ -1,0 +1,25 @@
+$color1 : #f18841;
+
+.page-link {
+  font-size: small;
+  color: $color1;
+  &:hover {
+    color: #b96731;
+  }
+  &:focus {
+    color: $color1;
+    box-shadow: 0 0 0 0.25rem #f1874152;
+  }
+  &.active,
+  .active > & {
+    z-index: 3;
+    //color: $color1;
+    //@include gradient-bg($color1);
+    border-color: $color1;
+    background-color: $color1;
+  }
+}
+
+.form-control {
+  font-size: small;
+}

@@ -1,0 +1,20 @@
+.page-link {
+  font-size: small;
+  color: #f18841;
+}
+.page-link:hover {
+  color: #b96731;
+}
+.page-link:focus {
+  color: #f18841;
+  box-shadow: 0 0 0 0.25rem rgba(241, 135, 65, 0.3215686275);
+}
+.page-link.active, .active > .page-link {
+  z-index: 3;
+  border-color: #f18841;
+  background-color: #f18841;
+}
+
+.form-control {
+  font-size: small;
+}/*# sourceMappingURL=pagination.css.map */
