@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.cdnfonts.com/css/gotham');
+
 $color1 : #f18841;
 $color2 : #f1874144;
 $color3 : #ffffff;
 $color4 : #000000;
+$color5 : #100c08;
 //$color5 : ;
 
 .bg-orange {
@@ -53,11 +56,16 @@ html {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
-    color: $color4;
+    //font-family: 'Open Sans', sans-serif;
+    font-family: 'Gotham', sans-serif;
+    color: $color5 !important;
     width: 100%;
-    letter-spacing: -1px;
-    font-size: 1em;
+    letter-spacing: 0px;
+    //font-size: 1em;
+    //font-size: small;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
     //min-width: fit-content;
     //min-height: 100vh;
     //height: 100%;
@@ -87,19 +95,20 @@ h1, h2 {
     font-style: normal;
     //letter-spacing: 1px;
     letter-spacing: normal;
-    text-transform: uppercase;
+    //text-transform: uppercase;
 }
 
 main {
     width: 100%;
-    min-height: 100vh;
+    //min-height: 100vh;
     //height: fit-content;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    overflow: scroll;
+    //justify-content: space-between;
+    justify-content: space-around;
+    //overflow: scroll;
     padding-top: 1em;
     padding-bottom: 1em;
 }
@@ -115,9 +124,19 @@ a {
 
 }
 
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &:hover {
+        font-weight: bold;
+    }
+}
+
 .btn-outline-orange {
     background-color: $color1;
     color: white !important;
+
     &:hover {
         border: $color1 solid 1px;
         color: $color1 !important;
@@ -189,7 +208,8 @@ a {
     text-align: center;
     padding: 1em;
     justify-content: space-between;
-    font-family: 'Open Sans', sans-serif;
+    //font-family: 'Open Sans', sans-serif;
+    font-family: 'Gotham', sans-serif;
     height: fit-content;
     .navbar-brand {
         //flex-basis: 70%;
@@ -225,28 +245,31 @@ a {
     top: 0;
     z-index: 99;
     */
-    //padding: 2em;
     padding-left: 1em;
     padding-right: 1em;
-    font-family: 'Open Sans', sans-serif;
+    //font-family: 'Open Sans', sans-serif;
+    font-family: 'Gotham', sans-serif;
+    font-size: medium;
+    font-weight: 500;
     //color: black !important;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
     .nav-link {
-        text-transform: uppercase;
+        //text-transform: uppercase;
         //font-family: 'NotoSansExtraCondensedBold';
         //font-weight: 100;
-        font-size:medium;
-        font-style: normal;
+        //font-size:medium;
+        //font-style: normal;
         letter-spacing: normal;
-        margin: 0 1em 0 1em;
+        //margin: 0 1em 0 1em;
         color: white;
         //border-bottom: solid white 1px;
         &:hover {
             //color: #f18841;
             //background-color: none;
             border-bottom: solid white 1px;
+            font-weight: bold;
             //-webkit-box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0); 
             //box-shadow: 0px 10px 13px -7px #000000, 0px -2px 15px 5px rgba(0,0,0,0);
         }
@@ -356,16 +379,26 @@ table.dataTable thead .sorting_desc_disabled:before {
     cursor: pointer; /* Add a mouse pointer on hover */
   }
 
+  /*
   #filter {
     display: block;
     position: sticky;
     top: 80px;
 }
+*/
+
+#filter {
+    div {
+        width: fit-content;
+    }
+}
 
 .sticky-scroll {
-    display: block;
+    //display: block;
     position: sticky;
+    position: -webkit-sticky;
     top: 80px;
+    //top: 0;
 }
 
 .login {
@@ -377,6 +410,7 @@ table.dataTable thead .sorting_desc_disabled:before {
     height: fit-content;
     -webkit-box-shadow: 5px 5px 15px 5px #acabab; 
     box-shadow: 5px 5px 15px 5px #acabab;
+    font-weight: 500;
 }
 
 .divider:after,
@@ -457,4 +491,11 @@ background: #eee;
 .example-wrapper code { 
     background: #F5F5F5;
     padding: 2px 6px; 
+}
+
+#listDeviceTable {
+    td {
+        color: $color5;
+        font-family: 'Gotham Medium', sans-serif;
+    }
 }
