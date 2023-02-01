@@ -3,9 +3,9 @@
 {% block title %}{{ 'Winback Interface | Device'|trans }}{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column justify-content-between align-items-center mx-0 px-0 w-100">
+    <div class="d-flex flex-column justify-content-between align-items-center mx-0 px-0 w-100 mt-1">
             <div class="row w-100 h-100 mt-4">
-                <div class="col-md-3">
+                <div class="col-md-3 d-flex align-items-center justify-content-center">
                     {% include "device/_filter.html.twig" %}
                 </div>
                 <!-- ===== DEVICE TABLE ===== -->
@@ -30,7 +30,7 @@
                                         <th scope="col"></th>
                                         <th scope="col" class="h-100 p-0 text-nowrap">
                                             <div class="h-100 d-flex justify-content-between input-group flex-nowrap text-center align-items-center ps-2">
-                                                {{ 'Serial Number'|trans }}
+                                                <div class="w-100">{{ 'Serial Number'|trans }}</div>
                                                 <span class="btn btn-light text-dark h-100 p-1" style="border-radius: 0;" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
                                             </div>
                                         
@@ -123,7 +123,7 @@
                                             </td>
                                             <!--info-->
                                             <td class="text-center">
-                                                <a id="info_device_{{device.id}}" href="#" class="info_device btn rounded-1 press modal-trigger bg-orange btn-outline-orange" 
+                                                <a id="info_device_{{device.id}}" href="#" class="info_device btn rounded-1 press modal-trigger bg-orange btn-outline-orange justify-content-center" 
                                                 data-bs-target="#modal_info_{{device.id}}"
                                                 data-id="{{device.id}}"
                                                 data-title="{{device.sn}}"

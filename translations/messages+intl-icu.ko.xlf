@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="71ZyWF0" resname="Forced">
         <source>Forced</source>
-        <target>__Forced</target>
+        <target>강제</target>
       </trans-unit>
       <trans-unit id="8al8m0W" resname="Upload Version">
         <source>Upload Version</source>
@@ -127,11 +127,11 @@
       </trans-unit>
       <trans-unit id="BuYaPAp" resname="Manage the versions available in the database, add or delete a new software.">
         <source>Manage the versions available in the database, add or delete a new software.</source>
-        <target>__Manage the versions available in the database, add or delete a new software.</target>
+        <target>Manage the versions available in the database, add or delete a new software.</target>
       </trans-unit>
       <trans-unit id="VlJg4Yd" resname="Manage the devices available on the server, edit an existing device.">
         <source>Manage the devices available on the server, edit an existing device.</source>
-        <target>__Manage the devices available on the server, edit an existing device.</target>
+        <target>Manage the devices available on the server, edit an existing device.</target>
       </trans-unit>
       <trans-unit id="NwaW7PP" resname="Visualize the number of devices updated in the database.">
         <source>Visualize the number of devices updated in the database.</source>
@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="kCsvSRw" resname="You are not identified yet. Please enter your Info to verify your identity and find your device.">
         <source>You are not identified yet. Please enter your Info to verify your identity and find your device.</source>
-        <target>__You are not identified yet. Please enter your Info to verify your identity and find your device.</target>
+        <target>You are not identified yet. Please enter your Info to verify your identity and find your device.</target>
       </trans-unit>
       <trans-unit id="Yk5ET_L" resname="Enter your SN">
         <source>Enter your SN</source>
@@ -367,6 +367,30 @@
       <trans-unit id="23YfAZX" resname="Software Type">
         <source>Software Type</source>
         <target>소프트웨어 유형</target>
+      </trans-unit>
+      <trans-unit id="K1w9JnI" resname="Contact">
+        <source>Contact</source>
+        <target>연락하다</target>
+      </trans-unit>
+      <trans-unit id="2pMq_zm" resname="On your personal dashboard">
+        <source>On your personal dashboard</source>
+        <target>On your personal dashboard</target>
+      </trans-unit>
+      <trans-unit id="dUnaTGE" resname="New Software">
+        <source>New Software</source>
+        <target>__New Software</target>
+      </trans-unit>
+      <trans-unit id="l.4K622" resname="Drag and Drop your files here.">
+        <source>Drag and Drop your files here.</source>
+        <target>__Drag and Drop your files here.</target>
+      </trans-unit>
+      <trans-unit id="GXZu1sy" resname="Cancel">
+        <source>Cancel</source>
+        <target>__Cancel</target>
+      </trans-unit>
+      <trans-unit id="v0sKW6X" resname="Delete software">
+        <source>Delete software</source>
+        <target>__Delete software</target>
       </trans-unit>
     </body>
   </file>

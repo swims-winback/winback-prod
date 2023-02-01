@@ -52,12 +52,14 @@
                     value="{{ csrf_token('authenticate') }}"
                 >
                 <div class="d-flex justify-content-around align-items-center text-center flex-wrap">
+                    <!--
                     <div class="checkbox" style="margin-bottom: 0.5em; margin-top: 0.5em;">
                         <label>
                             <input type="checkbox" name="_remember_me" class="form-check-input me-2 text-break text-nowrap">
                             {{ 'Remember me'|trans }}
                         </label>
                     </div>
+                    -->
                     <a style="margin-bottom: 0.5em; margin-top: 0.5em;" href="{{ path('app_forgot_password_request') }}"><u>
                     {{ 'Forgot Password ?'|trans }}</u></a>
                 </div>
