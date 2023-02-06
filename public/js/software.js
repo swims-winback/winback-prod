@@ -26,8 +26,8 @@ for(let e of softTablesClick){
             shouldSwitch = false;
             /* Get the two elements you want to compare,
             one from current row and one from the next: */
-            x = rows[i].getElementsByTagName("TD")[n];
-            y = rows[i + 1].getElementsByTagName("TD")[n];
+            x = rows[i].getElementsByTagName("a")[n];
+            y = rows[i + 1].getElementsByTagName("a")[n];
             /* Check if the two rows should switch place,
             based on the direction, asc or desc: */
             if (dir == "asc") {
@@ -39,6 +39,7 @@ for(let e of softTablesClick){
             } else if (dir == "desc") {
                 if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                     // If so, mark as a switch and break the loop:
+                  console.log(x.innerHTML)
                     shouldSwitch = true;
 
                     break;
@@ -48,7 +49,7 @@ for(let e of softTablesClick){
         if (shouldSwitch) {
             /* If a switch has been marked, make the switch
             and mark that a switch has been done: */
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
             // Each time a switch is done, increase this count by 1:
             switchcount ++;

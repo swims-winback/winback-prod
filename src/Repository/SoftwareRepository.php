@@ -102,7 +102,7 @@ class SoftwareRepository extends ServiceEntityRepository
             //->andWhere('s.createdAt = :val')
             //->setParameter('val', $value)
             //->orderBy('s.created_at', 'DESC')
-            ->orderBy('s.version', 'DESC')
+            ->orderBy('s.name', 'DESC')
             //->setMaxResults(10)
             ->getQuery()
             ->getResult()
