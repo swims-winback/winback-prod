@@ -432,4 +432,11 @@ table.dataTable thead .sorting_desc_disabled:before {
 #listDeviceTable td {
   color: #100c08;
   font-family: "Gotham Medium", sans-serif;
+}
+
+.comment_input:active {
+  background-color: #ffffff !important;
+}
+.comment_input:focus {
+  background-color: #ffffff !important;
 }/*# sourceMappingURL=styles.css.map */

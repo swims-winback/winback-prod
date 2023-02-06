@@ -517,3 +517,12 @@ background: #eee;
         font-family: 'Gotham Medium', sans-serif;
     }
 }
+
+.comment_input {
+    &:active {
+        background-color: #ffffff !important;
+    }
+    &:focus {
+        background-color: #ffffff !important;
+    }
+}

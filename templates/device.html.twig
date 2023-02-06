@@ -131,10 +131,13 @@
                                                 <i class="fa-solid fa-circle-info"></i>
                                                 </a>
                                             </td>
-                                            <td class="">
-                                                <div class="input-group d-flex flex-nowrap text-break overflow-hidden comment-form">
-                                                    <input class="comment_input border border-0" style="background-color:#f1874144;" type="text" name="nm" value="{{device.comment}}">
+                                            <td class="p-0 px-1">
+                                            <input class="comment_input border border-0" style="background-color:#f1874144; height: 2em;" type="text" name="nm" value="{{device.comment}}" data-id="{{device.id}}">
+                                                <div class="overflow-hidden comment-form">
+                                                    
+                                                    <!--
                                                     <button class="comment_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button> 
+                                                    -->
                                                 </div> 
                                             </td>
                                         </tr>
