@@ -100,13 +100,14 @@ a {
   background-color: transparent;
 }
 
-.btn {
+.btn:hover {
+  font-weight: bold;
+}
+
+.btn-justify {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-.btn:hover {
-  font-weight: bold;
 }
 
 .btn-outline-orange {

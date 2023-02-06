@@ -130,12 +130,15 @@ a {
 }
 
 .btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     &:hover {
         font-weight: bold;
     }
+}
+
+.btn-justify {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .btn-outline-orange {
