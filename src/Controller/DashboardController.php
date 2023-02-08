@@ -32,7 +32,10 @@ class DashboardController extends AbstractController
         
         foreach ($devicesFamily as $deviceFamily) {
             //$softwares = $deviceFamily->getSoftware();
-            $softwares = $softwareRepository->findByDeviceFamily($deviceFamily);
+            //$softwares = $softwareRepository->findByDeviceFamily($deviceFamily);
+            $softwares = $softwareRepository->findBy(
+                array('deviceFamily'=>$deviceFamily),
+                array('name' => 'DESC'));
             $softwareArray[$deviceFamily->getName()] = $softwares;
             //$deviceArray[$deviceFamily->getName()] = count($devices);
         }

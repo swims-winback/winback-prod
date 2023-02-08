@@ -6,19 +6,18 @@
 
 
     <div class="container row d-flex align-items-stretch">
-        <div class="col-sm-6 col-md-4 col-lg-3 mb-5">
-            <div class="card dashboard-card h-100" style="box-shadow: 0px 0px 2px 2px #acabab81;">
+        <div class="col-sm-8 col-md-5 col-xl-4 mb-5">
+            <div class="card dashboard-card w-100 h-100" style="box-shadow: 0px 0px 2px 2px #acabab81;">
                 <h3 class="card-header w-100"><div class="text-muted" style="text-transform: uppercase;">Devices</div></h3>
-                <div class="card-body d-flex flex-column justify-content-center w-100 p-0">
-                    <canvas id="myChart"></canvas>
+                <div class="card-body d-flex flex-column justify-content-top w-100 h-100 p-0 py-4">
+                    <canvas id="myChart" class="text-start"></canvas>
                 </div>
                 
                 <div id="total_count" style="display: none;">{{countDevices}}</div>
-                <div class="card-footer w-100"></div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-md-4 col-lg-3 mb-5 d-flex flex-wrap align-items-center justify-content-evenly">
+        <div class="col-sm-8 col-md-5 col-xl-4 mb-5 d-flex flex-wrap align-items-center justify-content-evenly">
             
 
                 <div id="carouselExampleIndicators" class="carousel carousel-dark slide w-100">
@@ -32,7 +31,7 @@
                         <div class="card dashboard-card">
                             
                             <h3 class="card-header w-100 device_family text-muted" id="{{deviceFamily}}">{{deviceFamily}}</h3>
-                            <div class="card-body d-flex flex-column justify-content-around w-100 h-100">
+                            <div class="card-body d-flex flex-column justify-content-top w-100 h-100">
                                 <canvas id="myChart2_{{deviceFamily}}" class="mb-3"></canvas>
                                 <div class="d-flex flex-nowrap justify-content-between align-items-center">
                                 <strong>Total :</strong><div class="device_count" id="count_{{deviceFamily}}">{{deviceFamily.devices.count}}</div>
@@ -53,11 +52,11 @@
                                 </button>
                                 {% for key, items in softwareArray %}
                                 {% if key == deviceFamily %}
-                                <select class="form-select w-50" id="dashSelect_{{deviceFamily}}">
+                                <select class="form-select w-75" id="dashSelect_{{deviceFamily}}">
                                 <option value="" selected disabled hidden>Version</option>
                                 {% for item in items %}
-                                    <option value={{item}} class="select-version" data-devicefamily="{{deviceFamily}}">
-                                    {{item}}
+                                    <option value={{item.version}} class="select-version" data-devicefamily="{{deviceFamily}}">
+                                    {{item.version}}
                                     </option>
                                 {% endfor %}
                                 </select>
@@ -84,9 +83,11 @@
             {#{{ render_chart(chart, {'id': 'my-chart'})}}#}
         </div>
     </div>
+    <!--
     <div class="container row">
     stat device/week or month
     </div>
+    -->
 {% endblock %}
 
 {% block javascripts %}

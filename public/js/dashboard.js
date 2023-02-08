@@ -52,6 +52,9 @@ const myChart = new Chart(ctx, {
                   text: 'Total Devices'
               }
             */
+              legend : {
+                position: 'bottom'
+              }
           }
   },
   plugins: [{
@@ -67,7 +70,7 @@ const myChart = new Chart(ctx, {
 
       var text = total_devices,
         textX = Math.round((width - ctx.measureText(text).width) / 2),
-        textY = (height / 3)+(height / 3);
+        textY = (height / 3)
       ctx.fillText(text, textX, textY);
       ctx.save();
     }
@@ -113,6 +116,9 @@ for (const key in result) {
                     text: `${key}`
                 }
               */
+              legend : {
+                position: 'bottom'
+              }
             }
           },
           
@@ -130,7 +136,7 @@ for (const key in result) {
         
               var text = versionZoneValue.textContent,
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
-                textY = (height / 3)+(height / 3);
+                textY = (height / 3);
               
               ctx.fillText(text, textX, textY);
               ctx.save();
@@ -140,6 +146,7 @@ for (const key in result) {
 
 }
 
+/*
 function addData(chart, label, data) {
   chart.data.labels.push(label);
   chart.data.datasets.forEach((dataset) => {
@@ -155,7 +162,7 @@ function removeData(chart) {
   });
   chart.update();
 }
-
+*/
 
 //Listen for the select options
 // when one option is selected, search all devices that corresponds to device family + version
@@ -165,21 +172,23 @@ $(document).ready(function() {
   for (let fam in family_array) {
     console.log(family_array[fam]);
     $(`#dashSelect_${family_array[fam]}`).on('change', () => {
-      let version = $( `#dashSelect_${family_array[fam]} option:selected` ).val();
+      let version = $(`#dashSelect_${family_array[fam]} option:selected`).val();
         let deviceFamily = $( `#dashSelect_${family_array[fam]} option:selected` ).data("devicefamily");
       let versionZone = document.getElementById(`count_version_${deviceFamily}`);
       let notUpdatedZone = document.getElementById(`count_not_${deviceFamily}`);
         $.ajax({    
           type: "GET",
           url: `/version/${deviceFamily}/${version}/`,
-          dataType: "html",                  
+          dataType: "html",    
+          
           success: function (data) { 
+            console.log(data);
             versionZone.innerHTML = data;
             notUpdatedZone.innerHTML = result[deviceFamily]-data;
             myChartArray[deviceFamily].data.datasets[0].data[0] = result[deviceFamily]-data;
             myChartArray[deviceFamily].data.datasets[0].data[1] = data;
             myChartArray[deviceFamily].update();
-          }
+          },
         });
       });
 
