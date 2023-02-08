@@ -71,6 +71,22 @@
                                                 {% endif %}
                                             </tr>
                                         </thead>
+                                        {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                            <select name="" id="">
+                                            <option value="" selected disabled hidden>Actual Version</option>
+                                            {% for soft in softwares %}
+                                                <option value={{soft}} class="select-version" data-devicefamily="{{soft.deviceFamily}}">
+                                                {{soft}}
+                                                </option>
+                                            {% endfor %}
+                                            </select>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        {% endif %}
                                         <tbody class="accordion-body">
                                         
                                         {% for soft in softwares %}

@@ -12,7 +12,7 @@
             </div>
         </div>
         <hr style="width: 50%">
-        {% if is_granted("ROLE_GOE") %}
+        {% if is_granted("ROLE_READER") %}
         <div class="row d-flex align-items-stretch justify-content-between w-100">
             
             <div class="col card shadow-1 hoverable-1 rounded-3 white card-index mx-1">
@@ -46,7 +46,19 @@
             {% endif %}
             
         </div>
-        
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+            <div class="row">
+                <div class="col-6">
+                    Devices connected in a week, day by day
+                    <div id="deviceConnected"></div>
+                    <canvas id="chartDeviceConnected"></canvas>
+                </div>
+                <div class="col-6">
+                    Devices created each month
+                    <canvas id="chartDeviceCreated"></canvas>
+                </div>
+            </div>
+            {% endif %}
         {% elseif is_granted("ROLE_CLIENT")%}
         <div class="">
             <!-- 
@@ -88,4 +100,8 @@
         You have no permissions attributed yet, Please wait for the admin team to authorise access.
         {% endif %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/main.js')}}"></script>
 {% endblock %}

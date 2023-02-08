@@ -44,7 +44,9 @@
                                         {% endif %}
                                         <th scope="col" class="text-center text-nowrap">{{ 'Forced'|trans }}</th>
                                         <th scope="col" class="text-center text-nowrap">{{ 'Info'|trans }}</th>
+                                        {% if is_granted("ROLE_GOE") %}
                                         <th scope="col" class="text-center text-nowrap">{{ 'Comment'|trans }}</th>
+                                        {% endif %}
                                     </tr>
                                     <tr class="w-100 align-bottom">
                                         <th class="text-center">
@@ -77,7 +79,9 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
+                                        {% if is_granted("ROLE_GOE") %}
                                         <th></th>
+                                        {% endif %}
                                     </tr>
                                 </thead>
                                 
@@ -131,8 +135,9 @@
                                                 <i class="fa-solid fa-circle-info"></i>
                                                 </a>
                                             </td>
+                                            {% if is_granted("ROLE_GOE") %}
                                             <td class="p-0 px-1">
-                                            <input class="comment_input border border-0" style="background-color:#f1874144; height: 2em;" type="text" name="nm" value="{{device.comment}}" data-id="{{device.id}}">
+                                                <input class="comment_input border border-0" style="background-color:#f1874144; height: 2em;" type="text" name="nm" value="{{device.comment}}" data-id="{{device.id}}">
                                                 <div class="overflow-hidden comment-form">
                                                     
                                                     <!--
@@ -140,6 +145,7 @@
                                                     -->
                                                 </div> 
                                             </td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     

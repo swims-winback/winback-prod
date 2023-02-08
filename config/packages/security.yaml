@@ -12,6 +12,8 @@ security:
 
     role_hierarchy:
         ROLE_CLIENT:      [ROLE_USER]
+        ROLE_READER:      [ROLE_USER]
+        ROLE_GOE:         [ROLE_READER]
         ROLE_SAV:         [ROLE_USER, ROLE_GOE]
         ROLE_ADMIN:       [ROLE_SAV]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
