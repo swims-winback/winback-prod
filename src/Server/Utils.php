@@ -1,5 +1,9 @@
 <?php
 namespace App\Server;
+
+use Exception;
+//use Monolog\Logger;
+
 ini_set('memory_limit','128M');
 //require_once dirname(__DIR__).'/config.php';
 //require_once(__DIR__.'/config.php');
@@ -19,16 +23,18 @@ class Utils {
     /**
      * List files in directory, ascending order
      *
-     * @return array array of files in directory, in ascending order
+     * array of files in directory, in ascending order
      */
     function listFiles(string $deviceType, $path)
     {
+        
         if (file_exists($path.deviceTypeArray[$deviceType])) {
             return array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'));
         }
         else {
             echo "\r\nUhuh, something went wrong ! Path doesn't exist, please check that ".$path.deviceTypeArray[$deviceType]." exists.\r\n";
             echo "\r\n #################### \r\n";
+            return false;
         }
     }
 
@@ -77,6 +83,7 @@ class Utils {
         }
         echo "\r\nUhuh, something went wrong ! Filelist is empty, please check your package folder.\r\n";
         echo "\r\n #################### \r\n";
+        return false;
 
     }
 
@@ -90,16 +97,22 @@ class Utils {
     function compareFile(string $fileArch, string $fileUp) : bool
     {
         if (!file_exists($fileArch) || !file_exists($fileUp)) {
+            echo "Archive File {$fileArch} or Package File {$fileUp} not present on the server.";
+            //$logger->error("Archive File {$fileArch} or Package File {$fileUp} not present on the server.");
             return false;
         }
         if(filesize($fileArch) !== filesize($fileUp)) {
+            echo "Archive File {$fileArch} and Package File {$fileUp} are not the same size.";
+            //$logger->error("Archive File {$fileArch} and Package File {$fileUp} are not the same size.");
             return false;
         }
         // Check if content is different
         $ahandle = fopen($fileArch, 'rb');
         $bhandle = fopen($fileUp, 'rb');
+        
 
 		if($ahandle && $bhandle){
+            
 			  if(fread($ahandle, 8192) != fread($bhandle, 8192))
 			  {
                 echo "\r\nUhuh, something went wrong ! Contents of package file and archive file are different, please check your files.\r\n";
@@ -108,6 +121,40 @@ class Utils {
 			  }
 			fclose($ahandle);
 			fclose($bhandle);
+
+            //return true;
+		}
+        return true;
+    }
+
+    function compareFileTest(string $fileArch, string $fileUp) : bool
+    {
+        if (!file_exists($fileArch) || !file_exists($fileUp)) {
+            echo "version not present on the server";
+            //$logger->error("Archive File {$fileArch} or Package File {$fileUp} not present on the server.");
+            return false;
+        }
+        if(filesize($fileArch) !== filesize($fileUp)) {
+            //$logger->error("Archive File {$fileArch} and Package File {$fileUp} are not the same size.");
+            return false;
+        }
+        // Check if content is different
+        $ahandle = fopen($fileArch, 'rb');
+        $bhandle = fopen($fileUp, 'rb');
+        
+
+		if($ahandle && $bhandle){
+            
+			  if(fread($ahandle, 8192) != fread($bhandle, 8192))
+			  {
+                echo "\r\nUhuh, something went wrong ! Contents of package file and archive file are different, please check your files.\r\n";
+                echo "\r\n #################### \r\n";
+                return false;
+			  }
+			fclose($ahandle);
+			fclose($bhandle);
+
+            //return true;
 		}
         return true;
     }
@@ -127,45 +174,95 @@ class Utils {
     {
         $scanPackFile = $this->listFiles($deviceType, PACK_PATH); // Package list
         $scanArchFile = $this->listFiles($deviceType, PACK_ARCH_PATH); // Archive list
-
-        if(count($scanPackFile) === count($scanArchFile))
-        {
-            $lastVersUp = $this->getVersion2($scanPackFile);
-            $lastVersArch = $this->getVersion2($scanArchFile);
-            if($lastVersArch === $lastVersUp)
+        if ($scanPackFile!=false && $scanArchFile!=false) {
+            if(count($scanPackFile) === count($scanArchFile))
             {
-                $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
-                $lastUpVerFile = PACK_PATH.deviceTypeArray[$deviceType].$filename;
-                $lastArchVerFile = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$filename;
-                if($this->compareFile($lastArchVerFile,$lastUpVerFile))
+                $lastVersUp = $this->getVersion2($scanPackFile);
+                $lastVersArch = $this->getVersion2($scanArchFile);
+                if($lastVersArch === $lastVersUp)
                 {
-                    return $filename;
+                    $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
+                    $lastUpVerFile = PACK_PATH.deviceTypeArray[$deviceType].$filename;
+                    $lastArchVerFile = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$filename;
+                    if($this->compareFile($lastArchVerFile, $lastUpVerFile))
+                    {
+                        return $filename;
+                    }
+                    else
+                    {
+                        echo ("\r\nerror 1 :\r\n
+                        \r\nUhuh, something went wrong ! CompareFile doesn't work !\r\n
+                        \r\n####################\r\n");
+                        return false;
+                    }
                 }
-                else
-                {
-					echo ("\r\nerror 1 :\r\n
-                    \r\nUhuh, something went wrong ! CompareFile doesn't work !\r\n
+                else{
+                    echo ("\r\nerror 2 :\r\n
+                    \r\nUhuh, something went wrong ! Versions of package file and archive file are different, please check your files.\r\n
                     \r\n####################\r\n");
                     return false;
                 }
             }
-            else{
-				echo ("\r\nerror 2 :\r\n
-                \r\nUhuh, something went wrong ! Versions of package file and archive file are different, please check your files.\r\n
+            echo ("\r\nerror 3 :\r\n
+                \r\nUhuh, something went wrong ! Package list and Archive list don't contain the same number of elements, please check your files lists.\r\n
                 \r\n####################\r\n");
-                return false;
-            }
+            return false;
         }
-        echo ("\r\nerror 3 :\r\n
-            \r\nUhuh, something went wrong ! Package list and Archive list don't contain the same number of elements, please check your files lists.\r\n
-            \r\n####################\r\n");
+        echo ("\r\nerror :\r\n
+        \r\nUhuh, something went wrong ! Package list and Archive list are not found.\r\n
+        \r\n####################\r\n");
         return false;
     }
 
+    function checkFileTest(string $deviceType, string $boardType = '2') : string|bool
+    {
+        $scanPackFile = $this->listFiles($deviceType, PACK_PATH); // Package list
+        $scanArchFile = $this->listFiles($deviceType, PACK_ARCH_PATH); // Archive list
+        if ($scanPackFile!=false && $scanArchFile!=false) {
+            if(count($scanPackFile) === count($scanArchFile))
+            {
+                $lastVersUp = $this->getVersion2($scanPackFile);
+                $lastVersArch = $this->getVersion2($scanArchFile);
+                if($lastVersArch === $lastVersUp)
+                {
+                    $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
+                    $lastUpVerFile = PACK_PATH.deviceTypeArray[$deviceType].$filename;
+                    $lastArchVerFile = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$filename;
+                    if($this->compareFileTest($lastArchVerFile, $lastUpVerFile))
+                    {
+                        return $filename;
+                    }
+                    else
+                    {
+                        echo ("\r\nerror 1 :\r\n
+                        \r\nUhuh, something went wrong ! CompareFile doesn't work !\r\n
+                        \r\n####################\r\n");
+                        return false;
+                    }
+                }
+                else{
+                    echo ("\r\nerror 2 :\r\n
+                    \r\nUhuh, something went wrong ! Versions of package file and archive file are different, please check your files.\r\n
+                    \r\n####################\r\n");
+                    return false;
+                }
+            }
+            echo ("\r\nerror 3 :\r\n
+                \r\nUhuh, something went wrong ! Package list and Archive list don't contain the same number of elements, please check your files lists.\r\n
+                \r\n####################\r\n");
+            return false;
+        }
+        echo ("\r\nerror :\r\n
+        \r\nUhuh, something went wrong ! Package list and Archive list are not found.\r\n
+        \r\n####################\r\n");
+        return false;
+    }
 
     /**
      * set software filename, verify file exists in package folder, returns filecontent to string
      * equivalence of fileContent in original code
+     * if package file exists, return package file content
+     * else return last package file ?
      * @param string $deviceType
      * @param string $fileName
      * @return string|bool
@@ -173,13 +270,47 @@ class Utils {
     function getFileContent(string $deviceType, string $fileName) : string|bool
     {
 		if(file_exists(PACK_PATH.deviceTypeArray[$deviceType].$fileName)){
-			return file_get_contents(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
+            echo "\r\n ".$fileName . " file exists !\r\n";
+            $content = file_get_contents(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
+            if ($content) {
+                return $content;
+            }
+            else {
+                echo "\r\nContent cannot be get.\r\n";
+                return false;
+            }
+            
 		}
         else
         {
+            
 			$aValue = explode('_', $fileName);
             //echo "\r\naValue: ".$aValue[2];
 			return file_get_contents($this->checkFile($deviceType, $aValue[2]));
+		}
+    }
+    function getFileContentTest(string $deviceType, string $fileName) : bool
+    {
+		if(file_exists(PACK_PATH.deviceTypeArray[$deviceType].$fileName)){
+            //echo "\r\n ".$fileName . " file exists !\r\n";
+            $content = file_get_contents(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
+            if (!$content) {
+                //throw new Exception('Content cannot be get.');
+                return false;
+            }
+            return true;
+		}
+        else
+        {
+            
+			$aValue = explode('_', $fileName);
+            //echo "\r\naValue: ".$aValue[2];
+			$content = file_get_contents($this->checkFileTest($deviceType, $aValue[2]));
+            if (!$content) {
+                //throw new Exception('Content cannot be get.');
+                return false;
+            }
+            return true;
 		}
     }
 
