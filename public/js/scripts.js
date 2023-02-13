@@ -226,6 +226,7 @@ for (let element of commentInputs) {
   }
 }
 */
+/*
 for(let element of commentButtons){
   element.onclick = function() {
     let id = $(element).data("id");
@@ -234,9 +235,35 @@ for(let element of commentButtons){
       comment = null
     }
     addComment(id, comment);
+    window.location.reload();
   };
 }
+*/
 
+// Execute a function when the user presses a key on the keyboard
+for (let element of commentInputs) {
+  element.addEventListener("keypress", function (event) {
+    // If the user presses the "Enter" key on the keyboard
+    if (event.key === "Enter") {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      //document.getElementById("myBtn").click();
+      let id = $(element).data("id");
+      let comment = element.value;
+      console.log(comment)
+      
+      if (comment == "") {
+        comment = null
+      }
+      addComment(id, comment);
+      window.location.reload();
+      
+    }
+  });
+}
+
+/*
 for (let element of updateCommentButtons) {
   element.onclick = function() {
     let id = $(element).data("id");
@@ -248,6 +275,7 @@ for (let element of updateCommentButtons) {
     addUpdateComment(id, comment);
   };
 }
+*/
 //window.onload = () => {
 
 
