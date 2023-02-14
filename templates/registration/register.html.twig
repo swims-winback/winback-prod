@@ -40,14 +40,15 @@
                 <div class="form-outline">
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
-                        
-                        {{ form_row(registrationForm.password.first, {attr: {placeholder: ( 'Password'|trans ), style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
+                        {{ form_row(registrationForm.password.first, {attr: {placeholder: ( 'Password'|trans ), style: 'border-left-style: none; border-radius: 0;', class:'inputPassword'}}) }}
+                        <span class="input-group-text text-secondary mb-3" id="addon-wrapping" style="background-color: #ffffff; border-left-style: none; border-left-right-radius: 0; border-left-right-radius: 0;"><i class="eyeIcon fa-regular fa-eye-slash"></i></span>
                     </div>
                 </div>
                 <div class="form-outline">
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
-                        {{ form_row(registrationForm.password.second, {attr: {placeholder: ( 'Confirm Password'|trans ), style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
+                        {{ form_row(registrationForm.password.second, {attr: {placeholder: ( 'Confirm Password'|trans ), style: 'border-left-style: none; border-radius: 0;', class:'inputPassword'}}) }}
+                        <span class="input-group-text text-secondary mb-3" id="addon-wrapping" style="background-color: #ffffff; border-left-style: none; border-left-right-radius: 0; border-left-right-radius: 0;"><i class="eyeIcon fa-regular fa-eye-slash"></i></span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center flex-nowrap">{{ form_row(registrationForm.agreeTerms, {attr: {label: ( 'Agree terms'|trans ), style: 'margin-bottom: 0;'}}) }}</div>
@@ -69,8 +70,7 @@
     </div>
 {% endblock %}
 
-{#
+
 {% block javascripts %}
     <script src="{{ asset('js/register.js')}}"></script>
 {% endblock %}
-#}

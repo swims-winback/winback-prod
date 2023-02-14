@@ -45,6 +45,7 @@
                     <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
                     <input type="password" placeholder="{{ 'Password'|trans }}" name="password" id="inputPassword" class="form-control" required>
+                    <span class="input-group-text text-secondary" id="addon-wrapping" style="background-color: #ffffff;"><i class="fa-regular fa-eye-slash" id="eyeIcon"></i></span>
                     </div>
                 </div>
                 
@@ -83,4 +84,8 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/login.js')}}"></script>
 {% endblock %}
