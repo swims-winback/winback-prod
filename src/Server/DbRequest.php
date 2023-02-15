@@ -154,8 +154,9 @@ class DbRequest {
      * @return \mysqli_result|bool
      */
     function initDeviceInDB(string $sn, string $vers, int $devType, string $ipAddr, string $logFile){
+        $geography = $this->getIpAddrFromSn($ipAddr);
         if ($sn!="" && $vers!="" && $devType!="" && $ipAddr!="" && $logFile!="") {
-            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.",".LOG_FILE.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '1','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."', '".$logFile."')";
+            $req = "INSERT INTO ".DEVICE_TABLE." (".DEVICE_TYPE.", ".SN.", ".DEVICE_VERSION.", ".VERSION_UPLOAD.",".IS_CONNECT.",".IP_ADDR.",".LOG_POINTEUR.",".SELECTED.",".CONNECTED.",".CREATED_AT.",".LOG_FILE.",".COUNTRY.",".CITY.") VALUES ('".$devType."', '".$sn."', '".$vers."', '0', '1','".$ipAddr."','0','0','0','".date("Y-m-d | H:i:s")."', '".$logFile."',".$geography['country']."',".$geography['city']."')";
             if ($res = $this->sendRq($req)) {
                 return $res;
             }
@@ -185,6 +186,17 @@ class DbRequest {
         return false;
     }
 
+    function initDeviceInServer($sn){
+        if ($sn!="") {
+            $req = "INSERT INTO device_server (device_id, date) VALUES ('".$sn."', '".date("Y-m-d | H:i:s")."')";
+            if ($res = $this->sendRq($req)) {
+                return $res;
+            }
+            return false;
+        }
+        return false;
+    }
+
     /**
      * If device exists in device Table, select & return row
      * Else, init device in db
@@ -195,15 +207,16 @@ class DbRequest {
      * @param string $logFile
      * @return array|bool|null
      */
+    
     function setDeviceInfo(string $sn, string $vers, int $devType, string $ipAddr, string $logFile)
     {
         $whereCond = SN." = '".$sn."'";
-        
+        $geography = $this->getLocationInfoByIp($ipAddr);
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
                 
-                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."'";
+                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."',".IP_ADDR." = '".$ipAddr."',".COUNTRY." = '".$geography['country']."',".CITY." = '".$geography['city']."'";
                 if(!empty($whereCond)){
                     $req .= " WHERE ".$whereCond;
                 }
@@ -221,6 +234,7 @@ class DbRequest {
             return false;
         }
     }
+    
 
     /**
      * Insert Device to SN Table if not exists yet
@@ -243,9 +257,36 @@ class DbRequest {
                     echo ("Device added in DB.");
                     return $row;
                 }
-            }else{
+            }
+        }
+        else {
+            return false;
+        }
+    }
 
-                echo "\r\nrecord already exists !\r\n";
+    function setDeviceToServer(string $sn)
+    {
+        //$whereCond = "'device_id' = '".$sn."' AND date LIKE '".date('Y-m-d')."'";
+        //$whereCond = "`device_id` = '" . $sn . "' AND Date(scrap_date) = 1";
+        $whereCond = "`device_id` = '".$sn."' AND DATE(date) = CURRENT_DATE";
+        $req = $this->select('*', 'device_server', $whereCond);
+        print($req);
+        if($res = $this->sendRq($req)){
+            if($row = mysqli_fetch_assoc($res)){
+                
+                $req = "UPDATE `device_server` SET `date` = '".date('Y-m-d | H:i:s')."'";
+                if(!empty($whereCond)){
+                    $req .= " WHERE ".$whereCond;
+                }
+                
+                $res = $this->sendRq($req);
+                return $row;
+            }else{
+                $res = $this->initDeviceInServer($sn);
+                $res2 = $this->sendRq($req);
+                if($row = mysqli_fetch_assoc($res2)){
+                    return $row;
+                }
             }
         }
         else {
@@ -438,6 +479,39 @@ class DbRequest {
             }
         }
         return false;
+    }
+
+    function getDeviceTypeActualVers($deviceType)
+    {
+        
+        $whereCond = NUMBER_ID."='$deviceType'";
+        $req = $this->select('actual_version_id', DEVICE_FAMILY_TABLE, $whereCond);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                //return $row['actual_version_id'];
+                $actual_version_id = $row['actual_version_id'];
+                $whereCond2 = "id='$actual_version_id'";
+                $req2 = $this->select('name', SOFTWARE_TABLE, $whereCond2);
+                //print_r($req2);
+                $res2 = $this->sendRq($req2);
+                if ($row2 = mysqli_fetch_assoc($res2)) {
+                    //print_r($row2['version']);
+                    return $row2['name'];
+                }
+            }
+        }
+        return false;
+    }
+
+    function getLocationInfoByIp($ip){
+        $ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));    
+        if($ip_data && $ip_data->geoplugin_countryName != null){
+            $result['country'] = $ip_data->geoplugin_countryCode;
+            $result['city'] = $ip_data->geoplugin_city;
+        }
+        print_r($result);
+        return $result;
     }
 
     function getUpdateComment($deviceType, $version)

@@ -44,6 +44,7 @@
                                         {% endif %}
                                         <th scope="col" class="text-center text-nowrap">{{ 'Forced'|trans }}</th>
                                         <th scope="col" class="text-center text-nowrap">{{ 'Info'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Country'|trans }}</th>
                                         {% if is_granted("ROLE_GOE") %}
                                         <th scope="col" class="text-center text-nowrap">{{ 'Comment'|trans }}</th>
                                         {% endif %}
@@ -76,6 +77,7 @@
                                                 {{ form_end(versionform) }}
                                             {% endif %}
                                         </th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -134,6 +136,9 @@
                                                 data-bs-toggle="modal">
                                                 <i class="fa-solid fa-circle-info"></i>
                                                 </a>
+                                            </td>
+                                            <td class="text-center">
+                                            {{device.country}}
                                             </td>
                                             {% if is_granted("ROLE_GOE") %}
                                             <td class="p-0 px-1">

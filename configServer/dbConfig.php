@@ -31,6 +31,8 @@ if (!defined('IS_CONNECT')) define('IS_CONNECT', 'is_active');
 if (!defined('CONNECTED')) define('CONNECTED', 'connected');
 if (!defined('DOWNLOAD')) define('DOWNLOAD', 'download');
 if (!defined('UPDATE_COMMENT')) define('UPDATE_COMMENT', 'update_comment');
+if (!defined('COUNTRY')) define('COUNTRY', 'country');
+if (!defined('CITY')) define('CITY', 'city');
 /* Define User Table properties */
 
 if (!defined('LOGIN')) define('LOGIN', 'username');

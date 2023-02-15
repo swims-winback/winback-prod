@@ -93,11 +93,21 @@ class Device
     #[ORM\Column(type: 'string', length: 400, nullable: true)]
     private $update_comment;
 
+    #[ORM\OneToMany(mappedBy: 'deviceId', targetEntity: DeviceServer::class)]
+    private Collection $deviceServers;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $country = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
         //$this->statistics = new ArrayCollection();
         $this->softwares = new ArrayCollection();
+        $this->deviceServers = new ArrayCollection();
     }
 
     public function __toString()
@@ -395,4 +405,58 @@ class Device
         return $this;
     }
     */
+
+    /**
+     * @return Collection<int, DeviceServer>
+     */
+    public function getDeviceServers(): Collection
+    {
+        return $this->deviceServers;
+    }
+
+    public function addDeviceServer(DeviceServer $deviceServer): self
+    {
+        if (!$this->deviceServers->contains($deviceServer)) {
+            $this->deviceServers->add($deviceServer);
+            $deviceServer->setDeviceId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeviceServer(DeviceServer $deviceServer): self
+    {
+        if ($this->deviceServers->removeElement($deviceServer)) {
+            // set the owning side to null (unless already changed)
+            if ($deviceServer->getDeviceId() === $this) {
+                $deviceServer->setDeviceId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
 }
