@@ -522,7 +522,7 @@ class DbRequest {
             $result['country'] = $ip_data->geoplugin_countryCode;
             $result['city'] = $ip_data->geoplugin_city;
         }
-        print_r($result);
+        //print_r($result);
         return $result;
     }
 
