@@ -28,26 +28,30 @@
                         <span class="input-group-text mb-3" id="addon-wrapping">
                         <i class="fa-solid fa-user"></i>
                         </span>
-                        {{ form_row(registrationForm.username, {attr: {placeholder: ( 'Username'|trans ), id: 'username', style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}})}}
+                        {{ form_row(registrationForm.username, {attr: {placeholder: ( 'Username'|trans ), id: 'username', style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;', class: 'form-control-register'}})}}
                     </div>
                 </div>
                 <div class="form-outline">
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-envelope"></i></span>
-                        {{ form_row(registrationForm.email, {attr: {placeholder: ( 'Email'|trans ), id: 'email', style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
+                        {{ form_row(registrationForm.email, {attr: {placeholder: ( 'Email'|trans ), id: 'email', style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;', class: 'form-control-register'}}) }}
                     </div>
                 </div>
                 <div class="form-outline">
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
-                        {{ form_row(registrationForm.password.first, {attr: {placeholder: ( 'Password'|trans ), style: 'border-left-style: none; border-radius: 0;', class:'inputPassword'}}) }}
+                        {{ form_row(registrationForm.password.first, {attr: {placeholder: ( 'Password'|trans ), style: 'border-left-style: none; border-radius: 0;', class:'inputPassword form-control-register', onkeyup:"checkPasswordStrength();"}}) }}
                         <span class="input-group-text text-secondary mb-3" id="addon-wrapping" style="background-color: #ffffff; border-left-style: none; border-left-right-radius: 0; border-left-right-radius: 0;"><i class="eyeIcon fa-regular fa-eye-slash"></i></span>
                     </div>
+                    <div class="progress">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div id="password-strength-status"></div>
                 </div>
                 <div class="form-outline">
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text mb-3" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
-                        {{ form_row(registrationForm.password.second, {attr: {placeholder: ( 'Confirm Password'|trans ), style: 'border-left-style: none; border-radius: 0;', class:'inputPassword'}}) }}
+                        {{ form_row(registrationForm.password.second, {attr: {placeholder: ( 'Confirm Password'|trans ), style: 'border-left-style: none; border-radius: 0;', class:'inputPassword form-control-register'}}) }}
                         <span class="input-group-text text-secondary mb-3" id="addon-wrapping" style="background-color: #ffffff; border-left-style: none; border-left-right-radius: 0; border-left-right-radius: 0;"><i class="eyeIcon fa-regular fa-eye-slash"></i></span>
                     </div>
                 </div>

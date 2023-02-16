@@ -439,4 +439,17 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 .comment_input:focus {
   background-color: #ffffff !important;
+}
+
+/* PASSWORD CHECK */
+/*
+.strong-password {
+    border: mediumseagreen solid 1px;
+    color: mediumseagreen !important;
+    background-color: white;
+}
+*/
+.form-control-register:focus {
+  box-shadow: none;
+  border: 1px solid #ced4da;
 }/*# sourceMappingURL=styles.css.map */

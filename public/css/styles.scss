@@ -6,6 +6,7 @@ $color2 : #f1874144;
 $color3 : #ffffff;
 $color4 : #000000;
 $color5 : #100c08;
+$color6 : #acabab;
 //$color5 : ;
 
 .bg-orange {
@@ -524,5 +525,21 @@ background: #eee;
     }
     &:focus {
         background-color: #ffffff !important;
+    }
+}
+
+/* PASSWORD CHECK */
+/*
+.strong-password {
+    border: mediumseagreen solid 1px;
+    color: mediumseagreen !important;
+    background-color: white;
+}
+*/
+
+.form-control-register {
+    &:focus{
+        box-shadow: none;
+        border: 1px solid #ced4da;
     }
 }
