@@ -274,6 +274,14 @@ class DeviceRepository extends ServiceEntityRepository
           ;
       }
 
+      public function findByDate($date)
+      {
+          return $this->createQueryBuilder('d')
+          ->andWhere('d.created_at LIKE :val')
+          ->setParameter('val', '%'.$date.'%')
+          ->getQuery()
+          ->getResult();
+      }
     // /**
     //  * @return Device[] Returns an array of Device objects
     //  */

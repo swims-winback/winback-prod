@@ -46,16 +46,27 @@
             {% endif %}
             
         </div>
-            {% if is_granted("ROLE_SUPER_ADMIN") %}
-            <div class="row">
-                <div class="col-6">
-                    Devices connected in a week, day by day
-                    <div id="deviceConnected"></div>
-                    <canvas id="chartDeviceConnected"></canvas>
+            {% if is_granted("ROLE_ADMIN") %}
+            <div class="row h-100 mt-5">
+                <div class="col-6 h-100">
+                    <!--Devices connected in a week, day by day-->
+                    
+                    {% for item, value in deviceCountArray %}
+                        <div class="days" style="display: none">{{item}}</div>
+                        
+                        <div class="device_count" style="display: none">{{value}}</div>
+                    {% endfor %}
+                    {% for item, value in deviceCreatedArray %}
+                        
+                        <div class="device_created" style="display: none">{{value}}</div>
+                    {% endfor %}
+                    <canvas id="chartDeviceConnected" style="height: 15em;"></canvas>
                 </div>
                 <div class="col-6">
-                    Devices created each month
+                    <!--Devices created each month-->
+                    
                     <canvas id="chartDeviceCreated"></canvas>
+                    
                 </div>
             </div>
             {% endif %}
