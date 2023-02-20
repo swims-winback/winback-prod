@@ -1,26 +1,3 @@
-/*
-$(document).ready(function () {
-    $("registrationForm").submit(function (event) {
-      var formData = {
-        name: $("#username").val(),
-        email: $("#email").val(),
-      };
-  
-      $.ajax({
-        type: "POST",
-        url: `/register`,
-        data: formData,
-        dataType: "json",
-        encode: true,
-      }).done(function (data) {
-        console.log(data);
-      });
-  
-      event.preventDefault();
-    });
-  });
-*/
-
 function togglePassword(element, password) {
   if (element.classList.contains('fa-eye-slash')) {
       element.classList.remove('fa-eye-slash')
