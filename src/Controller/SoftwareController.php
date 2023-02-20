@@ -145,9 +145,11 @@ class SoftwareController extends AbstractController
                 $arrayVersion[$deviceType] = array_diff(scandir(PACK_PATH.$deviceType), array('.'));
 
                 array_shift($arrayVersion[$deviceType]);
+                /*
                 if (!file_exists(UPLOAD_PATH."softwares/".$deviceType)) {
                     mkdir(UPLOAD_PATH."softwares/".$deviceType);
                 }
+                */
                 //if record not in db, add record
                 // for each file in device type folder, create record in db if not exists
                 foreach ($arrayVersion[$deviceType] as $key => $file) {
@@ -156,9 +158,11 @@ class SoftwareController extends AbstractController
                         $version = substr($fileArray[1], -11, 7);
                         $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], ID);
                         //$deviceTypeName = str_replace('/', '', $deviceType);
+                        /*
                         if (!file_exists(UPLOAD_PATH."softwares/".$deviceType.$file)) {
                             copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
                         }
+                        */
                         if (!file_exists(PACK_ARCH_PATH.$deviceType.$file)) {
                             copy(PACK_PATH.$deviceType.$file, PACK_ARCH_PATH.$deviceType.$file);
                         }
@@ -295,6 +299,34 @@ class SoftwareController extends AbstractController
 
         $em = $doctrine->getManager();
         $em->persist($software);
+        $em->flush();
+        
+
+        //return new Response("true");
+        return $this->redirectToRoute('software');
+        
+    }
+
+    /**
+     * @Route("/addActualVersion/{id}/{version}/", name="add_actual_version")
+     */
+    public function addActualVersion(ManagerRegistry $doctrine, DeviceFamilyRepository $deviceFamilyRepository, SoftwareRepository $softwareRepository, $id, $version, LoggerInterface $logger) {
+        $user = $this->getUser();
+        $deviceFamily = $deviceFamilyRepository->findOneBy(array('id' => $id));
+        $software = $softwareRepository->findOneBy(array('deviceFamily' => $id, 'version' => $version));
+        if ($version == "null") {
+            $version = "";
+            $logger->info($user." has deleted actual version ".$version." for device family ".$deviceFamily);
+            $this->addFlash('message', 'Actual Version deleted with success !');
+        }
+        else {
+            $logger->info($user." has added updated actual version ".$version." for device family ".$deviceFamily);
+            $this->addFlash('message', 'Actual Version '.$version." updated with success for device family ".$deviceFamily."!");
+        }
+        $deviceFamily->setActualVersion($software);
+
+        $em = $doctrine->getManager();
+        $em->persist($deviceFamily);
         $em->flush();
         
 

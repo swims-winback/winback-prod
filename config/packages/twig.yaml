@@ -5,6 +5,9 @@ twig:
         '%kernel.project_dir%/vendor/knplabs/knp-paginator-bundle/templates': KnpPaginator
         '%kernel.project_dir%/public/img': images
         '%kernel.project_dir%/public/css': styles
+    globals:
+        #ressource_directory: '%env(RESSOURCE_PATH)%'
+        ressource_directory: '%kernel.project_dir%/public/Ressource/'
 
 when@test:
     twig:
