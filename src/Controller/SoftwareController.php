@@ -259,16 +259,30 @@ class SoftwareController extends AbstractController
         $soft = $software;
         $name = $soft->getName();
         $deviceType = $soft->getDeviceFamily()->getName();
+        /*
         if (file_exists($this->getParameter('softwares_directory').'/'.$deviceType."/".$name)) {
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
+        */
+        if (file_exists($_ENV["PACK_PATH"].'/'.$deviceType."/".$name)) {
+            unlink($_ENV["PACK_PATH"].'/'.$deviceType."/".$name);
+        }
+        /*
         if (file_exists($this->getParameter('archives_directory').'/'.$deviceType."/".$name)) {
             unlink($this->getParameter('archives_directory').'/'.$deviceType."/".$name);
         }
+        */
+        if (file_exists($_ENV["PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
+            unlink($_ENV["PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
+        }
+        /*
         if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
             unlink($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name);
         }
-
+        */
+        if (file_exists($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name)) {
+            unlink($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name);
+        }
         $em = $doctrine->getManager();
         $deviceFamily->removeSoftware($soft);
         $em->remove($software);
