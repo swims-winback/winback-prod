@@ -9,7 +9,7 @@ twig:
         #ressource_directory: '%env(RESSOURCE_PATH)%'
         ressource_directory: '%kernel.project_dir%/public/Ressource/'
         #uploads_directory: '%kernel.project_dir%/Ressource/'
-        uploads_directory: '%env(RESSOURCE_PATH)%'
+        uploads_directory: '%env(CC_FS_BUCKET)%'
 
 when@test:
     twig:
