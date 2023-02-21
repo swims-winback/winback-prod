@@ -90,10 +90,17 @@ class SoftwareController extends AbstractController
             //return $this->redirectToRoute('software');
         }
         
-
-
         //$uploadform = $this->addSoftware($request, $dbRequest, $doctrine, $fileUploader, $deviceFamilyRepository);
         $this->addDirectorySoftware($dbRequest);
+
+        $path = RESSOURCE_PATH;
+        print_r($path);
+        if (file_exists($path)) {
+            echo "hello";
+        }
+        else {
+            echo "oh no";
+        }
 
         return $this->render('software.html.twig', [
             'softwares' => $softwares,
