@@ -96,6 +96,7 @@ class SoftwareController extends AbstractController
         $path = RESSOURCE_PATH;
         print_r($path);
         print_r($_ENV["CC_FS_BUCKET"]);
+        print_r($_ENV["APP_HOME"]);
         if (file_exists($path)) {
             echo "hello";
         }
