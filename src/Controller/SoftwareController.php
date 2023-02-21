@@ -95,7 +95,14 @@ class SoftwareController extends AbstractController
 
         $path = RESSOURCE_PATH;
         print_r($path);
+        print_r(CC_FS_BUCKET);
         if (file_exists($path)) {
+            echo "hello";
+        }
+        else {
+            echo "oh no";
+        }
+        if (file_exists(CC_FS_BUCKET)) {
             echo "hello";
         }
         else {
