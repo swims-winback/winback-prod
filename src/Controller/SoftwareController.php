@@ -109,6 +109,12 @@ class SoftwareController extends AbstractController
         else {
             echo "oh no";
         }
+        if (file_exists($_ENV["APP_HOME"])) {
+            echo "hello";
+        }
+        else {
+            echo "oh no";
+        }
 
         return $this->render('software.html.twig', [
             'softwares' => $softwares,
