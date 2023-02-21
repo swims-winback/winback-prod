@@ -7,13 +7,13 @@
 parameters:
      app.supported_locales: 'en|fr|ko'
      statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
-     uploads_directory: '%kernel.project_dir%/public/Ressource/'
+     #uploads_directory: '%kernel.project_dir%/public/Ressource/'
+     uploads_directory: '%env(RESSOURCE_PATH)%'
      packages_directory: '%kernel.project_dir%/src/Ressource/package'
      class_directory: '%kernel.project_dir%/src/Class'
      softwares_directory: '%kernel.project_dir%/public/Ressource/package'
      archives_directory: '%kernel.project_dir%/public/Ressource/archive/package'
     # statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
-    # uploads_directory: '%kernel.project_dir%/src/Ressource/'
      #ressource_directory: '%env(RESSOURCE_PATH)%'
      ressource_directory: '%kernel.project_dir%/public/Ressource/'
 services:
