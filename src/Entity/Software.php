@@ -59,10 +59,10 @@ class Software
     #[ORM\JoinColumn(nullable: true)]
     private $deviceFamily;
 
-    #[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'softwares')]
+    //#[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'softwares')]
     //#[ORM\Column(type: 'string', length: 255)]
-    #[ORM\JoinColumn(nullable: true)]
-    private $deviceFamilyTest;
+    //#[ORM\JoinColumn(nullable: true)]
+    //private $deviceFamilyTest;
     public function __construct()
     {
         $this->devices = new ArrayCollection();
