@@ -103,6 +103,12 @@ class SoftwareController extends AbstractController
         else {
             echo "\r\noh no\r\n";
         }
+        if (file_exists($path."WLE256_12_2_v000.028.bin")) {
+            echo "\r\nhello bin exists\r\n";
+        }
+        else {
+            echo "\r\noh no bin not exists\r\n";
+        }
         if (file_exists($_ENV["CC_FS_BUCKET"])) {
             echo "\r\nhello\r\n";
         }
@@ -123,7 +129,7 @@ class SoftwareController extends AbstractController
             'families' => $families,
             'searchform' => $searchform->createView(),
             //'uploaform' => $uploadform,
-            //'ressource_path' => $_ENV["RESSOURCE_PATH2"],
+            'ressource_path' => $_ENV["RESSOURCE_PATH"],
         ]);
     }
 

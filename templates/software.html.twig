@@ -108,7 +108,7 @@
                                                     {% if is_granted("ROLE_ADMIN") %}
                                                         <!--<a 'download' href="{{ asset('uploads/softwares/' ~ family.name ~ '/' ~ soft.name) }}">{{soft.name}}</a>-->
                                                         <!--<a 'download' href="{{ asset(ressource_directory ~ 'package/' ~ family.name ~ '/' ~ soft.name) }}">{{soft.name}}</a>-->
-                                                        <a 'download' href="{{ asset(uploads_directory ~ soft.name) }}">{{soft.name}}</a>
+                                                        <a 'download' href="{{ asset(ressource_path ~ soft.name) }}">{{soft.name}}</a>
                                                     {% else %}
                                                         {{soft.name}}
                                                     {% endif %}
