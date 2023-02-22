@@ -92,7 +92,7 @@ class SoftwareController extends AbstractController
         
         //$uploadform = $this->addSoftware($request, $dbRequest, $doctrine, $fileUploader, $deviceFamilyRepository);
         $this->addDirectorySoftware($dbRequest);
-
+        /*
         $path = RESSOURCE_PATH;
         $package_path = PACK_PATH;
         echo("\r\n".$path."\r\n");
@@ -143,7 +143,7 @@ class SoftwareController extends AbstractController
         echo ("\r\n".$_ENV["CC_WEBROOT"]."\r\n");
         //$file2 = scandir($_ENV["CC_WEBROOT"]);
         //print_r ($file2);
-
+        */
         return $this->render('software.html.twig', [
             'softwares' => $softwares,
             'software' => $software,
