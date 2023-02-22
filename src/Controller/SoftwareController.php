@@ -141,6 +141,8 @@ class SoftwareController extends AbstractController
             echo "\r\noh no\r\n";
         }
         echo ("\r\n".$_ENV["CC_WEBROOT"]."\r\n");
+        $file2 = scandir($_ENV["CC_WEBROOT"]);
+        print_r ($file2);
 
         return $this->render('software.html.twig', [
             'softwares' => $softwares,
