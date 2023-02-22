@@ -94,6 +94,7 @@ class SoftwareController extends AbstractController
         $this->addDirectorySoftware($dbRequest);
 
         $path = RESSOURCE_PATH;
+        $package_path = PACK_PATH;
         echo("\r\n".$path."\r\n");
         //echo("\r\n".$path."WLE256_12_2_v000.028.bin\r\n");
         //echo("\r\n".$_ENV["CC_FS_BUCKET"]."\r\n");
@@ -106,13 +107,13 @@ class SoftwareController extends AbstractController
         else {
             echo "\r\noh no\r\n";
         }
-        if (file_exists($path."Ressource/WLE256_12_2_v000.028.bin")) {
+        if (file_exists($path."WLE256_12_2_v000.028.bin")) {
             echo "\r\nhello bin exists\r\n";
         }
         else {
             echo "\r\noh no bin not exists\r\n";
         }
-        if (file_exists($path."Ressource/package/")) {
+        if (file_exists($package_path)) {
             echo "\r\nhello package exists\r\n";
         }
         else {
