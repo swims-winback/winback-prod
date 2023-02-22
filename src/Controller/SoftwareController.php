@@ -121,6 +121,7 @@ class SoftwareController extends AbstractController
             echo "\r\nhello fs exists\r\n";
         }
         else {
+            echo ($_ENV["APP_HOME"] . $_ENV["CC_FS_BUCKET"]);
             echo "\r\noh no fs not exist\r\n";
         }
         if (file_exists($_ENV["APP_HOME"])) {
