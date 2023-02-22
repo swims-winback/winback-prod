@@ -94,26 +94,26 @@ class SoftwareController extends AbstractController
         $this->addDirectorySoftware($dbRequest);
 
         $path = RESSOURCE_PATH;
-        print_r($path);
-        print_r($_ENV["CC_FS_BUCKET"]);
-        print_r($_ENV["APP_HOME"]);
+        echo("\r\n".$path."\r\n");
+        echo("\r\n".$_ENV["CC_FS_BUCKET"]."\r\n");
+        echo("\r\n".$_ENV["APP_HOME"]."\r\n");
         if (file_exists($path)) {
-            echo "hello";
+            echo "\r\nhello\r\n";
         }
         else {
-            echo "oh no";
+            echo "\r\noh no\r\n";
         }
         if (file_exists($_ENV["CC_FS_BUCKET"])) {
-            echo "hello";
+            echo "\r\nhello\r\n";
         }
         else {
-            echo "oh no";
+            echo "\r\noh no\r\n";
         }
         if (file_exists($_ENV["APP_HOME"])) {
-            echo "hello";
+            echo "\r\nhello\r\n";
         }
         else {
-            echo "oh no";
+            echo "\r\noh no\r\n";
         }
 
         return $this->render('software.html.twig', [
