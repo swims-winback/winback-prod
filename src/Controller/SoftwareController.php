@@ -140,6 +140,7 @@ class SoftwareController extends AbstractController
         else {
             echo "\r\noh no\r\n";
         }
+        echo ("\r\n".$_ENV["CC_WEBROOT"]."\r\n");
 
         return $this->render('software.html.twig', [
             'softwares' => $softwares,
