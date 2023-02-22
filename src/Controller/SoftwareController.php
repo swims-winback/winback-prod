@@ -99,7 +99,7 @@ class SoftwareController extends AbstractController
         echo("\r\n".$_ENV["CC_FS_BUCKET"]."\r\n");
         echo("\r\n".$_ENV["APP_HOME"]."\r\n");
         if (file_exists($path)) {
-            echo "\r\nhello\r\n";
+            echo "\r\nhello path exists\r\n";
         }
         else {
             echo "\r\noh no\r\n";
@@ -116,11 +116,12 @@ class SoftwareController extends AbstractController
         else {
             echo "\r\noh no package not exists\r\n";
         }
-        if (file_exists($_ENV["CC_FS_BUCKET"])) {
-            echo "\r\nhello\r\n";
+        if (file_exists($_ENV["APP_HOME"].$_ENV["CC_FS_BUCKET"])) {
+            echo ($_ENV["APP_HOME"] . $_ENV["CC_FS_BUCKET"]);
+            echo "\r\nhello fs exists\r\n";
         }
         else {
-            echo "\r\noh no\r\n";
+            echo "\r\noh no fs not exist\r\n";
         }
         if (file_exists($_ENV["APP_HOME"])) {
             echo "\r\nhello\r\n";
