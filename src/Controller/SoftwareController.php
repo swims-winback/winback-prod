@@ -127,7 +127,7 @@ class SoftwareController extends AbstractController
             'families' => $families,
             'searchform' => $searchform->createView(),
             //'uploaform' => $uploadform,
-            //'ressource_path' => $_ENV["RESSOURCE_PATH"],
+            'ressource_path' => $_ENV["RESSOURCE_PATH"],
         ]);
     }
 
