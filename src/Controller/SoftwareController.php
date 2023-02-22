@@ -100,6 +100,8 @@ class SoftwareController extends AbstractController
         echo("\r\n".$_ENV["APP_HOME"]."\r\n");
         if (file_exists($path)) {
             echo "\r\nhello path exists\r\n";
+            $file = scandir($path);
+            print_r ($file);
         }
         else {
             echo "\r\noh no\r\n";
