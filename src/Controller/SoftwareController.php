@@ -108,6 +108,9 @@ class SoftwareController extends AbstractController
             echo "\r\noh no\r\n";
         }
         if (file_exists($path."WLE256_12_2_v000.028.bin")) {
+            if ($path."WLE256_12_2_v000.028.bin"!="https://app-6ca0bd63-0c52-456b-8979-16f58874abb4.cleverapps.io/home/bas/app_6ca0bd63-0c52-456b-8979-16f58874abb4/public/Ressource/Ressource/WLE256_12_2_v000.028.bin") {
+                echo ("this is different");
+            }
             echo "\r\nhello bin exists\r\n";
         }
         else {
