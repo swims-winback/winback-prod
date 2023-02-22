@@ -30,33 +30,12 @@ class SoftwareController extends AbstractController
      */    
     public function index(SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository, Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
     {
-        /*
-        $families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
-        $searchform = $this->createForm(SearchSoftwareType::class);
-        $search = $searchform->handleRequest($request);
-        foreach ($families as $fam) {
-            $softwares = $fam->getSoftwares();
-            $soft = $softwares->get(0);
-            echo ($soft);
-            //$softwares = $deviceFamilyRepository->findby(array('name' => 'ASC'), array('softwares' => 'ASC'));
-            
-            $filteredCollection = $softwares->filter(function($element) {
-                return $element = "WLE256_11_2_v003.007.bin";
-            });
-            
-            //print_r($filteredCollection);
-        }
-        */
 
-        // je veux créer un families array avec les softwares sélectionnés en value
-
-        
         $software = null;
         $softwares = $softwareRepository->findAll();
         //$softwares = $softwareRepository->findBy(array(), array('name' => 'DESC'));
         $families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
         //$families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
-
         $searchform = $this->createForm(SearchSoftwareType::class);
         $search = $searchform->handleRequest($request);
         
@@ -73,9 +52,6 @@ class SoftwareController extends AbstractController
                 $family_name,
             );
             
-            //$families = $deviceFamilyRepository->findBy(array('softwares' => $software_name), array('name' => 'ASC'));
-            //$softwares = $softwareRepository->findBy(array('name' => $software_name), array('name' => 'ASC'));
-            
             if ($softwares == null) {
                 $this->addFlash(
                     'errorSoftware', 'Software '.$software_name.' not found, please try again !'
@@ -91,7 +67,7 @@ class SoftwareController extends AbstractController
         }
         
         //$uploadform = $this->addSoftware($request, $dbRequest, $doctrine, $fileUploader, $deviceFamilyRepository);
-        $this->addDirectorySoftware($dbRequest);
+        //$this->addDirectorySoftware($dbRequest);
         /*
         $path = RESSOURCE_PATH;
         $package_path = PACK_PATH;
@@ -151,7 +127,7 @@ class SoftwareController extends AbstractController
             'families' => $families,
             'searchform' => $searchform->createView(),
             //'uploaform' => $uploadform,
-            'ressource_path' => $_ENV["RESSOURCE_PATH"],
+            //'ressource_path' => $_ENV["RESSOURCE_PATH"],
         ]);
     }
 
