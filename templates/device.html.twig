@@ -116,7 +116,7 @@
                                             </td>
                                             {% if is_granted("ROLE_GOE")%}
                                             <td class="text-center">
-                                                <a download href="{{ asset('Ressource/Ressource/logs/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">
+                                                <a download href="{{ asset(ressource_path  ~ 'logs/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">
                                                 <i class="fa-solid fa-download"></i>
                                                 </a>
                                             </td>

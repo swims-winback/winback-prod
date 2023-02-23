@@ -71,6 +71,7 @@ class DeviceController extends AbstractController
             'form' => $form->createView(),
             'checkform' => $checkform->createView(),
             'versionform' => $versionform,
+            'ressource_path' => $_ENV["RESSOURCE_PATH"],
         ]);
 
     }
