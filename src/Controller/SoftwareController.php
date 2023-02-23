@@ -215,7 +215,8 @@ class SoftwareController extends AbstractController
                 $fileName = $form->get('file')->getData()->getClientOriginalName();
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
-                $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
+                //$originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
+                $originalFilename = "TESTTT_14_2_v000.000.bin";
                 $softwareVersion = substr($fileName, -11, 7);
                 $softwareName = $originalFilename;
                 $pattern2 = '/-/i';
