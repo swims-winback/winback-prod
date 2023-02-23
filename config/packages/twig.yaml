@@ -7,7 +7,7 @@ twig:
         '%kernel.project_dir%/public/css': styles
     globals:
         #ressource_directory: '%env(RESSOURCE_PATH)%'
-        ressource_directory: '%kernel.project_dir%/public/Ressource/'
+        #ressource_directory: '%kernel.project_dir%/public/Ressource/'
         #uploads_directory: '%kernel.project_dir%/Ressource/'
         uploads_directory: '%env(RESSOURCE_PATH)%'
 

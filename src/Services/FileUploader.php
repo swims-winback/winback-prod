@@ -26,8 +26,8 @@ class FileUploader
         $filename = $originalFilename.'.'."bin";
 
         try {
-            //$file->move($this->getTargetDirectory().$targetFolder, $filename);
-            echo($this->getTargetDirectory().$targetFolder);
+            $file->move($this->getTargetDirectory().$targetFolder, $filename);
+            //echo($this->getTargetDirectory().$targetFolder);
         } catch (FileException $e) {
             throw $e;
         }

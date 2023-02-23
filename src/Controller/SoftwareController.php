@@ -41,92 +41,29 @@ class SoftwareController extends AbstractController
         
         if($searchform->isSubmitted() && $searchform->isValid()) {
             // On recherche les annonces correspondant aux mots clefs
-            
             $software_name = $search->get('value')->getData();
             $family_name = $search->get('category')->getData();
-            
-            //echo ($software_name);
-            
             $softwares = $softwareRepository->search(
                 $software_name,
                 $family_name,
             );
-            
             if ($softwares == null) {
                 $this->addFlash(
                     'errorSoftware', 'Software '.$software_name.' not found, please try again !'
                 );
                 return $this->redirectToRoute('software');
             }
-            
             if ($family_name != null) {
                 $families = $deviceFamilyRepository->findFamilyByNameAll($family_name->getName());
-                //$families = $deviceFamilyRepository->findBy(array('name' => $family_name->getName()));
             }
-            //return $this->redirectToRoute('software');
         }
         
-        //$uploadform = $this->addSoftware($request, $dbRequest, $doctrine, $fileUploader, $deviceFamilyRepository);
-        //$this->addDirectorySoftware($dbRequest);
-        /*
-        $path = RESSOURCE_PATH;
-        $package_path = PACK_PATH;
-        echo("\r\n".$path."\r\n");
-        //echo("\r\n".$path."WLE256_12_2_v000.028.bin\r\n");
-        //echo("\r\n".$_ENV["CC_FS_BUCKET"]."\r\n");
-        //echo("\r\n".$_ENV["APP_HOME"]."\r\n");
-        if (file_exists($path)) {
-            echo "\r\nhello path exists\r\n";
-            $file = scandir($path);
-            print_r ($file);
-        }
-        else {
-            echo "\r\noh no\r\n";
-        }
-        if (file_exists($path."WLE256_12_2_v000.028.bin")) {
-            if ($path."WLE256_12_2_v000.028.bin"!="https://app-6ca0bd63-0c52-456b-8979-16f58874abb4.cleverapps.io/home/bas/app_6ca0bd63-0c52-456b-8979-16f58874abb4/public/Ressource/Ressource/WLE256_12_2_v000.028.bin") {
-                //"https://app-6ca0bd63-0c52-456b-8979-16f58874abb4.cleverapps.io/home/bas/app_6ca0bd63-0c52-456b-8979-16f58874abb4/public/Ressource/Ressource/WLE256_12_2_v000.028.bin"
-                //"/home/bas/app_6ca0bd63-0c52-456b-8979-16f58874abb4/public/Ressource/Ressource/WLE256_12_2_v000.028.bin"
-                echo ("this is different");
-                echo($path."WLE256_12_2_v000.028.bin");
-            }
-            echo "\r\nhello bin exists\r\n";
-        }
-        else {
-            echo "\r\noh no bin not exists\r\n";
-        }
-        if (file_exists($package_path)) {
-            echo "\r\nhello package exists\r\n";
-        }
-        else {
-            echo "\r\noh no package not exists\r\n";
-        }
-        if (file_exists($_ENV["APP_HOME"].$_ENV["CC_FS_BUCKET"])) {
-            //echo ($_ENV["APP_HOME"] . $_ENV["CC_FS_BUCKET"]);
-            echo "\r\nhello fs exists\r\n";
-        }
-        else {
-            echo ($_ENV["APP_HOME"] . $_ENV["CC_FS_BUCKET"]);
-            echo "\r\noh no fs not exist\r\n";
-        }
-        if (file_exists($_ENV["APP_HOME"])) {
-            echo ("\r\n".$_ENV["APP_HOME"]."\r\n");
-            echo "\r\nhello\r\n";
-        }
-        else {
-            echo "\r\noh no\r\n";
-        }
-        echo ("\r\n".$_ENV["CC_WEBROOT"]."\r\n");
-        //$file2 = scandir($_ENV["CC_WEBROOT"]);
-        //print_r ($file2);
-        */
+        $this->addDirectorySoftware($dbRequest);
         return $this->render('software.html.twig', [
             'softwares' => $softwares,
             'software' => $software,
-            //'form' => $form,
             'families' => $families,
             'searchform' => $searchform->createView(),
-            //'uploaform' => $uploadform,
             'ressource_path' => $_ENV["RESSOURCE_PATH"],
         ]);
     }
@@ -167,8 +104,8 @@ class SoftwareController extends AbstractController
     {
         // for each device type in device type array
         foreach (deviceType as $key => $deviceType) {
-            if (file_exists(PACK_PATH.$deviceType)) {
-                $arrayVersion[$deviceType] = array_diff(scandir(PACK_PATH.$deviceType), array('.'));
+            if (file_exists(REL_PACK_PATH.$deviceType)) {
+                $arrayVersion[$deviceType] = array_diff(scandir(REL_PACK_PATH.$deviceType), array('.'));
 
                 array_shift($arrayVersion[$deviceType]);
                 /*
@@ -189,8 +126,8 @@ class SoftwareController extends AbstractController
                             copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
                         }
                         */
-                        if (!file_exists(PACK_ARCH_PATH.$deviceType.$file)) {
-                            copy(PACK_PATH.$deviceType.$file, PACK_ARCH_PATH.$deviceType.$file);
+                        if (!file_exists(REL_PACK_ARCH_PATH.$deviceType.$file)) {
+                            copy(REL_PACK_PATH.$deviceType.$file, REL_PACK_ARCH_PATH.$deviceType.$file);
                         }
                         $this->initSoftwareInDB($name=$file, $devType=$deviceTypeId, $version, $date=date("Y-m-d | H:i:s"), $request);
                     }
@@ -215,8 +152,8 @@ class SoftwareController extends AbstractController
                 $fileName = $form->get('file')->getData()->getClientOriginalName();
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
-                //$originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
-                $originalFilename = "TESTTT_14_2_v000.000.bin";
+                $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
+                //$originalFilename = "TESTTT_14_2_v000.000.bin";
                 $softwareVersion = substr($fileName, -11, 7);
                 $softwareName = $originalFilename;
                 $pattern2 = '/-/i';
@@ -291,25 +228,27 @@ class SoftwareController extends AbstractController
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
         */
-        if (file_exists($_ENV["PACK_PATH"].'/'.$deviceType."/".$name)) {
-            unlink($_ENV["PACK_PATH"].'/'.$deviceType."/".$name);
+        if (file_exists($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name)) {
+            unlink($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name);
         }
         /*
         if (file_exists($this->getParameter('archives_directory').'/'.$deviceType."/".$name)) {
             unlink($this->getParameter('archives_directory').'/'.$deviceType."/".$name);
         }
         */
-        if (file_exists($_ENV["PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
-            unlink($_ENV["PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
+        if (file_exists($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
+            unlink($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
         }
         /*
         if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
             unlink($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name);
         }
         */
+        /*
         if (file_exists($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name)) {
             unlink($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name);
         }
+        */
         $em = $doctrine->getManager();
         $deviceFamily->removeSoftware($soft);
         $em->remove($software);
