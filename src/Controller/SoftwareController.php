@@ -104,8 +104,8 @@ class SoftwareController extends AbstractController
     {
         // for each device type in device type array
         foreach (deviceType as $key => $deviceType) {
-            if (file_exists(REL_PACK_PATH.$deviceType)) {
-                $arrayVersion[$deviceType] = array_diff(scandir(REL_PACK_PATH.$deviceType), array('.'));
+            if (file_exists($_ENV['REL_PACK_PATH'].$deviceType)) {
+                $arrayVersion[$deviceType] = array_diff(scandir($_ENV['REL_PACK_PATH'].$deviceType), array('.'));
 
                 array_shift($arrayVersion[$deviceType]);
                 /*
@@ -126,8 +126,8 @@ class SoftwareController extends AbstractController
                             copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
                         }
                         */
-                        if (!file_exists(REL_PACK_ARCH_PATH.$deviceType.$file)) {
-                            copy(REL_PACK_PATH.$deviceType.$file, REL_PACK_ARCH_PATH.$deviceType.$file);
+                        if (!file_exists($_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file)) {
+                            copy($_ENV['REL_PACK_PATH'].$deviceType.$file, $_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file);
                         }
                         $this->initSoftwareInDB($name=$file, $devType=$deviceTypeId, $version, $date=date("Y-m-d | H:i:s"), $request);
                     }
