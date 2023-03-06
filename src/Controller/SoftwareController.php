@@ -152,8 +152,10 @@ class SoftwareController extends AbstractController
                 $fileName = $form->get('file')->getData()->getClientOriginalName();
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
+                $targetDirectory = $fileUploader->getTargetDirectory();
+                print_r($targetDirectory);
+                /*
                 $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
-                //$originalFilename = "TESTTT_14_2_v000.000.bin";
                 $softwareVersion = substr($fileName, -11, 7);
                 $softwareName = $originalFilename;
                 $pattern2 = '/-/i';
@@ -171,7 +173,7 @@ class SoftwareController extends AbstractController
                 $user = $this->getUser();
                 $logger->info($user." has uploaded ".$fileName);
                 $this->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
-                
+                */
             }
             $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
             //return $this->redirectToRoute('software');
