@@ -24,7 +24,7 @@ class FileUploader
         //var_dump($safeFilename);
         //$filename = $safeFilename.'.'.$file->guessExtension();
         $filename = $originalFilename.'.'."bin";
-        print_r($this->getTargetDirectory());
+        //print_r($this->getTargetDirectory());
 
         try {
             //print_r($this->getTargetDirectory());
