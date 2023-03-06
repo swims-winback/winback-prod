@@ -28,7 +28,7 @@ class FileUploader
 
         try {
             //print_r($this->getTargetDirectory());
-            //$file->move($this->getTargetDirectory().$targetFolder, $filename);
+            $file->move($this->getTargetDirectory().$targetFolder, $filename);
             //echo($this->getTargetDirectory().$targetFolder);
         } catch (FileException $e) {
             throw $e;
