@@ -172,12 +172,12 @@ class SoftwareController extends AbstractController
                 
                 $user = $this->getUser();
                 $logger->info($user." has uploaded ".$fileName);
-                /*
+                
                 $this->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
-                */
+                
             }
             $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
-            //return $this->redirectToRoute('software');
+            return $this->redirectToRoute('software');
         }
         return $this->renderForm('software/add.html.twig', [
             'form' => $form,
