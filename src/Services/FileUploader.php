@@ -24,9 +24,11 @@ class FileUploader
         //var_dump($safeFilename);
         //$filename = $safeFilename.'.'.$file->guessExtension();
         $filename = $originalFilename.'.'."bin";
+        print_r($this->getTargetDirectory());
 
         try {
-            $file->move($this->getTargetDirectory().$targetFolder, $filename);
+            //print_r($this->getTargetDirectory());
+            //$file->move($this->getTargetDirectory().$targetFolder, $filename);
             //echo($this->getTargetDirectory().$targetFolder);
         } catch (FileException $e) {
             throw $e;
