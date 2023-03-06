@@ -174,7 +174,7 @@ class SoftwareController extends AbstractController
                 
             }
             $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
-            return $this->redirectToRoute('software');
+            //return $this->redirectToRoute('software');
         }
         return $this->renderForm('software/add.html.twig', [
             'form' => $form,
