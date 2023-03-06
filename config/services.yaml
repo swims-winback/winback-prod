@@ -7,9 +7,8 @@
 parameters:
      app.supported_locales: 'en|fr|ko'
      statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
-     #uploads_directory: '%kernel.project_dir%/public/Ressource/'
      uploads_directory: '%env(UPLOAD_PATH)%'
-     #uploads_directory: '%kernel.project_dir%/Ressource/'
+     uploads_directory: '%env(APP_HOME).env(CC_WEBROOT).env(RESSOURCE_PATH)%'
      #packages_directory: '%kernel.project_dir%/src/Ressource/package'
      class_directory: '%kernel.project_dir%/src/Class'
     # softwares_directory: '%kernel.project_dir%/public/Ressource/package'
