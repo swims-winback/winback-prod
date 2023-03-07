@@ -233,7 +233,7 @@ class SoftwareController extends AbstractController
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
         */
-        print_r($_ENV["REL_PACK_PATH"]);
+        //print_r($_ENV["REL_PACK_PATH"]);
         if (file_exists($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name);
         }
@@ -264,7 +264,7 @@ class SoftwareController extends AbstractController
         $logger->info($user." has deleted ".$name);
         $this->addFlash('message', 'Software '.$name.' deleted with success !');
         //return $this->redirectToRoute('software');
-        return new Response("true");
+        return new Response($_ENV["REL_PACK_PATH"]);
     }
 
     /**
