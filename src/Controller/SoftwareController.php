@@ -264,7 +264,7 @@ class SoftwareController extends AbstractController
         $logger->info($user." has deleted ".$name);
         $this->addFlash('message', 'Software '.$name.' deleted with success !');
         //return $this->redirectToRoute('software');
-        return new Response(REL_PACK_PATH);
+        return new Response($_ENV["REL_PACK_PATH"]);
     }
 
     /**
