@@ -263,7 +263,7 @@ class SoftwareController extends AbstractController
         $user = $this->getUser();
         $logger->info($user." has deleted ".$name);
         $this->addFlash('message', 'Software '.$name.' deleted with success !');
-        return $this->redirectToRoute('software');
+        //return $this->redirectToRoute('software');
     }
 
     /**
