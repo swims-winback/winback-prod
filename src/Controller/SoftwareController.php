@@ -245,6 +245,12 @@ class SoftwareController extends AbstractController
         if (file_exists($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
         }
+        if (file_exists($this->getParameter('uploads_directory').'/'.'packages/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'/'.'packages/'.$deviceType."/".$name);
+        }
+        if (file_exists($this->getParameter('uploads_directory').'/'.'archives/'.'packages/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'/'.'archives/'.'packages/'.$deviceType."/".$name);
+        }
         /*
         if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
             unlink($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name);
