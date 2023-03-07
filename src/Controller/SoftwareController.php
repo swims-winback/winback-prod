@@ -83,6 +83,7 @@ class SoftwareController extends AbstractController
         return false;
     }
 
+    /*
     function updateNewSoftware($name, $devType, $version, $date){
         $req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".SOFT_VERSION."= '".$version."',".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
         return $req;
@@ -94,6 +95,7 @@ class SoftwareController extends AbstractController
         
         return false;
     }
+    */
 
     /**
      * Check Directory is copied in db
@@ -173,7 +175,7 @@ class SoftwareController extends AbstractController
                 $user = $this->getUser();
                 $logger->info($user." has uploaded ".$fileName);
                 
-                $this->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
+                $dbRequest->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"));
                 
             }
             $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');

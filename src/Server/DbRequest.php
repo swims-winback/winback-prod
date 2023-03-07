@@ -20,10 +20,11 @@ class DbRequest {
      */
     public function dbConnect(){
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $connexion = mysqli_connect(HOSTNAME, ADMIN, PWD, DB);
+        $connexion = mysqli_connect(HOSTNAME, ADMIN, PWD, DB, DB_PORT);
         if ($connexion -> connect_errno) {
             echo "Failed to connect to MySQL: " . $connexion -> connect_error;
-            exit();
+            //exit();
+            return "error";
         }
         else {
             return $connexion;
@@ -210,13 +211,24 @@ class DbRequest {
     
     function setDeviceInfo(string $sn, string $vers, int $devType, string $ipAddr, string $logFile)
     {
+        $utils = new Utils();
         $whereCond = SN." = '".$sn."'";
         $geography = $this->getLocationInfoByIp($ipAddr); //get location by ip
+        /*
+        $geography = [];
+        $geography["country"] = "";
+        $geography["city"] = "Isle-d'Abeau";
+        */
+        $geography["country"] = $utils->clean($geography["country"]);
+        $geography["city"] = $utils->clean($geography["city"]);
+        // treat punctuation in name
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
+        print_r($req);
         if($res = $this->sendRq($req)){
+            
             if($row = mysqli_fetch_assoc($res)){
                 
-                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."',".IP_ADDR." = '".$ipAddr."',".COUNTRY." = '".$geography['country']."'";
+                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."',".IP_ADDR." = '".$ipAddr."',".COUNTRY." = '".$geography['country']."',".CITY." = '".$geography['city']."'";
                 if(!empty($whereCond)){
                     $req .= " WHERE ".$whereCond;
                 }
@@ -627,5 +639,17 @@ class DbRequest {
         }
 
         return 0;
+    }
+
+    function updateNewSoftware($name, $devType, $version, $date){
+        $req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".SOFT_VERSION."= '".$version."',".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
+        return $req;
+    }
+	
+    function updateSoftwareInDB($name, $devType, $version, $date){
+        $req = $this->updateNewSoftware($name, $devType, $version, $date);
+        $res = $this->sendRq($req);
+        
+        return false;
     }
 }
