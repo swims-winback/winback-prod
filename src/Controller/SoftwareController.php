@@ -229,41 +229,21 @@ class SoftwareController extends AbstractController
         $name = $soft->getName();
         $deviceType = $soft->getDeviceFamily()->getName();
         /*
-        if (file_exists($this->getParameter('softwares_directory').'/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
-        }
-        */
-        //print_r($_ENV["REL_PACK_PATH"]);
         if (file_exists($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name);
         }
-        /*
-        if (file_exists($this->getParameter('archives_directory').'/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('archives_directory').'/'.$deviceType."/".$name);
-        }
-        */
+
         if (file_exists($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
         }
-        if (file_exists($this->getParameter('uploads_directory'))) {
-            print_r($this->getParameter('uploads_directory'));
-        }
+        */
         if (file_exists($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name)) {
             unlink($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name);
         }
         if (file_exists($this->getParameter('uploads_directory').'archive/'.'package/'.$deviceType."/".$name)) {
             unlink($this->getParameter('uploads_directory').'archive/'.'package/'.$deviceType."/".$name);
         }
-        /*
-        if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name);
-        }
-        */
-        /*
-        if (file_exists($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name)) {
-            unlink($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name);
-        }
-        */
+
         $em = $doctrine->getManager();
         $deviceFamily->removeSoftware($soft);
         $em->remove($software);
@@ -272,8 +252,7 @@ class SoftwareController extends AbstractController
         $user = $this->getUser();
         $logger->info($user." has deleted ".$name);
         $this->addFlash('message', 'Software '.$name.' deleted with success !');
-        //return $this->redirectToRoute('software');
-        return new Response($_ENV["REL_PACK_PATH"]);
+        return $this->redirectToRoute('software');
     }
 
     /**
