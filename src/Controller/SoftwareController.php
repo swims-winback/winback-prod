@@ -233,6 +233,7 @@ class SoftwareController extends AbstractController
             unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
         }
         */
+        print_r($_ENV["REL_PACK_PATH"]);
         if (file_exists($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name);
         }
