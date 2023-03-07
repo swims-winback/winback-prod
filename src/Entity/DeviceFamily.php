@@ -40,6 +40,11 @@ class DeviceFamily
      */
     private $softwares;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    #private ?Software $actualVersion = null;
+    private ?Software $actualVersionName = null;
+
     /*
     #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class)]
     private Collection $softwares;
@@ -207,4 +212,17 @@ class DeviceFamily
         return $this;
     }
     */
+
+    public function getActualVersion(): ?Software
+    {
+        #return $this->actualVersion;
+        return $this->actualVersionName;
+    }
+
+    public function setActualVersion(Software $actualVersionName): self
+    {
+        #$this->actualVersion = $actualVersion;
+        $this->actualVersionName = $actualVersionName;
+        return $this;
+    }
 }
