@@ -175,7 +175,6 @@ if (!defined('CLASS_PATH')) define("CLASS_PATH", ROOT_DIR."/src/Class/");
 if (!defined('RESSOURCE_PATH')) define('RESSOURCE_PATH', $_ENV['RESSOURCE_PATH']);
 //if(!defined('ABS_RESSOURCE_PATH')) define ('ABS_RESSOURCE_PATH', $_ENV['ABS_RESSOURCE_PATH']);
 //if(!defined('ABS_RESSOURCE_PATH')) define ('ABS_RESSOURCE_PATH', ROOT_DIR."/public/Ressource/");
-#if (!defined('UPLOAD_PATH')) define("UPLOAD_PATH", $_ENV['UPLOAD_PATH']);
 if (!defined('CONFIG_PATH')) define("CONFIG_PATH", ROOT_DIR."/Config");
 
 if (!defined('LOGS_FILE')) define("LOGS_FILE", 'wintra.log');

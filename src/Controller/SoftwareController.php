@@ -110,11 +110,6 @@ class SoftwareController extends AbstractController
                 $arrayVersion[$deviceType] = array_diff(scandir($_ENV['REL_PACK_PATH'].$deviceType), array('.'));
 
                 array_shift($arrayVersion[$deviceType]);
-                /*
-                if (!file_exists(UPLOAD_PATH."softwares/".$deviceType)) {
-                    mkdir(UPLOAD_PATH."softwares/".$deviceType);
-                }
-                */
                 //if record not in db, add record
                 // for each file in device type folder, create record in db if not exists
                 foreach ($arrayVersion[$deviceType] as $key => $file) {
@@ -123,11 +118,6 @@ class SoftwareController extends AbstractController
                         $version = substr($fileArray[1], -11, 7);
                         $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], ID);
                         //$deviceTypeName = str_replace('/', '', $deviceType);
-                        /*
-                        if (!file_exists(UPLOAD_PATH."softwares/".$deviceType.$file)) {
-                            copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
-                        }
-                        */
                         if (!file_exists($_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file)) {
                             copy($_ENV['REL_PACK_PATH'].$deviceType.$file, $_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file);
                         }
