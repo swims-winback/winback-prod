@@ -248,11 +248,11 @@ class SoftwareController extends AbstractController
         if (file_exists($this->getParameter('uploads_directory'))) {
             print_r($this->getParameter('uploads_directory'));
         }
-        if (file_exists($this->getParameter('uploads_directory').'/'.'packages/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('uploads_directory').'/'.'packages/'.$deviceType."/".$name);
+        if (file_exists($this->getParameter('uploads_directory').'packages/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'packages/'.$deviceType."/".$name);
         }
-        if (file_exists($this->getParameter('uploads_directory').'/'.'archives/'.'packages/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('uploads_directory').'/'.'archives/'.'packages/'.$deviceType."/".$name);
+        if (file_exists($this->getParameter('uploads_directory').'archives/'.'packages/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'archives/'.'packages/'.$deviceType."/".$name);
         }
         /*
         if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
