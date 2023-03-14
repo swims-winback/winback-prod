@@ -500,26 +500,21 @@ class DbRequest {
     {
         
         $whereCond = NUMBER_ID."='$deviceType'";
-        $req = $this->select('actual_version_id', DEVICE_FAMILY_TABLE, $whereCond);
+        $req = $this->select('actual_version', DEVICE_FAMILY_TABLE, $whereCond);
         //$req = $this->select('actual_version_name', DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
-                //return $row['actual_version_id'];
-                /*
-                $actual_version_id = $row['actual_version_id'];
-                $whereCond2 = "id='$actual_version_id'";
-                */
-                $actual_version_id = $row['actual_version_id'];
-                $whereCond2 = "name='$actual_version_id'";
+                $actual_version = $row['actual_version'];
+                $whereCond2 = "name='$actual_version'";
                 $req2 = $this->select('name, version', SOFTWARE_TABLE, $whereCond2);
-                print_r($req2);
+                //print_r($req2);
                 //TODO mode de selection mauvais: si un soft est supprimé, son index est changé donc plutôt selection par device type et name, ou name directement
                 $res2 = $this->sendRq($req2);
                 if ($row2 = mysqli_fetch_assoc($res2)) {
                     //print_r($row2['version']);
-                    print_r($row2);
-                    echo ("hello");
+                    //print_r($row2);
+                    //echo ("hello");
                     return $row2;
                 }
             }
