@@ -20,15 +20,12 @@ class FileUploader
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        //var_dump($originalFilename);
-        //var_dump($safeFilename);
-        //$filename = $safeFilename.'.'.$file->guessExtension();
         $filename = $originalFilename.'.'."bin";
 
         try {
             $file->move($this->getTargetDirectory().$targetFolder, $filename);
-            //echo($this->getTargetDirectory().$targetFolder);
         } catch (FileException $e) {
+            echo "file error";
             throw $e;
         }
 

@@ -30,11 +30,21 @@ class SoftwareController extends AbstractController
      */    
     public function index(SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository, Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
     {
-
         $software = null;
         $softwares = $softwareRepository->findAll();
         //$softwares = $softwareRepository->findBy(array(), array('name' => 'DESC'));
         $families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
+        
+        /*
+        foreach ($families as $fam) {
+            print_r($fam->getName());
+            $softId = $fam->getActualVersion();
+            echo ("\r\n");
+            print_r($softId);
+            $softByFam = $softwareRepository->findOneBy(array('name'=> $softId));
+            print_r($softByFam->getName());
+        }
+        */
         //$families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
         $searchform = $this->createForm(SearchSoftwareType::class);
         $search = $searchform->handleRequest($request);
@@ -83,6 +93,7 @@ class SoftwareController extends AbstractController
         return false;
     }
 
+    /*
     function updateNewSoftware($name, $devType, $version, $date){
         $req = "INSERT INTO ".SOFTWARE_TABLE." (".NAME.", ".FAMILY_TYPE.", ".SOFT_VERSION.", ".SOFT_CREATED_AT.") VALUES ('".$name."', '".$devType."', '".$version."', '".$date."') ON DUPLICATE KEY UPDATE ".SOFT_VERSION."= '".$version."',".UPDATED_AT."= '".date("Y-m-d | H:i:s")."'";
         return $req;
@@ -94,6 +105,7 @@ class SoftwareController extends AbstractController
         
         return false;
     }
+    */
 
     /**
      * Check Directory is copied in db
@@ -104,15 +116,10 @@ class SoftwareController extends AbstractController
     {
         // for each device type in device type array
         foreach (deviceType as $key => $deviceType) {
-            if (file_exists(REL_PACK_PATH.$deviceType)) {
-                $arrayVersion[$deviceType] = array_diff(scandir(REL_PACK_PATH.$deviceType), array('.'));
+            if (file_exists($_ENV['REL_PACK_PATH'].$deviceType)) {
+                $arrayVersion[$deviceType] = array_diff(scandir($_ENV['REL_PACK_PATH'].$deviceType), array('.'));
 
                 array_shift($arrayVersion[$deviceType]);
-                /*
-                if (!file_exists(UPLOAD_PATH."softwares/".$deviceType)) {
-                    mkdir(UPLOAD_PATH."softwares/".$deviceType);
-                }
-                */
                 //if record not in db, add record
                 // for each file in device type folder, create record in db if not exists
                 foreach ($arrayVersion[$deviceType] as $key => $file) {
@@ -121,13 +128,8 @@ class SoftwareController extends AbstractController
                         $version = substr($fileArray[1], -11, 7);
                         $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], ID);
                         //$deviceTypeName = str_replace('/', '', $deviceType);
-                        /*
-                        if (!file_exists(UPLOAD_PATH."softwares/".$deviceType.$file)) {
-                            copy(PACK_PATH.$deviceType.$file, UPLOAD_PATH."softwares/".$deviceType.$file);
-                        }
-                        */
-                        if (!file_exists(REL_PACK_ARCH_PATH.$deviceType.$file)) {
-                            copy(REL_PACK_PATH.$deviceType.$file, REL_PACK_ARCH_PATH.$deviceType.$file);
+                        if (!file_exists($_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file)) {
+                            copy($_ENV['REL_PACK_PATH'].$deviceType.$file, $_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file);
                         }
                         $this->initSoftwareInDB($name=$file, $devType=$deviceTypeId, $version, $date=date("Y-m-d | H:i:s"), $request);
                     }
@@ -152,8 +154,10 @@ class SoftwareController extends AbstractController
                 $fileName = $form->get('file')->getData()->getClientOriginalName();
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
+                $targetDirectory = $fileUploader->getTargetDirectory();
+                print_r($targetDirectory);
+                
                 $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
-                //$originalFilename = "TESTTT_14_2_v000.000.bin";
                 $softwareVersion = substr($fileName, -11, 7);
                 $softwareName = $originalFilename;
                 $pattern2 = '/-/i';
@@ -170,7 +174,8 @@ class SoftwareController extends AbstractController
                 
                 $user = $this->getUser();
                 $logger->info($user." has uploaded ".$fileName);
-                $this->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"), $dbRequest);
+                
+                $dbRequest->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"));
                 
             }
             $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
@@ -224,31 +229,21 @@ class SoftwareController extends AbstractController
         $name = $soft->getName();
         $deviceType = $soft->getDeviceFamily()->getName();
         /*
-        if (file_exists($this->getParameter('softwares_directory').'/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('softwares_directory').'/'.$deviceType."/".$name);
-        }
-        */
         if (file_exists($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name);
         }
-        /*
-        if (file_exists($this->getParameter('archives_directory').'/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('archives_directory').'/'.$deviceType."/".$name);
-        }
-        */
+
         if (file_exists($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
             unlink($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
         }
-        /*
-        if (file_exists($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name)) {
-            unlink($this->getParameter('uploads_directory').'/'.'softwares/'.$deviceType."/".$name);
-        }
         */
-        /*
-        if (file_exists($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name)) {
-            unlink($_ENV["UPLOAD_PATH"].'/'.'softwares/'.$deviceType."/".$name);
+        if (file_exists($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name);
         }
-        */
+        if (file_exists($this->getParameter('uploads_directory').'archive/'.'package/'.$deviceType."/".$name)) {
+            unlink($this->getParameter('uploads_directory').'archive/'.'package/'.$deviceType."/".$name);
+        }
+
         $em = $doctrine->getManager();
         $deviceFamily->removeSoftware($soft);
         $em->remove($software);

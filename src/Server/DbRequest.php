@@ -218,7 +218,9 @@ class DbRequest {
         $geography["city"] = $utils->clean($geography["city"]);
         // treat punctuation in name
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
+        print_r($req);
         if($res = $this->sendRq($req)){
+            
             if($row = mysqli_fetch_assoc($res)){
                 
                 $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."',".IP_ADDR." = '".$ipAddr."',".COUNTRY." = '".$geography['country']."',".CITY." = '".$geography['city']."'";

@@ -171,8 +171,7 @@ if (!defined('ROOT_DIR')) define( 'ROOT_DIR', dirname(__FILE__, 2) );
 if (!defined('CLASS_PATH')) define("CLASS_PATH", ROOT_DIR."/src/Class/");
 //if (!defined('RESSOURCE_PATH')) define("RESSOURCE_PATH", ROOT_DIR."/public/Ressource/");
 if (!defined('RESSOURCE_PATH')) define('RESSOURCE_PATH', $_ENV['RESSOURCE_PATH']);
-//if(!defined('ABS_RESSOURCE_PATH')) define ('ABS_RESSOURCE_PATH', $_ENV['ABS_RESSOURCE_PATH']);
-//if (!defined('UPLOAD_PATH')) define("UPLOAD_PATH", $_ENV['UPLOAD_PATH']);
+if (!defined('UPLOAD_PATH')) define("UPLOAD_PATH", $_ENV['UPLOAD_PATH']);
 if (!defined('CONFIG_PATH')) define("CONFIG_PATH", ROOT_DIR."/Config");
 
 if (!defined('LOGS_FILE')) define("LOGS_FILE", 'wintra.log');
@@ -210,6 +209,7 @@ if (!defined('FW_OCTETS')) define("FW_OCTETS", 256);
 if (!defined('stFILENAME')) define("stFILENAME", "WLE256");
 if (!defined('extFILENAME')) define("extFILENAME", ".bin");
 #define('PACK_ARCH_PATH', ARCH_PATH."package/");
+if (!defined('LOG_PATH')) define("LOG_PATH", RESSOURCE_PATH."logs/");
 
 
 /* ================================ */
@@ -223,7 +223,7 @@ if (!defined('PWD')) define("PWD", $_ENV['PWD']);
 if (!defined('HOSTNAME')) define('HOSTNAME', $_ENV['HOSTNAME']);
 if (!defined('DB_PORT')) define('DB_PORT', $_ENV['DB_PORT']);
 /*
-if (!defined('DB')) define('DB', 'winback');
+if (!defined('DB')) define('DB', 'winback_test');
 if (!defined('ADMIN')) define('ADMIN', "root");
 if (!defined('PWD')) define("PWD", "");
 if (!defined('HOSTNAME')) define('HOSTNAME', 'localhost');
