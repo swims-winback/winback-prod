@@ -47,10 +47,10 @@ class DeviceFamily
     */
 
     //TODO
-    /*
-    #[ORM\Column(type: 'integer', nullable: true, unique: true)]
-    private $actualVersionId;
-    */
+    
+    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
+    private $actualVersion;
+    
     /*
     #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class)]
     private Collection $softwares;
@@ -233,16 +233,16 @@ class DeviceFamily
     */
 
     //TODO
-    /*
-    public function getActualVersion(): ?int
+    
+    public function getActualVersion(): ?string
     {
-        return $this->actualVersionId;
+        return $this->actualVersion;
     }
 
-    public function setActualVersion($actualVersionId): self
+    public function setActualVersion($actualVersion): self
     {
-        $this->actualVersionId = $actualVersionId;
+        $this->actualVersion = $actualVersion;
         return $this;
     }
-    */
+    
 }
