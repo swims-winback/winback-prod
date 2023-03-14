@@ -68,18 +68,30 @@ for(let e of softTablesClick){
 }
 
 function addUpdateComment(id, comment) {
+  $.ajax({
+    type:"POST",
+    cache:false,
+    url: `/addUpdateComment/${id}/${comment}`,
+    //data: {id:id, comment:comment},
+    success: function () {
+      console.log("comment added");
+      console.log(comment);
+    }
+  });
+}
 
-    $.ajax({
-      type:"POST",
-      cache:false,
-      url: `/addUpdateComment/${id}/${comment}`,
-      //data: {id:id, comment:comment},
-      success: function () {
-        console.log("comment added");
-        console.log(comment);
-      }
-    });
-  }
+function addActualVersion(id, version) {
+  $.ajax({
+    type:"POST",
+    cache:false,
+    url: `/addActualVersion/${id}/${version}/`,
+    //data: {id:id, comment:comment},
+    success: function () {
+      console.log("Actual version updated");
+      console.log(version);
+    }
+  });
+}
 
 let updateCommentButtons = document.getElementsByClassName("comment_update_button");
 let updateCommentInputs = document.getElementsByClassName("comment_update_input");
@@ -93,5 +105,21 @@ for (let element of updateCommentButtons) {
       }
       console.log(comment)
       addUpdateComment(id, comment);
+    };
+}
+  
+let updateActualVersionButtons = document.getElementsByClassName("actualVersion_update_button");
+let updateActualVersionInputs = document.getElementsByClassName("actualVersion_update_input");
+
+for (let element of updateActualVersionButtons) {
+    element.onclick = function() {
+      let id = $(element).data("id");
+      let version = element.previousElementSibling.value;
+      if (version == "") {
+        version = null
+      }
+      console.log(version)
+      addActualVersion(id, version);
+      window.location.reload();
     };
   }

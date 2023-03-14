@@ -45,7 +45,7 @@ class SoftwareController extends AbstractController
             print_r($softByFam->getName());
         }
         */
-        
+
         //$families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
         $searchform = $this->createForm(SearchSoftwareType::class);
         $search = $searchform->handleRequest($request);
