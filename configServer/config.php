@@ -152,17 +152,14 @@ define('FC', 252);
 define('DE', 222);
 */
 
-
+/*
 if (!defined('cmdByte')) define('cmdByte', array('FE' => 254, 'FD' => 253,'FC' => 252,'FA' => 250,'F9' => 249,'F8' => 248,'F7' => 247,'F6' => 246,'F5' => 245,'F4' => 244,'F3' => 243,'F2' => 242,'DE' => 222,'DD' => 221,'DC' => 220,'DB' => 219,'DA' => 218,'D9' => 217,'D8' => 216,'CF' => 207,'CE' => 206, 'CD' => 205, 'CC' => 204, 'CB' => 203));
 if (!defined('cmdSoft')) define('cmdSoft', array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
 if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
-
-/*
-PROD
+*/
 if (!defined('cmdByte')) define('cmdByte', array('FE' => 254, 'FD' => 253,'FC' => 252,'FA' => 250,'F9' => 249,'F8' => 248,'F7' => 247,'F6' => 246,'F5' => 245,'F4' => 244,'F3' => 243,'F2' => 242,'DE' => 222,'DD' => 221,'DC' => 220,'DB' => 219,'DA' => 218,'D9' => 217,'D8' => 216,'CF' => 207,'CE' => 206, 'CD' => 205, 'CC' => 204, 'CB' => 203));
 if (!defined('cmdSoft')) define('cmdSoft', array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD'));
 if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
-*/
 /* Define PATH */
 
 //define( 'ROOT_DIR', dirname(__FILE__, 2) );
@@ -173,18 +170,29 @@ if (!defined('ROOT_DIR')) define( 'ROOT_DIR', dirname(__FILE__, 2) );
 if (!defined('CLASS_PATH')) define("CLASS_PATH", ROOT_DIR."/src/Class/");
 //if (!defined('RESSOURCE_PATH')) define("RESSOURCE_PATH", ROOT_DIR."/public/Ressource/");
 if (!defined('RESSOURCE_PATH')) define('RESSOURCE_PATH', $_ENV['RESSOURCE_PATH']);
-//echo (RESSOURCE_PATH);
-if (!defined('UPLOAD_PATH')) define("UPLOAD_PATH", $_ENV['UPLOAD_PATH']);
+//if(!defined('ABS_RESSOURCE_PATH')) define ('ABS_RESSOURCE_PATH', $_ENV['ABS_RESSOURCE_PATH']);
+//if (!defined('UPLOAD_PATH')) define("UPLOAD_PATH", $_ENV['UPLOAD_PATH']);
 if (!defined('CONFIG_PATH')) define("CONFIG_PATH", ROOT_DIR."/Config");
 
 if (!defined('LOGS_FILE')) define("LOGS_FILE", 'wintra.log');
 if (!defined('GATELOG_FILE')) define("GATELOG_FILE", 'serverGate.log');
 if (!defined('PACK_PATH')) define("PACK_PATH", $_ENV['PACK_PATH']);
+//if (!defined('ABS_PACK_PATH')) define("ABS_PACK_PATH", $_ENV['ABS_PACK_PATH']);
+if (!defined('REL_PACK_PATH')) define("REL_PACK_PATH", $_ENV['REL_PACK_PATH']);
 if (!defined('ARCH_PATH')) define("ARCH_PATH", $_ENV['ARCH_PATH']);
+//if (!defined('ABS_ARCH_PATH')) define("ABS_ARCH_PATH", $_ENV['ABS_ARCH_PATH']);
+if (!defined('REL_ARCH_PATH')) define("REL_ARCH_PATH", $_ENV['REL_ARCH_PATH']);
 if (!defined('PACK_ARCH_PATH')) define("PACK_ARCH_PATH", $_ENV['PACK_ARCH_PATH']);
-if (!defined('PACK_FACTORYPATH')) define("PACK_FACTORYPATH", RESSOURCE_PATH.'factory/');
-if (!defined('LIBRARY_PATH')) define('LIBRARY_PATH', RESSOURCE_PATH.'library/');
-if (!defined('PACK_SAVE_FACTORYPATH')) define("PACK_SAVE_FACTORYPATH", ARCH_PATH.'factory/');
+if (!defined('REL_PACK_ARCH_PATH')) define("REL_PACK_ARCH_PATH", $_ENV['REL_PACK_ARCH_PATH']);
+//if (!defined('PACK_FACTORYPATH')) define("PACK_FACTORYPATH", RESSOURCE_PATH.'factory/');
+
+#if (!defined('LIBRARY_PATH')) define('LIBRARY_PATH', $_ENV['LIBRARY_PATH']);
+if (!defined('PUB_PATH')) define("PUB_PATH", $_ENV['PUB_PATH']);
+if (!defined('LIB_PATH')) define("LIB_PATH", $_ENV['LIB_PATH']);
+if (!defined('PROTO_PATH')) define("PROTO_PATH", $_ENV['PROTO_PATH']);
+if (!defined('LOG_PATH')) define("LOG_PATH", $_ENV['LOG_PATH']);
+
+//if (!defined('PACK_SAVE_FACTORYPATH')) define("PACK_SAVE_FACTORYPATH", ARCH_PATH.'factory/');
 if (!defined('deviceType')) define('deviceType', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
 if (!defined('DEVICE_TYPE_ARRAY')) define('DEVICE_TYPE_ARRAY', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
 if (!defined('deviceTypeName')) define('deviceTypeName', array(10 => 'RSHOCK', 11 => 'CRYOBACK4', 12 => 'BACK4', 13 => 'BIOBACK', 14 => 'BACK3'));
@@ -192,9 +200,6 @@ if (!defined('deviceTypeArray')) define('deviceTypeArray', array(10 => 'RSHOCK/'
 if (!defined('deviceTypeId')) define('deviceTypeId', array(10 => 1, 12 => 3, 11 => 4, 14 => 5, 13 => 6)); //Ids corresponding to Ids automatically created in SQLdb
 if (!defined('deviceIdType')) define('deviceIdType', array(1 => 10, 3 => 12, 4 => 11, 5 => 14, 6 => 13));
 if (!defined('deviceId')) define('deviceId', array('RSHOCK/' => 10, 'CRYOBACK4/' => 11, 'BACK4/' => 12 , 'BIOBACK/' => 13, 'BACK3/' => 14));
-if (!defined('PUB_PATH')) define("PUB_PATH", RESSOURCE_PATH."pubs/");
-if (!defined('LIB_PATH')) define("LIB_PATH", RESSOURCE_PATH."library/");
-if (!defined('PROTO_PATH')) define("PROTO_PATH", RESSOURCE_PATH."protocols/");
 
 /*
  *      DEFINE File Info
@@ -204,7 +209,6 @@ if (!defined('FW_OCTETS')) define("FW_OCTETS", 256);
 if (!defined('stFILENAME')) define("stFILENAME", "WLE256");
 if (!defined('extFILENAME')) define("extFILENAME", ".bin");
 #define('PACK_ARCH_PATH', ARCH_PATH."package/");
-if (!defined('LOG_PATH')) define("LOG_PATH", RESSOURCE_PATH."logs/");
 
 
 /* ================================ */
@@ -212,18 +216,17 @@ if (!defined('LOG_PATH')) define("LOG_PATH", RESSOURCE_PATH."logs/");
 /* ================================ */
 
 /* Define DB Info */
-
 if (!defined('DB')) define('DB', $_ENV['DB']);
 if (!defined('ADMIN')) define('ADMIN', $_ENV['ADMIN']);
 if (!defined('PWD')) define("PWD", $_ENV['PWD']);
 if (!defined('HOSTNAME')) define('HOSTNAME', $_ENV['HOSTNAME']);
+if (!defined('DB_PORT')) define('DB_PORT', $_ENV['DB_PORT']);
 /*
 if (!defined('DB')) define('DB', 'winback_test');
 if (!defined('ADMIN')) define('ADMIN', "root");
 if (!defined('PWD')) define("PWD", "");
 if (!defined('HOSTNAME')) define('HOSTNAME', 'localhost');
 */
-
 /*
 define('DB', 'winback');
 define('ADMIN', "root");
@@ -265,5 +268,4 @@ if (!defined('SERVER_HOSTNAME')) define('SERVER_HOSTNAME', PTF_ADDR);
 if (!defined('ADDRESS')) define('ADDRESS', "51.91.18.215");
 //define('ADDRESS', "192.168.1.127"); // wb wifi IP Address used in socket config //win0C
 //define('ADDRESS', "10.0.0.78"); // winback wifi //win0A
-//if (!defined('PORT')) define('PORT', 5006); // Port used in socket config
 if (!defined('PORT')) define('PORT', $_ENV['PORT']);
