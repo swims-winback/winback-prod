@@ -30,11 +30,21 @@ class SoftwareController extends AbstractController
      */    
     public function index(SoftwareRepository $softwareRepository, DeviceFamilyRepository $deviceFamilyRepository, Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
     {
-        echo ($this->getParameter('uploads_directory'));
         $software = null;
         $softwares = $softwareRepository->findAll();
         //$softwares = $softwareRepository->findBy(array(), array('name' => 'DESC'));
         $families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
+        
+        /*
+        foreach ($families as $fam) {
+            print_r($fam->getName());
+            $softId = $fam->getActualVersion();
+            echo ("\r\n");
+            print_r($softId);
+            $softByFam = $softwareRepository->findOneBy(array('name'=> $softId));
+            print_r($softByFam->getName());
+        }
+        */
         //$families = $deviceFamilyRepository->findBy(array(), array('name' => 'ASC'));
         $searchform = $this->createForm(SearchSoftwareType::class);
         $search = $searchform->handleRequest($request);

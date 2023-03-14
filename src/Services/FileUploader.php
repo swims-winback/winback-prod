@@ -20,9 +20,6 @@ class FileUploader
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        //var_dump($originalFilename);
-        //var_dump($safeFilename);
-        //$filename = $safeFilename.'.'.$file->guessExtension();
         $filename = $originalFilename.'.'."bin";
 
         try {
