@@ -152,17 +152,15 @@ define('FC', 252);
 define('DE', 222);
 */
 
-
+/*
 if (!defined('cmdByte')) define('cmdByte', array('FE' => 254, 'FD' => 253,'FC' => 252,'FA' => 250,'F9' => 249,'F8' => 248,'F7' => 247,'F6' => 246,'F5' => 245,'F4' => 244,'F3' => 243,'F2' => 242,'DE' => 222,'DD' => 221,'DC' => 220,'DB' => 219,'DA' => 218,'D9' => 217,'D8' => 216,'CF' => 207,'CE' => 206, 'CD' => 205, 'CC' => 204, 'CB' => 203));
 if (!defined('cmdSoft')) define('cmdSoft', array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
 if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
-
-/*
-PROD
+*/
 if (!defined('cmdByte')) define('cmdByte', array('FE' => 254, 'FD' => 253,'FC' => 252,'FA' => 250,'F9' => 249,'F8' => 248,'F7' => 247,'F6' => 246,'F5' => 245,'F4' => 244,'F3' => 243,'F2' => 242,'DE' => 222,'DD' => 221,'DC' => 220,'DB' => 219,'DA' => 218,'D9' => 217,'D8' => 216,'CF' => 207,'CE' => 206, 'CD' => 205, 'CC' => 204, 'CB' => 203));
 if (!defined('cmdSoft')) define('cmdSoft', array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD'));
 if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','D8','CF','CE', 'CD', 'CC', 'CB'));
-*/
+
 /* Define PATH */
 
 //define( 'ROOT_DIR', dirname(__FILE__, 2) );
@@ -173,7 +171,7 @@ if (!defined('ROOT_DIR')) define( 'ROOT_DIR', dirname(__FILE__, 2) );
 if (!defined('CLASS_PATH')) define("CLASS_PATH", ROOT_DIR."/src/Class/");
 //if (!defined('RESSOURCE_PATH')) define("RESSOURCE_PATH", ROOT_DIR."/public/Ressource/");
 if (!defined('RESSOURCE_PATH')) define('RESSOURCE_PATH', $_ENV['RESSOURCE_PATH']);
-//if(!defined('ABS_RESSOURCE_PATH')) define ('ABS_RESSOURCE_PATH', $_ENV['ABS_RESSOURCE_PATH']);
+if (!defined('UPLOAD_PATH')) define("UPLOAD_PATH", $_ENV['UPLOAD_PATH']);
 if (!defined('CONFIG_PATH')) define("CONFIG_PATH", ROOT_DIR."/Config");
 
 if (!defined('LOGS_FILE')) define("LOGS_FILE", 'wintra.log');
@@ -211,7 +209,7 @@ if (!defined('FW_OCTETS')) define("FW_OCTETS", 256);
 if (!defined('stFILENAME')) define("stFILENAME", "WLE256");
 if (!defined('extFILENAME')) define("extFILENAME", ".bin");
 #define('PACK_ARCH_PATH', ARCH_PATH."package/");
-
+if (!defined('LOG_PATH')) define("LOG_PATH", RESSOURCE_PATH."logs/");
 
 
 /* ================================ */
