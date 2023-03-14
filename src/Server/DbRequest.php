@@ -214,18 +214,11 @@ class DbRequest {
         $utils = new Utils();
         $whereCond = SN." = '".$sn."'";
         $geography = $this->getLocationInfoByIp($ipAddr); //get location by ip
-        /*
-        $geography = [];
-        $geography["country"] = "";
-        $geography["city"] = "Isle-d'Abeau";
-        */
         $geography["country"] = $utils->clean($geography["country"]);
         $geography["city"] = $utils->clean($geography["city"]);
         // treat punctuation in name
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
-        print_r($req);
         if($res = $this->sendRq($req)){
-            
             if($row = mysqli_fetch_assoc($res)){
                 
                 $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."',".IP_ADDR." = '".$ipAddr."',".COUNTRY." = '".$geography['country']."',".CITY." = '".$geography['city']."'";
@@ -282,7 +275,6 @@ class DbRequest {
         //$whereCond = "`device_id` = '" . $sn . "' AND Date(scrap_date) = 1";
         $whereCond = "`device_id` = '".$sn."' AND DATE(date) = CURRENT_DATE";
         $req = $this->select('*', 'device_server', $whereCond);
-        print($req);
         if($res = $this->sendRq($req)){
             if($row = mysqli_fetch_assoc($res)){
                 
@@ -509,18 +501,25 @@ class DbRequest {
         
         $whereCond = NUMBER_ID."='$deviceType'";
         $req = $this->select('actual_version_id', DEVICE_FAMILY_TABLE, $whereCond);
+        //$req = $this->select('actual_version_name', DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
                 //return $row['actual_version_id'];
+                /*
                 $actual_version_id = $row['actual_version_id'];
                 $whereCond2 = "id='$actual_version_id'";
+                */
+                $actual_version_id = $row['actual_version_id'];
+                $whereCond2 = "name='$actual_version_id'";
                 $req2 = $this->select('name, version', SOFTWARE_TABLE, $whereCond2);
-                //print_r($req2);
+                print_r($req2);
+                //TODO mode de selection mauvais: si un soft est supprimé, son index est changé donc plutôt selection par device type et name, ou name directement
                 $res2 = $this->sendRq($req2);
                 if ($row2 = mysqli_fetch_assoc($res2)) {
                     //print_r($row2['version']);
                     print_r($row2);
+                    echo ("hello");
                     return $row2;
                 }
             }
