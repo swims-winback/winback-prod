@@ -131,14 +131,14 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="input-group d-flex flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <input class="comment_update_input border border-0" style="background-color:#f1874144;" type="text" name="nm" value="{{soft.updateComment}}">
+                                                        <textarea class="comment_update_input border border-0" style="background-color:#f1874144;" type="text" name="nm" value="">{{soft.updateComment}}</textarea>
                                                         <button class="comment_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
                                                     </div>
                                                 </td>
                                                 {% elseif is_granted("ROLE_SAV") %}
                                                 <td class="text-center">
                                                     <div class="d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <input class="comment_update_input border border-0" type="text" name="nm" value="{{soft.updateComment}}" disabled>
+                                                        <textarea class="comment_update_input border border-0" type="text" name="nm" value="" disabled>{{soft.updateComment}}</textarea>
                                                     </div>
                                                 </td>
                                                 {% endif %}
