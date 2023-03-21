@@ -40,7 +40,6 @@
 html {
   width: 100%;
   min-height: 100vh;
-  height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   align-items: center;
@@ -140,7 +139,6 @@ a {
 
 .footer {
   width: 100%;
-  height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   text-align: center;
@@ -167,7 +165,6 @@ a {
 */
 .header {
   width: 100%;
-  height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   text-align: center;
@@ -287,7 +284,6 @@ td, th {
 }
 
 .test_zone_0 {
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   vertical-align: middle;
@@ -331,7 +327,6 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 */
 #filter div {
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
@@ -345,7 +340,6 @@ table.dataTable thead .sorting_desc_disabled:before {
 .login {
   border-radius: 5px;
   width: 100%;
-  height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   box-shadow: 5px 5px 15px 5px #acabab;
@@ -434,11 +428,11 @@ table.dataTable thead .sorting_desc_disabled:before {
   font-family: "Gotham Medium", sans-serif;
 }
 
-.comment_input:active {
-  background-color: #ffffff !important;
+.comment_update_input:active {
+  background-color: rgba(241, 135, 65, 0.2666666667) !important;
 }
-.comment_input:focus {
-  background-color: #ffffff !important;
+.comment_update_input:focus {
+  background-color: rgba(241, 135, 65, 0.2666666667) !important;
 }
 
 /* PASSWORD CHECK */
