@@ -428,10 +428,10 @@ table.dataTable thead .sorting_desc_disabled:before {
   font-family: "Gotham Medium", sans-serif;
 }
 
-.comment_update_input:active {
+.comment_update_input:active, .actualVersion_update_input:active {
   background-color: rgba(241, 135, 65, 0.2666666667) !important;
 }
-.comment_update_input:focus {
+.comment_update_input:focus, .actualVersion_update_input:focus {
   background-color: rgba(241, 135, 65, 0.2666666667) !important;
 }
 

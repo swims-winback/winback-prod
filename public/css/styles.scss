@@ -519,7 +519,7 @@ background: #eee;
     }
 }
 
-.comment_update_input {
+.comment_update_input, .actualVersion_update_input {
     &:active {
         //background-color: #ffffff !important;
         background-color:#f1874144 !important;

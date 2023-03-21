@@ -105,6 +105,7 @@ for (let element of updateCommentButtons) {
       }
       console.log(comment)
       addUpdateComment(id, comment);
+      window.location.reload();
     };
 }
   
