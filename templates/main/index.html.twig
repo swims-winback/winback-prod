@@ -3,6 +3,20 @@
 {% block title %}{{'Winback Interface | Home | Welcome !'|trans}}{% endblock %}
 
 {% block content %}
+    {#{{ render_esi(path('ch_cookie_consent.show')) }}#}
+    {#
+    {% if chcookieconsent_isCookieConsentSavedByUser() != true %}
+    <div class="modal" tabindex="-1" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                {{ render_esi(path('ch_cookie_consent.show_if_cookie_consent_not_set')) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    #}
     <div class="container py-5 bg-light rounded-3 d-flex flex-column align-items-center">
         <div class="d-flex align-items-center">
             <div><img src="{{asset('img/avatar.png')}}" alt="avatar" style="width: 5em; height: auto; border-radius: 50%; margin-right: 2em;" class="btn-shadow"></div>
