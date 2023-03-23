@@ -5,6 +5,19 @@
     "cboden/ratchet": {
         "version": "v0.4.4"
     },
+    "connectholland/cookie-consent-bundle": {
+        "version": "0.11",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.4",
+            "ref": "9725d24dc996a1041f25b9e29fc1567a861f98e4"
+        },
+        "files": [
+            "./config/packages/ch_cookie_consent.yaml",
+            "./config/routes/ch_cookie_consent.yaml"
+        ]
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -593,6 +606,9 @@
     "symfony/uid": {
         "version": "v6.0.3"
     },
+    "symfony/ux-chartjs": {
+        "version": "v2.7.0"
+    },
     "symfony/validator": {
         "version": "6.0",
         "recipe": {
@@ -622,6 +638,25 @@
         "files": [
             "config/packages/web_profiler.yaml",
             "config/routes/web_profiler.yaml"
+        ]
+    },
+    "symfony/webpack-encore-bundle": {
+        "version": "1.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.10",
+            "ref": "f8fc53f1942f76679e9ee3c25fd44865355707b5"
+        },
+        "files": [
+            "./assets/app.js",
+            "./assets/bootstrap.js",
+            "./assets/controllers.json",
+            "./assets/controllers/hello_controller.js",
+            "./assets/styles/app.css",
+            "./config/packages/webpack_encore.yaml",
+            "./package.json",
+            "./webpack.config.js"
         ]
     },
     "symfony/yaml": {
