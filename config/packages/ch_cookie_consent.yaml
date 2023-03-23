@@ -1,0 +1,3 @@
+ch_cookie_consent:
+    #categories: ['analytics', 'tracking', 'social_media', 'marketing']
+    categories: ['analytics']
