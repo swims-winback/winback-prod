@@ -90,7 +90,7 @@ class DeviceController extends AbstractController
                     $category = $device->getDeviceFamily();
                     //$version_software = $softwareRepository->findSoftwareByVersion($version_input, $category->getId());
                     $version_software = $softwareRepository->findOneBy(array('version'=>$version_input, 'deviceFamily'=>$category->getId()));
-                    var_dump($category->getId());
+                    //var_dump($category->getId());
                     if ($version_software or $version_input == 0) {
                         $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
                         $device->setVersionUpload($version_input);
