@@ -6,6 +6,7 @@ let updateZone = document.querySelectorAll(".update-zone");
 //let forcedButton = document.getElementsByName("switchbox");
 let deviceArray = document.querySelectorAll(".info_device"); //get all the info modals
 
+
   /* when page refreshed, cancel selection */
   if (window.performance) {
     console.info("window.performance works fine on this browser");
@@ -17,11 +18,13 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
       let substr_id = button.getAttribute("id");
       let id = substr_id.substr(9);
       button.checked = false;
+      
       let xmlhttp = new XMLHttpRequest;
       if (id != 0) {
         xmlhttp.open("GET", `/selected/${id}/${0}`)
         xmlhttp.send()
       }
+      
     }
     if (checkbox_0) {
       checkbox_0.checked = false;
@@ -91,18 +94,6 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
     */
 
     /*
-    var request = $.ajax({    
-      type: "GET", 
-      url: `/selected/`,          
-      dataType: "html",                  
-      success: function(data){
-        console.log(data);
-        selectedZone.innerHTML = data+" devices selected !";
-      }
-    });
-    */
-
-    /*
     setTimeout(() => {
       document.location.reload();
     }, 3000);
@@ -111,7 +102,7 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
 
 
 	// ######## Validate version ######## //
-  
+  //TODO Update in modal
 	for(let zone of updateZone) {
 		zone.addEventListener("change", function() {
 			id = zone.getAttribute('data-id');
@@ -121,22 +112,34 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
 		})
 	}
   
-	// ######### Switch function ######### //
+// ######### CHANGE FORCED ######### //
+/**
+ * Change force device status to 1 or 0
+ * @param {int} id - device id
+ * @param {boolean} forced - device forced status
+ */
+function addForce(id, forced) {
+  $.ajax({
+    type: "POST",
+    cache: false,
+    url: `/forced/${id}/${forced}`,
+    success: function () {
+      console.log("device forced")
+      console.log(forced)
+    }
+    })
+}
   
   let forcedButton = document.getElementsByName("switchbox");
 	for(let button of forcedButton){
     button.addEventListener("click", function(){  
-			let $id = button.getAttribute("data-id");
+			let id = button.getAttribute("data-id");
 			if (button.checked == true) {
         console.log(button.checked);
-        let xmlhttp = new XMLHttpRequest;
-        xmlhttp.open("GET", `/forced/${$id}/${1}`)
-        xmlhttp.send()
+        addForce(id, 1);
 			}
-      else{
-        let xmlhttp = new XMLHttpRequest;
-        xmlhttp.open("GET", `/forced/${$id}/${0}`)
-        xmlhttp.send()
+      else {
+        addForce(id, 0);
 			}
 		})
 	}
@@ -148,7 +151,8 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
 	for(let button of selectedButton){
 		button.onclick = function() {
       let substr_id = button.getAttribute("id");
-		  let id = substr_id.substr(9);
+      let id = substr_id.substr(9);
+      
 			if (id != 0 && button.checked == true) {
 				//console.log(button.checked);
         let xmlhttp = new XMLHttpRequest;
@@ -160,6 +164,7 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
 				xmlhttp.open("GET", `/selected/${id}/${0}`)
 				xmlhttp.send()
 			}
+      
 		}
 	}
 
@@ -171,64 +176,71 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
         for (var i=0; i < checkboxes.length; i++) {
           let id = checkboxes[i].getAttribute("data-id");
           checkboxes[i].checked = true;
+          
           let xmlhttp = new XMLHttpRequest;
           xmlhttp.open("GET", `/selected/${id}/${1}`)
           xmlhttp.send()
+          
         }
       }
       else {
         for (var i=0; i < checkboxes.length; i++) {
           let id = checkboxes[i].getAttribute("data-id");
           checkboxes[i].checked = false;
+          
           let xmlhttp = new XMLHttpRequest;
           xmlhttp.open("GET", `/selected/${id}/${0}`)
           xmlhttp.send()
+          
         }
       }
     }
   }
   
-  function addComment(id, comment) {
 
-    $.ajax({
-      type:"POST",
-      cache:false,
-      url: `/addComment/${id}/${comment}`,
-      //data: {id:id, comment:comment},
-      success: function () {
-        console.log("comment added");
-        console.log(comment);
-      }
-    });
-}
-function addUpdateComment(id, comment) {
-
+/**
+ * Call addComment in DeviceController
+ * @param {int} id - device id
+ * @param {string} comment 
+ */
+function addComment(id, comment) {
   $.ajax({
     type:"POST",
     cache:false,
-    url: `/addUpdateComment/${id}/${comment}`,
-    //data: {id:id, comment:comment},
+    url: `/addComment/${id}/${comment}`,
     success: function () {
       console.log("comment added");
       console.log(comment);
     }
   });
 }
+  
 let commentButtons = document.getElementsByClassName("comment_button");
 let commentInputs = document.getElementsByClassName("comment_input");
-let updateCommentButtons = document.getElementsByClassName("comment_update_button");
-let updateCommentInputs = document.getElementsByClassName("comment_update_input");
 
 /*
+// Execute a function when the user presses a key on the keyboard
 for (let element of commentInputs) {
-  element.onclick = function () {
-    $(element).addClass('border-dark');
-  }
+  element.addEventListener("keypress", function (event) {
+    // If the user presses the "Enter" key on the keyboard
+    if (event.key === "Enter") {
+      event.preventDefault(); // Cancel the default action, if needed
+      // Trigger the button element with a click
+      let id = $(element).data("id");
+      let comment = element.value;
+      console.log(comment)
+      if (comment == "") {
+        comment = null
+      }
+      addComment(id, comment);
+      window.location.reload();
+    }
+  });
 }
 */
-/*
-for(let element of commentButtons){
-  element.onclick = function() {
+for (let element of commentButtons) {
+  console.log(element);
+  element.onclick = function () {
     let id = $(element).data("id");
     let comment = element.previousElementSibling.value;
     if (comment == "") {
@@ -236,172 +248,47 @@ for(let element of commentButtons){
     }
     addComment(id, comment);
     window.location.reload();
-  };
+  }
 }
-*/
 
-// Execute a function when the user presses a key on the keyboard
-for (let element of commentInputs) {
-  element.addEventListener("keypress", function (event) {
-    // If the user presses the "Enter" key on the keyboard
-    if (event.key === "Enter") {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      //document.getElementById("myBtn").click();
-      let id = $(element).data("id");
-      let comment = element.value;
-      console.log(comment)
-      
-      if (comment == "") {
-        comment = null
+/* ===== VERSION - new functionnality ===== */
+  /**
+   * call addDeviceVersion in DeviceController
+   * @param {string} version 
+   * @param {int} id - device version
+   */
+  function addVersion(version, id) {
+    $.ajax({
+      type:"POST",
+      cache:false,
+      url: `/addDeviceVersion/${version}/${id}`,
+      //data: {id:id, comment:comment},
+      success: function () {
+        console.log("version added");
+        console.log(version);
       }
-      addComment(id, comment);
-      window.location.reload();
-      
-    }
-  });
+    });
 }
+  
+let versionButton = document.getElementById("version_button");
+let versionInput = document.getElementById("version_input");
+//let versionForm = document.getElementById("version_form");
+let versionDevices = document.getElementsByClassName("device-check");
 
-/*
-for (let element of updateCommentButtons) {
-  element.onclick = function() {
-    let id = $(element).data("id");
-    let comment = element.previousElementSibling.value;
-    if (comment == "") {
-      comment = null
+// TODO check if not multiple device type checked?
+versionButton.onclick = function () {
+  let version = versionButton.previousElementSibling.value;
+  console.log(versionDevices.length);
+  for (let device of versionDevices) {
+    if (device.checked == true) {
+      let device_id = device.getAttribute("data-id");
+      addVersion(version, device_id);
+      console.log(device.getAttribute("data-id"));
     }
-    console.log(comment)
-    addUpdateComment(id, comment);
-  };
+  }
+  console.log(version);
+  //addVersion(version);
+  //versionForm.reset();
+  versionButton.previousElementSibling.value = "";
+  window.location.reload();
 }
-*/
-//window.onload = () => {
-
-
-  // ######### Delete function ######### //
-  
-  /*
-  let deleteButton = document.querySelectorAll(".modal-trigger")
-  for(let button of deleteButton) {
-      button.addEventListener("click", function() {
-          $id = button.getAttribute("data-id");
-          $sn = button.getAttribute("data-title");
-          //console.log($id);
-          document.querySelector(".modal-footer a").href = `/admin/device/delete/${$id}`
-          //document.querySelector(".modal-content").innerText = ``
-      })
-  }
-  */
-
-
-  
-
-  // ============ Check all elements =========== //
-  /*
-  function check(source) {
-    let checkboxes = document.getElementsByName('checkbox');
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-        checkboxes[i].checked = source.checked;
-    }
-  }
-  */
-
-
-  /*
-  if (checkbox_0.checked == false) {
-    var checkboxes = document.getElementsByClassName('form-check-input');
-    //for (var checkbox of checkboxes) {
-    for (var i=1; i < checkboxes.length; i++) {
-
-      //let id = checkbox.getAttribute("data-id");
-      //checkbox.checked = this.checked;
-      let id = checkboxes[i].getAttribute("data-id");
-      checkboxes[i].checked = false;
-      let xmlhttp = new XMLHttpRequest;
-      //console.log(checkboxes[i]);
-      //console.log(id);
-      xmlhttp.open("GET", `/admin/device/unselected/${id}`)
-      xmlhttp.send()
-    }
-  }
-  */
-  
-  
-  // =========== check to modify version upload field ============ //
-
-  //let checkbox_array = document.getElementsByName('checkbox_item');
-
-  //let checkbox_0 = document.querySelector('#checkbox_0');
-  //let validButton_0 = document.querySelector('#valid_0');
- 
-
-  /*
-  var originalHTML = test_zone_1.innerHTML;
-  checkbox_1.addEventListener('click', () => {
-    checkbox_1.checked == true;
-    if(checkbox_1.checked) {
-      //var form = test_zone_1.dataset.form;
-      
-      //console.log($id);
-      test_zone_1.innerHTML = `<input type="text" id="input_${$id}"/>`;
-      input_1 = document.querySelector(`#input_${$id}`);
-      id = $id;
-
-      validButton.addEventListener('click', () => {
-        //console.log(validButton);
-        //test_zone_1.addEventListener('change', () => {
-        let xmlhttp = new XMLHttpRequest;
-        //console.log(input_1.value);
-        $user_input = input_1.value;
-        console.log(id);
-        xmlhttp.open("GET", `/admin/device/update/${id}/${$user_input}`)
-        xmlhttp.send()
-      });
-    
-    }
-    else {
-      test_zone_1.innerHTML = originalHTML;
-    }
-  })
-  */
-
-
-
-  /*
-  for(let button of checkbox){
-      $id = button.getAttribute("data-id");
-      let test_zone = document.getElementById(`test_zone_${$id}`);
-      var originalHTML = test_zone.innerHTML;
-      //button.addEventListener('click', function (){
-        if(button.checked){
-          test_zone.innerHTML = "blublu";
-        }
-        else {
-          test_zone.innerHTML = originalHTML;
-        }
-
-      //});
-  }
-  */
-
-  // ============ Switch all elements =========== //
-  /*
-  function toggle(source, name) {
-    switchboxes = document.getElementsByName(name);
-    for(var i=0, n=switchboxes.length;i<n;i++) {
-        switchboxes[i].checked = source.checked;
-    }
-    for(let button of switchboxes){
-      button.addEventListener("click", function(){
-        let xmlhttp = new XMLHttpRequest;
-        console.log(this.dataset.id);
-        xmlhttp.open("GET", `/admin/device/forced/${this.dataset.id}`)
-        xmlhttp.send()
-      })
-    }
-  }
-  */
-  //checkbox_0.addEventListener('click', check(this));
-  //onClick="toggle(this, 'checkbox')
-//}

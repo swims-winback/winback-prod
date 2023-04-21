@@ -446,4 +446,9 @@ table.dataTable thead .sorting_desc_disabled:before {
 .form-control-register:focus {
   box-shadow: none;
   border: 1px solid #ced4da;
+}
+
+.btn-left {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }/*# sourceMappingURL=styles.css.map */

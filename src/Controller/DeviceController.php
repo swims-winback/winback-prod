@@ -3,10 +3,8 @@ namespace App\Controller;
 
 use App\Class\SearchData;
 use App\Entity\Device;
-use App\Entity\User;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,30 +13,13 @@ use Doctrine\Persistence\ManagerRegistry;
 
 use App\Form\Type\DeviceType;
 use App\Form\DeviceEditType;
-//use App\Form\DevicePageType;
 use App\Form\DeviceVersionType;
 use App\Form\DeviceCheckType;
-use App\Form\DeviceCommentType;
 use App\Form\SearchDeviceType;
 
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\SoftwareRepository;
-use App\Services\FileUploader;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
-
-use function PHPUnit\Framework\throwException;
-
-use App\Server\TCPServer;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 use Psr\Log\LoggerInterface;
 
@@ -54,30 +35,32 @@ class DeviceController extends AbstractController
         $form = $this->createForm(SearchDeviceType::class, $data);
         $form->handleRequest($request);
         $devices = $deviceRepository->findSearch($data);
-        /*
-        if ($devices == null) {
+        if ($devices->getItems() == null) {
             $this->addFlash(
-                'error', 'Device not found, please try again !'
+                'error', 'Device(s) not found, please try again !'
             );
             return $this->redirectToRoute('device');
         }
-        */
         // Check-all form 
         $checkform = $this->createForm(DeviceCheckType::class);
         // input text version form
         $versionform = $this->editDeviceVersion($request, $deviceRepository, $softwareRepository, $doctrine, $logger);
+        //TODO for each device check if file exists, else leave path blank
+        $download_link = true;
+        
         return $this->render('device.html.twig', [
             'devices' => $devices,
             'form' => $form->createView(),
             'checkform' => $checkform->createView(),
             'versionform' => $versionform,
             'ressource_path' => $_ENV["RESSOURCE_PATH"],
+            'download_link' => $download_link
         ]);
 
     }
-    /**
-     * @Route("/{_locale<%app.supported_locales%>}/connect/{id}", name="connect")
-     */
+    
+    // TODO Is it used ?
+    //@Route("/{_locale<%app.supported_locales%>}/connect/{id}", name="connect")
     /*
     public function connect(Device $device, DeviceRepository $deviceRepository)  
     {
@@ -85,74 +68,12 @@ class DeviceController extends AbstractController
         return $this->render('device/_acces.html.twig', [
             'device'=> $device,
         ]);
-
     }
     */
-
-    public function addDevice(ManagerRegistry $doctrine, DeviceFamilyRepository $deviceFamilyRepository, $familyName, $version)
-    {
-        $device = new Device;
-
-        //$form = $this->createForm(DeviceType::class, $device);
-
-        //$form->handleRequest($request);
-
-        //if($form->isSubmitted() && $form->isValid())
-        //{
-            
-        //$familyName;
-        
-        $family = $deviceFamilyRepository->findFamilyByName($familyName);
-        $familyType = $family->getNumberId();
-
-        //$version = $form->get('version')->getData();
-        //$version;
-        $device->setVersionUpload($version);
-        ///*
-        //$deviceFile = $form->get('file')->getData();
-
-        //TODO Comment here
-
-            
-        $em = $doctrine->getManager();
-        //$device = $form->getData();
-        $em->persist($device);
-        $em->flush();
-        
-
-        //return $this->redirectToRoute('device');
-        return true;
-        /*
-        return $this->render('device/add.html.twig', [
-            'form' => $form->createView(),
-        ]);
-        */
-    }
-
 
     /**
-     * @Route("/{_locale<%app.supported_locales%>}/edit/{id}", name="device_edit")
-    */
-    public function editDevice(Request $request, ManagerRegistry $doctrine, Device $device): Response
-    {
-        $editform = $this->createForm(DeviceEditType::class, $device);
-        $editform->handleRequest($request);
-        if($editform->isSubmitted() && $editform->isValid())
-        {
-
-            $em = $doctrine->getManager();
-            $device = $editform->getData();
-            $em->persist($device);
-            $em->flush();
-
-            return $this->redirectToRoute('device');
-        }
-        return $this->renderForm('device.html.twig', [
-            'editform' => $editform,
-            'device' => $device
-        ]);
-    }
-
+     * return versionformView to be called in index function
+     */
     public function editDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger)
     {
         $user = $this->getUser();
@@ -163,20 +84,21 @@ class DeviceController extends AbstractController
         if($versionform->isSubmitted() && $versionform->isValid()) {
             foreach ($devices as $device) {
                 $version_input = $versionform->get('versionUpload')->getData();
-                $category = $device->getDeviceFamily();
-                $version_software = $softwareRepository->findSoftwareByVersion($version_input, $category->getId());
+                //$category = $device->getDeviceFamily();
+                //$version_software = $softwareRepository->findSoftwareByVersion($version_input, $category->getId());
                 if($device->getSelected() ) {
-                    if ($version_software  or $version_input == 0) {
-                        //$user = $this->getUser();
+                    $category = $device->getDeviceFamily();
+                    //$version_software = $softwareRepository->findSoftwareByVersion($version_input, $category->getId());
+                    $version_software = $softwareRepository->findOneBy(array('version'=>$version_input, 'deviceFamily'=>$category->getId()));
+                    var_dump($category->getId());
+                    if ($version_software or $version_input == 0) {
                         $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version_input);
                         $device->setVersionUpload($version_input);
-                        //TODO ici il faudrait envoyer un "socket_close()" au server et fermer la bonne socket
                         
-                        /*
                         $this->addFlash(
                             'infoDevice', 'Device '.$device->getSn().' updated !'
                         );
-                        */
+                        
                     }
                     else {
                         $this->addFlash(
@@ -186,56 +108,56 @@ class DeviceController extends AbstractController
                     $device->setSelected(false);
                     $em = $doctrine->getManager();
                     $em->flush();
-
                 }
-                
-                else {
-                    /*
-                    $device->setSelected(false);
-                    $em = $doctrine->getManager();
-                    $em->flush();
-                    */
-                }
-                
-                
             }
-            //TODO A vérifier si ça affiche bien le nombre de dévices ET sélectionnés ET updatés
-            /*
-            $this->addFlash(
-                'infoDevice', sizeof($deviceRepository->findAllSelected()).' devices updated !'
-            );
-            */
-            //return $this->redirectToRoute('device');
         }
-        return $versionform->createView();
+        $versionformView = $versionform->createView();
+        return $versionformView;
     }
 
-
     /**
-     * @Route("/delete/{id}", name="device_delete")
-    */    
-    public function deleteDevice(Device $device, ManagerRegistry $doctrine)
+     * @Route("/addDeviceVersion/{version}/{id}", name="add_version")
+     */
+    public function addDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $version, int $id)
     {
+        $user = $this->getUser();
+        $devices = $deviceRepository->findAll();
+        $device = $deviceRepository->findOneBy(array("id"=>$id));
 
+        $category = $device->getDeviceFamily();
+        $version_software = $softwareRepository->findOneBy(array('version'=>$version, 'deviceFamily'=>$category->getId()));
+        if ($version_software or $version == 0) {
+            $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+            $device->setVersionUpload($version);
+            
+            $this->addFlash(
+                'infoDevice', 'Device '.$device->getSn().' updated !'
+            );
+        }
+        else {
+            $this->addFlash(
+                'error', 'Software '.$version.' not found, please try again !'
+            );
+        }
+        $device->setSelected(false);
         $em = $doctrine->getManager();
-        $em->remove($device);
+        $em->persist($device);
         $em->flush();
-
-        //$this->addFlash('message', 'Device deleted with success !');
         return $this->redirectToRoute('device');
+        //return new Response("true");
     }
 
     /**
      * @Route("/forced/{id}/{select_bool}", name="forced")
      */
-    public function forced(Device $device, ManagerRegistry $doctrine, $select_bool)
+    public function forced(Device $device, DeviceRepository $deviceRepository, ManagerRegistry $doctrine, LoggerInterface $logger, int $id, $select_bool=false)
     {
+        $user = $this->getUser();
+        $logger->info($user." has forced ".$device->getSn());
         $device->setForced(($select_bool==0)?0:1);
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
-
-        //return new Response("true");
         return $this->redirectToRoute('device');
     }
 
@@ -268,21 +190,12 @@ class DeviceController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('device');
-    }
-
-    /**
-     * @Route("/selected/", name="selectedAll")
-     */
-    public function selectedAll(DeviceRepository $deviceRepo)
-    {
-        return new Response(sizeof($deviceRepo->findAllSelected()));
-    }   
+    }  
 
     /**
     * @Route("/updated/{id}/{version}/", name="updated")
     */
     public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger, $version)
-    //public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger)
     {
         $user = $this->getUser();
         $category = $device->getDeviceFamily();
@@ -301,24 +214,6 @@ class DeviceController extends AbstractController
         }  
         //return new Response("true");
         return $this->redirectToRoute('device');
-        
-    }
-    
-    public function updated_bool(Device $device, ManagerRegistry $doctrine, $version, $select_bool)
-    {
-        //print_r($version);
-        if ($select_bool == true) {
-            $device->setVersionUpload($version);
-
-            $em = $doctrine->getManager();
-            $em->persist($device);
-            $em->flush();
-    
-            //return new Response("true");
-            return $this->redirectToRoute('device');
-        }
-
-        
     }
 
     /**
