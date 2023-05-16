@@ -93,12 +93,12 @@
                                     name='{{device.sn}}' type="button" value="Connect" 
                                     data-bs-toggle="modal" data-bs-target="#testAcces_{{device.id}}">
                                     
-                                    <!--
+                                    {#
                                     <a href={{ path('connect', { 'id': device.id }) }} class="btn bg-green btn-outline-green connect_command" 
                                     id="c_sn_{{device.sn}}" 
                                     data-id="connect_{{device.id}}" 
                                     name='{{device.sn}}' type="button" value="Connect"></a>
-                                    -->
+                                    #}
                                 {% endif %}
                             </td>
                         </tr>
