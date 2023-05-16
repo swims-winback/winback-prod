@@ -50,3 +50,14 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Documentation
+
+Create new Command:
+
+- get contentSize, to define data space in header
+- create header
+- if numbers, pass them to setResponseToByte
+- if string, concatenate directly to response
+- concatenate header & response
+- after command switch, response is concatenated with footer
