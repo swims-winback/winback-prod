@@ -203,18 +203,6 @@
             TODO Uncomment new device if needed to test
             <button class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange"><a href="{{path('device_add')}}">New Device</a></button>
             #}
-
-            <!-- ===== DEVICE ACTION ===== -->
-            {#
-            {% include 'device/device_action.html.twig' %}
-            #}
-            <!--
-            <div id="errorDeviceConnect" class="alert alert-danger"></div>
-            -->
-            <!-- ===== ACCESS MODALS ===== -->
-            {#
-            {% include 'device/acces_modals.html.twig' %}
-            #}
         </div>
 
     </div>
@@ -223,14 +211,7 @@
 {% endblock %}
 
 {% block javascripts %}
-
-    
-    <script type="text/javascript">
-    //var path = "{{ asset('js/TCPClient2.php')}}";
-    </script>
-    
     <script>
-
     // ######### Sort Table by alphabetical order ######### //
     function sortTable(n) {
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -275,15 +256,6 @@
         }
     }
     </script>
-    <!--
-    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
-    -->
-    <!--
-    <script type="text/javascript" src="{{ asset('js/winback.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('js/socket.js')}}"></script>
-    
-    <script type="text/javascript" src="{{ asset('js/scripts.js')}}"></script>
-    -->
     <script type="text/javascript" src="{{ asset('js/scripts.js')}}"></script>
     <script type="text/javascript" src="{{ asset('js/winback.js')}}"></script>
     
