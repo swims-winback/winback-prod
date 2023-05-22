@@ -24,7 +24,7 @@ class TCPClient extends AbstractController
             return false;
         }
         else {
-            if (!(socket_connect($socket, ADDRESS, PORT))) {
+            if (!(socket_connect($socket, ADDRESS, $_ENV['PORT']))) {
                 //echo "socket_connect() failed.\nReason:  " . socket_strerror(socket_last_error($socket)) . "\n";
                 return false;
                 

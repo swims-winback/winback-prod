@@ -9,3 +9,7 @@ kernel:
 class:
     resource: ../src/Class/
     type: annotation
+
+server:
+    resource: ../src/Server/
+    type: annotation
