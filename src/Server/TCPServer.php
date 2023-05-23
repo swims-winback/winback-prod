@@ -265,7 +265,7 @@ class TCPServer extends AbstractController
 						{ 
 							$deviceKey = array_search($read_sock, $clients);			
 							$clientsInfo[$deviceKey][2] = hrtime(true)+$this->timeOut;
-							if(substr($data, 0, 1) == 'W' && array_key_exists(hexdec($data[3].$data[4]), deviceType)){ // Verify that data comes from a device (all devices start with W)
+							if(substr($data, 0, 1) == 'W' && $data[3] == 0 && array_key_exists(hexdec($data[3].$data[4]), deviceType)){ // Verify that data comes from a device (all devices start with W)
 								$time_start_socket = microtime(true);
 								$task = new CommandDetect();
 								$sn = substr($data, 0, 20);
@@ -426,7 +426,7 @@ class TCPServer extends AbstractController
 										//$this->linkConnection[$data][0] = $read_sock;
 										if(isset($this->linkConnection)){
 											//TODO old version
-											print_r($this->linkConnection);
+											//print_r($this->linkConnection);
 											$keyLink = array_key_exists($data, $this->linkConnection);
 											
 											if($keyLink){
@@ -454,7 +454,7 @@ class TCPServer extends AbstractController
 												//var_dump($clientsInfo[$key][1]);
 												$this->linkConnection[$data][1] = $read_sock;
 												socket_write($read_sock, $keyLink);
-												print_r($read_sock);
+												//print_r($read_sock);
 												//echo "SEND MSG TO >>>>>>>>>>>>>>>>>>>>> $key\n";
 												echo "SEND ".$keyLink." TO ".$data." >>>>>>>>>>>>>>>>>>>>>\n";
 											}
