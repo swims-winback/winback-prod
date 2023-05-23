@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 namespace App\Server;
 
@@ -8,48 +9,115 @@ use App\Server\DataResponse;
 use App\Server\DbRequest;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
-
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-require_once dirname(__FILE__, 3).'/configServer/config.php';
-require_once dirname(__FILE__, 3).'/configServer/dbConfig.php';
+//require_once dirname(__FILE__, 3).'/configServer/config.php';
+//require_once dirname(__FILE__, 3).'/configServer/dbConfig.php';
 
-require_once(dirname(__FILE__, 2).'/Server/CommandDetect.php');
+
+//require_once(dirname(__FILE__, 2).'/Server/CommandDetect.php');
 require_once(dirname(__FILE__, 2).'/Server/DataResponse.php');
 require_once(dirname(__FILE__, 2).'/Server/DbRequest.php');
 
-class TCPServer extends AbstractController
+class TCPServer extends Application
 {
 	private $timeOut;
 	/**
-	 * @linkConnection : 	 array of sn connected as key and array of sockets linked to this sn as values (ex: [WIN0D_TEST_61706    ] => Array), the subarray is a key-index paired with each socket (ex: [1] => Socket Object())
-	 * @clients : 
+	 * @param array $linkConnection - array of sn connected as key and array of sockets linked to this sn as values (ex: [WIN0D_TEST_61706    ] => Array), the subarray is a key-index paired with each socket (ex: [1] => Socket Object())
+	 * @param array $clients - array of socket object: [0] => Socket Object
 	 * 
 	 */
 	private $linkConnection = [];
 	private $clients;
 
-	// Create Socket and connect to server
+	/**
+	 * Confirm system can run script
+	 */
+	function preflight()
+	{
+		$phpversion_array = explode('.', phpversion());
+		if ((int)$phpversion_array[0].$phpversion_array[1] < 80) {
+			die('minimum php required is 8.0. exiting');
+		}
+
+		if(!is_writable('/tmp')) {
+			die('must be able to write to /tmp to continue. exiting.');
+		}
+	}
+
+	/**
+	 * Write server logs to a log file with date as filename
+	 * @param string $logTxt
+	 * @return string
+	 */
+	function writeServerLog(string $logTxt){
+		if (!file_exists($_ENV['LOG_PATH']."server/")) {
+			mkdir($_ENV['LOG_PATH']."server/", 0777, true);
+		}
+		$logFile = date("Y-m-d").".txt";
+		if (file_exists($_ENV['LOG_PATH']."server/".$logFile) && filesize($_ENV['LOG_PATH']."server/".$logFile) < 200000) {
+			$fd = fopen($_ENV['LOG_PATH']."server/".$logFile, "a+");
+			if($fd){
+				fwrite($fd, $logTxt);
+				fclose($fd);
+				return $logFile;
+			}else{
+				echo "fd error";
+				return false;
+			}
+		}
+		else {
+			$fd = fopen($_ENV['LOG_PATH']."server/".$logFile, "w");
+			if($fd){
+				fwrite($fd, $logTxt);
+				fclose($fd);
+				return $logFile;
+			}else{
+				echo "fd error";
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * Verify if command in data exists in command array
+	 * @param mixed $data
+	 * @return bool
+	 */
+	function dataToTreat($data){
+		if(isset($data[20]) && !empty($data[20])){
+			$cmdRec = $data[20].$data[21];
+			if (in_array($cmdRec, cmdSoft)) {
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+
+	/**
+	 * Create Socket and connect to server
+	 * @return $resultArray array|bool - array of sockets ? [0] => Array ([0]=> Socket Object()), [1]=> Socket Object()
+	 */
 	function createServer()
 	{
-		$request = new DbRequest;
-
 		set_time_limit(0);
 		ob_implicit_flush();
 
 		$msg = str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3)."\r\n==========   SERVER STARTED   ==========\r\n".str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3);
 		
 		echo($msg);
-		$request->setConnectAll(0);
+		//$request->setConnectAll(0);
 
 		$sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		// set the option to reuse the port
 		socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1);
 		// bind the socket to the address defined in config on port
-		if (socket_bind($sock, ADDRESS, PORT) === false) {
+		if (socket_bind($sock, ADDRESS, $_ENV['PORT']) === false) {
 			echo "socket_bind() a échoué : raison : " . socket_strerror(socket_last_error($sock)) . "\n";
 			return false;
 		}
@@ -59,22 +127,10 @@ class TCPServer extends AbstractController
 			return false;
 		}
 		
-		$this->clients = array($sock);
-		$resultArray = array($this->clients, $sock);
+		
+		$clients = array($sock);
+		$resultArray = array($clients, $sock);
 		return $resultArray;
-	}
-
-	// Verify if command in data exists in command array
-	function dataToTreat($data){
-		
-		if(isset($data[20]) && !empty($data[20])){
-			$cmdRec = $data[20].$data[21];
-			if (in_array($cmdRec, cmdSoft)) {
-				return true;
-			}
-			return false;
-		}
-		
 	}
 
 	/*
@@ -103,45 +159,72 @@ class TCPServer extends AbstractController
 	}
 	*/
 
-	/**
-	 * Write server logs to a log file with date as filename
-	 *
-	 */
-	function writeServerLog(string $logTxt){
-		if (!file_exists(LOG_PATH."server/")) {
-			mkdir(LOG_PATH."server/", 0777, true);
-
-		}
-		$logFile = date("Y-m-d").".txt";
-		if (file_exists(LOG_PATH."server/".$logFile) && filesize(LOG_PATH."server/".$logFile) < 200000) {
-			$fd = fopen(LOG_PATH."server/".$logFile, "a+");
-			if($fd){
-				fwrite($fd, $logTxt);
-				fclose($fd);
-				return $logFile;
-			}else{
-				echo "fd error";
-			}
-
-		}
-		else {
-			$fd = fopen(LOG_PATH."server/".$logFile, "w");
-			if($fd){
-				fwrite($fd, $logTxt);
-				fclose($fd);
-				return $logFile;
-			}else{
-				echo "fd error";
-			}
-		}
-	}
-
 	function runServer(LoggerInterface $logger)
 	{
 		/**
-		 * @clientsInfo : array of sn connected as key and array of info linked to this sn as values (ex: [WIN0D_TEST_61706    ] => Array), the subarray is a key-index paired with each info (ex: [1] => 'ip adress : port')
+		 * @var array $resultArray
+		 * [0] = $this->clients
+		 * [1] = $sock
+		 */
+		/**
+		 * @var array $clientsInfo
+		 * [0] = sn
+		 * [1] = ip:port
+		 * [2] = timeOut
+		 * [3] = ip
+		 * [4] = port
+		 * [5] = command history //used to show the last command send by the device
+		 * [6] = index //used to get indexToGet when downloading version to avoid downloading the same data chunk if server is too slow or blocked
+		 * [7] = device info
+		 * [8] = download percentage
+		 */
+
+		 /**
+		  * @var array $clients
+
+		  */
+		/**
+		 * @var array $responseArray
+		 * Response array return from CommandDetect
+		 * [0] = $indexToGet;
+		 * [1] = $response.$footer;
+		 * [2] = $deviceInfo;
+		 * [3] = $percentage;
+		 */
+
+		/** @var array $deviceInfo
+		*  	[id] =>
+		*	[device_family_id] =>
+		*	[device_family] =>
+		*	[sn] => 
+		*	[version] =>
+		*	[version_upload] =>
+		*	[forced] =>
+		*	[ip_addr] =>
+		*	[log_pointeur] =>
+		*	[pub] => 
+		*	[code_pin] =>
+		*	[selected] =>
+		*	[server_date] =>
+		*	[connected] =>
+		*	[created_at] => 
+		*	[updated_at] => 
+		*	[is_active] =>
+		*	[device_file] =>
+		*	[log_file] => LOGFILE.txt
+		*	[download] => download percentage
+		*	[indextoget] =>
+		*	[comment] =>
+		*	[update_comment] => NOTUSED
+		*	[country]
+		*	[city]
+		*/
+
+		/**
+		 * @clientsInfo : array of sn connected as key and array of info linked to this sn as values (ex: [WIN0D_TEST_61706    ] => Array), the subarray is a key-index paired with each info (ex: [1] => 'ip address : port')
 		 */
 		//$output = new ConsoleOutput();
+		$this->preflight();
 		$request = new DbRequest();
 		$dataResponse = new DataResponse();
 		$resultArray = $this->createServer();
@@ -211,6 +294,7 @@ class TCPServer extends AbstractController
 				unset($read[$key]);
 				unset($key);
 				$key = array_search($newsock, $clients);
+
 				$clientsInfo[$key][0] = "sn unknown";
 				$clientsInfo[$key][1] = "{$ip} : {$port}";
 				$clientsInfo[$key][2] = hrtime(true)+$this->timeOut;
@@ -260,7 +344,6 @@ class TCPServer extends AbstractController
 						
 						
 						// if commands are returned from device data
-
 						if($this->dataToTreat($data)) // => msg from device
 						{ 
 							$deviceKey = array_search($read_sock, $clients);			
@@ -272,13 +355,16 @@ class TCPServer extends AbstractController
 								$deviceType = hexdec($data[3].$data[4]);
 								$clientsInfo[$deviceKey][0] = $sn; // Show serial number in terminal
 								$deviceCommand = $data[20].$data[21];
-								
-								$responseArray = $task->start($data, $clientsInfo[$deviceKey][3], $clientsInfo[$deviceKey][7]);
+
+								//$deviceInfo = $clientsInfo[$deviceKey][7];
+
+								$responseArray = $task->start($data, $clientsInfo[$deviceKey][3], $clientsInfo[$deviceKey][7], $logger);
 
 								if ($responseArray != False) {
 									// récupérer deviceInfo
 									if (array_key_exists(2, $responseArray)) {
 										$clientsInfo[$deviceKey][7] = $responseArray[2];
+										//print_r($clientsInfo[$deviceKey][7]);
 									}
 									
 									// check if index is not duplicated
@@ -291,6 +377,7 @@ class TCPServer extends AbstractController
 											//echo "Index: ".$indexToGet;
 										}
 									}
+									// Check & show percentage number
 									if (array_key_exists(3, $responseArray)) {
 										$percentage = $responseArray[3];
 										//echo "\r\n".$percentage."\r\n";
@@ -314,6 +401,7 @@ class TCPServer extends AbstractController
 										}
 									}
 									else {
+										//print_r($responseArray[1]);
 										socket_write($clients[$deviceKey], $responseArray[1]);
 									}
 									
@@ -322,25 +410,6 @@ class TCPServer extends AbstractController
 								else {
 									$this->writeServerLog("\r\nResponse is empty! Please check that your device can connect to the server!\r\n");
 								}
-								
-								/*
-								$process = new Process([$task->start($data, $clientsInfo[$key][3], $clients[$key])]);
-								$process->start();
-								*/
-
-								/*
-								foreach ($process as $type => $outputProcess) {
-									if ($process::OUT === $type) {
-										echo "\nRead from stdout: ".$outputProcess;
-									} else { // $process::ERR === $type
-										echo "\nRead from stderr: ".$outputProcess;
-									}
-								}
-								*/
-								
-								//$response = $task->start($data, $clientsInfo[$key][3]);
-								//$responseArray = $task->start($data, $clientsInfo[$key][3]);
-								//$response = $responseArray[1];
 								
 								$clientsInfo[$deviceKey][5] = $deviceCommand;
 								
@@ -370,7 +439,6 @@ class TCPServer extends AbstractController
 												unset($clientsInfo[$i]);
 												//array_splice($clients, $i, 1);
 												//array_splice($clientsInfo, $i, 1);
-
 											}
 										}
 									}
@@ -540,9 +608,6 @@ class TCPServer extends AbstractController
 											{
 												//$key = array_search($this->linkConnection[$sn][0], $clients);
 												echo 'SEND MSG TO OTHER >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
-												//if (isset($this->linkConnection[$sn])) {
-													//print_r($this->linkConnection[$sn]);
-												//}
 												if (isset($this->linkConnection[$sn][1])) {
 													//print_r($this->linkConnection[$sn]);
 													socket_write($this->linkConnection[$sn][1], $data);
@@ -582,12 +647,6 @@ class TCPServer extends AbstractController
 					}
 
 			}
-			
-			// end of reading foreach
 		}
-		// close the listening socket
-		//socket_close($sock);
-		//$output->writeln("\r\nSocket closed ! Something is false.\r\n");
-		//echo "\r\nSocket closed ! Something is false.\r\n";
 	}
 }
