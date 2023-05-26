@@ -43,10 +43,6 @@ class TCPServer extends Application
 		if ((int)$phpversion_array[0].$phpversion_array[1] < 80) {
 			die('minimum php required is 8.0. exiting');
 		}
-
-		if(!is_writable('/tmp')) {
-			die('must be able to write to /tmp to continue. exiting.');
-		}
 	}
 
 	/**
@@ -99,6 +95,18 @@ class TCPServer extends Application
 		return false;
 	}
 
+	function disconnect($request, $logger, $clientsInfo, $clients, $i)
+	{
+		$request->setConnect(0, $clientsInfo[$i][0]);
+		socket_close($clients[$i]);
+		echo "\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.\n";
+		$logger->info("client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.");
+		unset($clients[$i]);	
+		unset($clientsInfo[$i]);
+		$disconnectArray[0] = $clients;
+		$disconnectArray[1] = $clientsInfo;
+		return $disconnectArray;
+	}
 	/**
 	 * Create Socket and connect to server
 	 * @return $resultArray array|bool - array of sockets ? [0] => Array ([0]=> Socket Object()), [1]=> Socket Object()
@@ -132,32 +140,6 @@ class TCPServer extends Application
 		$resultArray = array($clients, $sock);
 		return $resultArray;
 	}
-
-	/*
-	function disconnectServer($clients, $clientsInfo, $output)
-	{
-		for($i=1; $i<count($clients); $i++)
-		{
-			next($clients);
-			next($clientsInfo);
-			if(isset(current($clientsInfo)[2])){
-				// If process takes too much time, close socket ?
-				if(current($clientsInfo)[2] < hrtime(true)){
-					$output->writeln("\r\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
-					$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".key($clients)." disconnected.\n");
-					$key = key($clients);
-					
-					socket_close($clients[$key]);
-					$output->writeln("\r\nSocket closed !\r\n");
-					unset($clients[$key]);	
-					unset($clientsInfo[$key]);				
-				}
-			}	
-		}
-		//reset($clients);
-		return false;
-	}
-	*/
 
 	function runServer(LoggerInterface $logger)
 	{
@@ -241,29 +223,23 @@ class TCPServer extends Application
 			reset($clients);
 			reset($clientsInfo);
 			//TODO Close socket automatically after too much time without receiving data
-			//foreach ($clients as $i=>$client)
-			foreach ($clientsInfo as $i=>$client) 
-			//for($i=1; $i<count($clients); $i++)
+			foreach ($clientsInfo as $i=>$client)
 			{
 				if ($i > 0) {
 					if(isset($clientsInfo[$i][2])){
 						// If process takes too much time, close socket
 							if($clientsInfo[$i][2] < hrtime(true)){
-								
-								//$key = key($clients);
+								/*
 								$request->setConnect(0, $clientsInfo[$i][0]);
-								//socket_close($clients[$key]);
 								socket_close($clients[$i]);
-								//TODO $output->writeln("\r\nSocket closed !\r\n");
-								//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".$i." disconnected.\n");
-								//echo "\n".date("Y-m-d H:i:s | ")."client ".current($clientsInfo)[0]." ip ".current($clientsInfo)[1]." with key ".$i." disconnected.\n";
 								echo "\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.\n";
 								$logger->info("client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".$i." disconnected.");
-								//$this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$i][0]." ip ".$clientsInfo[$i][1]." with key ".[$i]." disconnected.\n");
 								unset($clients[$i]);	
 								unset($clientsInfo[$i]);
-								//array_splice($clients, $i, 1);
-								//array_splice($clientsInfo, $i, 1);
+								*/
+								$disconnectArray = $this->disconnect($request, $logger, $clientsInfo, $clients, $i);
+								$clients = $disconnectArray[0];
+								$clientsInfo = $disconnectArray[1];
 							}
 					}
 				}
@@ -349,8 +325,10 @@ class TCPServer extends Application
 							$deviceKey = array_search($read_sock, $clients);			
 							$clientsInfo[$deviceKey][2] = hrtime(true)+$this->timeOut;
 							if(substr($data, 0, 1) == 'W' && $data[3] == 0 && array_key_exists(hexdec($data[3].$data[4]), deviceType)){ // Verify that data comes from a device (all devices start with W)
+								echo ("\r\nData received: " . $data . "\r\n");
 								$time_start_socket = microtime(true);
 								$task = new CommandDetect();
+								//$client = new Client();
 								$sn = substr($data, 0, 20);
 								$deviceType = hexdec($data[3].$data[4]);
 								$clientsInfo[$deviceKey][0] = $sn; // Show serial number in terminal
@@ -375,6 +353,7 @@ class TCPServer extends Application
 											socket_write($clients[$deviceKey], $responseArray[1]);
 											$clientsInfo[$deviceKey][6] = $indexToGet;
 											//echo "Index: ".$indexToGet;
+											//$client->main($data);
 										}
 									}
 									// Check & show percentage number
@@ -403,6 +382,7 @@ class TCPServer extends Application
 									else {
 										//print_r($responseArray[1]);
 										socket_write($clients[$deviceKey], $responseArray[1]);
+										//$client->main($data);
 									}
 									
 									//socket_write($clients[$key], $responseArray[1]);
@@ -415,19 +395,19 @@ class TCPServer extends Application
 								
 								//if (($deviceCommand === 'F9') || ($deviceCommand === 'FA') || ($deviceCommand === 'FE') || ($deviceCommand === 'DE')){
 								
+								//When server reconnects or device reconnects, avoid duplicate of linkConnection for one device and disconnect the preceding index from the list
 								if(isset($this->linkConnection[$clientsInfo[$deviceKey][0]]) && !empty($this->linkConnection[$clientsInfo[$deviceKey][0]][0])){
 									
-									foreach ($clientsInfo as $i=>$client) { 
-									//for ($i=1; $i < count($clientsInfo); $i++) {
+									foreach ($clientsInfo as $i=>$client) {
 
 										if( isset($clientsInfo[$i][0]) && isset($clientsInfo[$deviceKey][0]) && $clientsInfo[$i][0] == $clientsInfo[$deviceKey][0])
 										{
-											//var_dump($i);
-											//var_dump($deviceKey);
 											if($i!=$deviceKey)
-											//if($this->linkConnection[$clientsInfo[$key][0]][0]!=$clients[$i] && $i!=$key)
 											{
-
+												$disconnectArray = $this->disconnect($request, $logger, $clientsInfo, $clients, $i);
+												$clients = $disconnectArray[0];
+												$clientsInfo = $disconnectArray[1];
+												/*
 												echo("socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
 												$logger->info("Socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
 												//$this->writeServerLog("socket is closed :".$clientsInfo[$i][0]."with key: ".$i);
@@ -439,6 +419,7 @@ class TCPServer extends Application
 												unset($clientsInfo[$i]);
 												//array_splice($clients, $i, 1);
 												//array_splice($clientsInfo, $i, 1);
+												*/
 											}
 										}
 									}
@@ -473,53 +454,32 @@ class TCPServer extends Application
 							//if ($read_sock!=false && array_key_exists($read_sock, $clients)) {
 							if ($read_sock!=false && in_array($read_sock, $clients)) {
 								$key = array_search($read_sock, $clients);
-								//$clientsInfo[$key][0] = "Computer ".$i;
-								//echo "\r\n{$clientsInfo[$key][1]} send {$data} to {} with SN ".$clientsInfo[$key][0]."\r\n";
-								//echo "\r\n{$ip}:{$port} send {$data} to IP ".$clientsInfo[$key][1]."\r\n";
 								echo "\r\nComputer with IP {$clientsInfo[$key][1]} send {$data} to device.\r\n";
 								$logger->info("Computer with IP {$clientsInfo[$key][1]} send {$data} to device.");
-								//echo "\r\n{$ip} send {$data} from {$read_sock} to ?? with SN ".$clientsInfo[$key][0]."\r\n";
-								//echo "\r\nData length : ".strlen($data)."\r\n"; // check data length
 	
 								// check data starts with serial number
 								if (($data[0] == 'W')) {
-									//$this->linkConnection[$data][1] = $read_sock;
 									if(($data[0] == 'W') && (strlen($data) == 20)) 
 									{
-										//$output->writeln(strlen($data1));
-										//$key = 0;
 										$sn = substr($data, 0, 20);
-										//TODO find if $this->linkConnection exists & what to do if $this->linkConnection is not defined?
-										//TODO change key 0 --> 1 if needed
-										//$this->linkConnection[$data][0] = $read_sock;
 										if(isset($this->linkConnection)){
-											//TODO old version
-											print_r($this->linkConnection);
 											$keyLink = array_key_exists($data, $this->linkConnection);
-											
 											if($keyLink){
-												//print_r($this->linkConnection);
 												echo 'Add link connection >>>>>>>>>>>>>>>>>>>>> '.$keyLink." !!!!!!!\n";
 												if(isset($this->linkConnection[$data][1]) && !empty($this->linkConnection[$data][1])){
 													//Check if sn exists in clients
 													$key1 = array_search($this->linkConnection[$data][1], $clients);
 													
 													if($key1){
-														//print_r($clientsInfo[$key1]);
 														echo "\nSocket is closed with key1:".$clientsInfo[$key1][1]."\n";
 														$logger->info("Socket is closed :".$clientsInfo[$key1][1]);
-														//$this->writeServerLog("\r\nSocket close :".$data."\r\n");
 														$request->setConnect(0, $data);
-														//$this->writeServerLog("\nsetConnect 0 ".$data."\n");
 														socket_close($clients[$key1]);
-														//TODO $this->writeServerLog("\n".date("Y-m-d H:i:s | ")."client ".$clientsInfo[$key1][0]." ip ".$clientsInfo[$key1][3]." with key ".key($clients)." disconnected.\n");
 														unset($clients[$key1]);
 														unset($clientsInfo[$key1]);	
 		
 													}
 												}
-												//var_dump($read_sock);
-												//var_dump($clientsInfo[$key][1]);
 												$this->linkConnection[$data][1] = $read_sock;
 												socket_write($read_sock, $keyLink);
 												print_r($read_sock);
@@ -545,11 +505,12 @@ class TCPServer extends Application
 									}
 									else
 									{
+										//Data is incorrect
 										if (strlen($data)<=20) {
+											echo "\r\nData is incorrect, data length is under 20.\r\n";
 											socket_close($read_sock);
 											unset($clients[$key]);
 											unset($clientsInfo[$key]);
-											//TODO $output->writeln("\r\nData : ".bin2hex($data)."\r\n");
 										}
 										elseif (strlen($data) > 20 && ord($data[21]) != 0) {
 											
@@ -576,28 +537,14 @@ class TCPServer extends Application
 												
 												$this->linkConnection[$sn][1] = $read_sock;
 												echo 'SEND MSG TO RSHOCK >>>>>>>>>>>>>>>>>>>>> '.$data."\n";
-			
-												//print_r($this->linkConnection[$sn][0]);
-												//socket_write($this->linkConnection[$sn][0], $data);
 												
 												if((socket_write($this->linkConnection[$sn][0], $data)) === false)
-												//if(FALSE === socket_write($this->linkConnection[$sn][0], $data))
-												//socket_write($this->linkConnection[$sn][0], $data);
-												//if(socket_read($this->linkConnection[$sn][0], 4096, PHP_BINARY_READ) === false)
-												
-												//if((socket_write($this->linkConnection[$sn][0], $data)) === false)
-												//if ($this->linkConnection[$sn][0] == null and socket_write($this->linkConnection[$sn][0], $data) === false)
-												//if ($this->linkConnection[$sn][0] == null)
 												// If connexion is lost with device when on connect interface, close socket
-												
 												{
 													$key = array_search($this->linkConnection[$sn][0], $clients);
 													if($key){
 														socket_close($clients[$key]);
 														echo "\r\nSocket closed with Sn ".$clientsInfo[$key][1]." and keyFalse: ".$key." !\r\n";
-														//$request->setConnect(0, $sn);
-														//array_splice($clients, $key, 1);
-														//var_dump($clientsInfo[$key]);
 														unset($clients[$key]);
 														unset($clientsInfo[$key]);
 													}
@@ -626,9 +573,7 @@ class TCPServer extends Application
 													echo 'Device is not connected';
 													//unset($data);
 												}
-												
 											}
-		
 										}
 		
 									}
