@@ -482,7 +482,7 @@ class TCPServer extends Application
 												}
 												$this->linkConnection[$data][1] = $read_sock;
 												socket_write($read_sock, $keyLink);
-												print_r($read_sock);
+												//print_r($read_sock);
 												//echo "SEND MSG TO >>>>>>>>>>>>>>>>>>>>> $key\n";
 												echo "SEND ".$keyLink." TO ".$data." >>>>>>>>>>>>>>>>>>>>>\n";
 											}
