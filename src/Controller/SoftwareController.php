@@ -119,7 +119,6 @@ class SoftwareController extends AbstractController
         foreach (deviceType as $key => $deviceType) {
             if (file_exists($_ENV['REL_PACK_PATH'].$deviceType)) {
                 $arrayVersion[$deviceType] = array_diff(scandir($_ENV['REL_PACK_PATH'].$deviceType), array('.'));
-
                 array_shift($arrayVersion[$deviceType]);
                 //if record not in db, add record
                 // for each file in device type folder, create record in db if not exists
@@ -128,10 +127,6 @@ class SoftwareController extends AbstractController
                         $fileArray = explode("v", $file);
                         $version = substr($fileArray[1], -11, 7);
                         $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], ID);
-                        //$deviceTypeName = str_replace('/', '', $deviceType);
-                        if (!file_exists($_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file)) {
-                            copy($_ENV['REL_PACK_PATH'].$deviceType.$file, $_ENV['REL_PACK_ARCH_PATH'].$deviceType.$file);
-                        }
                         $this->initSoftwareInDB($name=$file, $devType=$deviceTypeId, $version, $date=date("Y-m-d | H:i:s"), $request);
                     }
                 }
@@ -229,15 +224,6 @@ class SoftwareController extends AbstractController
         $soft = $software;
         $name = $soft->getName();
         $deviceType = $soft->getDeviceFamily()->getName();
-        /*
-        if (file_exists($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name)) {
-            unlink($_ENV["REL_PACK_PATH"].'/'.$deviceType."/".$name);
-        }
-
-        if (file_exists($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name)) {
-            unlink($_ENV["REL_PACK_ARCH_PATH"].'/'.$deviceType."/".$name);
-        }
-        */
         if (file_exists($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name)) {
             unlink($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name);
         }
