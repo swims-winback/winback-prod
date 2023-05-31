@@ -52,6 +52,37 @@
                             <div class="accordion-collapse collapse show responsive-table overflow-auto" id="accordionCollapse_{{ family.name }}" aria-labelledby="accordionHeading_{{ family.name }}" data-bs-parent="#accordionSoftware">
                                 
                                 <table class="table table-striped table-hover" id="softTable_{{ family.name }}">
+                                        {% if is_granted("ROLE_ADMIN") %}
+                                        <thead>
+                                            <tr>
+                                                <th colspan="1" class="text-center">
+                                                Actual version :
+                                                </th>
+                                                <th colspan="3" class="text-center">
+                                                <span class="actualFile">
+                                                {{ family.actualVersion }}
+                                                </span>
+                                                
+                                                </th>
+                                                <th colspan="1" class="text-center">
+                                                    <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-hidden actualVersion-update-form">
+                                                        <input class="actualVersion_update_input border border-0 w-100" style="background-color:rgb(236, 236, 236);" type="text" name="nm" value="">
+                                                        <button class="actualVersion_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{family.id}}"><i class="fa-solid fa-check"></i></button>
+                                                    </div>
+                                                    {#
+                                                    <select name="" id="">
+                                                    <option value="" selected disabled hidden>Actual Version</option>
+                                                    {% for soft in softwares %}
+                                                        <option value={{soft}} class="select-version" data-devicefamily="{{soft.deviceFamily}}">
+                                                        {{soft}}
+                                                        </option>
+                                                    {% endfor %}
+                                                    </select>
+                                                    #}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        {% endif %}
                                         <thead class="accordion-item">
                                             <tr class="accordion-header">
                                                 <th class="text-center">{{ 'Filename'|trans }}</th>
@@ -74,34 +105,7 @@
                                                 
                                             </tr>
                                         </thead>
-                                        {% if is_granted("ROLE_ADMIN") %}
-                                        <thead>
-                                            
-                                            <tr>
-                                                <th>
-                                                <span>
-                                                Actual version :
-                                                {{ family.actualVersion }}
-                                                </span>
-                                                <div class="input-group d-flex flex-nowrap text-break overflow-hidden actualVersion-update-form">
-                                                    <input class="actualVersion_update_input border border-0" style="background-color:rgb(236, 236, 236);" type="text" name="nm" value="">
-                                                    <button class="actualVersion_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{family.id}}"><i class="fa-solid fa-check"></i></button>
-                                                </div>
-                                                
-                                                {#
-                                                <select name="" id="">
-                                                <option value="" selected disabled hidden>Actual Version</option>
-                                                {% for soft in softwares %}
-                                                    <option value={{soft}} class="select-version" data-devicefamily="{{soft.deviceFamily}}">
-                                                    {{soft}}
-                                                    </option>
-                                                {% endfor %}
-                                                </select>
-                                                #}
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        {% endif %}
+
                                         <tbody class="accordion-body">
                                         
                                         {% for soft in softwares %}
@@ -113,7 +117,7 @@
                                                 
                                                 <td class="text-center">
                                                     {% if is_granted("ROLE_SAV") %}
-                                                        <a download href="{{ asset(ressource_path  ~ 'package/' ~ family.name ~ '/' ~ soft.name) }}">{{soft.name}}</a>
+                                                        <a download href="{{ asset(ressource_path  ~ 'package/' ~ family.name ~ '/' ~ soft.name) }}" class="filename">{{soft.name}}</a>
                                                     {% else %}
                                                         {{soft.name}}
                                                     {% endif %}
@@ -124,15 +128,15 @@
                                                 
                                                 {% if is_granted("ROLE_ADMIN") %}
                                                 <td class="text-center">
-                                                    <a href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger" 
+                                                    <button href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger delete-button" 
                                                     data-bs-target="#modal_delete_{{soft.id}}"
                                                     data-id="delete_{{soft.id}}"
                                                     data-title="{{soft.name}}"
-                                                    data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></a>
+                                                    data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></button>
                                                 </td>
                                                 <td class="text-center">
-                                                    <div class="input-group d-flex flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <textarea class="comment_update_input border border-0" style="background-color:#ffffff;" type="text" name="nm" value="">{{soft.updateComment}}</textarea>
+                                                    <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
+                                                        <textarea class="comment_update_input border border-0 w-100" style="background-color:#ffffff;" type="text" name="nm" value="">{{soft.updateComment}}</textarea>
                                                         <button class="comment_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
                                                     </div>
                                                 </td>

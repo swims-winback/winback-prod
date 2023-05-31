@@ -123,4 +123,36 @@ for (let element of updateActualVersionButtons) {
       addActualVersion(id, version);
       window.location.reload();
     };
+}
+  
+var getPreviousSibling = function (elem, selector) {
+	var sibling = elem.previousElementSibling;
+	if (!selector) return sibling;
+	while (sibling) {
+		if (sibling.matches(selector)) return sibling;
+		sibling = sibling.previousElementSibling;
+	}
+};
+
+
+let deleteButtons = document.getElementsByClassName("delete-button");
+let actualFile = document.getElementsByClassName("actualFile");
+let actualFile_array = []
+for (let element of actualFile) {
+  if (element.innerHTML != '') {
+    clean_value = element.innerHTML.trim()
+      actualFile_array.push(clean_value)
   }
+}
+//make an array of actualFile values
+
+for (let element of deleteButtons) {
+  let filename = $(element).data("title");
+  filename = filename.trim()
+  if (actualFile_array.includes(filename)) {
+    console.log(filename)
+    element.disabled = true;
+   }
+  }
+
+
