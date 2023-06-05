@@ -213,41 +213,25 @@ function addComment(id, comment) {
       console.log(comment);
     }
   });
+  window.location.reload();
 }
   
 let commentButtons = document.getElementsByClassName("comment_button");
 let commentInputs = document.getElementsByClassName("comment_input");
 
-/*
-// Execute a function when the user presses a key on the keyboard
-for (let element of commentInputs) {
-  element.addEventListener("keypress", function (event) {
-    // If the user presses the "Enter" key on the keyboard
-    if (event.key === "Enter") {
-      event.preventDefault(); // Cancel the default action, if needed
-      // Trigger the button element with a click
-      let id = $(element).data("id");
-      let comment = element.value;
-      console.log(comment)
-      if (comment == "") {
-        comment = null
-      }
-      addComment(id, comment);
-      window.location.reload();
-    }
-  });
-}
-*/
 for (let element of commentButtons) {
-  console.log(element);
+  //console.log(element);
   element.onclick = function () {
     let id = $(element).data("id");
     let comment = element.previousElementSibling.value;
+    if (!comment.replace(/\s/g, '').length) {
+      console.log('string only contains whitespace (ie. spaces, tabs or line breaks)');
+      comment = null
+    }
     if (comment == "") {
       comment = null
     }
     addComment(id, comment);
-    window.location.reload();
   }
 }
 
@@ -262,17 +246,20 @@ for (let element of commentButtons) {
       type:"POST",
       cache:false,
       url: `/addDeviceVersion/${version}/${id}`,
-      //data: {id:id, comment:comment},
       success: function () {
         console.log("version added");
         console.log(version);
       }
     });
+    //window.location.reload();
 }
-  
+
+// Delete hidden label after check form
+checkbox_0.parentElement.classList.remove("form-check")
+document.getElementById('versionUpload').parentElement.classList.remove("mb-3")
+
 let versionButton = document.getElementById("version_button");
 let versionInput = document.getElementById("version_input");
-//let versionForm = document.getElementById("version_form");
 let versionDevices = document.getElementsByClassName("device-check");
 
 // TODO check if not multiple device type checked?
@@ -287,8 +274,7 @@ versionButton.onclick = function () {
     }
   }
   console.log(version);
-  //addVersion(version);
-  //versionForm.reset();
-  versionButton.previousElementSibling.value = "";
   window.location.reload();
+  versionButton.previousElementSibling.value = "";
+  //window.location.reload();
 }
