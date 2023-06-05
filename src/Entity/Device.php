@@ -102,12 +102,19 @@ class Device
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
+    #[ORM\OneToMany(mappedBy: 'serial_number', targetEntity: Log::class, orphanRemoval: true)]
+    private Collection $logs;
+
+    #[ORM\Column]
+    private ?bool $server_id = null;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
         //$this->statistics = new ArrayCollection();
         $this->softwares = new ArrayCollection();
         $this->deviceServers = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
     public function __toString()
@@ -456,6 +463,48 @@ class Device
     public function setCity(?string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Log>
+     */
+    public function getLogs(): Collection
+    {
+        return $this->logs;
+    }
+
+    public function addLog(Log $log): self
+    {
+        if (!$this->logs->contains($log)) {
+            $this->logs->add($log);
+            $log->setSerialNumber($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLog(Log $log): self
+    {
+        if ($this->logs->removeElement($log)) {
+            // set the owning side to null (unless already changed)
+            if ($log->getSerialNumber() === $this) {
+                $log->setSerialNumber(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isServerId(): ?bool
+    {
+        return $this->server_id;
+    }
+
+    public function setServerId(bool $server_id): self
+    {
+        $this->server_id = $server_id;
 
         return $this;
     }
