@@ -1,6 +1,16 @@
 # Winback Interface
 
-Winback Interface est une plateforme d'administration pour gérer les machines Winback connectées sur le serveur.
+Winback-assist is a management platform to manage Winback devices connected on the server.
+
+Please check that at least PHP 8.0 is installed on your device and check that php command is available on your terminal with `php -v`.
+Check also that you have Composer, MySQL and Symfony installed and available.
+
+Before running the application, follow these steps:
+- download this folder in your device
+- import the database in your database service
+- run `composer install` to install the dependencies
+- the Ressource folder is a sensitive data so it is not present by default. If you have the Ressource archive on your device, please export it in the public directory.
+
 ## How to use:
 
 ### Start Server:
@@ -11,53 +21,3 @@ If the server starts correctly, it prints server connexion information, device i
 
 ### Start Interface:
 Open a terminal and run command: ```symfony console start:server```
-
-Libraries to install:
-composer require twig/intl-extra
-
-## Installation
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
-```bash
-pip install foobar
-```
-
-## Usage
-
-```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
-```
-
-
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
-
-## Documentation
-
-Create new Command:
-
-- get contentSize, to define data space in header
-- create header
-- if numbers, pass them to setResponseToByte
-- if string, concatenate directly to response
-- concatenate header & response
-- after command switch, response is concatenated with footer
