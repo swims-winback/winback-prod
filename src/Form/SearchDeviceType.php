@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Class\SearchData;
 use App\Entity\DeviceFamily;
 use App\Entity\Software;
+use App\Repository\DeviceFamilyRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -39,14 +40,18 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
                 'expanded' => true,
-                'multiple' => true
+                'multiple' => true,
+                'query_builder' => function (DeviceFamilyRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.name', 'ASC');
+                },
             ])
             
             ->add('version', SearchType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Enter version',
+                    'placeholder' => 'Version',
                 ],
                 'required' => false,
             ])
@@ -55,7 +60,7 @@ class SearchDeviceType extends AbstractType
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Enter upload version',
+                    'placeholder' => 'Upload Version',
                 ],
                 'required' => false,
             ])

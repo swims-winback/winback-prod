@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\DeviceFamily;
+use App\Repository\DeviceFamilyRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -31,6 +32,10 @@ class SearchSoftwareType extends AbstractType
                     'class' => 'form-control',
                 ],
                 'required' => false,
+                'query_builder' => function (DeviceFamilyRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.name', 'ASC');
+                },
             ])
             /*
             ->add('max_result', ChoiceType::class, [
