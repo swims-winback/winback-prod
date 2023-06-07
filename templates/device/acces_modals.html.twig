@@ -11,7 +11,7 @@
             <fieldset class="mb-2">
                 <legend>Test Touch</legend>
                         <div class="form-outline mb-2">
-                            <label for="pageSlide" class="form-label">Page: </label>
+                            <span class="form-label">Page: </span>
                             <div class="input-group">
                                 <input data-sn="{{device.sn}}" data-id="{{device.id}}" class="btn btn-outline-secondary page_button" type="button" id='i_infoPageLess_sn_1234' name="pageSlide" value="-">
                                 <span class="input-group-text" id="pageInfoNumber_{{device.id}}">0</span>
@@ -22,7 +22,7 @@
             <fieldset class="mb-2">
                 <legend>Test Command</legend>
                 <div class="input-group">
-                    <input data-sn="{{device.sn}}" class="form-control" type="text" id="u_cmdStringTest_sn_1234" name="cmdString" value="" placeholder="Command String" required>
+                    <input data-sn="{{device.sn}}" class="form-control" type="text" id="u_cmdStringTest_sn_{{device.sn}}" name="cmdString" value="" placeholder="Command String" required>
                     <input data-id="{{device.id}}" class="btn btn-outline-dark submit_command_button" type="button" id="u_cmdTest_sn_1234" name="cmdTest" value="Send">
                 </div>
             </fieldset>
