@@ -68,21 +68,28 @@
                                         <th></th>
                                         <th id='test_zone_0'>
                                             {% if is_granted("ROLE_SAV")%}
-                                                
+                                                {#
                                                 {{ form_start(versionform) }}
                                                     <div class="input-group d-flex flex-nowrap align-items-stretch justify-content-center">
                                                     {{form_row(versionform.versionUpload, {attr: { style: 'border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: fit-content; height: 100%;'}})}}
                                                     <button type="submit" class="text-center btn bg-orange btn-outline-orange" style="width: fit-content"><i class="fa-solid fa-check fa-2xs"></i></button>
                                                     </div>
                                                 {{ form_end(versionform) }}
-                                                
+                                                #}
+
+                                                <div class="input-group d-flex flex-nowrap align-items-stretch justify-content-center">
+                                                    <textarea class="form-control" name="" id="version_input" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: fit-content; height: 100%;'></textarea>
+                                                    <button type="button" class="text-center btn bg-orange btn-outline-orange" id="version_button">
+                                                    <i class="fa-solid fa-check fa-2xs"></i>
+                                                    </button>
+                                                </div>
                                                 {#
-                                                    <div class="input-group">
-                                                        <textarea class="form-control" name="" id="version_input" cols="10" rows="1"></textarea>
-                                                        <button type="button" class="text-center btn bg-orange btn-outline-orange" id="version_button">
-                                                        <i class="fa-solid fa-check fa-2xs"></i>
-                                                        </button>
-                                                    </div>
+                                                <div class="input-group d-flex flex-nowrap align-items-stretch justify-content-center">
+                                                    <textarea class="form-control" name="" id="version_input" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: fit-content; height: 100%;'></textarea>
+                                                    <button type="button" class="text-center btn bg-orange btn-outline-orange" id="version_button">
+                                                    <i class="fa-solid fa-check fa-2xs"></i>
+                                                    </button>
+                                                </div>
                                                 #}
 
 

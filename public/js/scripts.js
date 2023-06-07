@@ -10,21 +10,34 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
   /* when page refreshed, cancel selection */
   if (window.performance) {
     console.info("window.performance works fine on this browser");
-  }
+}
+  
+/**
+ * 
+ * @param {*} id device id
+ * @param {*} status selected (1) or not (0)
+ */
+function addSelected(id, status) {
+  $.ajax({
+    cache:false,
+    url: `/selected/${id}/${status}`,
+    success: function () {
+      console.log(status)
+    }
+    })
+}
+  
   //console.info(performance.navigation.type);
+  
   if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
     //console.info( "This page is reloaded" );
     for(let button of selectedButton){
       let substr_id = button.getAttribute("id");
-      let id = substr_id.substr(9);
+      //let id = substr_id.substr(9);
       button.checked = false;
-      
-      let xmlhttp = new XMLHttpRequest;
-      if (id != 0) {
-        xmlhttp.open("GET", `/selected/${id}/${0}`)
-        xmlhttp.send()
-      }
-      
+      //if (id != 0) {
+        //addSelected(id, 0)
+      //}
     }
     if (checkbox_0) {
       checkbox_0.checked = false;
@@ -32,7 +45,6 @@ let deviceArray = document.querySelectorAll(".info_device"); //get all the info 
   } else {
     console.info( "This page is not reloaded");
   }
-
 
   /* set device active in db to show connect button and allow connection*/
   /*
@@ -148,8 +160,9 @@ function addForce(id, forced) {
 	/* select devices in db */
 	// if button clicked & button checked, item selected in db
 
+  /*
 	for(let button of selectedButton){
-		button.onclick = function() {
+    button.onclick = function () {
       let substr_id = button.getAttribute("id");
       let id = substr_id.substr(9);
       
@@ -167,7 +180,7 @@ function addForce(id, forced) {
       
 		}
 	}
-
+  */
 
 	/* if checkbox_0 is clicked and is checked, query all checkbox in html, change checkbox.checked's value according to value for checkbox_0, select item in db */
   if (checkbox_0) {
@@ -176,22 +189,24 @@ function addForce(id, forced) {
         for (var i=0; i < checkboxes.length; i++) {
           let id = checkboxes[i].getAttribute("data-id");
           checkboxes[i].checked = true;
-          
+          //addSelected(id, 1)
+          /*
           let xmlhttp = new XMLHttpRequest;
           xmlhttp.open("GET", `/selected/${id}/${1}`)
           xmlhttp.send()
-          
+          */
         }
       }
       else {
         for (var i=0; i < checkboxes.length; i++) {
           let id = checkboxes[i].getAttribute("data-id");
           checkboxes[i].checked = false;
-          
+          //addSelected(id, 0)
+          /*
           let xmlhttp = new XMLHttpRequest;
           xmlhttp.open("GET", `/selected/${id}/${0}`)
           xmlhttp.send()
-          
+          */
         }
       }
     }
@@ -241,14 +256,19 @@ for (let element of commentButtons) {
    * @param {string} version 
    * @param {int} id - device version
    */
-  function addVersion(version, id) {
+function addVersion(version, id) {
+    //console.log("add version...")
     $.ajax({
       type:"POST",
       cache:false,
       url: `/addDeviceVersion/${version}/${id}`,
-      success: function () {
-        console.log("version added");
-        console.log(version);
+      async: false,
+      success: function (data) {
+        //console.log("version added");
+        //console.log(data);
+      },
+      error: function (data) {
+        console.log(data);
       }
     });
     //window.location.reload();
@@ -256,7 +276,7 @@ for (let element of commentButtons) {
 
 // Delete hidden label after check form
 checkbox_0.parentElement.classList.remove("form-check")
-document.getElementById('versionUpload').parentElement.classList.remove("mb-3")
+//document.getElementById('versionUpload').parentElement.classList.remove("mb-3")
 
 let versionButton = document.getElementById("version_button");
 let versionInput = document.getElementById("version_input");
@@ -265,16 +285,20 @@ let versionDevices = document.getElementsByClassName("device-check");
 // TODO check if not multiple device type checked?
 versionButton.onclick = function () {
   let version = versionButton.previousElementSibling.value;
-  console.log(versionDevices.length);
-  for (let device of versionDevices) {
+  //console.log(versionDevices.length);
+  for (let device of selectedButton) {
     if (device.checked == true) {
       let device_id = device.getAttribute("data-id");
       addVersion(version, device_id);
+      //$.when( addVersion(version, device_id) ).done(function() {
+        //window.location.reload();
+      //});
       console.log(device.getAttribute("data-id"));
     }
   }
-  console.log(version);
-  window.location.reload();
-  versionButton.previousElementSibling.value = "";
+  //console.log(version);
   //window.location.reload();
+  versionButton.previousElementSibling.value = "";
+  window.location.reload();
+
 }

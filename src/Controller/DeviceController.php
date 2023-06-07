@@ -117,13 +117,18 @@ class DeviceController extends AbstractController
 
     /**
      * @Route("/addDeviceVersion/{version}/{id}", name="add_version")
+     * function called in js when updateVersion form is triggered
      */
     public function addDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $version, int $id)
     {
+        //var_dump($version);
+        //var_dump($id);
+        
         $user = $this->getUser();
         $devices = $deviceRepository->findAll();
         $device = $deviceRepository->findOneBy(array("id"=>$id));
-
+        //var_dump($device->getSn());
+        
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findOneBy(array('version'=>$version, 'deviceFamily'=>$category->getId()));
         if ($version_software or $version == 0) {
@@ -133,6 +138,9 @@ class DeviceController extends AbstractController
             $this->addFlash(
                 'infoDevice', 'Device '.$device->getSn().' updated !'
             );
+            $em = $doctrine->getManager();
+            $em->persist($device);
+            $em->flush();
         }
         else {
             $this->addFlash(
@@ -140,11 +148,9 @@ class DeviceController extends AbstractController
             );
         }
         $device->setSelected(false);
-        $em = $doctrine->getManager();
-        $em->persist($device);
-        $em->flush();
         return $this->redirectToRoute('device');
         //return new Response("true");
+        
     }
 
     /**
@@ -194,6 +200,7 @@ class DeviceController extends AbstractController
 
     /**
     * @Route("/updated/{id}/{version}/", name="updated")
+    * Update version in modal
     */
     public function updated(Request $request, Device $device, ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, LoggerInterface $logger, $version)
     {
@@ -212,8 +219,7 @@ class DeviceController extends AbstractController
                 'error', 'Software '.$version.' not found, please try again !'
             );
         }  
-        //return new Response("true");
-        return $this->redirectToRoute('device');
+        return new Response("true");
     }
 
     /**
@@ -238,6 +244,23 @@ class DeviceController extends AbstractController
         $em->flush();
 
         //return new Response("true");
+        return $this->redirectToRoute('device');
+    }
+
+    /**
+     * @Route("/addServerId/{id}/{serverId}", name="add_server_id")
+     */
+    public function addServerId(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $serverId, LoggerInterface $logger) {
+        $user = $this->getUser();
+        $device = $deviceRepository->findOneBy(array('id' => $id));
+        $logger->info($user." has changed serverId to ".$serverId." for ".$device->getSn());
+        $this->addFlash('infoDevice', 'ServerId '.$serverId.' changed for '.$device->getSn().'!');
+
+        $device->setServerId($serverId);
+
+        $em = $doctrine->getManager();
+        $em->persist($device);
+        $em->flush();
         return $this->redirectToRoute('device');
     }
 }
