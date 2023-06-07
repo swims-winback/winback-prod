@@ -255,9 +255,7 @@ class DeviceController extends AbstractController
         $device = $deviceRepository->findOneBy(array('id' => $id));
         $logger->info($user." has changed serverId to ".$serverId." for ".$device->getSn());
         $this->addFlash('infoDevice', 'ServerId '.$serverId.' changed for '.$device->getSn().'!');
-
         $device->setServerId($serverId);
-
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
