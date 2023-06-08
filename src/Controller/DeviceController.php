@@ -219,7 +219,8 @@ class DeviceController extends AbstractController
                 'error', 'Software '.$version.' not found, please try again !'
             );
         }  
-        return new Response("true");
+        //return new Response("true");
+        return $this->redirectToRoute('device');
     }
 
     /**
