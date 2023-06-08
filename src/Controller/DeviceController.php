@@ -121,14 +121,9 @@ class DeviceController extends AbstractController
      */
     public function addDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $version, int $id)
     {
-        //var_dump($version);
-        //var_dump($id);
-        
         $user = $this->getUser();
-        $devices = $deviceRepository->findAll();
+        //$devices = $deviceRepository->findAll();
         $device = $deviceRepository->findOneBy(array("id"=>$id));
-        //var_dump($device->getSn());
-        
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findOneBy(array('version'=>$version, 'deviceFamily'=>$category->getId()));
         if ($version_software or $version == 0) {

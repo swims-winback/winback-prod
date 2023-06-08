@@ -3,6 +3,7 @@ var checkboxes = document.getElementsByClassName('device-check');
 let selectedButton = document.querySelectorAll(".device-check");
 let selectedZone = document.getElementById('selectedZone');
 let updateZone = document.querySelectorAll(".update-zone");
+let validButtons = document.querySelectorAll(".valid-buttons");
 //let forcedButton = document.getElementsByName("switchbox");
 let deviceArray = document.querySelectorAll(".info_device"); //get all the info modals
 
@@ -115,6 +116,7 @@ function addSelected(id, status) {
 
 	// ######## Validate version ######## //
   //TODO Update in modal
+  /*
 	for(let zone of updateZone) {
 		zone.addEventListener("change", function() {
 			id = zone.getAttribute('data-id');
@@ -123,7 +125,26 @@ function addSelected(id, status) {
 			document.querySelector(`#update_${id}`).href = url;
 		})
 	}
-  
+  */
+for (let validButton of validButtons) {
+  validButton.addEventListener("click", function () {
+    let id = validButton.getAttribute('name');
+    let zone = document.querySelector(`#update_${id}`);
+    let version = zone.value;
+    let forcedButton = document.querySelector(`#forced_${id}`);
+    if (version != "") {
+      addVersion(version, id);
+    }
+    if (forcedButton.checked == true) {
+      console.log(forcedButton.checked);
+      addForce(id, 1);
+    }
+    else {
+      addForce(id, 0);
+    }
+    window.location.reload();
+  })
+ }
 // ######### CHANGE FORCED ######### //
 /**
  * Change force device status to 1 or 0
@@ -142,6 +163,8 @@ function addForce(id, forced) {
     })
 }
   
+/*
+TODO
   let forcedButton = document.getElementsByName("switchbox");
 	for(let button of forcedButton){
     button.addEventListener("click", function(){  
@@ -155,7 +178,8 @@ function addForce(id, forced) {
 			}
 		})
 	}
-  
+ */
+
 	// ######### Selected function ######### //
 	/* select devices in db */
 	// if button clicked & button checked, item selected in db
@@ -263,13 +287,6 @@ function addVersion(version, id) {
       cache:false,
       url: `/addDeviceVersion/${version}/${id}`,
       async: false,
-      success: function (data) {
-        //console.log("version added");
-        //console.log(data);
-      },
-      error: function (data) {
-        console.log(data);
-      }
     });
     //window.location.reload();
 }

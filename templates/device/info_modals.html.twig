@@ -109,6 +109,7 @@
                         <tr>
                             <th>{{ 'Forced'|trans }} :</th>
                             <td>
+                                <!--
                                 <a href="#" class="form-field form-default"
                                     data-target="modal_forced_{{device.id}}"
                                     data-id="forced_{{device.id}}"
@@ -122,16 +123,29 @@
                                     <span class="slider"></span>
                                     </label>
                                 </a>
+                                -->
+                                <input type="checkbox" 
+                                id="forced_{{device.id}}"
+                                {{ (device.forced)? 'checked': ''}} 
+                                data-id="{{device.id}}" 
+                                name="switchbox">
                             </td>
                         </tr>
                         <tr>
                             <th>{{ 'Upload Version'|trans }} :</th>
                             <td>
+                                {#
                                 <input type="text" id="{{device.id}}"
                                     data-id="{{device.id}}" 
-                                    name="" value="" 
+                                    name="" value=""
                                     class="update-zone" 
                                     onblur="this.value=''">
+                                #}
+                                <input type="text"
+                                    data-id="{{device.id}}" 
+                                    name="" value="" 
+                                    id="update_{{device.id}}"
+                                    class="update-zone">
                             </td>
                         </tr>
                         
@@ -144,11 +158,17 @@
             <div class="modal-footer">
                 {% if is_granted("ROLE_GOE")%}
                 <div>
+                    <!--
                     <a href="" 
                     class="update btn btn-dark red shadow-1 rounded-1 small" 
                     id="update_{{device.id}}" 
                     name="validate">{{ 'Validate'|trans }}
                     </a>
+                    -->
+                    <button type="button"
+                    class="update btn btn-dark red shadow-1 rounded-1 small valid-buttons"  
+                    name="{{device.id}}">{{ 'Validate'|trans }}
+                    </button>
                 </div>
                 {% endif %}
             </div>
