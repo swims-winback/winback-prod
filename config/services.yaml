@@ -8,13 +8,7 @@ parameters:
      app.supported_locales: 'en|fr|ko'
      statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
      uploads_directory: '%env(APP_HOME)%%env(CC_WEBROOT)%%env(RESSOURCE_PATH)%'
-     #packages_directory: '%kernel.project_dir%/src/Ressource/package'
      class_directory: '%kernel.project_dir%/src/Class'
-    # softwares_directory: '%kernel.project_dir%/public/Ressource/package'
-    # archives_directory: '%kernel.project_dir%/public/Ressource/archive/package'
-    # statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
-     #ressource_directory: '%env(RESSOURCE_PATH)%'
-     #ressource_directory: '%kernel.project_dir%/public/Ressource/'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -35,10 +29,11 @@ services:
     App\Services\FileUploader:
         arguments:
             $targetDirectory: '%uploads_directory%'
+
+    App\EventListener\ExceptionListener:
+        tags: [kernel.event_listener]
 when@dev:       
     imports:
-        #- { resource: '../config.php' }
-        #- { resource: '../dataConfig.php' }
         - { resource: '../configServer/*.php' }
 when@prod:
     imports:
