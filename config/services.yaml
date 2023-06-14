@@ -7,7 +7,7 @@
 parameters:
      app.supported_locales: 'en|fr|ko'
      statistics_directory: '%kernel.project_dir%/public/uploads/statistics'
-     uploads_directory: '%env(APP_HOME)%%env(CC_WEBROOT)%%env(RESSOURCE_PATH)%'
+     uploads_directory: '%kernel.project_dir%/public/Ressource/'
      class_directory: '%kernel.project_dir%/src/Class'
 services:
     # default configuration for services in *this* file
