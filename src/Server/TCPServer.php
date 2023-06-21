@@ -116,7 +116,7 @@ class TCPServer extends Application
 		set_time_limit(0);
 		ob_implicit_flush();
 
-		$msg = str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3)."\r\n==========   SERVER STARTED   ==========\r\n".str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3);
+		$msg = str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3)."\r\n==========   SERVER STARTED {$_ENV['ADDRESS']}:{$_ENV['PORT']}   ==========\r\n".str_repeat("\r\n".str_repeat("#", 30)."\r\n", 3);
 		
 		echo($msg);
 		//$request->setConnectAll(0);
@@ -125,7 +125,7 @@ class TCPServer extends Application
 		// set the option to reuse the port
 		socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1);
 		// bind the socket to the address defined in config on port
-		if (socket_bind($sock, ADDRESS, $_ENV['PORT']) === false) {
+		if (socket_bind($sock, $_ENV['ADDRESS'], $_ENV['PORT']) === false) {
 			echo "socket_bind() a échoué : raison : " . socket_strerror(socket_last_error($sock)) . "\n";
 			return false;
 		}
