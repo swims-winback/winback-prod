@@ -93,11 +93,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/super, roles: ROLE_SUPER }
-         - { path: ^/user/client, roles: ROLE_CLIENT }
-         - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/sav, roles: ROLE_SAV }
-         - { path: ^/(en|fr|ko)/user, roles: ROLE_USER }
+         - { path: ^/super, roles: ROLE_SUPER, requires_channel: https }
+         - { path: ^/user/client, roles: ROLE_CLIENT, requires_channel: https }
+         - { path: ^/admin, roles: ROLE_ADMIN, requires_channel: https }
+         - { path: ^/sav, roles: ROLE_SAV, requires_channel: https }
+         - { path: ^/(en|fr|ko)/user, roles: ROLE_USER, requires_channel: https }
          
 
 when@test:

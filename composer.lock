@@ -8538,16 +8538,16 @@
         },
         {
             "name": "symfony/ux-chartjs",
-            "version": "v2.7.0",
+            "version": "v2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-chartjs.git",
-                "reference": "7f486038d828fd893b2f769e8e8954b7cd028691"
+                "reference": "1dc192838f6bfbc30236cc971652ee049263274a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-chartjs/zipball/7f486038d828fd893b2f769e8e8954b7cd028691",
-                "reference": "7f486038d828fd893b2f769e8e8954b7cd028691",
+                "url": "https://api.github.com/repos/symfony/ux-chartjs/zipball/1dc192838f6bfbc30236cc971652ee049263274a",
+                "reference": "1dc192838f6bfbc30236cc971652ee049263274a",
                 "shasum": ""
             },
             "require": {
@@ -8599,7 +8599,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-chartjs/tree/v2.7.0"
+                "source": "https://github.com/symfony/ux-chartjs/tree/v2.7.1"
             },
             "funding": [
                 {
@@ -8615,7 +8615,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-19T15:55:42+00:00"
+            "time": "2023-01-24T15:40:19+00:00"
         },
         {
             "name": "symfony/validator",
