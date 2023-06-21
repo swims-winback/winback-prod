@@ -1,20 +1,9 @@
 <?php
 namespace App\Server;
 
-use App\Entity\DeviceFamily;
-use App\Repository\DeviceFamilyRepository;
-use Exception;
 //use Monolog\Logger;
 
 ini_set('memory_limit','128M');
-//require_once dirname(__DIR__).'/config.php';
-//require_once(__DIR__.'/config.php');
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-//require_once dirname(__FILE__, 3).'/configServer/config.php';
 
 class Utils {
     
@@ -24,15 +13,12 @@ class Utils {
     private $dbRequest;
     function __construct() {
     }
-    /*
-    function __construct(DbRequest $dbRequest) {
-        $this->dbRequest;
-    }
-    */
+
     /**
      * List files in directory, ascending order
-     *
-     * array of files in directory, in ascending order
+     * @param mixed $deviceType
+     * @param mixed $path
+     * @return array|bool array of files in directory, in ascending order
      */
     function listFiles(string $deviceType, $path)
     {
