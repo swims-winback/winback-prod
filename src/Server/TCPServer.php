@@ -328,7 +328,7 @@ class TCPServer extends Application
 								//echo ("\r\nData received: " . $data . "\r\n");
 								$time_start_socket = microtime(true);
 								$task = new CommandDetect();
-								//$client = new Client();
+								//$clientServeur = new Client();
 								$sn = substr($data, 0, 20);
 								$deviceType = hexdec($data[3].$data[4]);
 								$clientsInfo[$deviceKey][0] = $sn; // Show serial number in terminal
@@ -353,7 +353,7 @@ class TCPServer extends Application
 											socket_write($clients[$deviceKey], $responseArray[1]);
 											$clientsInfo[$deviceKey][6] = $indexToGet;
 											//echo "Index: ".$indexToGet;
-											//$client->main($data);
+											//$clientServeur->main($data);
 										}
 									}
 									// Check & show percentage number
@@ -382,7 +382,7 @@ class TCPServer extends Application
 									else {
 										//print_r($responseArray[1]);
 										socket_write($clients[$deviceKey], $responseArray[1]);
-										//$client->main($data);
+										//$clientServeur->main($data);
 									}
 									
 									//socket_write($clients[$key], $responseArray[1]);

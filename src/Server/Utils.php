@@ -1,20 +1,9 @@
 <?php
 namespace App\Server;
 
-use App\Entity\DeviceFamily;
-use App\Repository\DeviceFamilyRepository;
-use Exception;
 //use Monolog\Logger;
 
 ini_set('memory_limit','128M');
-//require_once dirname(__DIR__).'/config.php';
-//require_once(__DIR__.'/config.php');
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-//require_once dirname(__FILE__, 3).'/configServer/config.php';
 
 class Utils {
     
@@ -24,15 +13,12 @@ class Utils {
     private $dbRequest;
     function __construct() {
     }
-    /*
-    function __construct(DbRequest $dbRequest) {
-        $this->dbRequest;
-    }
-    */
+
     /**
      * List files in directory, ascending order
-     *
-     * array of files in directory, in ascending order
+     * @param mixed $deviceType
+     * @param mixed $path
+     * @return array|bool array of files in directory, in ascending order
      */
     function listFiles(string $deviceType, $path)
     {
@@ -95,46 +81,6 @@ class Utils {
 
     }
 
-    /**
-     * Compare contents of package file and archive file
-     *
-     * @param string $fileArch
-     * @param string $fileUp
-     * @return boolean
-     */
-    function compareFile(string $fileArch, string $fileUp) : bool
-    {
-        if (!file_exists($fileArch) || !file_exists($fileUp)) {
-            echo "Archive File {$fileArch} or Package File {$fileUp} not present on the server.";
-            //$logger->error("Archive File {$fileArch} or Package File {$fileUp} not present on the server.");
-            return false;
-        }
-        if(filesize($fileArch) !== filesize($fileUp)) {
-            echo "Archive File {$fileArch} and Package File {$fileUp} are not the same size.";
-            //$logger->error("Archive File {$fileArch} and Package File {$fileUp} are not the same size.");
-            return false;
-        }
-        // Check if content is different
-        $ahandle = fopen($fileArch, 'rb');
-        $bhandle = fopen($fileUp, 'rb');
-        
-
-		if($ahandle && $bhandle){
-            
-			  if(fread($ahandle, 8192) != fread($bhandle, 8192))
-			  {
-                echo "\r\nUhuh, something went wrong ! Contents of package file and archive file are different, please check your files.\r\n";
-                echo "\r\n #################### \r\n";
-                return false;
-			  }
-			fclose($ahandle);
-			fclose($bhandle);
-
-            //return true;
-		}
-        return true;
-    }
-
     function compareFileTest(string $fileArch, string $fileUp) : bool
     {
         if (!file_exists($fileArch) || !file_exists($fileUp)) {
@@ -176,7 +122,7 @@ class Utils {
     function checkLastVersion(string $deviceType, string $boardType = '2')
     {
         $dbRequest = new DbRequest;
-        //$scanPackFile = $this->listFiles($deviceType, PACK_PATH); // Package list
+        //$scanPackFile = $this->listFiles($deviceType, $_ENV['PACK_PATH']); // Package list
         //print_r($scanPackFile);
         //if ($scanPackFile!=false) {
             $lastVersUp = $dbRequest->getDeviceTypeActualVers($deviceType);
@@ -184,7 +130,7 @@ class Utils {
             //$filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
             //$filename = $lastVersUp["name"];
             //$version = $lastVersUp["version"];
-            //$lastUpVerFile = PACK_PATH.deviceTypeArray[$deviceType].$filename;
+            //$lastUpVerFile = $_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$filename;
             return $lastVersUp;
         //}
         //echo ("\r\nerror :\r\n
@@ -207,14 +153,14 @@ class Utils {
     function checkFile(string $deviceType, string $boardType = '2') : string|bool
     {
         $scanPackFile = $this->listFiles($deviceType, $_ENV['PACK_PATH']); // Package list
-        #$scanArchFile = $this->listFiles($deviceType, PACK_ARCH_PATH); // Archive list
+        #$scanArchFile = $this->listFiles($deviceType, $_ENV['PACK_ARCH_PATH']); // Archive list
         #if ($scanPackFile!=false && $scanArchFile!=false) {
         if ($scanPackFile!=false) {
             $lastVersUp = $this->getVersion2($scanPackFile);
 
             $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
             $lastUpVerFile = $_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$filename;
-            //$lastArchVerFile = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$filename;
+            //$lastArchVerFile = $_ENV['PACK_ARCH_PATH'].deviceTypeArray[$deviceType].$filename;
             return $filename;
         }
         echo ("\r\nerror :\r\n
