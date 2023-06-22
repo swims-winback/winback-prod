@@ -23,6 +23,11 @@ class Sn
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     //#[ORM\Column(name: 'Date', type: "datetime", nullable: true)]
     private ?\DateTimeInterface $Date = null;
+
+    /*
+    #[ORM\ManyToOne(inversedBy: 'serial_number')]
+    private ?Client $client = null;
+    */
     //private ?string $Date = null;
 
     public function getId(): ?int
@@ -41,7 +46,7 @@ class Sn
 
         return $this;
     }
-
+    
     public function getDevice(): ?string
     {
         return $this->Device;
@@ -53,7 +58,7 @@ class Sn
 
         return $this;
     }
-
+    
     public function getDate(): ?\DateTimeInterface
     {
         return $this->Date;
@@ -65,4 +70,18 @@ class Sn
 
         return $this;
     }
+
+    /*
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+    */
 }
