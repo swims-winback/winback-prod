@@ -108,6 +108,12 @@ class Device
     #[ORM\Column]
     private ?bool $server_id = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $server_ip = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $server_port = null;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
@@ -505,6 +511,30 @@ class Device
     public function setServerId(bool $server_id): self
     {
         $this->server_id = $server_id;
+
+        return $this;
+    }
+
+    public function getServerIp(): ?string
+    {
+        return $this->server_ip;
+    }
+
+    public function setServerIp(?string $server_ip): self
+    {
+        $this->server_ip = $server_ip;
+
+        return $this;
+    }
+
+    public function getServerPort(): ?string
+    {
+        return $this->server_port;
+    }
+
+    public function setServerPort(string $server_port): self
+    {
+        $this->server_port = $server_port;
 
         return $this;
     }
