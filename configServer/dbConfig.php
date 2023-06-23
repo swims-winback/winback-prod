@@ -33,6 +33,7 @@ if (!defined('DOWNLOAD')) define('DOWNLOAD', 'download');
 if (!defined('UPDATE_COMMENT')) define('UPDATE_COMMENT', 'update_comment');
 if (!defined('COUNTRY')) define('COUNTRY', 'country');
 if (!defined('CITY')) define('CITY', 'city');
+if (!defined('SERVER_ID')) define('SERVER_ID', 'server_id');
 /* Define User Table properties */
 
 if (!defined('LOGIN')) define('LOGIN', 'username');
