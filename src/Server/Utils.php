@@ -1,7 +1,7 @@
 <?php
 namespace App\Server;
 
-//use Monolog\Logger;
+use Monolog\Logger;
 
 ini_set('memory_limit','128M');
 
@@ -15,105 +15,6 @@ class Utils {
     }
 
     /**
-     * List files in directory, ascending order
-     * @param mixed $deviceType
-     * @param mixed $path
-     * @return array|bool array of files in directory, in ascending order
-     */
-    function listFiles(string $deviceType, $path)
-    {
-        if (file_exists($path.deviceTypeArray[$deviceType])) {
-            return array_diff(scandir($path.deviceTypeArray[$deviceType]), array('..', '.'));
-        }
-        else {
-            echo "\r\nUhuh, something went wrong ! Path doesn't exist, please check that ".$path.deviceTypeArray[$deviceType]." exists.\r\n";
-            echo "\r\n #################### \r\n";
-            return false;
-        }
-    }
-
-    /**
-     * Get device version from a file list
-     * 
-     * @param array $fileList
-     * @param string $boardType
-     * @return string $version
-     */
-    function getVersion(array $fileList, string $boardType = '2') : string
-    {
-        //$fileList = $this->listUpFile($deviceType);
-        if ($fileList) {
-            foreach ($fileList as $fileName) {
-                $versionValue = basename($fileName, extFILENAME);
-                $aValue = explode($boardType.'_v', $versionValue);
-                /*
-                echo "\r\n".'Filename : '.$fileName."\r\n";
-                */
-                if(isset($aValue[1])){
-                    $version = $aValue[1];
-                    /*
-                    echo "\r\n".'Version : '.$aValue[1]."\r\n";
-                    echo "\r\ngetVersion function is working correctly !\r\n";
-                    echo "\r\n #################### \r\n";
-                    */
-                    return $version;
-                }
-            }
-            echo "\r\nUhuh, something went wrong ! Filelist is empty, please check your package folder.\r\n";
-            echo "\r\n #################### \r\n";
-        }
-
-    }
-
-    /**
-     * Get last file of a list of software files and extract the version number
-     */
-    function getVersion2(array $fileList) : string
-    {
-        if ($fileList) {
-            $versionValue = basename(end($fileList), extFILENAME);
-            $version = substr($versionValue, -7);
-            return $version;
-        }
-        echo "\r\nUhuh, something went wrong ! Filelist is empty, please check your package folder.\r\n";
-        echo "\r\n #################### \r\n";
-        return false;
-
-    }
-
-    function compareFileTest(string $fileArch, string $fileUp) : bool
-    {
-        if (!file_exists($fileArch) || !file_exists($fileUp)) {
-            echo "version not present on the server";
-            //$logger->error("Archive File {$fileArch} or Package File {$fileUp} not present on the server.");
-            return false;
-        }
-        if(filesize($fileArch) !== filesize($fileUp)) {
-            //$logger->error("Archive File {$fileArch} and Package File {$fileUp} are not the same size.");
-            return false;
-        }
-        // Check if content is different
-        $ahandle = fopen($fileArch, 'rb');
-        $bhandle = fopen($fileUp, 'rb');
-        
-
-		if($ahandle && $bhandle){
-            
-			  if(fread($ahandle, 8192) != fread($bhandle, 8192))
-			  {
-                echo "\r\nUhuh, something went wrong ! Contents of package file and archive file are different, please check your files.\r\n";
-                echo "\r\n #################### \r\n";
-                return false;
-			  }
-			fclose($ahandle);
-			fclose($bhandle);
-
-            //return true;
-		}
-        return true;
-    }
-
-    /**
      * Summary of checkLastVersion
      * @param string $deviceType
      * @param string $boardType
@@ -122,67 +23,8 @@ class Utils {
     function checkLastVersion(string $deviceType, string $boardType = '2')
     {
         $dbRequest = new DbRequest;
-        //$scanPackFile = $this->listFiles($deviceType, $_ENV['PACK_PATH']); // Package list
-        //print_r($scanPackFile);
-        //if ($scanPackFile!=false) {
-            $lastVersUp = $dbRequest->getDeviceTypeActualVers($deviceType);
-            //print_r($lastVersUp);
-            //$filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
-            //$filename = $lastVersUp["name"];
-            //$version = $lastVersUp["version"];
-            //$lastUpVerFile = $_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$filename;
-            return $lastVersUp;
-        //}
-        //echo ("\r\nerror :\r\n
-        //\r\nUhuh, something went wrong ! Package list is not found.\r\n
-        //\r\n####################\r\n");
-        //return false;
-    }
-    /**
-     * List files in archive & package folder; 
-     * if size of lists are identical, 
-     * get version of package & archive; 
-     * if versions are identicals, 
-     * build software filename & returns it
-     *
-     * @param string $deviceType
-     * @param string $boardType
-     * @return string|boolean $filename
-     */
-    
-    function checkFile(string $deviceType, string $boardType = '2') : string|bool
-    {
-        $scanPackFile = $this->listFiles($deviceType, $_ENV['PACK_PATH']); // Package list
-        #$scanArchFile = $this->listFiles($deviceType, $_ENV['PACK_ARCH_PATH']); // Archive list
-        #if ($scanPackFile!=false && $scanArchFile!=false) {
-        if ($scanPackFile!=false) {
-            $lastVersUp = $this->getVersion2($scanPackFile);
-
-            $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
-            $lastUpVerFile = $_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$filename;
-            //$lastArchVerFile = $_ENV['PACK_ARCH_PATH'].deviceTypeArray[$deviceType].$filename;
-            return $filename;
-        }
-        echo ("\r\nerror :\r\n
-        \r\nUhuh, something went wrong ! Package list is not found.\r\n
-        \r\n####################\r\n");
-        return false;
-    }
-    
-    function checkFileTest(string $deviceType, string $boardType = '2') : string|bool
-    {
-        $scanPackFile = $this->listFiles($deviceType, $_ENV['PACK_PATH']); // Package list
-        if ($scanPackFile!=false) {
-            $lastVersUp = $this->getVersion2($scanPackFile);
-
-            $filename = stFILENAME."_".$deviceType."_".$boardType."_v".$lastVersUp.extFILENAME;
-            $lastUpVerFile = $_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$filename;
-            return $filename;
-        }
-        echo ("\r\nerror :\r\n
-        \r\nUhuh, something went wrong ! Package list is not found.\r\n
-        \r\n####################\r\n");
-        return false;
+        $lastVersUp = $dbRequest->getDeviceTypeActualVers($deviceType);
+        return $lastVersUp;
     }
 
     /**
@@ -194,39 +36,82 @@ class Utils {
      * @param string $fileName
      * @return string|bool
      */
-    function getFileContent(string $deviceType, string $fileName) : string|bool
+    /*
+    function getFileContent(string $deviceType, string $fileName, Logger $logger) : string|bool
     {
-		if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName)){
-            //echo "\r\n ".$fileName . " file exists !\r\n";
-            $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName);
-            if ($content) {
-                return $content;
-            }
-            else {
-                echo "\r\nContent cannot be get.\r\n";
-                return false;
-            }
-		}
-        else
-        {
-			$aValue = explode('_', $fileName);
-            //echo "\r\naValue: ".$aValue[2];
-			//return file_get_contents($this->checkFile($deviceType, $aValue[2]));
-            $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
-            $lastVersUp = $this->checkLastVersion($deviceType, $boardType);
-			$actualFile = $lastVersUp["name"];
-            if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile)){
-                $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile);
-                if (!$content) {;
-                    //throw new Exception('Content cannot be get.');
+        if (file_exists($_ENV['PACK_PATH'])) { # check that directory exists and is accessible
+            if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName)){
+                $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName);
+                if ($content) {
+                    return $content;
+                }
+                else {
+                    $logger->error("Content of file".$_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName." cannot be get.");
                     echo "\r\nContent cannot be get.\r\n";
                     return false;
                 }
-                return $content;
             }
-            echo "\r\nFile doesn't exist, please check again.\r\n";
+            else
+            {
+                $aValue = explode('_', $fileName);
+                $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
+                $lastVersUp = $this->checkLastVersion($deviceType, $boardType);
+                $actualFile = $lastVersUp["name"];
+                if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile)){
+                    $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile);
+                    if (!$content) {;
+                        //throw new Exception('Content cannot be get.');
+                        $logger->error("Content of file".$_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile." cannot be get.");
+                        echo "\r\nContent cannot be get.\r\n";
+                        return false;
+                    }
+                    return $content;
+                }
+                $logger->error($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile." doesn't exist, please check again.");
+                echo "\r\nFile doesn't exist, please check again.\r\n";
+                return false;
+            }
+        }
+        else {
+            $logger->error("<error>Directory" . $_ENV['PACK_PATH'] . "doesn't exist. Content cannot be get.</error>");
+            echo "\r\nDirectory". $_ENV['PACK_PATH'] ."doesn't exist. Content cannot be get.\r\n";
             return false;
-		}
+        }
+
+    }
+    */
+    function getFileContent(string $deviceType, string $fileName) : string|bool
+    {
+        if (file_exists($_ENV['PACK_PATH'])) { # check that directory exists and is accessible
+            if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName)){
+                $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName);
+                if ($content) {
+                    return $content;
+                } else {
+                    echo "\r\nContent cannot be get.\r\n";
+                    return false;
+                }
+            } else {
+                $aValue = explode('_', $fileName);
+                $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
+                $lastVersUp = $this->checkLastVersion($deviceType, $boardType);
+                $actualFile = $lastVersUp["name"];
+                if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile)){
+                    $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile);
+                    if (!$content) {
+                        echo "\r\nContent cannot be get.\r\n";
+                        return false;
+                    }
+                    return $content;
+                }
+                echo "\r\nFile doesn't exist, please check again.\r\n";
+                return false;
+            }
+        }
+        else {
+            echo "\r\nDirectory". $_ENV['PACK_PATH'] ."doesn't exist. Content cannot be get.\r\n";
+            return false;
+        }
     }
 
     function getFileContentTest(string $deviceType, string $fileName) : bool
