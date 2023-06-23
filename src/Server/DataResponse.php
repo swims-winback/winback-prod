@@ -1,29 +1,16 @@
 <?php
 namespace App\Server;
 
-//require_once ('config.php');
-require_once dirname(__FILE__, 3).'/configServer/config.php';
-//require_once CLASS_PATH.'Utils.php';
+use Monolog\Logger;
 require_once("Utils.php");
 require_once("DbRequest.php");
-//include_once CLASS_PATH.'Utils.php';
 
 
 
 class DataResponse extends Utils
 {
-    private $aResponse = array();
-    private $aIndex = array();
-    //private $aSizeProg = array();
-    private $sHeader;
-    private $fileContent;
-    private $fileContentCRC;
     private $fileName;
-	//private $contents;
-    private $startOffset = 0;
-    private $sizeContent = 0;
-    //private $sizeProg = 0;
-
+    private $header;
     private $getserverCesarMatrixTxArray=array(
         0x9E, 0xAC, 0xCF, 0x90, 0x36, 0x3A, 0x1F, 0xDC, 0xBB, 0x4B, 0x4A, 0x71, 0x61, 0x09, 0x10, 0x07,
         0x6A, 0xF1, 0x2A, 0x87, 0xF3, 0x1A, 0xBC, 0xAB, 0xE4, 0xDD, 0xD8, 0x48, 0x7B, 0x0A, 0xA4, 0xCB,
@@ -43,27 +30,14 @@ class DataResponse extends Utils
 
     function __construct() {
         
-        //$this->utils = new Utils();
     }
-    /*
-    function __construct(Utils $utils) {
-        $this->utils = $utils;
-        //$this->utils = new Utils();
-    }
-	*/
-
-    /*
-	function getIndexFile($command){
-        $this->startOffset = $this->aIndex[0]+$this->aIndex[1]+$this->aIndex[2]+$this->aIndex[3];
-    }
-    */
 
     /**
      * Returns specific substracted data from file content, the beginning of data corresponds to startOffset & the data length corresponds to fromIndex
      *
      * @param string $fileContent //$fileContent extracted with getFileContent
-     * @param [type] $startOffset
      * @param integer $fromIndex
+     * @param integer $startOffset
      * @return string
      */
     function setFileContent(string $fileContent, $fromIndex = 0, $startOffset = 0){
@@ -72,38 +46,25 @@ class DataResponse extends Utils
         return $fileContentFromIndex;
     }
 
-    /*
-    function setFileContent(string $deviceType, int $startOffset = 0) : string|bool
-    {
-        //$startOffset += $fromIndex;
-        //$this->getContentFromIndex = $this->getContentFromIndex($deviceType, $fileName, $this->startOffset);
-        echo $this->getContentFromIndex($deviceType, $startOffset);
-        echo "\r\nsetFileContent function is working correctly !\r\n";
-        echo "\r\n #################### \r\n";
-        return $this->getContentFromIndex($deviceType, $startOffset);
-    }
-	*/
-
+    /**
+     * Summary of getIndexForImg
+     * @param mixed $fileContent
+     * @return int
+     */
     function getIndexForImg($fileContent){
-        //$fileContent = $this->getFileContent($deviceType);
-        //$this->aIndex[0] = hexdec(bin2hex($this->fileContent[18]))*256;
-        //$this->aIndex[1] = hexdec(bin2hex($this->fileContent[19]));
         $aIndex[0] = hexdec(bin2hex($fileContent[18]))*256;
         $aIndex[1] = hexdec(bin2hex($fileContent[19]));
         $startOffset = $aIndex[0] + $aIndex[1];
-        /*
-        echo "\r\naIndex[0] : ".$aIndex[0]."\r\n";
-        echo "\r\naIndex[1] : ".$aIndex[1]."\r\n";
-        echo "\r\nstartOffset : ".$startOffset."\r\n";
-        echo "\r\ngetIndexForImg function is working correctly !\r\n";
-        echo "\r\n #################### \r\n";
-        */
-        //echo "\r\nstartOffset : ".$startOffset."\r\n";
-        return $startOffset;
+        return intval($startOffset);
     }
     
+    /**
+     * Summary of getIndexForProg
+     * @param string $command
+     * @param string $fileContent
+     * @return int
+     */
     function getIndexForProg(string $command, string $fileContent){
-        //$fileContent = $this->getFileContent($deviceType);
         $listProgIndex = 
             array(
                 "FC" => array(8,9,10,11),
@@ -118,101 +79,99 @@ class DataResponse extends Utils
         $aIndex[2] = hexdec(bin2hex($fileContent[$listProgIndex[$command][2]]))*256;
         $aIndex[3] = hexdec(bin2hex($fileContent[$listProgIndex[$command][3]]));
         $startOffset = $aIndex[0] + $aIndex[1] + $aIndex[2] + $aIndex[3];
-        /*
-        echo "\r\nstartOffset : ".$startOffset."\r\n";
-        echo "\r\ngetIndexForProg function is working correctly !\r\n";
-        echo "\r\n #################### \r\n";
-        */
-        return $startOffset;
+        return intval($startOffset);
     }
 
-    // Function used in commandDetect, in DD case
-    /*
-	function setFileContent2048Bytes($fromIndex = 0){
-        $this->startOffset += $fromIndex;
-        $this->getContentFromIndex = $this->utils->getContentFromIndex($this->fileContent, $this->startOffset,2048);
-		return strlen($this->getContentFromIndex);
-    }
-	*/
-    function exportFile($directory, $sn, $logTxt) {
-        //$path = LOG_PATH."dc_file/";
-        if (!file_exists($directory)) {
-            mkdir($directory, 0777, true);
-        }
-        $logFile = trim($sn).".txt";
-        //if (file_exists($directory.$logFile)) {
-            $fd = fopen($directory.$logFile, "a+");
-            if($fd){
-                fwrite($fd, $logTxt);
-                fclose($fd);
-                return $logFile;
-            }else{
-                echo "fd error";
-            }
-        //}
-    }
     /**
      * Extract content from file, between startOffset and 4096
+     * @param string $fileName
+     * @param int $fromIndex
+     * @param int $startOffset
+     * @return array
      */
-    /*
-	function setFileContent4096Bytes($fileContent, $fromIndex = 0, $startOffset = 0){
-        //$startOffset = 0;
-        $startOffset += $fromIndex;
-        //$fileContent = $this->getFileContent($deviceType);
-        $fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset, 4096);
-        //Export to a new file
-
-        //echo "\r\nfile content length : ".strlen($fileContentFromIndex);
-        $resultArray = array($fileContentFromIndex, strlen($fileContentFromIndex));
-		return $resultArray;
-    }
-    */
     function setFileContent4096Bytes($fileName, $fromIndex = 0, $startOffset = 0){
-        //$startOffset = 0;
         $startOffset += $fromIndex;
-        //$fileContent = $this->getFileContent($deviceType);
-        //$fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset, 4096);
         //Export to a new file
         $fileContentFromIndex = file_get_contents($fileName, $use_include_path=false, $context=null, $offset=$startOffset, $length=4096);
-        //echo "\r\nfile content length : ".strlen($fileContentFromIndex);
         $resultArray = array($fileContentFromIndex, strlen($fileContentFromIndex));
 		return $resultArray;
     }
-	
-    function setFileName($fileName){
-        //return $this->fileName = $fileName;
-        $this->fileName = $fileName;
-        return $this;
-    }
-    
-    function getFileName(){
-        return $this->fileName;
-    }
 
+    /**
+     * Summary of setHeader
+     * @param int $cmd
+     * @param int $reqId
+     * @param int $dataSize
+     * @return string
+     */
     function setHeader(int $cmd, int $reqId, $dataSize=FW_OCTETS){
         $this->header = chr(AA).chr(0).chr($reqId).chr($cmd).chr(intval($dataSize/256)).chr($dataSize%256);
-        $binHeader = bin2hex($this->header);
-        //echo "\r\nheader : {$binHeader}\r\n";
         return $this->header;
     }
     
+    /**
+     * Summary of setFooter
+     * @param string $oTram
+     * @return string
+     */
     function setFooter($oTram){
         $tramSize = 0;
         for($parse = 0; $parse < strlen($oTram); $parse++){
 			$tramSize = $tramSize + (hexdec(bin2hex($oTram[$parse])) * (($parse%255)+1));
         }
         return chr($tramSize);
-
     }
 	
-    function getSynchroDirectoryData($path, $device){
-        if (file_exists(LIB_PATH.$device.$path)) {
-            $listFiles = scandir(LIB_PATH.$device.$path);
-            //echo "\r\npath : {$path}\r\n";
+    /**
+     * return structure of library folder to the device
+     * @param string $path
+     * @param string $device
+     * @param string $config - boardType
+     * @return string $Response
+     */
+    function getSynchroDirectoryData($path, $device, $config){
+        $pathSynchro = $_ENV['LIB_PATH'] . $device . $config.'/' . $path;
+        if (file_exists($pathSynchro)) {
+            $listFiles = array_values(array_diff(scandir($pathSynchro), array('..', '.'))); //list files, delete '.' in directory array, reset array keys
+            $directoryListString='';
+            for($i=0; $i<count($listFiles); $i++){
+                if (strpos($listFiles[$i], '.')) {
+                    $handle = fopen($pathSynchro . $listFiles[$i], 'rb');
+                    if ($handle) {
+                        $contents = fread($handle, 9);
+                        fclose($handle);
+                        $version = hexdec(bin2hex($contents[7]));
+                        $revision = hexdec(bin2hex($contents[8]));
+                        $directoryListString .= $listFiles[$i] . ',' . ((intval($version / 100)) % 10) . ((intval($version / 10)) % 10) . ($version % 10) . ((intval($revision / 100)) % 10) . ((intval($revision / 10)) % 10) . ($revision % 10) . '|';
+                    }
+                } else
+                    $directoryListString .= $listFiles[$i] . '|';
+            }
+            $dataSize=strlen($directoryListString);
+            $this->header[4]=chr(intval($dataSize/256));
+            $this->header[5]=chr($dataSize%256);
+            $Response = $this->header.$directoryListString;
+            return $Response;
+        }
+        else {
+            $directoryListString = false;
+            $this->header[4]=chr(0);
+            $this->header[5]=chr(0);
+            $Response = $this->header.$directoryListString;
+            return $Response;
+        }
+	}
+
+    function getProtocolDirectoryData($path, $device, $config){
+        $pathProto = $_ENV['PROTO_PATH'] . $device . $config.'/' . 'WB/' . $path;
+        if (file_exists($pathProto)) {
+            //echo "\r\n".$pathProto."\r\n";
+            $listFiles = scandir($pathProto);
+            $listFiles = array_slice($listFiles, 0, 102);
             $directoryListString='';
             for($i=0;$i<count($listFiles);$i++)if($listFiles[$i][0]!='.'){
                 if(strpos($listFiles[$i],'.')){
-                    $handle = fopen(LIB_PATH.$device.$path.$listFiles[$i], 'rb');
+                    $handle = fopen($pathProto.$listFiles[$i], 'rb');
                     if($handle){
                         $contents=fread($handle, 9);
                         fclose($handle);
@@ -222,62 +181,37 @@ class DataResponse extends Utils
                     }
                 }else $directoryListString.=$listFiles[$i].'|';
             }
-            //echo "\r\ndirectory : {$directoryListString}\r\n";
-            
-            //$directoryListString="DOCS/|";
             $dataSize=strlen($directoryListString);
             $this->header[4]=chr(intval($dataSize/256));
             $this->header[5]=chr($dataSize%256);
             $Response = $this->header.$directoryListString;
             return $Response;
         }
-        else {            
-            //$dataSize=strlen($directoryListString);
+        else {
             $directoryListString = false;
             $this->header[4]=chr(0);
             $this->header[5]=chr(0);
             $Response = $this->header.$directoryListString;
             return $Response;
         }
-
 	}
 
-
-
-	/**
-	 * Write logTxt variable to a log file with sn as filename
-	 *
-	 */
-    /*
-	function writeLog(string $sn, string $deviceType, string $logTxt){
-        if (!file_exists(LOG_PATH.deviceTypeArray[$deviceType])) {
-            mkdir(LOG_PATH.deviceTypeArray[$deviceType], 0777, true);
-        }
-        $logFile = trim($sn).".txt";
-		$fd = fopen(LOG_PATH.deviceTypeArray[$deviceType].$logFile, "a+");
-		if($fd){
-			fwrite($fd, $logTxt);
-			fclose($fd);
-            return $logFile;
-		}else{
-			echo "fd error";
-		}
-	}
-    */
 
     /**
-	 * Write logTxt variable to a log file with sn as filename
-	 *
-	 */
+     * Write command logs to logfile with sn as filename
+     * @param string $sn
+     * @param string $deviceType
+     * @param string $logTxt
+     * @return string $logFile
+     */
 	function writeCommandLog(string $sn, string $deviceType, string $logTxt){
-        $path = LOG_PATH."command/".deviceType[$deviceType];
+        $path = $_ENV['LOG_PATH']."command/".deviceType[$deviceType];
 		if (!file_exists($path)) {
 			mkdir($path, 0777, true);
 		}
 		$logFile = trim($sn).".txt";
-        //if (file_exists($path.$logFile) && filesize($path.$logFile) < 60000) {
         if (file_exists($path.$logFile) && filesize($path.$logFile) < 1000000000) {
-            $fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "a+");
+            $fd = fopen($_ENV['LOG_PATH']."command/".deviceType[$deviceType].$logFile, "a+");
             if($fd){
                 fwrite($fd, $logTxt);
                 fclose($fd);
@@ -287,35 +221,7 @@ class DataResponse extends Utils
             }
         }
         else {
-            $fd = fopen(LOG_PATH."command/".deviceType[$deviceType].$logFile, "w");
-            if($fd){
-                fwrite($fd, $logTxt);
-                fclose($fd);
-                return $logFile;
-            }else{
-                echo "fd error";
-            }
-        }
-	}
-
-    function writeDcLog(string $sn, string $deviceType, string $logTxt){
-        $path = LOG_PATH."dc/".deviceType[$deviceType];
-		if (!file_exists($path)) {
-			mkdir($path, 0777, true);
-		}
-		$logFile = trim($sn).".txt";
-        if (file_exists($path.$logFile) && filesize($path.$logFile) < 60000) {
-            $fd = fopen(LOG_PATH."dc/".deviceType[$deviceType].$logFile, "a+");
-            if($fd){
-                fwrite($fd, $logTxt);
-                fclose($fd);
-                return $logFile;
-            }else{
-                echo "fd error";
-            }
-        }
-        else {
-            $fd = fopen(LOG_PATH."dc/".deviceType[$deviceType].$logFile, "w");
+            $fd = fopen($_ENV['LOG_PATH']."command/".deviceType[$deviceType].$logFile, "w");
             if($fd){
                 fwrite($fd, $logTxt);
                 fclose($fd);
@@ -327,80 +233,72 @@ class DataResponse extends Utils
 	}
 
     function getPubsData(string $deviceType){
-
-        $handle = fopen(PUB_PATH.$deviceType."PUBS".extFILENAME, 'rb');
-
+        $handle = fopen($_ENV['PUB_PATH'].$deviceType."PUBS".extFILENAME, 'rb');
 		if($handle){
 			$contents = fread($handle, 5); // Get 5 first characters of contents
 			fclose($handle);
-			
-            $pubSize = filesize(PUB_PATH.$deviceType."PUBS".extFILENAME);
-
+            $pubSize = filesize($_ENV['PUB_PATH'].$deviceType."PUBS".extFILENAME);
             // Concatenate header, contents & pubsize to form response
             $response = $this->header.$contents.chr(intval($pubSize/256/256/256)).chr(intval($pubSize/256/256)).chr(intval($pubSize/256)).chr(intval($pubSize%256));
-            //echo bin2hex($response);
-            /*
-            echo "\r\ngetPubsData function is working correctly !\r\n";
-            echo "\r\ngetPubsData Response size: ".strlen($response)."\r\n";
-            echo "\r\ngetPubsData Response: ".bin2hex($response)."\r\n";
-            echo "\r\n #################### \r\n";
-            */
             return $response;
 		}
 		else
         {
-            
             echo "\r\nUhuh, something went wrong ! Check that pubs folder exists for {$deviceType}.\r\n";
             echo "\r\n #################### \r\n";
         }
-
-		
 	}
 	
     /**
      * Get content of pub file and build response with header & content
-     *
      * @param string $deviceType
-     * @param integer $fromIndex
-     * @param integer $size
-     * @return string $response
+     * @param int $fromIndex
+     * @param int $size
+     * @return bool|string
      */
     function getPubsFile(string $deviceType, $fromIndex = 0, $size = 0){
 		
-		$contents = file_get_contents(PUB_PATH.$deviceType."PUBS.bin");	
+		$contents = file_get_contents($_ENV['PUB_PATH'].$deviceType."PUBS.bin");	
 		if ($contents) {
             $response = $this->header.substr($contents, $fromIndex, $size);
             for($aInit = strlen($response); $aInit < ($size+6); $aInit++){
                 $response[$aInit] = chr(255);
             }
-            //echo bin2hex($response);
             return $response;
         }
         else
         {
             echo "\r\nUhuh, something went wrong ! Check that pubs folder exists for {$deviceType}.\r\n";
             echo "\r\n #################### \r\n";
+            return false;
         }
-
-		
 	} 
 
-    function getFile4096Bytes($path, $device, $fromIndex = 0, $size = 0){
-		
-		$contents=file_get_contents(LIB_PATH.$device.$path);	
-		
+    /**
+     * Summary of getFile4096Bytes
+     * @param string $path
+     * @param string $device
+     * @param int $fromIndex
+     * @param int $size
+     * @return string
+     */
+    function getFile4096Bytes($directoryPath, $fromIndex = 0, $size = 0){
+		$contents = file_get_contents($directoryPath);
 		$Response = $this->header.substr($contents, $fromIndex, $size);
 		for($aInit = strlen($Response); $aInit < ($size+6); $aInit++){
             $Response[$aInit] = chr(255);
         }
         return $Response;
-		
 	}
 
-    /* ############################# */
-    
+    /**
+     * Summary of getCRCAutoDetect
+     * @param string $deviceType
+     * @param int $startOffset
+     * @param string $fileName
+     * @return string
+     */
     function getCRCAutoDetect(string $deviceType, $startOffset, $fileName)
-    //function getCRCAutoDetect($startOffset, $crcFileContent)
     {
         $crcFileContent = $this->getFileContent($deviceType, $fileName);
         $fileContentCRC = substr($crcFileContent, $startOffset, strlen($crcFileContent) - $startOffset);
@@ -411,6 +309,11 @@ class DataResponse extends Utils
         return chr($sizeContent);
     }
 
+    /**
+     * Initialize response array with 39 empty elements
+     * @param int $nbData
+     * @return array<string>
+     */
     function initAutoDetectResponse($nbData = 39){
         for($aInit = 0; $aInit < $nbData; $aInit++){
             $aResponse[$aInit] = chr(0);
@@ -420,11 +323,13 @@ class DataResponse extends Utils
 
     /**
      * Fill tempResponse with elements in fileContent
+     * @param string $sizeContent
+     * @param string $fileContent
+     * @param mixed $forced [0 or 1]
+     * @return string
      */
-    function autoDetectBody(string $sizeContent, $fileContent, $forced = 0){
+    function autoDetectBody(string $sizeContent, string $fileContent, int $forced = 0){
         $aResponse = $this->initAutoDetectResponse(); // Init aResponse content
-        //$fileContent = $this->getContentFromIndex($deviceType, $fromIndex);
-        //$fileContent = $this->getFileContent($deviceType);
 
         $aResponse[0] = $fileContent[4];
 
@@ -469,26 +374,30 @@ class DataResponse extends Utils
 		
         $aResponse[38] = $sizeContent;
 
+        $aResponse = implode('', $aResponse);
         return $aResponse;
 	}
 
     /**
-     * create final response with header & tempResponse
+     * Join temporary response in string, concatenate header & string
+     * --> same as getResponseData
+     * @param string $aResponse
+     * @return string $response
      */
     function getAutoDetectResponse($aResponse){
-        $response =  $this->header;
-        $response .= implode('', $aResponse);
+        $response = $this->header.$aResponse;
         return $response;
 
     }
 
-    //function getResponseData(int $cmd, int $reqId, string $deviceType, $index) : string
-    function getResponseData($fileContent='') : string
+    /**
+     * Concatenate header & response content
+     * @param string $content
+     * @return string $response
+     */
+    function setResponseData($content='') : string
     {
-        //echo "header: ".$this->header;
-        //echo "fileContent: ".$fileContent;
-        $response = $this->header.$fileContent;
-
+        $response = $this->header.$content;
         return $response;
     }
 	
@@ -497,54 +406,66 @@ class DataResponse extends Utils
      * Initiate a response array of size 11
      * response 6,7,8,9,10 = pointer 1,2,3,4,5
      *
-     * @param integer $pointer
-     * @return array
+     * @param string $pointer
+     * @return string $aResponse
      */
 	function setResponseLog($pointer = 0){
         $aResponse = array_fill(0, 11, chr(0)); //Init response array filled with n zeros
-        $aResponse2 = $aResponse;
-        $pointer = str_split($pointer);
-		$ptLength = count($pointer);
-        $size = count($pointer);
-        
+        $ptLength = strlen($pointer);
 		$parse = 0;
 		for($i = $ptLength - 1; $i >= 0 ; $i--){
 			$aResponse[10 - $i] = chr($pointer[$parse]);
-            //echo "\r\npointer: ".$pointer[$parse]."\r\n";
 			$parse++;
 		}
-        
-        if ($aResponse === $aResponse2) {
-            echo true;
-        }
-        //echo "\r\nsetResponseLog Response size : ".sizeof($aResponse)."\r\n";
-        //echo "\r\nsetResponseLog Response : ";
-        //print_r($aResponse);
-        //echo "\r\n";
+        $aResponse = implode('', $aResponse);
         return $aResponse;
 	}
 	
-    // call setResponseLog + getAutoDetectResponse
+    /**
+     * Convert integer to chr to send in response
+     * @param int $number
+     * @return string
+     */
+    function setResponseToByte($number=0, $prefix=0) {
+        $array  = array_map('intval', str_split($number));
+        $response = array();
+        foreach ($array as $key=>$value) {
+            $response[]=chr($value);
+        }
+        $response = implode('', $response);
+        if ($prefix!=0) {
+            $sub = $prefix - strlen($number);
+            $preResponse = str_repeat(chr(0), $sub);
+            $response = $preResponse . $response;
+        }
+        echo "\r\n".$response."\r\n";
+        return $response;
+    }
+
+    /**
+     * Summary of getLogByPointer
+     * @param mixed $pointer
+     * @return string
+     */
 	function getLogByPointer($pointer = 0){
 		$aResponse = $this->setResponseLog($pointer);
-		$response = $this->getAutoDetectResponse($aResponse);
-        /*
-        echo "\r\ngetLogByPointer Response size : ".strlen($response)."\r\n";
-        echo "\r\ngetLogByPointer Response : ".$response."\r\n";
-        */
+		//$response = $this->getAutoDetectResponse($aResponse);
+        $response = $this->setResponseData($aResponse);
 		return $response;
 	}
-
+    
+    /**
+     * Encode response with a cesar matrix
+     * Header is length 6, do not encode header with i = 6
+     * @param string $tempResponse
+     * @return string
+     */
     function getCesarMatrix($tempResponse)
     {
         for($i=6; $i<strlen($tempResponse);$i++)
         {
             $tempResponse[$i] = chr(hexdec(bin2hex($tempResponse[$i])) + $this->getserverCesarMatrixTxArray[($i-6)%214]);
         }
-        /*
-        echo "\r\ngetCesarMatrix Response size : ".strlen($tempResponse)."\r\n";
-        echo "\r\ngetCesarMatrix Response : ".bin2hex($tempResponse)."\r\n";
-        */
         return $tempResponse;
     }
 
@@ -566,14 +487,13 @@ class DataResponse extends Utils
      *
      * @param string $sn
      * @param string $deviceType
-     * @return int $newPointeur
+     * @return string $newPointeur
      */
     function getPointeur($sn, $deviceType)
     {
-        $path = LOG_PATH.deviceTypeArray[$deviceType].trim($sn).".txt";
+        $path = $_ENV['LOG_PATH'].deviceTypeArray[$deviceType].trim($sn).".txt";
         if(file_exists($path)){
             $newPointeur = filesize($path);
-            //if((size%10000000)>= 9999458)size+=(10000000-(size%10000000)) ;
             if (($newPointeur%10000000)>= 9999458) {
                 $newPointeur+=(10000000-($newPointeur%10000000));
             }
@@ -585,26 +505,30 @@ class DataResponse extends Utils
         //echo "\r\nNew Pointeur = {$newPointeur}\r\n";
         return $newPointeur;
     }
+    
+    
     function getPointeur2($sn, $deviceType)
     {
-        $path = LOG_PATH.deviceTypeArray[$deviceType].trim($sn).".txt";
+        $path = $_ENV['LOG_PATH'].deviceTypeArray[$deviceType].trim($sn).".txt";
         if(file_exists($path)){
             $newPointeur = filesize($path);
-            //if((size%10000000)>= 9999458)size+=(10000000-(size%10000000)) ;
-            /*
-            if (($newPointeur%10000000)>= 9999458) {
-                $newPointeur+=(10000000-($newPointeur%10000000));
-            }
-            */
         }
         else {
             $newPointeur = 0;
         }
         $newPointeur = strval($newPointeur);
-        //echo "\r\nNew Pointeur = {$newPointeur}\r\n";
         return $newPointeur;
     }
-
+    
+    /**
+     * Get the pointer/size of log file, init pointer in response
+     * - ex: ptLength = 7, i = 6 (taking account index 0), pointer is init in response
+     * @param string $sn
+     * @param int $deviceType
+     * @param string $temporaryResponse
+     * @return string
+     */
+    
     function pointeurToResponse($sn, $deviceType, $temporaryResponse)
     {
         $newPointeur = $this->getPointeur($sn, $deviceType);
@@ -614,88 +538,7 @@ class DataResponse extends Utils
             $temporaryResponse[49 - $i] = chr($newPointeur[$parse]);
             $parse++;
         }
-        //echo "\r\nResponse = {$temporaryResponse} length = ".strlen($temporaryResponse)."\r\n";
         return $temporaryResponse;
     }
+    
 }
-
-/*
-$deviceType = "12";
-$fileName = "WLE256_12_2_v003.005.bin";
-$fromIndex = 10;
-*/
-
-/* Command variables for getIndexForImg test */
-//$command = "FC";
-//$command = "F8";
-//$command = "F7";
-//$command = "F6";
-//$command = "F5";
-
-/* variables for setHeader test */
-
-/*
-$cmd = 222;
-$reqId = 2;
-
-$utils = new Utils($deviceType);
-$dataResponse = new dataResponse($utils);
-//$dataResponse->setFileContent4096Bytes($deviceType, $fromIndex);
-//$dataResponse->getIndexForImg($deviceType);
-//$dataResponse->getIndexForProg($command, $deviceType);
-$dataResponse->setHeader($cmd, $reqId);
-*/
-
-/* DA Command */
-/*
-$sn = "WIN0C_TEST_LEA2   ";
-$deviceType = "12";
-$command = "DA";
-$reqId = 99;
-$dataResponse = new DataResponse();
-$dataResponse->setHeader(cmdByte[$command], $reqId, 9);
-//$temporaryResponse = $dataResponse->getPubsData(deviceTypeArray[$deviceType]);
-//$output->writeln("\r\n"."TX data : ".bin2hex($temporaryResponse)."\r\n");
-//$response = $dataResponse->getCesarMatrix($temporaryResponse);
-$dataResponse->getCesarMatrix(
-    $response = $dataResponse->getPubsData(deviceTypeArray[$deviceType])
-);
-*/
-/* DC Command */
-/*
-$dataResponse = new DataResponse();
-$deviceType = "12";
-$reqId = 99;
-$command = "DC";
-$indexToGet = 000000;
-$fileName = "WLE256_12_2_v003.005";
-$fileContentArray = $dataResponse->setFileContent4096Bytes($dataResponse->getFileContent($deviceType, $fileName), $indexToGet);
-$fileContent = $fileContentArray[0];
-$nbDataToSend = $fileContentArray[1];
-echo ($nbDataToSend);
-*/
-/*
-$dataResponse->setHeader(cmdByte[$command], $reqId, $nbDataToSend);
-$response = $dataResponse->getCesarMatrix(
-    $temporaryResponse = $dataResponse->getResponseData($fileContent)
-);
-*/
-//echo "\r\n"."TX data : ".bin2hex($response)."\r\n";
-//$output->writeln("\r\n"."TX data : ".bin2hex($response)."\r\n");
-//$output->writeln("\r\n"."TX data size: ".strlen(bin2hex($response))."\r\n");
-/* D9 Command */
-/*
-$dataResponse = new DataResponse();
-$request = new DbRequest();
-$sn = "WIN0C_TEST_LEA2   ";
-$deviceType = "12";
-$reqId = 99;
-$newPointeur = $dataResponse->getPointeur($sn, $deviceType);
-$request->setLog($sn, $newPointeur);
-$dataResponse->setHeader(cmdByte["DB"], $reqId, 11);
-$temporaryResponse = $dataResponse->getLogByPointer($newPointeur);
-//$output->writeln("\r\n"."TX data : ".bin2hex($temporaryResponse)."\r\n");
-$response = $dataResponse->getCesarMatrix($temporaryResponse);
-*/
-//$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
-//$response = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType]);
