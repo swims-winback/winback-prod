@@ -130,8 +130,12 @@ class DataResponse extends Utils
      * @return string $Response
      */
     function getSynchroDirectoryData($path, $device, $config){
-        //$pathSynchro = $_ENV['LIB_PATH'] . $device . $config.'/' . $path;
-        $pathSynchro = $_ENV['LIB_PATH'] . $device . $path;
+        if ($_ENV['APP_ENV'] == 'dev') {
+            $pathSynchro = $_ENV['LIB_PATH'] . $device . $config.'/' . $path;
+        }
+        else {
+            $pathSynchro = $_ENV['LIB_PATH'] . $device . $path;
+        }
         if (file_exists($pathSynchro)) {
             $listFiles = array_values(array_diff(scandir($pathSynchro), array('..', '.'))); //list files, delete '.' in directory array, reset array keys
             $directoryListString='';
