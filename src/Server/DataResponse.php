@@ -506,7 +506,6 @@ class DataResponse extends Utils
             $newPointeur = 0;
         }
         $newPointeur = strval($newPointeur);
-        //echo "\r\nNew Pointeur = {$newPointeur}\r\n";
         return $newPointeur;
     }
     
