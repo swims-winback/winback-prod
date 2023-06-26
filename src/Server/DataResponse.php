@@ -162,7 +162,7 @@ class DataResponse extends Utils
             return $Response;
         }
 	}
-    /*
+    
     function getProtocolDirectoryData($path, $device, $config){
         $pathProto = $_ENV['PROTO_PATH'] . $device . $config.'/' . 'WB/' . $path;
         if (file_exists($pathProto)) {
@@ -196,8 +196,6 @@ class DataResponse extends Utils
             return $Response;
         }
 	}
-    */
-
 
     /**
      * Write command logs to logfile with sn as filename
