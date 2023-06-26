@@ -1,11 +1,9 @@
 <?php
 namespace App\Server;
 
-use App\Entity\Device;
-use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-use Symfony\Component\Console\Output\ConsoleOutput;
 class CommandDetect extends AbstractController {
 
     /***  Var to set from request  ***/
@@ -21,6 +19,13 @@ class CommandDetect extends AbstractController {
 	
 	private $nbDataToSend;
 	private $dataTemp;
+	/**
+	 * Summary of responseArray
+	 * [0] = $indexToGet;
+	 * [1] = $response.$footer;
+	 * [2] = $deviceInfo;
+	 * [3] = $percentage;
+	 */
 	private $responseArray = array();
 
 	private $getserverCesarMatrixTxArray=array(
@@ -62,13 +67,18 @@ class CommandDetect extends AbstractController {
 	{
 		
 	}
-
+	/**
+	 * Summary of writeLog
+	 * @param string $sn
+	 * @param string $deviceType
+	 * @return string $logFile
+	 */
 	public function writeLog(string $sn, string $deviceType){
-        if (!file_exists(LOG_PATH.deviceTypeArray[$deviceType])) {
-            mkdir(LOG_PATH.deviceTypeArray[$deviceType], 0777, true);
+        if (!file_exists($_ENV['LOG_PATH'].deviceTypeArray[$deviceType])) {
+            mkdir($_ENV['LOG_PATH'].deviceTypeArray[$deviceType], 0777, true);
         }
         $logFile = trim($sn).".txt";
-		$fd = fopen(LOG_PATH.deviceTypeArray[$deviceType].$logFile, "a+");
+		$fd = fopen($_ENV['LOG_PATH'].deviceTypeArray[$deviceType].$logFile, "a+");
 		if($fd){
 			fwrite($fd, $this->logTxt);
 			fclose($fd);
@@ -78,26 +88,81 @@ class CommandDetect extends AbstractController {
 		}
 	}
 
-	/**
-	 * Get command received from data
-	 *
-	 * @param [type] $data
-	 * @return bool
+		/**
+	 * Get forced status from database
+	 * @param array $deviceInfo
+	 * @return int
 	 */
-	public function dataToTreat($data)
-	{
-		$cmdSoft = array('FE', 'FD', 'FC', 'FA', 'F9', 'F8', 'F7', 'F6', 'F5', 'F3', 'F2','DE','DD','DC','DB','DA','D9','D8','CF','CE','CD');
-		if(isset($data[20]) && !empty($data[20])){
-			$cmdRec = $data[20].$data[21];
-			if(in_array($cmdRec, $cmdSoft)){
-				return true;
-			}
+	function getForced($deviceInfo) {
+		if (isset($deviceInfo[FORCED_UPDATE]) && (($deviceInfo[FORCED_UPDATE] === '1') || isset($deviceInfo[FORCED_UPDATE]) && ($deviceInfo[FORCED_UPDATE] === 1))) {
+			$forcedUpdate = 1;
 		}
-		return false;
+		else {
+			$forcedUpdate = 0;
+		}
+		return $forcedUpdate;
+	}
+
+	function getFilenameFromVersion($version, $deviceType, $boardType){
+		$versionData = explode(".",$version,8);
+		$versionString = str_pad($versionData[0], 3 , "0" , STR_PAD_LEFT);
+		if (!array_key_exists(1, $versionData)) {
+			$revisionString = str_pad("0", 3 , "0" , STR_PAD_LEFT);
+		}
+		else {
+			$revisionString = str_pad($versionData[1], 3 , "0" , STR_PAD_LEFT);
+		}
+		$fileName = stFILENAME."_".$deviceType."_".$boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
+		return $fileName;
+	}
+
+	/**
+	 * Get VersionUpload from database
+	 * @param array $deviceInfo
+	 * @param int $boardType
+	 * @param string $deviceType
+	 * @param object $dataResponse
+	 * @return string $fileName
+	 */
+	function getVersionUpload($deviceInfo, $boardType, $deviceType, $dbRequest) {
+		if (isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768)) {
+			$fileName = $this->getFilenameFromVersion($deviceInfo[VERSION_UPLOAD], $deviceType, $boardType);
+		} else {
+			$lastVersUp = $dbRequest->getDeviceTypeActualVers($deviceType);
+			$fileName = $lastVersUp["name"];
+		}
+		$fileUp = $_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName;
+		if (!file_exists($fileUp)) {
+			//$logger->error("<error>Package File {$fileUp} not present on the server. Keeping old version.</error>");
+			echo "\r\nPackage File {$fileUp} not present on the server.\r\n";
+			return false;
+		}
+		else {
+			return $fileName;
+		}
 	}
 
 	public function getDeviceVariables(string $data, DataResponse $dataResponse)
 	{
+		/** @var array $deviceObj
+		 * ["Command"] = $command
+		 * ["Serial Number"]
+		 * ["Device Type"] = $deviceType
+		 * ["Device Version"]
+		 * ["Filename"]
+		 * ["boardType"] = $boardType
+		 * ["Index"]
+		 * ["Request Id"]
+		 * ["Forced Update"]
+		 */
+
+		/** @var mixed $data
+		 * $deviceType = [3:4]
+		 * $sn = [0:19]
+		 * $command = [20:21]
+		 * $boardType = [32:35]
+		 * 
+		 */
 		$deviceObj = [
 			"Command" => "",
 			"Serial Number" => "",
@@ -111,15 +176,15 @@ class CommandDetect extends AbstractController {
 		];
 
 		if(!empty($data)){
-            if(isset($data[0])){
+            if(isset($data[0]) && !empty($data[0]) && isset($data[1])){
                 $command = (isset($data[20]) && isset($data[21]) !== "aa") ? $data[20].$data[21] : '';
 				// Get command in data received
 				$deviceObj["Command"] = $command;
 				// Get device type in data received
 				$deviceType = hexdec($data[3].$data[4]);
 				$deviceObj["Device Type"] = $deviceType;
-
-				if($command === "DE" || $command === "DD" || $command === "DC" || $command === "DB" || $command === "D8" || $command === "CF" || $command === "CE" || $command === "CD"){
+				
+				if (in_array($command, cmdBack)) {
 					for($i=28; $i<(28+206); $i++){
 						$dataTemp = hexdec(bin2hex($data[$i]));
 						if($dataTemp === 127)
@@ -130,7 +195,6 @@ class CommandDetect extends AbstractController {
 						{
 							$dataTemp = ((hexdec(bin2hex($data[$i]))-35) - $this->getserverCesarMatrixRxArray[($i-28)]);
 						}
-						
 						if($dataTemp < 0)
 						{
 							$data[$i] = chr($dataTemp+127);
@@ -139,10 +203,9 @@ class CommandDetect extends AbstractController {
 						{
 							$data[$i] = chr($dataTemp+35);
 						}
-						
 					}
 				}
-
+				// Define BoardType
 				if($command === 'DE' || $command === 'DD' || $command === 'DC' || $command === 'CD')
 				{
 					$boardType = hexdec(substr($data, 32, 4));
@@ -153,88 +216,91 @@ class CommandDetect extends AbstractController {
 					$boardType = 2;
 					$deviceObj["boardType"] = $boardType;
 				}
-				
-				if($command ==='D8' || $command === 'CE')
+				// Define IndexToGet
+				if($command ==='D8' || $command === 'CE' || $command === 'CB')
 				{
 					$indexToGet = hexdec(substr($data, 24, 8));
 					$deviceObj["Index"] = $indexToGet;
 				}
 				
-				if(isset($data[1]))
-				{
-					// Récupérer les 20 premiers characters qui correspondent au sn
-					if(!empty($data[0]))
-					{
-						$sn = substr($data, 0, 20);
-						$deviceObj["Serial Number"] = $sn;
-					}
+					$sn = substr($data, 0, 20);
+					$deviceObj["Serial Number"] = $sn;
 
 					$this->reqId = isset($data[22]) ? hexdec($data[22].$data[23]) : 0;
 					$deviceObj["Request Id"] = $this->reqId;
-					
-					if($command === "F3")
-					{
-						$length = 0;
-						for($parse = 24; $parse < 238; $parse++){
-							if($data[$parse] === "$")
+
+					switch ($command) {
+						case 'F3':
+							$length = 0;
+							for($parse = 24; $parse < 238; $parse++){
+								if($data[$parse] === "$")
+								{
+									break;
+								}
+								$this->logTxt .= $data[$parse];
+								$length++;
+							}
+							$this->ptLogSave = $length;
+							break;
+						case 'DB':
+							$length = 0;
+							for($parse = 32; $parse < 238; $parse+=2)
 							{
-								break;
+								$dataTemp = chr(hexdec($data[$parse].$data[$parse+1]));
+								if($dataTemp === "$") //separator
+									break;
+								$this->logTxt .= $dataTemp;
+								$length++;
 							}
-							$this->logTxt .= $data[$parse];
-							$length++;
-						}
-						$this->ptLogSave = $length;
-					}
-					else if($command === "DB")
-					{
-						$length = 0;
-						for($parse = 32; $parse < 238; $parse+=2)
-						{
-							$dataTemp = chr(hexdec($data[$parse].$data[$parse+1]));
-							if($dataTemp === "$") //separator
-								break;
-							$this->logTxt .= $dataTemp;
-							$length++;
-						}
-						$this->ptLogSave = $length;
-					}
-					else if($command === "F9" || $command === "FE" || $command === "FA")
-					{
-						if(!empty($data[28]) || !empty($data[29]) || !empty($data[30]) || !empty($data[31])){			
+							$this->ptLogSave = $length;
+							break;
+						case 'F9':
+						case 'FE':
+						case 'FA':
+							if(!empty($data[28]) || !empty($data[29]) || !empty($data[30]) || !empty($data[31])){			
+								$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
+								$deviceObj["Device Version"] = $version;
+							}
+							break;
+						case 'F5':
+						case 'F6':
+						case 'F7':
+						case 'F8':
+						case 'FC':
+						case 'FD':
+							$indexToGet = hexdec(substr($data, 24, 8));
+							$deviceObj["Index"] = $indexToGet;
+							break;
+						case 'DE':
+						case 'DD':
+						case 'DC':
+						case 'CD':
 							$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
+							$boardType = hexdec(substr($data, 32, 4));
+							// TODO put boardType in database
+							$indexToGet = hexdec(substr($data, 36, 8));
 							$deviceObj["Device Version"] = $version;
-						}
-					}
-					
-					else if($command === "F5" || $command === "F6" || $command === "F7" || $command === "F8" || $command === "FC" || $command === "FD")
-					{
-						$indexToGet = hexdec(substr($data, 24, 8));
-						$deviceObj["Index"] = $indexToGet;
-					}
-					
-					else if($command === "DE" || $command === "DD" || $command === "DC" || $command === 'CD')
-					{
-						$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
-						//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nVersion : ".$version."\r\n");
-						$boardType = hexdec(substr($data, 32, 4));
-						$indexToGet = hexdec(substr($data, 36, 8));
-						$deviceObj["Device Version"] = $version;
-						$deviceObj["Index"] = $indexToGet;
-					}
-					else if($command === "CF" || $command === "CE")
-					{
-						if(!empty($data[0])){
-							for($parse = 32; $parse < strlen($data) && $data[$parse]!='$'; $parse++){
-								$this->path .= $data[$parse];
+							$deviceObj["Index"] = $indexToGet;
+							break;
+						case 'CF':
+						case 'CE':
+						case 'CC':
+						case 'CB':
+							if(!empty($data[0])){
+								for($parse = 32; $parse < strlen($data) && $data[$parse]!='$'; $parse++){
+									$this->path .= $data[$parse];
+								}
 							}
-						}
+							break;
+						default:
+							# code...
+							break;
 					}
 					return $deviceObj;
 				}
             }
             
         }
-	}
 
 	
 	/**
@@ -253,7 +319,6 @@ class CommandDetect extends AbstractController {
 
 		$dataResponse = new DataResponse();
 		$request = new DbRequest();
-
 		// DEFINE DEVICE VARIABLES
 		$deviceObj = $this->getDeviceVariables($data, $dataResponse);
 		$sn = $deviceObj["Serial Number"];
@@ -265,78 +330,40 @@ class CommandDetect extends AbstractController {
 		$boardType = $deviceObj["boardType"];
 
 		if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
-			// WRITE CMD LOG + CONNECT DB //
-			//$time_start4 = microtime(true);
-			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nSN: ".$sn." | Msg received with IP: {$ipAddr} | \r\n".date("Y-m-d H:i:s")." | "."Command : {$data[20]}{$data[21]} |\r\nRX : ".$data."\r\n");
-			//$dbHandle = $request->dbConnect();
-			//if($dbHandle){
 				$deviceTypeId = deviceTypeId[$deviceType];
+				$deviceTypeName = deviceTypeName[$deviceType];
 				$logFile = trim($sn).".txt";
+				/** @var array $deviceInfo 
+				 * Info available in database
+				 * [SN] : sn
+				 * [FORCED_UPDATE] : forced
+				*/
 				$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
+				$request->setDeviceToSN($sn, $deviceTypeName);
+				$request->setDeviceToServer($sn);
 				$this->responseArray[2] = $deviceInfo;
-			//}
 		}
 
 		// SET FORCED //
-		if(isset($deviceInfo[FORCED_UPDATE]) && (($deviceInfo[FORCED_UPDATE] === '1') || ($deviceInfo[FORCED_UPDATE] === 1)))
-		{
-			$forcedUpdate = 1;
-			//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
-			//echo "\r\nFORCED_UPDATE: ".$deviceInfo[FORCED_UPDATE]."\r\n";
-			//$request->setForced($sn, $forcedUpdate);
-		}
-		else
-		{
-			$forcedUpdate = 0;
-			//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
-			//echo "\r\nFORCED_UPDATE: ".$deviceInfo[FORCED_UPDATE]."\r\n";
-			//$request->setForced($sn, $forcedUpdate);
-		}
-
-		// SET VERSION UPLOAD //
-		if(isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768))
-		{
-			$versionData = explode(".",$deviceInfo[VERSION_UPLOAD],8);
-			$versionString = str_pad($versionData[0], 3 , "0" , STR_PAD_LEFT);
-			$revisionString = str_pad($versionData[1], 3 , "0" , STR_PAD_LEFT);
-			$fileName = stFILENAME."_".$deviceType."_".$boardType."_v".$versionString.'.'.$revisionString.extFILENAME;
-			$fileArch = PACK_ARCH_PATH.deviceTypeArray[$deviceType].$fileName;
-			$fileUp = PACK_PATH.deviceTypeArray[$deviceType].$fileName;
-			$cmpFile = $dataResponse->compareFile($fileArch, $fileUp);
-			if(!$cmpFile){
-				return FALSE;
-			}
-		}
-
+		$forcedUpdate = $this->getForced($deviceInfo);
 		
-		// SET FILENAME //
-		if(!isset($fileName)){
-			$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-		}
+		$fileName = $this->getVersionUpload($deviceInfo, $boardType, $deviceType, $request);
 		$deviceObj["Filename"] = $fileName;
-
-		//$time_start4 = microtime(true);
+		
         switch ($command) {
             case "FC": //prog
             case "F8": //prog
             case "F7": //prog
             case "F6": //prog
             case "F5": //UART_CMD_UPDATE_SUBPROG4
-				// if filename has not been defined by upload version
-				if (!$fileName) {
-					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-				}
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
-				//if ($percentage == 0 || $percentage == 99) {
-					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
-				//}
-				//$this->responseArray[3] = $percentage;
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
                 $startOffset = $dataResponse->getIndexForProg($command, $totalFileContent);
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
-				$response = $dataResponse->getResponseData($fileContent);
+				$response = $dataResponse->setResponseData($fileContent);
                 break;
             case "FD": //UART_CMD_UPDATE_PICTURES //update version
 				if ($deviceInfo[FORCED_UPDATE] == 1) {
@@ -344,94 +371,100 @@ class CommandDetect extends AbstractController {
 					$deviceInfo[FORCED_UPDATE] = 0;
 					$forcedUpdate = 0;
 				}
-				if (!$fileName) {
-					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-				}
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
-				//if ($percentage == 0 || $percentage == 99) {
-					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
-				//}
+				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
+
                 $startOffset = $dataResponse->getIndexForImg($totalFileContent);
-				//echo "\r\nstartOfsset: ".$startOffset."\r\n";
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
-				//echo "\r\nfileContent: ".$fileContent."\r\n";
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
-                $response = $dataResponse->getResponseData($fileContent);
-				//echo "\r\nMsg send: ".$response."\r\n";
+                $response = $dataResponse->setResponseData($fileContent);
                 break;
-			// create device in db if not exist
-            case "FE": //UART_CMD_AUTODETECT
-				//$time_start4 = microtime(true);
+            case "FE": //UART_CMD_AUTODETECT //Ready To Receive
                 $dataResponse->setHeader(cmdByte[$command], $this->reqId, 39);
-				if (!$fileName) {
-					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-				}
 				$fileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$startOffset = $dataResponse->getIndexForImg($fileContent);
 				$sizeContent = $dataResponse->getCRCAutoDetect($deviceType, $startOffset, $fileName);
 				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $fileContent, $forcedUpdate);
-                $response = $dataResponse->getAutoDetectResponse($tempResponse);
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFE - TX : ".bin2hex($response)."\r\n");
+				$response = $dataResponse->setResponseData($tempResponse);
                 break;
 		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
-				if (!isset($fileName)) {
-					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-				}
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
-				$tempResponse = $dataResponse->getResponseData($fileContent);
+				$tempResponse = $dataResponse->setResponseData($fileContent);
 
 				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse);
 
 				$tempResponse[37] = $forcedUpdate;
-				$response = $dataResponse->getDate($tempResponse);
+				$finalResponse = $dataResponse->getDate($tempResponse);
 				$pinCode = intval($deviceInfo[PIN_CODE]);
-				$response[62] = chr(intval($deviceInfo[PUB_ACCEPTED]));
-				$response[63] = chr($pinCode/256);
-				$response[64] = chr($pinCode%256);
+				$finalResponse[62] = chr(intval($deviceInfo[PUB_ACCEPTED]));
+				$finalResponse[63] = chr($pinCode/256);
+				$finalResponse[64] = chr($pinCode%256);
 
-				//TODO $commentsString in database
-				$commentsString = $request->getUpdateComment($request->getDeviceTypeId($deviceType), $version);
-				echo('Comment string: '.$commentsString);
-				//TODO Instead search for software corresponding to update version & device type and return update_comment
-				//$commentsString="Update version \nMaj touch and go";
-				
-				for($i = 0; $i < strlen($commentsString) ; $i++)
+				//TODO $comment in database
+				// length comment = 100
+				if ($deviceType==14 and $fileName=="WLE256_14_2_v003.011.bin") {
+					$comment = "Power regulation\nContact optimization\nHi-EMS: add Drain function\n  Bracelets: add Hi-TENS and TIC   ";
+				}
+				else {
+					$comment = str_repeat(" ", 100);
+				}
+				/*
+				if ($commentsString = $request->getUpdateComment($request->getDeviceTypeId($deviceType), $uploadVersion)) {
+					echo ("\r\nComment String: " . $commentsString."\r\n");
+				}
+				else {
+					$commentsString="Update version \nMaj touch and go";
+					echo ("\r\nComment String: " . $commentsString."\r\n");
+				}
+				*/
+				for($i = 0; $i < strlen($comment) ; $i++)
 				{				
-					$response[70 + $i] = $commentsString[$i];
+					$finalResponse[70 + $i] = $comment[$i];
 				}
-				for($i=6; $i<strlen($response); $i++)
-				{
-					$response[$i] = chr(hexdec(bin2hex($response[$i])) + $this->getserverCesarMatrixTxArray[($i-6)%214]);
+				$response = $dataResponse->getCesarMatrix($finalResponse);
+				break;
+			case "DD": //change l'IP Addresse à laquelle la machine se connecte
+				$server_id = $deviceInfo["server_id"];
+				if ($deviceInfo["server_id"] = 1) {
+					$address = $deviceInfo["server_ip"];
+					$port = $deviceInfo["server_port"];
+					$input2 = $address.",".$port."\0";
+					$contentSize = strlen($server_id)+strlen($input2);
+					$header = $dataResponse->setHeader(cmdByte[$command], $this->reqId, $contentSize);
+					$content = $dataResponse->setResponseToByte($server_id, 0);
+					$tempResponse = $header.$content.$input2;
+					$response = $dataResponse->getCesarMatrix($tempResponse);
+					// change to 0 in db
+					$request->setServerId($sn, 0);
+					$deviceInfo["server_id"] = 0;
 				}
-				echo("\r\nDE - TX data : ".bin2hex($response)."\r\n");
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nDE - TX data : ".bin2hex($response)."\r\n");
+				else {
+					$header = $dataResponse->setHeader(cmdByte[$command], $this->reqId, strlen($server_id));
+					$content = $dataResponse->setResponseToByte($server_id, 0);
+					$tempResponse = $header.$content;
+					$response = $dataResponse->getCesarMatrix($tempResponse);
+				}
 				break;	
-			//case "CC": //synchro directory prtocol
+			//case "CC": //synchro directory protocol
 			//case "CB": //download protocol
 				
 			case "DC": //Download BOARD //Download Version
 			case "CD": //Download BOARD //Download Version
 				// * Empêche la machine de rester forcée après un 1er téléchargement *//
-				
 				if ($deviceInfo[FORCED_UPDATE] == 1) {
 					$request->setForced($sn, 0);
 					$deviceInfo[FORCED_UPDATE] = 0;
 					$forcedUpdate = 0;
 				}
-				//echo "\r\nforcedUpdate: ".$forcedUpdate."\r\n";
-				//echo "\r\nFORCED_UPDATE: ".$deviceInfo[FORCED_UPDATE]."\r\n";
 				//* return index in tcpserver to not send response if index is repeated*//
 				$this->responseArray[0] = $indexToGet;
-				if (!$fileName) {
-					$fileName = $dataResponse->checkFile($deviceType, $boardType = '2');
-				}
-				$filesize =  filesize(PACK_PATH.deviceTypeArray[$deviceType].$fileName);
+				$filesize =  filesize($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName);
 				$percentage = intval(($indexToGet/$filesize)*100);
 				if ($percentage == 0 && $indexToGet == 4096 || $percentage == 99 && ($filesize-$indexToGet) < 4096) {
-					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".filesize(PACK_PATH.deviceTypeArray[$deviceType].$fileName) . ' bytes - '.$percentage." %\r\n");
+					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".filesize($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName) . ' bytes - '.$percentage." %\r\n");
 					if ($percentage == 99 && ($filesize-$indexToGet) < 4096) {
 						$request->setDownload($sn, 100);
 						$percentage = 100;
@@ -439,17 +472,17 @@ class CommandDetect extends AbstractController {
 				}
 				$this->responseArray[3] = $percentage;
 
-				$fileContentArray = $dataResponse->setFileContent4096Bytes(PACK_PATH.deviceTypeArray[$deviceType].$fileName, $indexToGet);
+				$fileContentArray = $dataResponse->setFileContent4096Bytes($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName, $indexToGet);
 				$fileContent = $fileContentArray[0];
 				$nbDataToSend = $fileContentArray[1];
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $nbDataToSend);
 
 				$response = $dataResponse->getCesarMatrix(
-					$tempResponse = $dataResponse->getResponseData($fileContent)
+					$tempResponse = $dataResponse->setResponseData($fileContent)
 				);
 				break;
 			case "DB": //Load & copy Logs
-				$logFile = $this->writeLog($sn, $deviceType);
+				$this->writeLog($sn, $deviceType);
 			case "D9":	//resend logs pointer
 				$newPointeur = $dataResponse->getPointeur($sn, $deviceType);
 				//$request->setLog($sn, $newPointeur);
@@ -461,77 +494,64 @@ class CommandDetect extends AbstractController {
 
 			case "DA": //Pubs ask date
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 9);
-				//$response = $dataResponse->getCesarMatrix($temporaryResponse);
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getPubsData(deviceTypeArray[$deviceType])
 				);
 				break;
 
 		    case "D8": //Download PUBS
-				$size = (filesize(PUB_PATH.deviceTypeArray[$deviceType]."PUBS.bin")-$indexToGet);
+				$size = (filesize($_ENV['PUB_PATH'].deviceTypeArray[$deviceType]."PUBS.bin")-$indexToGet);
 				if($size>4096)$size=4096;
-				//echo '....'.$this->indexToGet.'.....'.$size.'.....';
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $size);
-				//echo "\r\n"."TX data: ".bin2hex($temporaryResponse)."\r\n"; 
 				$response = $dataResponse->getCesarMatrix(
 					$tempResponse = $dataResponse->getPubsFile(deviceType[$deviceType], $indexToGet, $size)
 				);
-				//$output->writeln("\r\n"."TX data: ".bin2hex($response)."\r\n");
-				//TODO $output->writeln("\r\n"."TX data size: ".strlen(bin2hex($response))."\r\n");
 				break;
 			case "CF": //Synchro directory		
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
-				$response = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType]);
-				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);//$this->Response[$i]+=$getserverCesarMatrixArray[$i%214];				
+				$response = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType], $boardType);
+				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);				
 				break;
 			case "CE": //Download file
-				$size=(filesize(LIB_PATH.deviceType[$deviceType].$this->path)-$indexToGet);
+				if ($_ENV['APP_ENV'] == 'dev') {
+					$directoryPath = $_ENV['LIB_PATH'] . deviceType[$deviceType] . $boardType.'/'.$this->path;
+				}
+				else {
+					$directoryPath = $_ENV['LIB_PATH'] . deviceType[$deviceType] . $this->path;
+				}
+				$size=(filesize($directoryPath)-$indexToGet);
 				if($size>4096)$size=4096;
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $size);
-				$tempResponse = $dataResponse->getFile4096Bytes($this->path, deviceType[$deviceType], $indexToGet, $size);
+				$tempResponse = $dataResponse->getFile4096Bytes($directoryPath, $indexToGet, $size);
 				$response = $dataResponse->getCesarMatrix($tempResponse);
 				break;
 
             case "F9": //Ready To Receive
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nfilename: ".$fileName."\r\n");
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nversion: ".$version."\r\n");
 				$request->setConnect('1', $sn);
 				$request->setVersion($version, $sn);
-				//$newPointeur = strval($request->getDevice($sn, LOG_POINTEUR));
 				$newPointeur = $dataResponse->getPointeur2($sn, $deviceType);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 11);
-                //$dataResponse->initAutoDetectResponse(11);
-				$response = $dataResponse->getLogByPointer($newPointeur);
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nF9 - TX : ".bin2hex($response)."\r\n");
+				$content = $dataResponse->setResponseToByte($newPointeur, 11);
+				$response = $dataResponse->setResponseData($content);
 				break;
 
             case "F3": //Receive log file				
-				$logFile = $this->writeLog($sn, $deviceType);
-				//$request->setLogFile($sn, $logFile); // update logfilename in db
-				//$pointer = intval($request->getDevice($sn, LOG_POINTEUR)) + $this->ptLogSave;
-				//$newPointeur = strval($pointer);
+				$this->writeLog($sn, $deviceType);
 				$newPointeur = $dataResponse->getPointeur2($sn, $deviceType);
-				//$request->setLog($sn, $newPointeur); // update pointeur in db
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 11);
-                //$dataResponse->initAutoDetectResponse(11);
-				$response = $dataResponse->getLogByPointer($newPointeur);
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nF3 - TX : ".bin2hex($response)."\r\n");
+				$content = $dataResponse->setResponseToByte($newPointeur, 11);
+				$response = $dataResponse->setResponseData($content);
 				break;
 
             case "F2": //Close log 
 				//$request->setConnect('1', $sn);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
-				$response = $dataResponse->getResponseData();
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nF2 - TX : ".bin2hex($response)."\r\n");
+				$response = $dataResponse->setResponseData(); // Send header with empty response to indicate ends of logs to device
 				break;
 
             case "FA":
-                //$deviceInfo = $request->initDeviceInDB($sn, $version, $deviceType);
-				//$request->initDeviceInDB($sn, $version, $deviceType, $ipAddr);
-                //$request->setIpAddr($ipAddr, $sn);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
-				$response = $dataResponse->getResponseData();
-				//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nFA - TX : ".bin2hex($response)."\r\n");
+				$response = $dataResponse->setResponseData();
                 break;
 
             default:
@@ -542,21 +562,13 @@ class CommandDetect extends AbstractController {
 		
 		$sFooter = $dataResponse->setFooter($response);
 		$this->responseArray[1] = $response.$sFooter;
-		$affResponse = bin2hex($response.$sFooter);
-		//echo "\r\nSN : ".$sn."| Msg send : ".strlen($affResponse)."\r\n".date("Y-m-d H:i:s | ")."Command : ".$command." from server";
-		//$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")."Msg send : ".strlen($affResponse)." \n| SN : ".$sn."\n| Command : ".$command." from server\r\n");
-		
-		//return $response.$sFooter;
 		
 		$time_end_command = microtime(true);
 		$execution_time_command = ($time_end_command - $time_start_command)*1000;
-		//echo "\r\n".$command.": Total Execution Time Command: ".$execution_time_command." Milliseconds\r\n";
 		if ($command != "DC" and $command != "CD" and $command != "FD" and $command != "FC") {
 			$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ")." \n| SN : ".$sn."\n| Command : ".$command."\r\n");
 		}
-
 		if ($execution_time_command > 100) {
-			//$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 			echo "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n";
 			$dataResponse->writeCommandLog($sn, $deviceType, "\r\nTime Alert: Command takes more than 100 ms:".$execution_time_command."\r\n");
 		}
