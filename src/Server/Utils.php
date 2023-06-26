@@ -65,6 +65,10 @@ class Utils {
                 return false;
             }
         }
+        else {
+            echo "\r\nDirectory". $_ENV['PACK_PATH'] ."doesn't exist. Content cannot be get.\r\n";
+            return false;
+        }
     }
 
     function getFileContentTest(string $deviceType, string $fileName) : bool

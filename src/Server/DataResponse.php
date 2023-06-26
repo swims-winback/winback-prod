@@ -109,6 +109,11 @@ class DataResponse extends Utils
         return $this->header;
     }
     
+    /**
+     * Summary of setFooter
+     * @param string $oTram
+     * @return string
+     */
     function setFooter($oTram){
         $tramSize = 0;
         for($parse = 0; $parse < strlen($oTram); $parse++){
@@ -234,9 +239,7 @@ class DataResponse extends Utils
 		if($handle){
 			$contents = fread($handle, 5); // Get 5 first characters of contents
 			fclose($handle);
-			
             $pubSize = filesize($_ENV['PUB_PATH'].$deviceType."PUBS".extFILENAME);
-
             // Concatenate header, contents & pubsize to form response
             $response = $this->header.$contents.chr(intval($pubSize/256/256/256)).chr(intval($pubSize/256/256)).chr(intval($pubSize/256)).chr(intval($pubSize%256));
             return $response;
@@ -273,10 +276,16 @@ class DataResponse extends Utils
         }
 	} 
 
+    /**
+     * Summary of getFile4096Bytes
+     * @param string $path
+     * @param string $device
+     * @param int $fromIndex
+     * @param int $size
+     * @return string
+     */
     function getFile4096Bytes($directoryPath, $fromIndex = 0, $size = 0){
-		
-		$contents=file_get_contents($directoryPath);	
-		
+		$contents = file_get_contents($directoryPath);
 		$Response = $this->header.substr($contents, $fromIndex, $size);
 		for($aInit = strlen($Response); $aInit < ($size+6); $aInit++){
             $Response[$aInit] = chr(255);
@@ -446,6 +455,7 @@ class DataResponse extends Utils
         $response = $this->setResponseData($aResponse);
 		return $response;
 	}
+
     /**
      * Encode response with a cesar matrix
      * Header is length 6, do not encode header with i = 6
@@ -511,6 +521,7 @@ class DataResponse extends Utils
         $newPointeur = strval($newPointeur);
         return $newPointeur;
     }
+    
     /**
      * Get the pointer/size of log file, init pointer in response
      * - ex: ptLength = 7, i = 6 (taking account index 0), pointer is init in response
