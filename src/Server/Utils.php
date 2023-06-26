@@ -23,8 +23,8 @@ class Utils {
     function checkLastVersion(string $deviceType, string $boardType = '2')
     {
         $dbRequest = new DbRequest;
-            $lastVersUp = $dbRequest->getDeviceTypeActualVers($deviceType);
-            return $lastVersUp;
+        $lastVersUp = $dbRequest->getDeviceTypeActualVers($deviceType);
+        return $lastVersUp;
     }
 
     /**
@@ -36,11 +36,12 @@ class Utils {
      * @param string $fileName
      * @return string|bool
      */
+    
     function getFileContent(string $deviceType, string $fileName) : string|bool
     {
         if (file_exists($_ENV['PACK_PATH'])) { # check that directory exists and is accessible
-            if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName)){
-                $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName);
+            if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName)) {
+                $content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName);
                 if ($content) {
                     return $content;
                 } else {
@@ -52,8 +53,8 @@ class Utils {
                 $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
                 $lastVersUp = $this->checkLastVersion($deviceType, $boardType);
                 $actualFile = $lastVersUp["name"];
-                if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile)){
-                    $content = file_get_contents($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$actualFile);
+                if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $actualFile)) {
+                    $content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $actualFile);
                     if (!$content) {
                         echo "\r\nContent cannot be get.\r\n";
                         return false;

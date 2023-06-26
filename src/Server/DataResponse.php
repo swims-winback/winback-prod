@@ -45,7 +45,7 @@ class DataResponse extends Utils
         $fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset); // TODO check startOffset et fromIndex
         return $fileContentFromIndex;
     }
-    
+
     /**
      * Summary of getIndexForImg
      * @param mixed $fileContent
@@ -109,11 +109,6 @@ class DataResponse extends Utils
         return $this->header;
     }
     
-    /**
-     * Summary of setFooter
-     * @param string $oTram
-     * @return string
-     */
     function setFooter($oTram){
         $tramSize = 0;
         for($parse = 0; $parse < strlen($oTram); $parse++){
@@ -238,8 +233,10 @@ class DataResponse extends Utils
         $handle = fopen($_ENV['PUB_PATH'].$deviceType."PUBS".extFILENAME, 'rb');
 		if($handle){
 			$contents = fread($handle, 5); // Get 5 first characters of contents
-			fclose($handle);			
+			fclose($handle);
+			
             $pubSize = filesize($_ENV['PUB_PATH'].$deviceType."PUBS".extFILENAME);
+
             // Concatenate header, contents & pubsize to form response
             $response = $this->header.$contents.chr(intval($pubSize/256/256/256)).chr(intval($pubSize/256/256)).chr(intval($pubSize/256)).chr(intval($pubSize%256));
             return $response;
@@ -276,16 +273,10 @@ class DataResponse extends Utils
         }
 	} 
 
-    /**
-     * Summary of getFile4096Bytes
-     * @param string $path
-     * @param string $device
-     * @param int $fromIndex
-     * @param int $size
-     * @return string
-     */
-    function getFile4096Bytes($directoryPath, $fromIndex = 0, $size = 0){	
-		$contents = file_get_contents($directoryPath);
+    function getFile4096Bytes($directoryPath, $fromIndex = 0, $size = 0){
+		
+		$contents=file_get_contents($directoryPath);	
+		
 		$Response = $this->header.substr($contents, $fromIndex, $size);
 		for($aInit = strlen($Response); $aInit < ($size+6); $aInit++){
             $Response[$aInit] = chr(255);
@@ -422,7 +413,7 @@ class DataResponse extends Utils
         $aResponse = implode('', $aResponse);
         return $aResponse;
 	}
-
+	
     /**
      * Convert integer to chr to send in response
      * @param int $number
@@ -443,19 +434,18 @@ class DataResponse extends Utils
         echo "\r\n".$response."\r\n";
         return $response;
     }
-	
-	/**
+
+    /**
      * Summary of getLogByPointer
      * @param mixed $pointer
      * @return string
      */
-    function getLogByPointer($pointer = 0){
+	function getLogByPointer($pointer = 0){
 		$aResponse = $this->setResponseLog($pointer);
 		//$response = $this->getAutoDetectResponse($aResponse);
         $response = $this->setResponseData($aResponse);
 		return $response;
 	}
-
     /**
      * Encode response with a cesar matrix
      * Header is length 6, do not encode header with i = 6
@@ -521,7 +511,6 @@ class DataResponse extends Utils
         $newPointeur = strval($newPointeur);
         return $newPointeur;
     }
-
     /**
      * Get the pointer/size of log file, init pointer in response
      * - ex: ptLength = 7, i = 6 (taking account index 0), pointer is init in response
@@ -530,7 +519,6 @@ class DataResponse extends Utils
      * @param string $temporaryResponse
      * @return string
      */
-
     function pointeurToResponse($sn, $deviceType, $temporaryResponse)
     {
         $newPointeur = $this->getPointeur($sn, $deviceType);
@@ -542,5 +530,4 @@ class DataResponse extends Utils
         }
         return $temporaryResponse;
     }
-
 }
