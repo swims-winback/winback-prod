@@ -105,7 +105,7 @@ class DataResponse extends Utils
      * @return string
      */
     function setHeader(int $cmd, int $reqId, $dataSize=FW_OCTETS){
-        $this->header = chr(AA).chr(0).chr($reqId).chr($cmd).chr(intval($dataSize/256)).chr($dataSize%256);
+        $this->header = chr($_ENV['AA']).chr(0).chr($reqId).chr($cmd).chr(intval($dataSize/256)).chr($dataSize%256);
         return $this->header;
     }
     
@@ -248,8 +248,7 @@ class DataResponse extends Utils
 		}
 		else
         {
-            echo "\r\nUhuh, something went wrong ! Check that pubs folder exists for {$deviceType}.\r\n";
-            echo "\r\n #################### \r\n";
+            echo "\r\nError: Check that pubs folder exists for {$deviceType}.\r\n";
         }
 	}
 	
@@ -272,8 +271,7 @@ class DataResponse extends Utils
         }
         else
         {
-            echo "\r\nUhuh, something went wrong ! Check that pubs folder exists for {$deviceType}.\r\n";
-            echo "\r\n #################### \r\n";
+            echo "\r\nError: Check that pubs file exists for {$deviceType}.\r\n";
             return false;
         }
 	} 
