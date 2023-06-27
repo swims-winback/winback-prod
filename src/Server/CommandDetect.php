@@ -463,6 +463,20 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 					$tempResponse = $header.$content;
 					$response = $dataResponse->getCesarMatrix($tempResponse);
 				}
+								
+				break;
+			case "CC": //synchro directory prtocol
+				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
+				$response = $dataResponse->getProtocolDirectoryData($this->path, deviceType[$deviceType], $boardType);
+				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);
+				break;
+			case "CB": //download protocol
+				$directoryPath = $_ENV['PROTO_PATH'] . deviceType[$deviceType] .$this->path;
+				$size=(filesize($directoryPath)-$indexToGet);
+				if($size>4096)$size=4096;
+				$dataResponse->setHeader(cmdByte[$command], $this->reqId, $size);
+				$tempResponse = $dataResponse->getFile4096Bytes($directoryPath, $indexToGet, $size);
+				$response = $dataResponse->getCesarMatrix($tempResponse);
 				break;
 			case "DC": //Download BOARD //Download Version
 			case "CD": //Download BOARD //Download Version
