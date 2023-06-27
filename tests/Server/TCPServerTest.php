@@ -1,17 +1,20 @@
 <?php
-namespace App\Tests\Server;
+namespace App\Tests\Entity;
+
 use App\Server\TCPServer;
+use Exception;
+//use Monolog\Test\TestCase;
+
+//use Monolog\Test\TestCase as TestTestCase;
 use PHPUnit\Framework\TestCase;
 
 class TCPServerTest extends TestCase
 {
+
     public function testDefault()
     {
-        /*
-        $product = new Product('Pomme', 'food', 1);
-                                 $this->assertSame(0.055, $product->computeTVA());
-        */
-        $tcpserver = new TCPServer();
-                                //$this->assertSame(???, $tcpserver->createServer());
+        $tcpServer = new TCPServer;
+        $resultArray = $tcpServer->createServer();
+        
     }
 }

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 require_once dirname(__FILE__, 3).'/configServer/config.php';
 
-class TCPClient extends AbstractController
+class Client extends AbstractController
 {
     /**
      * Create socket and connect to socket
@@ -15,10 +15,12 @@ class TCPClient extends AbstractController
     function connectToServer(){
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if ($socket === false) {
+            echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
             return false;
         }
         else {
-            if (!(socket_connect($socket, $_ENV['ADDRESS'], $_ENV['PORT']))) {
+            if (!(socket_connect($socket, "10.0.0.19", 5007))) {
+                echo "socket_connect() failed.\nReason:  " . socket_strerror(socket_last_error($socket)) . "\n";
                 return false;
                 
             }
@@ -38,6 +40,7 @@ class TCPClient extends AbstractController
             socket_close($socket);
             return 1;
         } else {
+            echo "socket_recv() failed; reason: " . socket_strerror(socket_last_error($socket)) . "\n";
             socket_close($socket);
             return 0;
         }    
@@ -50,10 +53,13 @@ class TCPClient extends AbstractController
     function getMsgFromServer($socket){
         $buf = '';
         if (false !== ($bytes = socket_recv($socket, $buf, 240, MSG_WAITALL))) {
+            //echo("Read $bytes bytes from socket_recv(). Closing socket...");
             socket_close($socket);
             
         } else {
+            //echo "socket_recv() failed; reason: " . socket_strerror(socket_last_error($socket)) . "\n";
             socket_close($socket);
+            //return false;
         }
         return $buf;
         
@@ -157,93 +163,15 @@ class TCPClient extends AbstractController
     /**
      * @Route("/tcpClient/", name="tcpClient")
      */
-    function main() {
-        
-        if(isset($_POST)){
-            switch ($_POST['action']) {
-                case 'connect':
-                    //echo 'connect';
-                    if (($socket = $this->connectToServer()) != null) {
-                        socket_write($socket, $_POST['sn']);
-                        $isConnect = $this->getMsgConnectFromServer($socket);
-                        return new Response($isConnect);
-                    }
-                    else {
-                        return new Response(false);
+    function main($data) {
+        if (($socket = $this->connectToServer()) != null) {
+            socket_write($socket, $data);
+            $isConnect = $this->getMsgConnectFromServer($socket);
+            echo "\r\nisConnect: \r\n" . $isConnect;
+            return new Response($isConnect);
 
-                    }
-                case 'disconnect':
-                    /*
-                    if (($socket = connectToServer()) != null) {
-                        //$request->setConnect(0, $_POST['sn']);
-                        //closeCnx();
-                        socket_close($socket);
-                    }
-                    */
-                    return new Response(false);
-                    //break;
-                case 'buttonTouch':
-                    $trackZone = 0;
-                    if(($_POST['cmd'] == 'tecaIntensity')){
-                        if($_POST['tagTouch1'] == 10)
-                            $add = 0;
-                        else {
-                            $add = 0.5;
-                        }
-                        $trackZone = ($_POST['tagTouch1'] + $add) * 255/10;
-                        $msgToSend = $this->setMsg(COMMAND['touch'], 5, $trackZone, 0, 0, 12, $_POST['sn'], $_POST['page']);
-                    }else if(($_POST['cmd'] == 'timerSlide')){
-                        $trackZone = ((($_POST['tagTouch1'] + 2.5)/5) - 1) * 255/12;
-                        echo $_POST['tagTouch1']." trackzone = ".$trackZone;
-                        $msgToSend = $this->setMsg(COMMAND['touch'], 5, $trackZone, 0, 0, 13, $_POST['sn'], $_POST['page']);
-                    }else{
-                        $msgToSend = $this->setMsg(COMMAND['touch'], 5, $trackZone, 0, 0, DATA_DEVICE[$_POST['cmd']][$_POST['tagTouch1']], $_POST['sn'], $_POST['page']);
-                    }
-                    $socket = $this->connectToServer();
-                    socket_write($socket, $msgToSend);
-                    $response = $this->getMsgFromServer($socket);
-                    $diag = $this->decodeData($response);
-                    return new Response(json_encode($diag));
-                case 'periodictyConnect':
-                    $socket = $this->connectToServer();
-                    $response = $this->getMsgFromServer($socket);
-                    $diag = $this->decodeData($response);
-                    return new Response(json_encode($diag));
-                case 'test':
-                    $msgToSend = $this->setMsg(0, 5, 0, 0, 0, 0, $_POST['sn'], $_POST['page']);
-                    $socket = $this->connectToServer();
-                    if ($socket != null && $socket != false) {
-                        socket_write($socket, $msgToSend);
-                        $response = $this->getMsgFromServer($socket);
-                        $diag[] = substr($response, 20);
-                        return new Response(json_encode($diag));
-                    }
-                    return new Response(false);
-                case 'touchTest':
-                    $tagTouch0 = $_POST['tagTouch']/256;
-                    $tagTouch1 = $_POST['tagTouch']%256;
-                    $trackTouch0 = $_POST['trackerTouch']/256;
-                    $trackTouch1 = $_POST['trackerTouch']%256;
-                    $msgToSend = $this->setMsg(1, 5, $trackTouch0, $trackTouch1, $tagTouch0, $tagTouch1, $_POST['sn'], $_POST['page']);
-                    $socket = $this->connectToServer();
-                    socket_write($socket, $msgToSend);
-                    $response = $this->getMsgFromServer($socket);
-                    $diag[] = substr($response, 20);
-                    return new Response(json_encode($diag));
-                case 'cmdTest':
-                    $msgToSend = $this->setMsg(2, 5, 0, 0, 0, 0, $_POST['sn'], $_POST['page'], $_POST['tagTouch1']);
-                    $socket = $this->connectToServer();
-                    socket_write($socket, $msgToSend);
-                    $response = $this->getMsgFromServer($socket);
-                    $diag[] = substr($response, 20);
-                    return new Response(json_encode($diag));
-                case 'pageTest':
-                    $GLOBALS['page'] = $_POST['tagTouch1'];
-                    return new Response(false);
-                default:
-                    return new Response(false);
-            }
         }
+        
     }
 
 }

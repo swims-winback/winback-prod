@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Client_login;
 
 use App\Entity\Admin;
 use App\Entity\Client;
@@ -19,12 +19,12 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class ClientRegistrationType extends AbstractType
+class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            /*
+            
             ->add('username', TextType::class, [
                 'label' => false,
                 'required' => true,
@@ -69,7 +69,6 @@ class ClientRegistrationType extends AbstractType
                     ]),
                 ],
             ])
-            */
             ->add('email', TextType::class, [
                 'label' => false,
                 'required' => true,
@@ -87,12 +86,7 @@ class ClientRegistrationType extends AbstractType
                         'message'=> 'The email {{ value }} is not a valid email.',
                     ])
                 ],
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Enter email',
-                ],
             ])
-            /*
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
@@ -101,6 +95,26 @@ class ClientRegistrationType extends AbstractType
                     ]),
                 ],
             ])
+            /*
+            ->add('plainPassword', PasswordType::class, [
+                // instead of being set onto the object directly,
+                // this is read and encoded in the controller
+                'label' => false,
+                'mapped' => false,
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a password',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
+            ])
+            */
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
@@ -135,9 +149,7 @@ class ClientRegistrationType extends AbstractType
                     ]),
                 ],
             ])
-            */
             //serial number
-            /*
             ->add('serial_number', TextType::class, [
                 'label' => false,
                 'required' => true,
@@ -146,12 +158,7 @@ class ClientRegistrationType extends AbstractType
                         'message' => 'Please enter a serial number',
                     ]),
                 ],
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Enter serial number',
-                ],
             ])
-            */
         ;
     }
 

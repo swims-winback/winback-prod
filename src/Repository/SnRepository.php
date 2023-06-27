@@ -59,6 +59,19 @@ class SnRepository extends ServiceEntityRepository
         );
       }
 
+    /**
+     * Récupère le prix minimum et maximum correspondant à une recherche
+     * @return integer[]
+     */
+    public function findMinMax(SearchSn $search): array
+    {
+        $results = $this->getSearchQuery($search, true)
+            ->select('MIN(d.Date) as min', 'MAX(d.Date) as max')
+            ->getQuery()
+            ->getScalarResult();
+        return [(int)$results[0]['min'], (int)$results[0]['max']];
+    }
+
     private function getSearchQuery(SearchSn $search)
       {
         $query = $this
@@ -74,7 +87,19 @@ class SnRepository extends ServiceEntityRepository
                 ->setParameter('q', "%{$search->q}%");
         }
         
-          return $query;
+        if (!empty($search->min)) {
+            $query = $query
+                ->andWhere('d.Date >= :min')
+                ->setParameter('min', $search->min);
+        }
+
+        if (!empty($search->max)) {
+            $query = $query
+                ->andWhere('d.Date <= :max')
+                ->setParameter('max', $search->max);
+        }
+
+        return $query;
       }
 //    /**
 //     * @return Sn[] Returns an array of Sn objects

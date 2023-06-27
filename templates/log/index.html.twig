@@ -9,11 +9,12 @@
 <!-- Display for one sn, count of mode, accessoire...-->
 <div class="d-flex flex-column justify-content-between align-items-center mx-0 px-0 w-100 mt-1">
     <h1>My Dashboard</h1>
+    {#
     {{form_start(form)}}
     {{form_row(form)}}
     <button>Submit</button>
     {{form_end(form)}}
-
+    #}
     {#
     {% for item in logs %}
         {{item.serialNumber}}

@@ -345,19 +345,19 @@ class CommandDetect extends AbstractController {
 		$indexToGet = $deviceObj["Index"];
 		$boardType = $deviceObj["boardType"];
 
-if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
-		$deviceTypeId = deviceTypeId[$deviceType];
-		$deviceTypeName = deviceTypeName[$deviceType];
-		$logFile = trim($sn).".txt";
-		/** @var array $deviceInfo 
-		 * Info available in database
-		 * [SN] : sn
-		 * [FORCED_UPDATE] : forced
-		*/
-		$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
-		$request->setDeviceToSN($sn, $deviceTypeName);
-		$request->setDeviceToServer($sn);
-		$this->responseArray[2] = $deviceInfo;
+		if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
+			$deviceTypeId = deviceTypeId[$deviceType];
+			$deviceTypeName = deviceTypeName[$deviceType];
+			$logFile = trim($sn).".txt";
+			/** @var array $deviceInfo 
+			 * Info available in database
+			 * [SN] : sn
+			 * [FORCED_UPDATE] : forced
+			*/
+			$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
+			$request->setDeviceToSN($sn, $deviceTypeName);
+			$request->setDeviceToServer($sn);
+			$this->responseArray[2] = $deviceInfo;
 		}
 
 		// SET FORCED //
@@ -443,8 +443,8 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				$response = $dataResponse->getCesarMatrix($finalResponse);
 				break;
 			case "DD": //change l'IP Addresse à laquelle la machine se connecte
-				$server_id = $deviceInfo["server_id"];
-				if ($deviceInfo["server_id"] = 1) {
+				$server_id = $deviceInfo["server_id"];				
+				if ($deviceInfo["server_id"] = 1) {				
 					$address = $deviceInfo["server_ip"];
 					$port = $deviceInfo["server_port"];
 					$input2 = $address.",".$port."\0";
@@ -463,7 +463,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 					$tempResponse = $header.$content;
 					$response = $dataResponse->getCesarMatrix($tempResponse);
 				}
-								
+				
 				break;
 			case "CC": //synchro directory prtocol
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
@@ -537,7 +537,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 			case "CF": //Synchro directory
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
 				$response = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType], $boardType);
-				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);				
+				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);
 				break;
 			case "CE": //Download file
 				if ($_ENV['APP_ENV'] == 'dev') {
@@ -562,7 +562,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				$response = $dataResponse->setResponseData($content);
 				break;
 
-            case "F3": //Receive log file				
+            case "F3": //Receive log file
 				$this->writeLog($sn, $deviceType);
 				$newPointeur = $dataResponse->getPointeur2($sn, $deviceType);
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 11);

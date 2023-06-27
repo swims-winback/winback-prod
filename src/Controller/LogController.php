@@ -387,7 +387,7 @@ class LogController extends AbstractController
             'protocoles'=> $protocoles,
             //'modeChartsBloc' => $modeChartsBloc
             //'blocArray' => $blocArray
-            'form' => $form->createView(),
+            //'form' => $form->createView(),
             'modes'=>$modes,
             'ways'=>$ways,
             'modes_name'=>$modes_name,

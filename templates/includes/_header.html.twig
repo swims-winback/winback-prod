@@ -39,7 +39,16 @@
                     <li><a class="nav-link" href="{{path('app_sn')}}">{{ 'SN'|trans }}</a></li>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
-                    <li><a class="nav-link" href="{{path('statistics')}}">{{ 'Statistics'|trans }}</a></li>
+                    <li class="nav-link dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Statistics
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{path('statistics')}}">{{ 'Treatments'|trans}}</a></li>
+                            <li><a class="dropdown-item" href="{{path('app_log')}}">Logs</a></li>
+                        </ul>
+                    </li>
+                    {#<li><a class="nav-link" href="{{path('statistics')}}">{{ 'Statistics'|trans }}</a></li>#}
                     {% endif %}
                 {% endif %}
                     <li class="nav-item dropdown" style="width: fit-content;">

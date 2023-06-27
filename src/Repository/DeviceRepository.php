@@ -215,7 +215,7 @@ class DeviceRepository extends ServiceEntityRepository
       }
 
     private function getSearchQuery(SearchData $search): ORMQueryBuilder
-      {
+    {
         $query = $this
         ->createQueryBuilder('d')
         ->orderBy('d.sn', 'ASC')
@@ -259,20 +259,8 @@ class DeviceRepository extends ServiceEntityRepository
                 ->setParameter('deviceFamily', $search->categories);
         }
         
-          return $query;
-      }
-
-      /**
-       * @return Device[] Returns an array of Device objects selected
-       */
-      public function findAllSelected()
-      {
-          return $this->createQueryBuilder('d')
-              ->andWhere('d.selected = 1')
-              ->getQuery()
-              ->getResult()
-          ;
-      }
+        return $query;
+    }
 
       public function findByDate($date)
       {

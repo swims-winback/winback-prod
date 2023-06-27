@@ -31,8 +31,8 @@ class Client
     }
 
     
-    #[ORM\Column(length: 200)]
-    private ?string $serial_number = null;
+    //#[ORM\Column(length: 200)]
+    //private ?string $serial_number = null;
     
     public function getId(): ?int
     {
@@ -51,6 +51,7 @@ class Client
         return $this;
     }
     
+    /*
     public function getSerialNumber(): ?string
     {
         return $this->serial_number;
@@ -62,35 +63,6 @@ class Client
 
         return $this;
     }
-    
-
-    /*
-    public function getSerialNumber(): Collection
-    {
-        return $this->serial_number;
-    }
-
-    
-    public function addSerialNumber(Sn $serialNumber): self
-    {
-        if (!$this->serial_number->contains($serialNumber)) {
-            $this->serial_number->add($serialNumber);
-            $serialNumber->setClient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSerialNumber(Sn $serialNumber): self
-    {
-        if ($this->serial_number->removeElement($serialNumber)) {
-            // set the owning side to null (unless already changed)
-            if ($serialNumber->getClient() === $this) {
-                $serialNumber->setClient(null);
-            }
-        }
-
-        return $this;
-    }
     */
+
 }
