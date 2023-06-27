@@ -6,14 +6,10 @@ when@dev:
     monolog:
         handlers:
             main:
-                #type: stream
-                type: rotating_file
-                #path: "%kernel.logs_dir%/%kernel.environment%.log"
-                path: var/log/dev/.log
-                #level: debug
-                buffer_size: 50 # How many messages should be saved? Prevent memory leaks
-                max_files: 10
-                channels: ["!event", "!doctrine"]
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                channels: ["!event"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -26,25 +22,6 @@ when@dev:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine", "!console"]
-            doctrine:
-                type: rotating_file
-                path: var/log/dev/doctrine/.log
-                buffer_size: 50
-                max_files: 10
-                channels: ["doctrine"]
-            app:
-                type: rotating_file
-                path: var/log/dev/app/.log
-                buffer_size: 50
-                max_files: 10
-                channels: ["app"]
-            #console2:
-                #type: rotating_file
-                #path: var/log/dev/console/.log
-                #buffer_size: 50
-                #max_files: 10
-                #channels: ["console"]
-            
 
 when@test:
     monolog:

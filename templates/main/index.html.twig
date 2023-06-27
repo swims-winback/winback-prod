@@ -17,7 +17,7 @@
     </div>
     {% endif %}
     #}
-    <div class="container py-5 bg-light rounded-3 d-flex flex-column align-items-center">
+    <div class="container py-5 bg-light rounded-3 d-flex flex-column align-items-center w-100">
         <div class="d-flex align-items-center">
             <div><img src="{{asset('img/avatar.png')}}" alt="avatar" style="width: 5em; height: auto; border-radius: 50%; margin-right: 2em;" class="btn-shadow"></div>
             <div style="color: #4f4f4f;">
@@ -27,32 +27,32 @@
         </div>
         <hr style="width: 50%">
         {% if is_granted("ROLE_READER") %}
-        <div class="row d-flex align-items-stretch justify-content-between w-100">
+        <div class="row d-flex align-items-stretch justify-content-between w-50">
             
-            <div class="col card shadow-1 hoverable-1 rounded-3 white card-index mx-1">
+            <div class="col col-lg-4 card shadow-1 hoverable-1 rounded-3 white card-index" style="min-width: 15em;">
                 <a href="{{path('software')}}">
                 <div class="card-body">
-                <h4 class="text-nowrap">{{ 'Softwares'|trans }}</h4>
+                <h6 class="text-nowrap">{{ 'Softwares'|trans }}</h6>
                 {{ 'Manage the versions available in the database, add or delete a new software.'|trans }}
                 </div>
                 </a>
             </div>
             
             
-            <div class="col card shadow-1 hoverable-1 rounded-3 white card-index mx-1">
+            <div class="col col-lg-4 card shadow-1 hoverable-1 rounded-3 white card-index" style="min-width: 15em;">
                 <a href="{{path('device')}}">
                     <div class="card-body">
-                    <h4 class="text-nowrap">{{ 'Devices'|trans }}</h4>
+                    <h6 class="text-nowrap">{{ 'Devices'|trans }}</h6>
                     {{ 'Manage the devices available on the server, edit an existing device.'|trans }}
                     </div>
                 </a>   
             </div>
             
             {% if is_granted("ROLE_ADMIN") %}
-            <div class="col card shadow-1 hoverable-1 rounded-3 white card-index mx-1">
+            <div class="col col-lg-4 card shadow-1 hoverable-1 rounded-3 white card-index" style="min-width: 15em;">
             <a href="{{path('dashboard')}}">
                 <div class="card-body">
-                <h4 class="text-nowrap">{{ 'Dashboard'|trans }}</h4>
+                <h6 class="text-nowrap">{{ 'Dashboard'|trans }}</h6>
                 {{ 'Visualize the number of devices updated in the database.'|trans }}
                 </div>
             </a>
@@ -61,26 +61,15 @@
             
         </div>
             {% if is_granted("ROLE_ADMIN") %}
-            <div class="row h-100 mt-5">
-                <div class="col-6 h-100">
-                    <!--Devices connected in a week, day by day-->
-                    
-                    {% for item, value in deviceCountArray %}
-                        <div class="days" style="display: none">{{item}}</div>
-                        
-                        <div class="device_count" style="display: none">{{value}}</div>
-                    {% endfor %}
-                    {% for item, value in deviceCreatedArray %}
-                        
-                        <div class="device_created" style="display: none">{{value}}</div>
-                    {% endfor %}
-                    <canvas id="chartDeviceConnected" style="height: 15em;"></canvas>
+            <div class="row h-100 mt-5 d-flex align-items-center justify-content-center">
+                <div style="height: 25em; width: 30em;">
+                {{ render_chart(firstChart) }}
                 </div>
-                <div class="col-6">
-                    <!--Devices created each month-->
-                    
-                    <canvas id="chartDeviceCreated"></canvas>
-                    
+                <div style="height: 25em; width: 30em;">
+                {{ render_chart(secondChart) }}
+                </div>
+                <div style="height: 25em; width: 30em;">
+                {{ render_chart(thirdChart) }}
                 </div>
             </div>
             {% endif %}
@@ -98,26 +87,47 @@
             - register user in client table
             - in client table, link sn
             -->
-            {% if clientIdentified %}
+            {% if clientIdentified and clientToSn %}
             You are identified, well done !
-            {% for client in clientIdentified %}
-                
-                {#{{client.serialNumber}}#}
-                
-            {% endfor %}
+            <table class="table table-striped table-bordered table-hover w-100">
+                <thead>
+                    <tr>
+                    <th>Serial Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for client in clientToSn %}
+                <tr>
+                <td>{{client.Sn}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
             {% else %}
             {{ 'You are not identified yet. Please enter your Info to verify your identity and find your device.'|trans }}
             
             <!-- when form is submitted, send automatically a mail to admin to request client registration -->
+            {#
             {{ form_start(clientRegistration) }}
                 {{ form_row(clientRegistration.email) }}
                 {{ form_row(clientRegistration.serial_number) }}
                 <button>Submit</button>
             {{ form_end(clientRegistration) }}
+            #}
+            {{ form_start(clientRegistration) }}
+                {{ form_row(clientRegistration.email) }}
+                {#
+                {{ form_row(clientRegistration.serial_number) }}
+                #}
+                <button>Submit</button>
+            {{ form_end(clientRegistration) }}
+            <!--
             <form action="">
                 <input type="text" placeholder="{{ 'Enter your SN'|trans }}">
                 <input type="text" placeholder="{{ 'Enter your Username or Mail'|trans }}">
             </form>
+            -->
             <!--TODO Maybe send a recap mail with info -->
             {% endif %}
         </div>
@@ -128,6 +138,8 @@
     </div>
 {% endblock %}
 
+{#
 {% block javascripts %}
     <script src="{{ asset('js/main.js')}}"></script>
 {% endblock %}
+#}

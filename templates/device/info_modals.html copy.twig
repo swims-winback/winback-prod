@@ -1,0 +1,186 @@
+<!-- ===== INFO MODALS ===== -->
+{% for device in devices %}
+    <div class="modal shadow-1 white falling overflow-scroll p-4" id="modal_info_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="text-center w-100 align-middle">{{ 'Device Info'|trans }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="divider"></div>
+            <div class="responsive-table px-4">
+                <table class="table striped">
+                    <tbody>
+                        <tr>
+                            <th>{{ 'Serial Number'|trans }} :</th>
+                            <td>{{device.sn}}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Device Type'|trans }} :</th>
+                            <td>{{device.deviceFamily}}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Version'|trans }} :</th>
+                            <td>{{device.version}}</td>
+                        </tr>
+                        {# 
+                        <tr>
+                            <th>Upload Version :</th>
+                            <td>{{device.versionUpload}}</td>
+                        </tr>
+                        #} 
+
+                        <tr>
+                            <th>{{ 'IP Address'|trans }} :</th>
+                            <td>{{device.ipAddr}}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Country'|trans }} :</th>
+                            <td>{{device.country}}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'City'|trans }} :</th>
+                            <td>{{device.city}}</td>
+                        </tr>
+                        {#
+                        <tr>
+                            <th>{{ 'Log Pointer'|trans }} :</th>
+                            <td>{{device.logPointeur}}</td>
+                        </tr>
+                        #}
+                        <tr>
+                            <th>{{ 'Advertising'|trans }} :</th>
+                            <td class="{{(device.pub)? 'device-active': 'device-inactive'}}">
+                            {{ (device.pub)? 'Yes': 'No'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'PIN code'|trans }} :</th>
+                            <td>{{device.codePin}}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Creation Date'|trans }} :</th>
+                            <td>{{device.createdAt|format_datetime('medium', 'short')}}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Update Date'|trans }} :</th>
+                            <td>{{device.updatedAt|format_datetime('medium', 'short')}}</td>
+                        </tr>
+                        {#
+                        <tr>
+                            <th>{{ 'Server last activity'|trans }} :</th>
+                            <td>{{device.serverDate|format_datetime('medium', 'short')}}</td>
+                        </tr>
+                        #}
+                        <tr>
+                            <th>{{ 'Status'|trans }} :</th>
+                            <td>
+                                <div class="{{(device.isActive)? 'device-active': 'device-inactive'}}">{{(device.isActive)? 'Active':'Inactive'}}</div>
+                            </td>
+                        </tr>
+                        {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <tr class="text-center">
+                            <th>{{ 'Connect'|trans }} :</th>
+                            <td>
+                                {% if (device.deviceFamily == "BIOBACK" or device.deviceFamily == "RSHOCK" or device.deviceFamily == "CRYOBACK4") %}
+                                    
+                                    <input class="btn bg-green btn-outline-green connect_button" 
+                                    id="c_sn_{{device.sn}}" 
+                                    data-id="connect_{{device.id}}" 
+                                    name='{{device.sn}}' type="button" value="Connect" 
+                                    data-bs-toggle="modal" data-bs-target="#testAcces_{{device.id}}">
+                                    
+                                    {#
+                                    <a href={{ path('connect', { 'id': device.id }) }} class="btn bg-green btn-outline-green connect_command" 
+                                    id="c_sn_{{device.sn}}" 
+                                    data-id="connect_{{device.id}}" 
+                                    name='{{device.sn}}' type="button" value="Connect"></a>
+                                    #}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        {% if is_granted("ROLE_GOE")%}
+                        
+                        <tr>
+                            <th>{{ 'Forced'|trans }} :</th>
+                            <td>
+                                <!--
+                                <a href="#" class="form-field form-default"
+                                    data-target="modal_forced_{{device.id}}"
+                                    data-id="forced_{{device.id}}"
+                                    data-title="{{device.sn}}">
+                                    <label class="form-switch mt-2">
+                                    <input type="checkbox" 
+                                    {{ (device.forced)? 'checked': ''}} 
+                                    data-id="{{device.id}}" 
+                                    name="switchbox" 
+                                    onblur="this.value=''">
+                                    <span class="slider"></span>
+                                    </label>
+                                </a>
+                                -->
+                                <input type="checkbox" 
+                                id="forced_{{device.id}}"
+                                {{ (device.forced)? 'checked': ''}} 
+                                data-id="{{device.id}}" 
+                                name="switchbox">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Upload Version'|trans }} :</th>
+                            <td>
+                                {#
+                                <input type="text" id="{{device.id}}"
+                                    data-id="{{device.id}}" 
+                                    name="" value=""
+                                    class="update-zone" 
+                                    onblur="this.value=''">
+                                #}
+                                <input type="text"
+                                    data-id="{{device.id}}" 
+                                    name="" value="" 
+                                    id="update_{{device.id}}"
+                                    class="update-zone">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Change Server'|trans }}</th>
+                            <td>
+                            {{device.serverId}}
+                            </td>
+                        </tr>
+                        
+                        {% endif %}
+                    </tbody>
+                </table>
+                
+            </div>
+            <div class="divider"></div>
+            <div class="modal-footer">
+                {% if is_granted("ROLE_GOE")%}
+                <div>
+                    <!--
+                    <a href="" 
+                    class="update btn btn-dark red shadow-1 rounded-1 small" 
+                    id="update_{{device.id}}" 
+                    name="validate">{{ 'Validate'|trans }}
+                    </a>
+                    -->
+                    <button type="button"
+                    class="update btn btn-dark red shadow-1 rounded-1 small valid-buttons"  
+                    name="{{device.id}}">{{ 'Validate'|trans }}
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+
+    {% include 'device/acces_modals.html.twig' %}
+{% endfor %}
