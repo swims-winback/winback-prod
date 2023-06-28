@@ -11,22 +11,8 @@ class UtilsTest extends TestCase
 {
     public function testDefault()
     {
-        /*
-        $product = new Product('Pomme', 'food', 1);
-                                 $this->assertSame(0.055, $product->computeTVA());
-        */
+
         $utils = new Utils();
-        $deviceType = '12';
-        /*
-        $soft = "WLE256_12_2_v003.012.bin";
-        */
-        /*
-        $test_soft_array = ["test1.bin", "test2.bin", "test3.bin", "test4.bin", "test5.bin"];
-        $this->assertSame($test_soft_array, $utils->listFiles('TEST', PACK_PATH));
-        $this->assertSame($test_soft_array, $utils->listFiles('TEST2', PACK_PATH));
-        */
-        /* COMPARE FILE */
-        //$this->assertSame(??, $utils->compareFile());
         /* GET FILE CONTENT */
         $rshock_soft_list = array_diff(scandir($_ENV['PACK_PATH'].deviceTypeArray[10]), array('..', '.'));
         $cryo_soft_list = array_diff(scandir($_ENV['PACK_PATH'].deviceTypeArray[11]), array('..', '.'));
