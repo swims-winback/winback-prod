@@ -19,8 +19,8 @@ class DbRequestTest extends TestCase
         $dbRequest = new DbRequest;
 
         //$dbRequest->getDeviceTypeActualVers(12);
-        $this->testGetDeviceTypeActualVers('3.2', 'WLE256_14_2_v003.002.bin', 14); //BACK3
-        $this->testGetDeviceTypeActualVers('3.12', 'WLE256_12_2_v003.012.bin', 12); //BACK4
+        $this->testGetDeviceTypeActualVers('3.3', 'WLE256_14_2_v003.003.bin', 14); //BACK3
+        $this->testGetDeviceTypeActualVers('3.15', 'WLE256_12_2_v003.015.bin', 12); //BACK4
         $this->testGetDeviceTypeActualVers('3.1', 'WLE256_13_2_v003.001.bin', 13); //BIOBACK
         $this->testGetDeviceTypeActualVers('3.7', 'WLE256_11_2_v003.007.bin', 11); //CRYO
         $this->testGetDeviceTypeActualVers('4.2', 'WLE256_10_2_v004.002.bin', 10); //RSHOCK

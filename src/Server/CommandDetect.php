@@ -522,8 +522,9 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				break;
 			case "CF": //Synchro directory
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId, 0);
-				$response = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType], $boardType);
-				for($i=6;$i<strlen($response);$i++)$response[$i]=chr(hexdec(bin2hex($response[$i]))+$this->getserverCesarMatrixTxArray[($i-6)%214]);				
+				$finalResponse = $dataResponse->getSynchroDirectoryData($this->path, deviceType[$deviceType], $boardType);
+				$response = $dataResponse->getCesarMatrix($finalResponse);
+								
 				break;
 			case "CE": //Download file
 				if ($_ENV['APP_ENV'] == 'dev') {
