@@ -1,5 +1,5 @@
 <?php
-namespace App\Websocket;
+namespace App\Controller;
     
 use Exception;
 use Ratchet\ConnectionInterface;

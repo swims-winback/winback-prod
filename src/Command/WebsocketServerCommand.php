@@ -1,7 +1,7 @@
 <?php
 namespace App\Command;
 
-use App\Websocket\MessageHandler;
+use App\Controller\MessageHandler;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
