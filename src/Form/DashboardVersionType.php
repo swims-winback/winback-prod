@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Class\SearchData;
 use App\Class\SearchVersion;
 use App\Entity\Device;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

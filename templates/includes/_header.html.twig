@@ -1,24 +1,4 @@
-
-    <!--
-    <header class="header shadow d-flex justify-content-center">
-            <div data-target="example-sidenav" class="press sidenav-trigger flex-1">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-            </div>
-            <a class="navbar-logo w-100 flex-2" href="{{path('home')}}">
-                {#<img src="{{asset('img/winback-logo.webp')}}" alt="Logo" class="logo" style="height: 50px;">#}
-            </a>
-            <div class="navbar-menu flex-1">
-                <a class="navbar-link" href="{{path('app_logout')}}">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
-                </a>
-            </div>
-    </header>
-    -->
-    <!--<nav class="navbar navbar-expand-md shadow primary bg-orange px-3 fixed-top" id="navbar">-->
-    <nav class="container-fluid navbar navbar-expand-lg shadow bg-orange sticky-top">
-        <!--
-        <a class="navbar-brand" href="{{path('home')}}"><img src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto"></a>
-        -->
+<nav class="container-fluid navbar navbar-expand-lg shadow bg-orange sticky-top">
         <div class="w-100 d-flex flex-nowrap align-items-center">
             <a href="{{path('home')}}">
             <img class="navbar-brand" id="navbar-logo" src="{{asset('img/winback_logo.svg')}}" alt="winback_logo" width="140" height="auto">
@@ -26,15 +6,11 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                 <ul class="navbar-nav d-flex align-items-center me-auto">
                 {% if is_granted('ROLE_READER') %}
-                    <!--
-                    <li><a class="nav-link" href="{{path('home')}}"><i class="fa-solid fa-house"></i></a></li>
-                    -->
                     <li><a class="nav-link" href="{{path('software')}}">{{ 'Softwares'|trans }}</a></li>
                     <li><a class="nav-link" href="{{path('device')}}">{{ 'Devices'|trans }}</a></li>
                     {% if is_granted("ROLE_ADMIN") %}
                     <li><a class="nav-link" href="{{path('dashboard')}}">{{ 'Dashboard'|trans }}</a></li>
                     {% endif %}
-                    <!--<a class="nav-link" href="">Maintenance</a>-->
                     {% if is_granted('ROLE_ADMIN') %}
                     <li><a class="nav-link" href="{{path('app_sn')}}">{{ 'SN'|trans }}</a></li>
                     {% endif %}
@@ -44,11 +20,12 @@
                             Statistics
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{path('statistics')}}">{{ 'Treatments'|trans}}</a></li>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li><a class="dropdown-item" href="{{path('app_log')}}">Logs</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{{path('statistics')}}">{{ 'Treatments'|trans}}</a></li>
                         </ul>
                     </li>
-                    {#<li><a class="nav-link" href="{{path('statistics')}}">{{ 'Statistics'|trans }}</a></li>#}
                     {% endif %}
                 {% endif %}
                     <li class="nav-item dropdown" style="width: fit-content;">

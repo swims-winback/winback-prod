@@ -98,7 +98,7 @@ class DashboardController extends AbstractController
         return new Response(count($devices));
     }
 
-        /**
+    /**
      * getChart
      * @param ChartBuilderInterface $chartBuilder
      * @param array $labels - array of legends

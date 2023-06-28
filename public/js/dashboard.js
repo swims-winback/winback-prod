@@ -83,50 +83,6 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const param = getChart('Total Devices', family_array, count_array, backgroundArray, borderArray);
 const myChart = new Chart(ctx, param);
 
-/*
-const myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels:
-          family_array,
-            datasets: [{
-              label: 'Total Devices',
-              data: count_array,
-              backgroundColor: backgroundArray,
-              borderColor: borderArray,
-            borderWidth: 1,
-            hoverOffset: 4
-            }]
-        },
-  options: {
-    responsive: true,
-    plugins: {
-              legend : {
-                position: 'bottom'
-              }
-          }
-  },
-  plugins: [{
-    id: 'text',
-    beforeDraw: function(chart, a, b) {
-      var width = chart.width,
-        height = chart.height,
-        ctx = chart.ctx;
-      ctx.restore();
-      var fontSize = (height / 114).toFixed(2);
-      ctx.font = fontSize + "em sans-serif";
-      ctx.textBaseline = "middle";
-
-      var text = total_devices,
-        textX = Math.round((width - ctx.measureText(text).width) / 2),
-        textY = (height / 3)
-      ctx.fillText(text, textX, textY);
-      ctx.save();
-    }
-  }]
-  
-});
-*/
 
 myChartArray = []
 for (let key in result) {

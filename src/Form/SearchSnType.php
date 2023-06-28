@@ -31,7 +31,7 @@ class SearchSnType extends AbstractType
                 ],
                 'required' => false,
             ])
-            
+            /*
             ->add('date', RangeType::class, [
                 'attr' => [
                     'min' => '2014-01-08',
@@ -53,7 +53,7 @@ class SearchSnType extends AbstractType
                     'placeholder' => 'Date max'
                 ]
             ])
-
+            */
         ;
     }
 
