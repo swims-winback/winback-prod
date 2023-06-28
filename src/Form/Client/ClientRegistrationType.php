@@ -137,6 +137,7 @@ class ClientRegistrationType extends AbstractType
             ])
             */
             //serial number
+            /*
             ->add('serial_number', TextType::class, [
                 'label' => false,
                 'required' => true,
@@ -150,7 +151,7 @@ class ClientRegistrationType extends AbstractType
                     'placeholder' => 'Enter serial number',
                 ],
             ])
-            
+            */
         ;
     }
 
