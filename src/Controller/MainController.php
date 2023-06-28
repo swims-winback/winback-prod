@@ -96,6 +96,8 @@ class MainController extends AbstractController
             //$clientSn = new ClientSn();
             $email = $form->get('email')->getData();
             $client->setEmail($email);
+
+            //$client->setSerialNumber($form->get('serial_number')->getData());
             //$clientSn->setClient($email);
             //$clientSn->setSn($form->get('serial_number')->getData());
 

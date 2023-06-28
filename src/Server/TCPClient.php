@@ -162,7 +162,6 @@ class TCPClient extends AbstractController
         if(isset($_POST)){
             switch ($_POST['action']) {
                 case 'connect':
-                    //echo 'connect';
                     if (($socket = $this->connectToServer()) != null) {
                         socket_write($socket, $_POST['sn']);
                         $isConnect = $this->getMsgConnectFromServer($socket);
@@ -181,7 +180,6 @@ class TCPClient extends AbstractController
                     }
                     */
                     return new Response(false);
-                    //break;
                 case 'buttonTouch':
                     $trackZone = 0;
                     if(($_POST['cmd'] == 'tecaIntensity')){

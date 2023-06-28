@@ -41,6 +41,14 @@ class Utils {
     {
         if (file_exists($_ENV['PACK_PATH'])) { # check that directory exists and is accessible
             if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName)) {
+                if ($content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName)) {
+                    return $content;
+                } else {
+                    echo "\r\n{$fileName} is too big. Content cannot be get.\r\n";
+                    return false;
+                }
+
+                /*
                 $content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName);
                 if ($content) {
                     return $content;
@@ -48,6 +56,50 @@ class Utils {
                     echo "\r\nContent cannot be get.\r\n";
                     return false;
                 }
+                */
+            } else {
+                $aValue = explode('_', $fileName);
+                $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
+                $lastVersUp = $this->checkLastVersion($deviceType, $boardType);
+                $actualFile = $lastVersUp["name"];
+                if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $actualFile)) {
+                    $content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $actualFile);
+                    if (!$content) {
+                        echo "\r\n{$actualFile} is too big. Content cannot be get.\r\n";
+                        return false;
+                    }
+                    return $content;
+                }
+                echo "\r\n{$actualFile} doesn't exist, please check again.\r\n";
+                return false;
+            }
+        }
+        else {
+            echo "\r\nDirectory". $_ENV['PACK_PATH'] ."doesn't exist. Content cannot be get.\r\n";
+            return false;
+        }
+    }
+
+    function getFileContentTest(string $deviceType, string $fileName) : string|bool
+    {
+        if (file_exists($_ENV['PACK_PATH'])) { # check that directory exists and is accessible
+            if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName)) {
+                if ($content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName)) {
+                    return true;
+                } else {
+                    echo "\r\n{$fileName} is too big. Content cannot be get.\r\n";
+                    return false;
+                }
+
+                /*
+                $content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName);
+                if ($content) {
+                    return $content;
+                } else {
+                    echo "\r\nContent cannot be get.\r\n";
+                    return false;
+                }
+                */
             } else {
                 $aValue = explode('_', $fileName);
                 $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
@@ -59,7 +111,7 @@ class Utils {
                         echo "\r\nContent cannot be get.\r\n";
                         return false;
                     }
-                    return $content;
+                    return true;
                 }
                 echo "\r\nFile doesn't exist, please check again.\r\n";
                 return false;
@@ -70,7 +122,7 @@ class Utils {
             return false;
         }
     }
-
+    /*
     function getFileContentTest(string $deviceType, string $fileName) : bool
     {
 		if(file_exists($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName)){
@@ -103,6 +155,7 @@ class Utils {
             return false;
 		}
     }
+    */
 
     /**
      * Extract specific data from content file, based on an index and a certain length
