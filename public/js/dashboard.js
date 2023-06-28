@@ -1,4 +1,24 @@
 //doughnut
+backgroundArray = [
+  'rgba(255, 99, 132, 0.2)',
+  'rgba(255, 159, 64, 0.2)',
+  'rgba(255, 205, 86, 0.2)',
+  'rgba(75, 192, 192, 0.2)',
+  'rgba(54, 162, 235, 0.2)',
+  'rgba(153, 102, 255, 0.2)',
+  'rgba(201, 203, 207, 0.2)'
+];
+
+borderArray = [
+  'rgb(255, 99, 132)',
+  'rgb(255, 159, 64)',
+  'rgb(255, 205, 86)',
+  'rgb(75, 192, 192)',
+  'rgb(54, 162, 235)',
+  'rgb(153, 102, 255)',
+  'rgb(201, 203, 207)'
+];
+
 let total_devices = document.getElementById('total_count').textContent;
 let device_count_array = document.getElementsByClassName('device_count');
 let count_array = [];
@@ -16,7 +36,54 @@ for (var i = 0; i < family_array.length; i++) {
         result[family_array[i]] = count_array[i];
 }
 
+function getChart(label, labels_array, data_array, backgroundArray, borderArray) {
+  return ({
+    type: 'doughnut',
+    data: {
+      labels:
+      labels_array,
+        datasets: [{
+          label: label,
+          data: data_array,
+          backgroundColor: backgroundArray,
+          borderColor: borderArray,
+        borderWidth: 1,
+        hoverOffset: 4
+        }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+                legend : {
+                  position: 'bottom'
+                }
+            }
+    },
+    plugins: [{
+      id: 'text',
+      beforeDraw: function(chart, a, b) {
+        var width = chart.width,
+          height = chart.height,
+          ctx = chart.ctx;
+        ctx.restore();
+        var fontSize = (height / 114).toFixed(2);
+        ctx.font = fontSize + "em sans-serif";
+        ctx.textBaseline = "middle";
+
+        var text = total_devices,
+          textX = Math.round((width - ctx.measureText(text).width) / 2),
+          textY = (height / 3)
+        ctx.fillText(text, textX, textY);
+        ctx.save();
+      }
+    }]
+  });
+}
 const ctx = document.getElementById('myChart').getContext('2d');
+const param = getChart('Total Devices', family_array, count_array, backgroundArray, borderArray);
+const myChart = new Chart(ctx, param);
+
+/*
 const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -25,20 +92,8 @@ const myChart = new Chart(ctx, {
             datasets: [{
               label: 'Total Devices',
               data: count_array,
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
+              backgroundColor: backgroundArray,
+              borderColor: borderArray,
             borderWidth: 1,
             hoverOffset: 4
             }]
@@ -46,12 +101,6 @@ const myChart = new Chart(ctx, {
   options: {
     responsive: true,
     plugins: {
-            /*
-              title: {
-                  display: true,
-                  text: 'Total Devices'
-              }
-            */
               legend : {
                 position: 'bottom'
               }
@@ -77,11 +126,17 @@ const myChart = new Chart(ctx, {
   }]
   
 });
-
+*/
 
 myChartArray = []
+for (let key in result) {
+
+  
+}
+
 for (const key in result) {
-  let substr_devices = total_devices - result[key];
+  //let substr_devices = total_devices - result[key];
+  
   let versionZoneValue = document.getElementById(`count_version_${key}`);
   var type = 'ctx2';
   var type2 = 'myChart2';
@@ -96,7 +151,6 @@ for (const key in result) {
                 backgroundColor: [
                   'white',
                   'rgba(54, 162, 235, 0.2)'
-                  
                 ],
                 borderColor: [
                   'grey',
@@ -106,38 +160,27 @@ for (const key in result) {
               hoverOffset: 4
               }]
             },
-          
       options: {
         responsive: true,
         plugins: {
-              /*
-                title: {
-                    display: true,
-                    text: `${key}`
-                }
-              */
               legend : {
                 position: 'bottom'
               }
             }
           },
-          
           plugins: [{
             id: 'text',
             beforeDraw: function(chart, a, b) {
               var width = chart.width,
                 height = chart.height,
                 ctx = chart.ctx;
-              
               ctx.restore();
               var fontSize = (height / 200).toFixed(2);
               ctx.font = fontSize + "em sans-serif";
               ctx.textBaseline = "middle";
-        
               var text = versionZoneValue.textContent,
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
                 textY = (height / 3);
-              
               ctx.fillText(text, textX, textY);
               ctx.save();
             }
@@ -145,24 +188,6 @@ for (const key in result) {
   });
 
 }
-
-/*
-function addData(chart, label, data) {
-  chart.data.labels.push(label);
-  chart.data.datasets.forEach((dataset) => {
-      dataset.data.push(data);
-  });
-  chart.update();
-}
-
-function removeData(chart) {
-  chart.data.labels.pop();
-  chart.data.datasets.forEach((dataset) => {
-      dataset.data.pop();
-  });
-  chart.update();
-}
-*/
 
 //Listen for the select options
 // when one option is selected, search all devices that corresponds to device family + version

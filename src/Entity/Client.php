@@ -30,8 +30,7 @@ class Client
         //$this->serial_number = new ArrayCollection();
     }
 
-    
-    #[ORM\Column(length: 200)]
+    //#[ORM\Column(length: 200)]
     //private ?string $serial_number = null;
     
     public function getId(): ?int
@@ -93,4 +92,5 @@ class Client
         return $this;
     }
     */
+
 }

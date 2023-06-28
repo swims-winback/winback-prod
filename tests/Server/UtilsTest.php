@@ -1,5 +1,9 @@
 <?php
 namespace App\Tests\Entity;
+
+use App\Entity\DeviceFamily;
+use App\Repository\DeviceFamilyRepository;
+use App\Server\DbRequest;
 use App\Server\Utils;
 use Exception;
 //use Monolog\Test\TestCase;
@@ -9,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class UtilsTest extends TestCase
 {
+
     public function testDefault()
     {
 
@@ -26,6 +31,7 @@ class UtilsTest extends TestCase
         foreach ($back4_soft_list as $soft) {
             $this->assertSame(true, $utils->getFileContentTest('12', $soft));
         }
+        //$this->assertSame(true, $utils->getFileContentTest('12', "WLE256_12_2_v003.015.bin")); //Check when filename is not present, if device get last version
         foreach ($bio_soft_list as $soft) {
             $this->assertSame(true, $utils->getFileContentTest('13', $soft));
         }

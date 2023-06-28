@@ -18,4 +18,19 @@ class SearchSn
      */
     public $q = '';
 
+    /**
+     * @var null|integer
+     */
+    public $date;
+
+    /**
+     * @var null|integer
+     */
+    public $max;
+
+    /**
+     * @var null|integer
+     */
+    public $min;
+
 }

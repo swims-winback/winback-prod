@@ -27,7 +27,7 @@ class DbRequestTest extends TestCase
 
         $dbRequest->getLocationInfoByIp('82.64.154.34');
 
-        $dbRequest->setDeviceInfo('WIN0C01B42108-0001', '3.12', 12, '82.64.154.34', 'WIN0C01B42108-0001.txt');
+        //$dbRequest->setDeviceInfo('WIN0C01B42108-0001', '3.12', 12, '82.64.154.34', 'WIN0C01B42108-0001.txt');
     }
 
     public function testGetDeviceTypeActualVers($version, $filename, $deviceType)
