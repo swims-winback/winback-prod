@@ -56,7 +56,7 @@ class MainController extends AbstractController
             $client = new Client();
             $email = $form->get('email')->getData();
             $client->setEmail($email);
-            $client->setSerialNumber($form->get('serial_number')->getData());
+            //$client->setSerialNumber($form->get('serial_number')->getData());
 
             $entityManager->persist($client);
             $entityManager->flush();
