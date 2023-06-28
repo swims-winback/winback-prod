@@ -32,7 +32,7 @@ class Client
 
     
     #[ORM\Column(length: 200)]
-    private ?string $serial_number = null;
+    //private ?string $serial_number = null;
     
     public function getId(): ?int
     {
@@ -50,7 +50,7 @@ class Client
 
         return $this;
     }
-    
+    /*
     public function getSerialNumber(): ?string
     {
         return $this->serial_number;
@@ -62,7 +62,7 @@ class Client
 
         return $this;
     }
-    
+    */
 
     /*
     public function getSerialNumber(): Collection
