@@ -65,7 +65,7 @@ body {
     letter-spacing: 0px;
     //font-size: 1em;
     //font-size: small;
-    font-size: 12px;
+    font-size:small;
     font-style: normal;
     font-weight: 400;
     //min-width: fit-content;
@@ -563,4 +563,5 @@ background: #eee;
 
 .modal-dialogue-device {
     --bs-modal-width: 50%;
+    font-size: medium;
 }

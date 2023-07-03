@@ -53,7 +53,7 @@ body {
   color: #100c08 !important;
   width: 100%;
   letter-spacing: 0px;
-  font-size: 12px;
+  font-size: small;
   font-style: normal;
   font-weight: 400;
   min-height: 100vh;
@@ -465,4 +465,5 @@ table.dataTable thead .sorting_desc_disabled:before {
 
 .modal-dialogue-device {
   --bs-modal-width: 50%;
+  font-size: medium;
 }/*# sourceMappingURL=styles.css.map */

@@ -1,7 +1,7 @@
 <!-- ===== INFO MODALS ===== -->
 {% for device in devices %}
     <div class="modal modal-device shadow-1 white falling w-100" id="modal_info_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
-        <div class="modal-dialog modal-dialogue-device w-100 h-100">
+        <div class="modal-dialog modal-dialogue-device w-100">
             <div class="modal-content w-100 h-100">
                 <div class="modal-header">
                 <h5 class="text-center w-100 align-middle">{{ 'Device Info'|trans }}</h5>
@@ -9,7 +9,7 @@
                 </div>
 
                 <div class="divider"></div>
-                <div class="px-4 pb-5 pt-1 w-100 h-100 d-flex flex-column justify-content-between align-items-stretch">
+                <div class="px-4 pb-5 pt-1 w-100 h-100 d-flex flex-column justify-content-around align-items-stretch">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
                             <b>{{ 'Serial Number'|trans }} :</b>
@@ -72,7 +72,8 @@
                         <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
                             <b>{{ 'Connect'|trans }} :</b>
                             {% if (device.deviceFamily == "BIOBACK" or device.deviceFamily == "RSHOCK" or device.deviceFamily == "CRYOBACK4") %}
-                                <input class="btn bg-green btn-outline-green connect_button w-75" 
+                                <input class="btn bg-green btn-outline-green connect_button" 
+                                style="width:fit-content;"
                                 id="c_sn_{{device.sn}}" 
                                 data-id="connect_{{device.id}}" 
                                 name='{{device.sn}}' type="button" value="Connect" 
@@ -95,7 +96,7 @@
                                     class="update-zone" style='width:12em;'>
                             </div>
                         </div>
-                        <div class="d-flex flex-nowrap justify-content-left align-self-stretch align-items-center">
+                        <div class="d-flex flex-nowrap justify-content-left align-self-stretch align-items-center w-50">
                             <b class="me-1">{{ 'Forced'|trans }} :</b>
                             <div>
                                 <input type="checkbox" 
@@ -108,17 +109,20 @@
 
                     </div>
                     {% if is_granted("ROLE_GOE")%}
-                    <div class="text-end w-100">
-                        <button type="button"
-                        class="update btn btn-dark red shadow-1 rounded-1 small valid-buttons"  
-                        name="{{device.id}}">{{ 'Validate'|trans }}
-                        </button>
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div class="w-50"></div>
+                        <div class="w-50">
+                            <button type="button"
+                            class="update btn btn-dark red shadow-1 rounded-1 small valid-buttons"  
+                            name="{{device.id}}">{{ 'Validate'|trans }}
+                            </button>
+                        </div>
                     </div>
                     {% endif %}
                     <hr class="hr" />
                         {% if is_granted("ROLE_ADMIN")%}
                         <div class="d-flex justify-content-between w-100">
-                            <div class="d-flex flex-column justify-content-left">
+                            <div class="d-flex flex-column justify-content-left w-50">
                                 <b>{{ 'Server IP'|trans }}</b>
                                 <input type="text"
                                 data-id="{{device.id}}" 
@@ -126,7 +130,7 @@
                                 id="server_ip_{{device.id}}"
                                 class="server_ip-zone" style='width:12em;'>
                             </div>
-                            <div class="d-flex flex-column justify-content-left">
+                            <div class="d-flex flex-column justify-content-left w-50">
                                 <b>{{ 'Server Port'|trans }}</b>
                                 <input type="text"
                                 data-id="{{device.id}}" 
@@ -144,10 +148,12 @@
                                 data-id="{{device.id}}" 
                                 name="switchbox">
                             </div>
+                            <div class="w-50">
                             <button type="button"
                             class="update btn btn-dark red shadow-1 rounded-1 small server-buttons"  
                             name="{{device.id}}">{{ 'Validate'|trans }}
                             </button>
+                            </div>
                         </div>
                         {% elseif is_granted("ROLE_GOE")%}
                         <div class="d-flex justify-content-between align-items-center w-100">
