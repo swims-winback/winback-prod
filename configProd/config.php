@@ -36,3 +36,6 @@ if (!defined('deviceId')) define('deviceId', array('RSHOCK/' => 10, 'CRYOBACK4/'
 if (!defined('FW_OCTETS')) define("FW_OCTETS", 256);
 if (!defined('stFILENAME')) define("stFILENAME", "WLE256");
 if (!defined('extFILENAME')) define("extFILENAME", ".bin");
+
+if (!defined('ADDRESS_ARRAY')) define('ADDRESS_ARRAY', array($_ENV['ADDRESS']));
+if (!defined('PORT_ARRAY')) define('PORT_ARRAY', array($_ENV['PORT'], $_ENV['SERVER_SECURE_PORT']));

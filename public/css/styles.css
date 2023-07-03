@@ -461,4 +461,8 @@ table.dataTable thead .sorting_desc_disabled:before {
 .table-header-second {
   background-color: #767171;
   color: #F5F5F5;
+}
+
+.modal-dialogue-device {
+  --bs-modal-width: 50%;
 }/*# sourceMappingURL=styles.css.map */

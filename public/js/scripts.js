@@ -4,6 +4,7 @@ let selectedButton = document.querySelectorAll(".device-check");
 let selectedZone = document.getElementById('selectedZone');
 let updateZone = document.querySelectorAll(".update-zone");
 let validButtons = document.querySelectorAll(".valid-buttons");
+let serverButtons = document.querySelectorAll(".server-buttons");
 //let forcedButton = document.getElementsByName("switchbox");
 let deviceArray = document.querySelectorAll(".info_device"); //get all the info modals
 
@@ -162,49 +163,8 @@ function addForce(id, forced) {
     }
     })
 }
-  
-/*
-TODO
-  let forcedButton = document.getElementsByName("switchbox");
-	for(let button of forcedButton){
-    button.addEventListener("click", function(){  
-			let id = button.getAttribute("data-id");
-			if (button.checked == true) {
-        console.log(button.checked);
-        addForce(id, 1);
-			}
-      else {
-        addForce(id, 0);
-			}
-		})
-	}
- */
 
 	// ######### Selected function ######### //
-	/* select devices in db */
-	// if button clicked & button checked, item selected in db
-
-  /*
-	for(let button of selectedButton){
-    button.onclick = function () {
-      let substr_id = button.getAttribute("id");
-      let id = substr_id.substr(9);
-      
-			if (id != 0 && button.checked == true) {
-				//console.log(button.checked);
-        let xmlhttp = new XMLHttpRequest;
-				xmlhttp.open("GET", `/selected/${id}/${1}`)
-				xmlhttp.send()
-			}
-			else if (id != 0 && button.checked == false) {
-        let xmlhttp = new XMLHttpRequest;
-				xmlhttp.open("GET", `/selected/${id}/${0}`)
-				xmlhttp.send()
-			}
-      
-		}
-	}
-  */
 
 	/* if checkbox_0 is clicked and is checked, query all checkbox in html, change checkbox.checked's value according to value for checkbox_0, select item in db */
   if (checkbox_0) {
@@ -213,24 +173,12 @@ TODO
         for (var i=0; i < checkboxes.length; i++) {
           let id = checkboxes[i].getAttribute("data-id");
           checkboxes[i].checked = true;
-          //addSelected(id, 1)
-          /*
-          let xmlhttp = new XMLHttpRequest;
-          xmlhttp.open("GET", `/selected/${id}/${1}`)
-          xmlhttp.send()
-          */
         }
       }
       else {
         for (var i=0; i < checkboxes.length; i++) {
           let id = checkboxes[i].getAttribute("data-id");
           checkboxes[i].checked = false;
-          //addSelected(id, 0)
-          /*
-          let xmlhttp = new XMLHttpRequest;
-          xmlhttp.open("GET", `/selected/${id}/${0}`)
-          xmlhttp.send()
-          */
         }
       }
     }
@@ -281,19 +229,16 @@ for (let element of commentButtons) {
    * @param {int} id - device version
    */
 function addVersion(version, id) {
-    //console.log("add version...")
     $.ajax({
       type:"POST",
       cache:false,
       url: `/addDeviceVersion/${version}/${id}`,
       async: false,
     });
-    //window.location.reload();
 }
 
 // Delete hidden label after check form
 checkbox_0.parentElement.classList.remove("form-check")
-//document.getElementById('versionUpload').parentElement.classList.remove("mb-3")
 
 let versionButton = document.getElementById("version_button");
 let versionInput = document.getElementById("version_input");
@@ -302,20 +247,86 @@ let versionDevices = document.getElementsByClassName("device-check");
 // TODO check if not multiple device type checked?
 versionButton.onclick = function () {
   let version = versionButton.previousElementSibling.value;
-  //console.log(versionDevices.length);
   for (let device of selectedButton) {
     if (device.checked == true) {
       let device_id = device.getAttribute("data-id");
       addVersion(version, device_id);
-      //$.when( addVersion(version, device_id) ).done(function() {
-        //window.location.reload();
-      //});
       console.log(device.getAttribute("data-id"));
     }
   }
-  //console.log(version);
-  //window.location.reload();
   versionButton.previousElementSibling.value = "";
   window.location.reload();
 
+}
+
+/*** ===== SERVER IP & PORT ===== ***/
+for (let validButton of serverButtons) {
+  validButton.addEventListener("click", function () {
+    let id = validButton.getAttribute('name');
+    let serverIdButton = document.querySelector(`#server_id_${id}`);
+    let zone = document.querySelector(`#server_ip_${id}`);
+    let serverIp = zone.value;
+    let zone2 = document.querySelector(`#server_port_${id}`);
+    let serverPort = zone2.value;
+    if (serverIdButton.checked == true) {
+      console.log(serverIdButton.checked);
+      addServerId(id, 1);
+    }
+    else {
+      addServerId(id, 0);
+    }
+    if (serverIp != "") {
+      addServerIp(serverIp, id);
+    }
+    if (serverPort != "") {
+      addServerPort(serverPort, id);
+    }
+    window.location.reload();
+  })
+}
+ 
+// ######### CHANGE Server ID ######### //
+/**
+ * Change server ID status to 1 or 0
+ * @param {int} id - device id
+ * @param {boolean} status - Server ID status - 1: change | 0: no change
+ */
+function addServerId(id, status) {
+  $.ajax({
+    type: "POST",
+    cache: false,
+    url: `/addServerId/${id}/${status}`,
+    success: function () {
+      console.log("server Id changed")
+      console.log(status)
+    }
+    })
+}
+
+// ######### CHANGE Server IP ######### //
+  /**
+   * call addServerIp in DeviceController
+   * @param {string} ip
+   * @param {int} id
+   */
+function addServerIp(ip, id) {
+    $.ajax({
+      type:"POST",
+      cache:false,
+      url: `/addServerIp/${ip}/${id}`,
+    });
+}
+
+// ######### CHANGE Server PORT ######### //
+  /**
+   * call addServerPort in DeviceController
+   * @param {string} port
+   * @param {int} id
+   */
+  function addServerPort(port, id) {
+    $.ajax({
+      type:"POST",
+      cache:false,
+      url: `/addServerPort/${port}/${id}`,
+    });
 }

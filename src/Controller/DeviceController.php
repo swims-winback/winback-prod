@@ -44,7 +44,6 @@ class DeviceController extends AbstractController
         // Check-all form 
         $checkform = $this->createForm(DeviceCheckType::class);
         // input text version form
-        $versionform = $this->editDeviceVersion($request, $deviceRepository, $softwareRepository, $doctrine, $logger);
         //TODO for each device check if file exists, else leave path blank
         $download_link = true;
         
@@ -52,7 +51,6 @@ class DeviceController extends AbstractController
             'devices' => $devices,
             'form' => $form->createView(),
             'checkform' => $checkform->createView(),
-            'versionform' => $versionform,
             'ressource_path' => $_ENV["RESSOURCE_PATH"],
             'download_link' => $download_link
         ]);
@@ -122,7 +120,6 @@ class DeviceController extends AbstractController
     public function addDeviceVersion(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $version, int $id)
     {
         $user = $this->getUser();
-        //$devices = $deviceRepository->findAll();
         $device = $deviceRepository->findOneBy(array("id"=>$id));
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findOneBy(array('version'=>$version, 'deviceFamily'=>$category->getId()));
@@ -142,9 +139,8 @@ class DeviceController extends AbstractController
                 'error', 'Software '.$version.' not found, please try again !'
             );
         }
-        $device->setSelected(false);
+        //$device->setSelected(false);
         return $this->redirectToRoute('device');
-        //return new Response("true");
         
     }
 
@@ -255,6 +251,60 @@ class DeviceController extends AbstractController
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
+        return $this->redirectToRoute('device');
+    }
+
+    /**
+     * @Route("/addServerIp/{ip}/{id}", name="add_serverIp")
+     * function called in js when updateServer form is triggered
+     */
+    public function addServerIp(DeviceRepository $deviceRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $ip, int $id)
+    {
+        $user = $this->getUser();
+        $device = $deviceRepository->findOneBy(array("id"=>$id));
+        if (in_array($ip, ADDRESS_ARRAY)) {
+            $logger->info($user." has updated ".$device->getSn()." server IP address from ".$device->getServerIp()." to ".$ip);
+            $device->setServerIp($ip);
+            
+            $this->addFlash(
+                'infoDevice', 'Device '.$device->getSn().' serverIP updated !'
+            );
+            $em = $doctrine->getManager();
+            $em->persist($device);
+            $em->flush();
+        }
+        else {
+            $this->addFlash(
+                'error', 'Address '.$ip.' not found, please try again !'
+            );
+        }
+        return $this->redirectToRoute('device');
+    }
+
+    /**
+     * @Route("/addServerPort/{port}/{id}", name="add_serverPort")
+     * function called in js when updateServer form is triggered
+     */
+    public function addServerPort(DeviceRepository $deviceRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $port, int $id)
+    {
+        $user = $this->getUser();
+        $device = $deviceRepository->findOneBy(array("id"=>$id));
+        if (in_array($port, PORT_ARRAY)) {
+            $logger->info($user." has updated ".$device->getSn()." server PORT from ".$device->getServerPort()." to ".$port);
+            $device->setServerPort($port);
+            
+            $this->addFlash(
+                'infoDevice', 'Device '.$device->getSn().' serverPort updated !'
+            );
+            $em = $doctrine->getManager();
+            $em->persist($device);
+            $em->flush();
+        }
+        else {
+            $this->addFlash(
+                'error', 'Port '.$port.' not found, please try again !'
+            );
+        }
         return $this->redirectToRoute('device');
     }
 }
