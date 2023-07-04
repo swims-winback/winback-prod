@@ -124,7 +124,10 @@ class DeviceController extends AbstractController
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findOneBy(array('version'=>$version, 'deviceFamily'=>$category->getId()));
         if ($version_software or $version == 0) {
-            $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+            $logTxt = $user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version;
+            $this->writeVersionLog($device->getSn(), $device->getDeviceFamily(), $logTxt);
+            $logger->critical($logTxt);
+            //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
             $device->setVersionUpload($version);
             
             $this->addFlash(
@@ -147,11 +150,19 @@ class DeviceController extends AbstractController
     /**
      * @Route("/forced/{id}/{select_bool}", name="forced")
      */
-    public function forced(Device $device, DeviceRepository $deviceRepository, ManagerRegistry $doctrine, LoggerInterface $logger, int $id, $select_bool=false)
+    public function forced(Device $device, ManagerRegistry $doctrine, LoggerInterface $logger, int $id, $select_bool=false)
     {
         $user = $this->getUser();
-        $logger->info($user." has forced ".$device->getSn());
-        $device->setForced(($select_bool==0)?0:1);
+        
+        if ($select_bool==0) {
+            $logger->critical($user." has deforced ".$device->getSn());
+            $device->setForced(0);
+        }
+        else {
+            $logger->critical($user." has forced ".$device->getSn());
+            $device->setForced(1);
+        }
+        
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
@@ -199,7 +210,9 @@ class DeviceController extends AbstractController
         $category = $device->getDeviceFamily();
         $version_software = $softwareRepository->findSoftwareByVersion($version, $category->getId());
         if ($version_software or $version == 0) {
-            $logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+            $logTxt = $user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version;
+            $this->writeVersionLog($device->getSn(), $device->getDeviceFamily(), $logTxt);
+            $logger->info($logTxt);
             $device->setVersionUpload($version);
             $em = $doctrine->getManager();
             $em->persist($device);
@@ -307,5 +320,34 @@ class DeviceController extends AbstractController
         }
         return $this->redirectToRoute('device');
     }
+
+	function writeVersionLog(string $sn, string $deviceType, string $inputTxt){
+        $path = $_ENV['LOG_PATH']."version/".$deviceType."/";
+        $logTxt = "\r\n".date("Y-m-d H:i:s | ").$inputTxt."\r\n";
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
+		}
+		$logFile = trim($sn).".txt";
+        if (file_exists($path.$logFile) && filesize($path.$logFile) < 1000) {
+            $fd = fopen($_ENV['LOG_PATH']."version/".$deviceType."/".$logFile, "a+");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+        else {
+            $fd = fopen($_ENV['LOG_PATH']."version/".$deviceType."/".$logFile, "w");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+	}
 }
 

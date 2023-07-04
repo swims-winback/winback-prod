@@ -26,6 +26,13 @@ when@dev:
                 path: var/log/dev/app/.log
                 buffer_size: 50
                 max_files: 10
+                channels: ["app"] 
+            version:
+                type: rotating_file
+                level: warning
+                path: var/log/dev/version/.log
+                buffer_size: 50
+                max_files: 10
                 channels: ["app"]      
 
 when@test:
@@ -79,3 +86,10 @@ when@prod:
             error_log_handler:
                 type: error_log
                 level: info
+            version:
+                type: rotating_file
+                level: warning
+                path: var/log/prod/version/.log
+                buffer_size: 50
+                max_files: 10
+                channels: ["app"] 

@@ -398,6 +398,8 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
                 $response = $dataResponse->setResponseData($fileContent);
                 break;
             case "FE": //UART_CMD_AUTODETECT //Ready To Receive
+				$logTxt = "Version: ".$deviceInfo[DEVICE_VERSION]." Upload version: ".$deviceInfo[VERSION_UPLOAD]." Address: ".$deviceInfo[IP_ADDR]." Country: ".$deviceInfo[COUNTRY];
+				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
                 $dataResponse->setHeader(cmdByte[$command], $this->reqId, 39);
 				$fileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$startOffset = $dataResponse->getIndexForImg($fileContent);
@@ -405,7 +407,9 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				$tempResponse = $dataResponse->autoDetectBody($sizeContent, $fileContent, $forcedUpdate);
 				$response = $dataResponse->setResponseData($tempResponse);
                 break;
-		    case "DE": //autoDetect BOARD, ASK_GMU_VERSION
+			case "DE": //autoDetect BOARD, ASK_GMU_VERSION
+				$logTxt = "Version: ".$deviceInfo[DEVICE_VERSION]." Upload version: ".$deviceInfo[VERSION_UPLOAD]." Address: ".$deviceInfo[IP_ADDR]." Country: ".$deviceInfo[COUNTRY];
+				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
 				$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
 				$dataResponse->setHeader(cmdByte[$command], $this->reqId);
 				$tempResponse = $dataResponse->setResponseData($fileContent);
@@ -555,6 +559,8 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				break;
 
             case "F9": //Ready To Receive
+				$logTxt = "Version: ".$deviceInfo[DEVICE_VERSION]." Upload version: ".$deviceInfo[VERSION_UPLOAD]." Address: ".$deviceInfo[IP_ADDR]." Country: ".$deviceInfo[COUNTRY];
+				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
 				$request->setConnect('1', $sn);
 				$request->setVersion($version, $sn);
 				$newPointeur = $dataResponse->getPointeur2($sn, $deviceType);

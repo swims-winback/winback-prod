@@ -236,6 +236,35 @@ class DataResponse extends Utils
         }
 	}
 
+    function writeVersionLog(string $sn, string $deviceType, string $inputTxt){
+        $path = $_ENV['LOG_PATH']."version/".deviceType[$deviceType];
+        $logTxt = "\r\n".date("Y-m-d H:i:s | ").$inputTxt."\r\n";
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
+		}
+		$logFile = trim($sn).".txt";
+        if (file_exists($path.$logFile) && filesize($path.$logFile) < 1000) {
+            $fd = fopen($_ENV['LOG_PATH']."version/".deviceType[$deviceType].$logFile, "a+");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+        else {
+            $fd = fopen($_ENV['LOG_PATH']."version/".deviceType[$deviceType].$logFile, "w");
+            if($fd){
+                fwrite($fd, $logTxt);
+                fclose($fd);
+                return $logFile;
+            }else{
+                echo "fd error";
+            }
+        }
+	}
+
     function getPubsData(string $deviceType){
         $handle = fopen($_ENV['PUB_PATH'].$deviceType."PUBS".extFILENAME, 'rb');
 		if($handle){
