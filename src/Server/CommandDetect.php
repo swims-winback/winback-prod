@@ -425,7 +425,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 
 				//TODO $comment in database
 				// length comment = 100
-				if ($deviceType==14 and $fileName=="WLE256_14_2_v003.011.bin") {
+				if ($deviceType==14 and $fileName=="WLE256_14_2_v003.012.bin") {
 					$comment = "Power regulation\nContact optimization\nHi-EMS: add Drain function\n  Bracelets: add Hi-TENS and TIC   ";
 				}
 				else {
