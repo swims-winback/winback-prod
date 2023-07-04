@@ -88,6 +88,21 @@ class CommandDetect extends AbstractController {
 		}
 	}
 
+	public function compareVersion($version, $version_test) {
+		$version_split = explode(".", $version);
+		$prefix = $version_split[0];
+		$suffix = $version_split[1];
+	
+		$version_split_test = explode(".", $version_test);
+		$prefix_test = $version_split_test[0];
+		$suffix_test = $version_split_test[1];
+	
+		if ($prefix_test > $prefix or ($prefix_test <= $prefix and $suffix_test >= $suffix)) {
+			//echo true;
+			return true;
+		}
+	}
+
 	/**
 	 * Get forced status from database
 	 * @param array $deviceInfo
@@ -425,12 +440,29 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 
 				//TODO $comment in database
 				// length comment = 100
-				if ($deviceType==14 and $fileName=="WLE256_14_2_v003.012.bin") {
-					$comment = "Power regulation\nContact optimization\nHi-EMS: add Drain function\n  Bracelets: add Hi-TENS and TIC   ";
+				if ($deviceType==14) {
+					if ($this->compareVersion("3.12", $deviceInfo[VERSION_UPLOAD]) == true) {
+						$firstComment = $request->getUpdateComment($request->getDeviceTypeId($deviceType), $deviceInfo[VERSION_UPLOAD]);
+						$firstComment = str_replace('\n', "\n", $firstComment);
+						$endstr = 100-strlen($firstComment); //If comment lower than max size, add blank space
+						$comment = $firstComment.str_repeat(" ", $endstr);
+					}
+					else {
+						$comment = str_repeat(" ", 100);
+					}
 				}
-				else {
-					$comment = str_repeat(" ", 100);
+				elseif ($deviceType==12) {
+					if ($this->compareVersion("3.22", $deviceInfo[VERSION_UPLOAD]) == true) {
+						$firstComment = $request->getUpdateComment($request->getDeviceTypeId($deviceType), $deviceInfo[VERSION_UPLOAD]);
+						$firstComment = str_replace('\n', "\n", $firstComment);
+						$endstr = 100-strlen($firstComment); //If comment lower than max size, add blank space
+						$comment = $firstComment.str_repeat(" ", $endstr);
+					}
+					else {
+						$comment = str_repeat(" ", 100);
+					}
 				}
+
 				/*
 				if ($commentsString = $request->getUpdateComment($request->getDeviceTypeId($deviceType), $uploadVersion)) {
 					echo ("\r\nComment String: " . $commentsString."\r\n");

@@ -469,7 +469,7 @@ class DataResponse extends Utils
             $preResponse = str_repeat(chr(0), $sub);
             $response = $preResponse . $response;
         }
-        echo "\r\n".$response."\r\n";
+        //echo "\r\n".bin2hex($response)."\r\n";
         return $response;
     }
 
