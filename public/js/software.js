@@ -156,3 +156,25 @@ for (let element of deleteButtons) {
   }
 
 
+// ######### CHECK Comment Length ######### //
+
+
+for (let input of updateCommentInputs) {
+  input.oninput = function () {
+    comment = input.value
+    //console.log(e)
+    let id = $(input).data("id");
+    console.log(id)
+    let log = document.getElementById("comment_left_"+id);
+    console.log(100 - comment.length + " characters left")
+    log.textContent = 100 - comment.length + " characters left"
+  }
+  
+}
+
+function checkCommentLength(e) {
+  comment = e.target.value
+  let id = $(e).data("id");
+  let log = document.getElementById("comment_left_"+id);
+  log.textContent = 100 - comment.length + " characters left"
+}

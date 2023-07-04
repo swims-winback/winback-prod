@@ -135,8 +135,9 @@
                                                     data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></button>
                                                 </td>
                                                 <td class="text-center">
+                                                    <div id="comment_left_{{soft.id}}"></div>
                                                     <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <textarea class="comment_update_input border border-0 w-100" style="background-color:#ffffff;" type="text" name="nm" value="">{{soft.updateComment}}</textarea>
+                                                        <textarea class="comment_update_input border border-0 w-100" style="background-color:#ffffff;" type="text" name="nm" value="" data-id="{{soft.id}}">{{soft.updateComment}}</textarea>
                                                         <button class="comment_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
                                                     </div>
                                                 </td>
