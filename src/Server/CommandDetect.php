@@ -97,7 +97,7 @@ class CommandDetect extends AbstractController {
 		$prefix_test = $version_split_test[0];
 		$suffix_test = $version_split_test[1];
 	
-		if ($prefix_test > $prefix or ($prefix_test <= $prefix and $suffix_test >= $suffix)) {
+		if ($prefix_test > $prefix or ($prefix_test == $prefix and $suffix_test >= $suffix)) {
 			//echo true;
 			return true;
 		}
