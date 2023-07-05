@@ -90,12 +90,12 @@ class CommandDetect extends AbstractController {
 
 	public function compareVersion($version, $version_test) {
 		$version_split = explode(".", $version);
-		$prefix = $version_split[0];
-		$suffix = $version_split[1];
+		$prefix = intval($version_split[0]);
+		$suffix = intval($version_split[1]);
 	
 		$version_split_test = explode(".", $version_test);
-		$prefix_test = $version_split_test[0];
-		$suffix_test = $version_split_test[1];
+		$prefix_test = intval($version_split_test[0]);
+		$suffix_test = intval($version_split_test[1]);
 	
 		if ($prefix_test > $prefix or ($prefix_test == $prefix and $suffix_test >= $suffix)) {
 			//echo true;
