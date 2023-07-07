@@ -12,6 +12,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 
 class DbRequestTest extends TestCase
+//class DbRequestTest
 {
 
     public function testDefault()
@@ -26,10 +27,10 @@ class DbRequestTest extends TestCase
         $this->testGetDeviceTypeActualVers('4.2', 'WLE256_10_2_v004.002.bin', 10); //RSHOCK
 
         $dbRequest->getLocationInfoByIp('82.64.154.34');
-
+        
         //$dbRequest->setDeviceInfo('WIN0C01B42108-0001', '3.12', 12, '82.64.154.34', 'WIN0C01B42108-0001.txt');
     }
-
+    
     public function testGetDeviceTypeActualVers($version, $filename, $deviceType)
     {
         $dbRequest = new DbRequest;
@@ -38,4 +39,11 @@ class DbRequestTest extends TestCase
         $this->assertSame($version, $result['version']);
     }
 
+    public function testInitDeviceInSn()
+    {
+        $dbRequest = new DbRequest;
+        $this->assertTrue($dbRequest->initDeviceInSN("testB3TX", "BACK3"));
+        $this->assertTrue($dbRequest->initDeviceInSN("test2B3TX", "BACK3"));
+        $this->assertTrue($dbRequest->setDeviceToServer("test2B3TX"));
+    }
 }

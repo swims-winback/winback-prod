@@ -124,9 +124,12 @@ class DbRequest {
      */
     function initDeviceInSN($sn, $devType){
         if ($sn!="" && $devType!="") {
-            $req = "INSERT INTO ".SN_TABLE." (".SN_DEVICE.", ".SN_ID.", ".SN_DATE.") VALUES ('".$devType."', '".$sn."', '".date("Y-m-d | H:i:s")."')";
+            if (str_contains($sn, 'B3TX')) {
+                $devType = "BACK3TX";
+            }
+            $req = "INSERT IGNORE INTO ".SN_TABLE." (".SN_DEVICE.", ".SN_ID.", ".SN_DATE.") VALUES ('".$devType."', '".$sn."', '".date("Y-m-d | H:i:s")."')";
             if ($res = $this->sendRq($req)) {
-                return $res;
+                return true;
             }
             return false;
         }
@@ -142,7 +145,7 @@ class DbRequest {
         if ($sn!="") {
             $req = "INSERT INTO device_server (device_id, date) VALUES ('".$sn."', '".date("Y-m-d | H:i:s")."')";
             if ($res = $this->sendRq($req)) {
-                return $res;
+                return true;
             }
             return false;
         }
@@ -198,6 +201,7 @@ class DbRequest {
      * @param string $devType
      * @return array|bool|null
      */
+    /*
     function setDeviceToSN(string $sn, string $devType)
     {
         $whereCond = SN_ID." = '".$sn."'";
@@ -217,6 +221,7 @@ class DbRequest {
             return false;
         }
     }
+    */
 
     function setDeviceToServer(string $sn)
     {
@@ -229,12 +234,12 @@ class DbRequest {
                     $req .= " WHERE ".$whereCond;
                 }
                 $res = $this->sendRq($req);
-                return $row;
+                return true;
             }else{
                 $res = $this->initDeviceInServer($sn);
                 $res2 = $this->sendRq($req);
                 if($row = mysqli_fetch_assoc($res2)){
-                    return $row;
+                    return true;
                 }
             }
         }

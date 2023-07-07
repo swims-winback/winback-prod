@@ -370,7 +370,8 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 		 * [FORCED_UPDATE] : forced
 		*/
 		$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
-		$request->setDeviceToSN($sn, $deviceTypeName);
+		//$request->setDeviceToSN($sn, $deviceTypeName);
+		$request->initDeviceInSN($sn, $deviceTypeName);
 		$request->setDeviceToServer($sn);
 		$this->responseArray[2] = $deviceInfo;
 		}
