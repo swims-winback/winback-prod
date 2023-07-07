@@ -1,5 +1,18 @@
+@media (max-width: 500px) {
+  .page-link {
+    font-size: x-small;
+  }
+}
+@media (min-width: 500px) {
+  .page-link {
+    font-size: small;
+  }
+}
+nav {
+  width: 100%;
+}
+
 .page-link {
-  font-size: small;
   color: #f18841;
 }
 .page-link:hover {
@@ -17,4 +30,8 @@
 
 .form-control {
   font-size: small;
+}
+
+.pagination {
+  justify-content: center;
 }/*# sourceMappingURL=pagination.css.map */

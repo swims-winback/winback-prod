@@ -3,13 +3,15 @@
 {% block title %}{{ 'Winback Interface | Device'|trans }}{% endblock %}
 
 {% block content %}
+    <!--
     <div class="d-flex flex-column justify-content-between align-items-center mx-0 px-0 w-100 mt-1">
-            <div class="row w-100 h-100 mt-4">
-                <div class="col-md-3 d-flex vh-100 justify-content-center sticky-scroll">
+    -->
+            <div class="row w-100 h-100">
+                <div class="col-md-2 d-flex justify-content-center">
                     {% include "device/_filter.html.twig" %}
                 </div>
                 <!-- ===== DEVICE TABLE ===== -->
-                <div class="col-md-9 h-100">
+                <div class="col-md-10 h-100 d-flex flex-column justify-content-between align-items-center">
                     <h1 class="text-center mb-4">{{ 'Device'|trans }}</h1>
                     {% for message in app.flashes('error') %}
                         <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
@@ -69,7 +71,7 @@
                                         <th id='test_zone_0'>
                                             {% if is_granted("ROLE_SAV")%}
                                                 <div class="input-group d-flex flex-nowrap align-items-stretch justify-content-center">
-                                                    <textarea class="form-control" name="" id="version_input" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: fit-content; height: 100%;'></textarea>
+                                                    <textarea class="form-control" name="" id="version_input" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 100%; height: 100%;'></textarea>
                                                     <button type="button" class="text-center btn bg-orange btn-outline-orange" id="version_button">
                                                     <i class="fa-solid fa-check fa-2xs"></i>
                                                     </button>
@@ -162,6 +164,7 @@
                 </div>
 
                 <!-- Button to add device table -->
+                {#
                 {% if is_granted("ROLE_SUPER_ADMIN") %}
                     <button id="floatingBtn" class="btn bg-orange btn-outline-orange  d-flex align-items-center justify-content-center" 
                     style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999;" 
@@ -171,25 +174,22 @@
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 {% endif %}
+                #}
                 <!-- ===== UPLOAD MODALS ===== -->
                 {% include 'device/upload_modals.html.twig' %}
 
-
+                <!-- ===== INFO MODALS ===== -->
+                {% include 'device/info_modals.html.twig' %}
             </div>
             <!-- ===== /DEVICE TABLE ===== -->
 
-            <!-- ===== INFO MODALS ===== -->
-            
-            {% include 'device/info_modals.html.twig' %}
-            
-            
             {#
             TODO Uncomment new device if needed to test
             <button class="ml-auto btn shadow-1 rounded-1 small bg-orange btn-outline-orange"><a href="{{path('device_add')}}">New Device</a></button>
             #}
-        </div>
-
+    <!--
     </div>
+    -->
     
 
 {% endblock %}

@@ -1,7 +1,26 @@
 $color1 : #f18841;
 
+
+@media (max-width: 500px) { 
+    
+    .page-link {
+      font-size: x-small;
+    }
+    
+}
+@media (min-width: 500px) { 
+    
+  .page-link {
+    font-size: small;
+  }
+  
+}
+
+nav {
+  width: 100%;
+}
+
 .page-link {
-  font-size: small;
   color: $color1;
   &:hover {
     color: #b96731;
@@ -22,4 +41,8 @@ $color1 : #f18841;
 
 .form-control {
   font-size: small;
+}
+
+.pagination {
+  justify-content: center;
 }
