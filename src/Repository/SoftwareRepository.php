@@ -21,6 +21,14 @@ class SoftwareRepository extends ServiceEntityRepository
         parent::__construct($registry, Software::class);
     }
 
+    public function distinctVersions(){
+        return $this->createQueryBuilder('cc')
+        ->groupBy('cc.deviceFamily')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
     /**
      * Recherche les softwares en fonction du formulaire
      *
@@ -34,39 +42,16 @@ class SoftwareRepository extends ServiceEntityRepository
         }
         if($category != null){
             $query->leftJoin('d.deviceFamily', 'c');
-            $query->andWhere('c.id = :id')
-            ->setParameter('id', $category);
+            $query->andWhere('c.name = :name')
+            ->setParameter('name', $category);
         }
         //echo ($query);
         return $query
+            ->orderBy('d.name', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
-    /*
-    public function findSoftwareByCriteria($version = null, $family = null, $value = null)
-    {
-        $query = $this->createQueryBuilder('m');
-        if ($version != null) {
-            $query->where('m.version = :val')
-            ->setParameter('val', $version);
-        }
-        if($family != null){
-            $query->leftJoin('m.deviceFamily', 'c');
-            $query->andWhere('c.id = :id')
-            ->setParameter('id', $family);
-        }
-        if($value != null){
-            //:value->containsAny($value);
-            $query->andWhere('m.sn = :value OR m.version = :value')
-            ->setParameter('value', $value);
-        }
-        return $query->getQuery()
-        ->getResult()
-        //->getOneOrNullResult()
-    ;
-    }
-    */
     public function findSoftwareByName($value): ?Software
     {
         return $this->createQueryBuilder('s')

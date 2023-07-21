@@ -47,7 +47,13 @@
                                     {{ family.name }}
                                 </button>
                                 -->
-                                {{ family.name }}
+                                {% if family.numberId == 10 %}
+                                    HI-TENS
+                                {% elseif family.numberId == 14 %}
+                                    BACK3TX
+                                {% else %}
+                                    {{ family.name }}
+                                {% endif %}
                             </h2>
                             <div class="accordion-collapse collapse show responsive-table overflow-auto" id="accordionCollapse_{{ family.name }}" aria-labelledby="accordionHeading_{{ family.name }}" data-bs-parent="#accordionSoftware">
                                 
