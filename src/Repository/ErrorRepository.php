@@ -2,9 +2,14 @@
 
 namespace App\Repository;
 
+use App\Class\SearchError;
 use App\Entity\Error;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @extends ServiceEntityRepository<Error>
@@ -39,6 +44,92 @@ class ErrorRepository extends ServiceEntityRepository
         }
     }
 
+        /**
+       * Get devices after filter search
+       * @return PaginationInterface
+       */
+      public function findSearch(SearchError $search, PaginatorInterface $paginator): PaginationInterface
+      {
+
+        $query = $this->getSearchQuery($search)->getQuery();
+        return $paginator->paginate(
+            $query,
+            $search->page,
+            25
+        );
+      }
+
+      private function getSearchQuery(SearchError $search): ORMQueryBuilder
+      {
+          $query = $this
+          ->createQueryBuilder('d')
+          ->orderBy('d.sn', 'ASC')
+          ->orderBy('d.error', 'ASC')
+          ->select('c', 'd')
+          ->join('d.sn', 'c')
+          ->select('e', 'd')
+          ->join('d.error', 'e');
+          //->setMaxResults(10);
+        
+          
+          if (!empty($search->q)) {
+              $query = $query
+                  ->andWhere('d.sn LIKE :q')
+                  ->setParameter('q', "%{$search->q}%");
+          }
+          
+          if (!empty($search->version)) {
+              $query = $query
+                  ->andWhere('d.version = :version')
+                  ->setParameter('version', $search->version);
+          }
+          
+          if (!empty($search->sn_category)) {
+              $query = $query
+                  ->andWhere('c.sn IN (:sn)')
+                  ->setParameter('sn', $search->sn_category);
+          }
+          if (!empty($search->error_category)) {
+            $query = $query
+                ->andWhere('e.error_id IN (:error)')
+                ->setParameter('error', $search->error_category);
+        }
+          
+          return $query;
+      }
+
+      public function distinctCategories(){
+        $query = $this->createQueryBuilder('cc')
+        ->groupBy('cc.sn')
+        ->getQuery()
+        ->getResult()
+        ;
+        return $query;
+    }
+    public function distinctErrors(){
+        return $this->createQueryBuilder('cc')
+        ->groupBy('cc.error')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+    public function distinctVersions(){
+        return $this->createQueryBuilder('cc')
+        ->groupBy('cc.version')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+      /*
+      public function findAllSn(DeviceRepository $deviceRepository) {
+        $back4 = deviceTypeId[12];
+        $devices = $deviceRepository->findBy(array('deviceFamily' => $back4));
+        foreach ($devices as $device) {
+            $this->findBy(array('sn' =>$device), array(array('distinct' => TRUE)));
+        }
+        return True;
+     }
+     */
 //    /**
 //     * @return Error[] Returns an array of Error objects
 //     */

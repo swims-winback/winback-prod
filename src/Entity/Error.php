@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ErrorRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ErrorRepository::class)]
 class Error
@@ -14,41 +15,51 @@ class Error
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $error_id = null;
+    
+    #[ORM\ManyToOne(targetEntity: ErrorFamily::class)]
+    #[ORM\JoinColumn(nullable: false, referencedColumnName:"error_id")]
+    //#[ORM\Column]
+    private $error;
+    
 
-    #[ORM\Column(length: 255)]
-    private ?string $sn = null;
+    #[ORM\ManyToOne(targetEntity: Device::class)]
+    #[ORM\JoinColumn(nullable: false, referencedColumnName:"sn")]
+    //#[ORM\Column(length: 255)]
+    private $sn;
 
     #[ORM\Column(length: 255)]
     private ?string $version = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    //#[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    //#[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(length: 255)]
+    //private ?\DateTimeInterface $date = null;
+    private ?string $date;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getErrorId(): ?int
+    
+    public function getError(): ?ErrorFamily
     {
-        return $this->error_id;
+        return $this->error;
     }
 
-    public function setErrorId(int $error_id): self
+    public function setError(?ErrorFamily $error): self
     {
-        $this->error_id = $error_id;
+        $this->error = $error;
 
         return $this;
     }
-
-    public function getSn(): ?string
+    
+    public function getSn(): ?Device
     {
         return $this->sn;
     }
 
-    public function setSn(string $sn): self
+    public function setSn(?Device $sn): self
     {
         $this->sn = $sn;
 
@@ -67,12 +78,12 @@ class Error
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?string
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(string $date): self
     {
         $this->date = $date;
 

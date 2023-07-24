@@ -1,0 +1,27 @@
+{{ form_start(form, {attr: { id: 'filter', style: "", class: "d-flex flex-column justify-content-center"}}) }}
+    <div class="input-group flex-nowrap">
+    <span class="input-group-text mb-3" id="addon-wrapping" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0; background-color: white;'>
+    <i class="fa-solid fa-magnifying-glass"></i>
+    </span>
+    {{ form_row(form.q, {attr: { style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
+    </div>
+    <!-- Device Type -->
+    
+        <h6 class="mt-2">{{ 'Device'|trans }}</h6>
+        <div class="border border-0" id="collapseDeviceType" style="height: 10em;">
+            {{ form_row(form.sn_category) }}
+        </div>
+    
+    <!-- Error Type -->
+        <h6 class="mt-2">{{ 'Error'|trans }}</h6>
+        <div class="border border-0" id="collapseErrorType">
+            {{ form_row(form.error_category) }}
+        </div>
+    <!-- Device Version -->
+        <h6 class="mt-2">{{ 'Device Version'|trans }}</h6>
+        <div class="border border-0" id="collapseDeviceVersion">
+            {{ form_row(form.version) }}
+        </div>
+
+    <button type="submit" class="btn bg-orange btn-outline-orange">{{ 'Search'|trans }}</button>
+{{ form_end(form) }}
