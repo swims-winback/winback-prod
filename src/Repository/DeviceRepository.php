@@ -34,6 +34,14 @@ class DeviceRepository extends ServiceEntityRepository
         ->getResult()
         ;
     }
+
+    public function distinctCountries(){
+        return $this->createQueryBuilder('cc')
+        ->groupBy('cc.country')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
     /**
      * Recherche les devices en fonction du formulaire
      *
@@ -260,10 +268,16 @@ class DeviceRepository extends ServiceEntityRepository
         }
         
         
-        if (!empty($search->categories)) {
+        if (!empty($search->category)) {
             $query = $query
                 ->andWhere('c.name IN (:deviceFamily)')
-                ->setParameter('deviceFamily', $search->categories);
+                ->setParameter('deviceFamily', $search->category);
+        }
+
+        if (!empty($search->country)) {
+            $query = $query
+            ->andWhere('d.country = :country')
+            ->setParameter('country', $search->country);
         }
         
         return $query;

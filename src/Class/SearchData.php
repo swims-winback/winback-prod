@@ -22,7 +22,7 @@ class SearchData
     @var DeviceFamily[]
     */
     //public $categories = [];
-    public $categories;
+    public $category;
     /*
     #[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'devices')]
     #[ORM\JoinColumn(nullable: false)]
@@ -47,5 +47,10 @@ class SearchData
      * @var boolean
      */
     public $connected = false;
+
+    /**
+     * @var null|string
+     */
+    public $country;
 
 }

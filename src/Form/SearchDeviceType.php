@@ -45,10 +45,22 @@ class SearchDeviceType extends AbstractType
         return $sn_array;
     }
 
+    function getCountries(DeviceRepository $deviceRepository) {
+        $distinctCategories = $deviceRepository->distinctCountries();
+        foreach ($distinctCategories as $cat) {
+            if ($cat->getCountry() != '0') {
+                $result_array[$cat->getCountry()] = $cat->getCountry();
+            }
+            
+        }
+        return $result_array;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $deviceRepository = new DeviceRepository($this->registry, $this->paginator);
         $deviceType_array = $this->getVersions($deviceRepository);
+        $country_array = $this->getCountries($deviceRepository);
         $builder
             
             ->add('q', TextType::class, [
@@ -76,7 +88,7 @@ class SearchDeviceType extends AbstractType
                 },
             ])
             */
-            ->add('categories', ChoiceType::class, [
+            ->add('category', ChoiceType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
@@ -117,6 +129,19 @@ class SearchDeviceType extends AbstractType
                 'required' => false,
             ])
             */
+
+            ->add('country', ChoiceType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'multiple' => false,
+                'choices'  => $country_array
+                ,
+                'required' => false,
+                'placeholder' => false,
+                
+            ])
         ;
     }
 
