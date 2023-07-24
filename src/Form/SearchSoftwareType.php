@@ -69,9 +69,9 @@ class SearchSoftwareType extends AbstractType
                     'class' => 'form-control',
                 ],
                 'multiple' => false,
-                'choices'  => [
-                    ""=>$deviceType_array
-                ],
+                'choices'  => 
+                    $deviceType_array
+                ,
                 'required' => false,
                 'placeholder' => false,
                 
