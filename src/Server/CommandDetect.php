@@ -140,6 +140,7 @@ class CommandDetect extends AbstractController {
 	 * @return string $fileName
 	 */
 	function getVersionUpload($deviceInfo, $boardType, $deviceType, $dbRequest) {
+		echo "\r\n BoardType: " . $boardType;
 		if (isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768)) {
 			$fileName = $this->getFilenameFromVersion($deviceInfo[VERSION_UPLOAD], $deviceType, $boardType);
 		} else {
@@ -239,7 +240,11 @@ class CommandDetect extends AbstractController {
 				// Define BoardType
 				if($command === 'DE' || $command === 'DD' || $command === 'DC' || $command === 'CD')
 				{
+					//echo "\r\nboardType characters: " . substr($data, 32, 4)."\r\n";
 					$boardType = hexdec(substr($data, 32, 4));
+					if ($boardType == 0) {
+						$boardType = 2;
+					}
 					$deviceObj["boardType"] = $boardType;
 				}
 				else
