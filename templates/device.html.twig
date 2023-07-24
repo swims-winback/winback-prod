@@ -103,7 +103,15 @@
                                                 </div>
                                             </td>
                                             <td class="text-center text-nowrap">{{device.sn}}</td>
-                                            <td class="text-center">{{device.deviceFamily}}</td>
+                                            <td class="text-center">
+                                            {% if device.deviceFamily.numberId == 10 %}
+                                                HI-TENS
+                                            {% elseif device.deviceFamily.numberId == 14 %}
+                                                BACK3TX
+                                            {% else %}
+                                                {{ device.deviceFamily }}
+                                            {% endif %}
+                                            </td>
                                             <td class="text-center">{{device.version}}</td>
                                             <td class="text-center version-upload" id="test_zone_{{device.id}}">{{device.versionUpload}}</td>
                                             {#TODO Progress bar#}

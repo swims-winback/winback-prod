@@ -15,12 +15,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Device
 {
+    /*
     #[ORM\Id]
+    */
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
 
+    #[ORM\Id]
     #[ORM\Column(type: 'string', length: 255)]
     private $sn;
 
@@ -125,15 +128,19 @@ class Device
 
     public function __toString()
     {
-        return $this->version;
+        if(is_null($this->sn)) {
+            return 'NULL';
+        }
+        //return $this->version;
+        return $this->sn;
     }
 
+    
     public function getId(): ?int
     {
         return $this->id;
     }
-
-
+    
 
     public function getSn(): ?string
     {

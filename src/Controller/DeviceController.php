@@ -20,7 +20,7 @@ use App\Form\SearchDeviceType;
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\SoftwareRepository;
-
+use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 
 class DeviceController extends AbstractController
@@ -28,13 +28,13 @@ class DeviceController extends AbstractController
     /**
      * @Route("/{_locale<%app.supported_locales%>}/user/device/", name="device")
      */
-    public function index(DeviceRepository $deviceRepository, Request $request, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger)  
+    public function index(DeviceRepository $deviceRepository, Request $request, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, PaginatorInterface $paginator)  
     {
         $data = new SearchData();
         $data->page = $request->get('page', 1);
         $form = $this->createForm(SearchDeviceType::class, $data);
         $form->handleRequest($request);
-        $devices = $deviceRepository->findSearch($data);
+        $devices = $deviceRepository->findSearch($data, $paginator);
         if ($devices->getItems() == null) {
             $this->addFlash(
                 'error', 'Device(s) not found, please try again !'
@@ -157,15 +157,18 @@ class DeviceController extends AbstractController
         if ($select_bool==0) {
             $logger->critical($user." has deforced ".$device->getSn());
             $device->setForced(0);
+            //var_dump("unforced");
         }
         else {
             $logger->critical($user." has forced ".$device->getSn());
             $device->setForced(1);
+            //var_dump("forced");
         }
         
         $em = $doctrine->getManager();
         $em->persist($device);
         $em->flush();
+        
         return $this->redirectToRoute('device');
     }
 

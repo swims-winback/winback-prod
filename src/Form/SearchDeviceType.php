@@ -6,6 +6,9 @@ use App\Class\SearchData;
 use App\Entity\DeviceFamily;
 use App\Entity\Software;
 use App\Repository\DeviceFamilyRepository;
+use App\Repository\DeviceRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,8 +21,34 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchDeviceType extends AbstractType
 {
+    public $registry;
+    public $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator) {
+        $this->registry = $registry;
+        $this->paginator = $paginator;
+    }
+
+    function getVersions(DeviceRepository $deviceRepository) {
+        $distinctCategories = $deviceRepository->distinctVersions();
+        foreach ($distinctCategories as $cat) {
+            if ($cat->getDeviceFamily()->getNumberId() == 10) {
+                $sn_array['HI-TENS'] = $cat->getDeviceFamily()->getName();
+            }
+            elseif ($cat->getDeviceFamily()->getNumberId() == 14) {
+                $sn_array['BACK3TX'] = $cat->getDeviceFamily()->getName();
+            }
+            else {
+                $sn_array[$cat->getDeviceFamily()->getName()] = $cat->getDeviceFamily()->getName();
+            }
+        }
+        return $sn_array;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $deviceRepository = new DeviceRepository($this->registry, $this->paginator);
+        $deviceType_array = $this->getVersions($deviceRepository);
         $builder
             
             ->add('q', TextType::class, [
@@ -31,7 +60,7 @@ class SearchDeviceType extends AbstractType
                 'required' => false,
             ])
             
-            
+            /*
             ->add('categories', EntityType::class, [
                 'class' => DeviceFamily::class,
                 'label' => false,
@@ -45,6 +74,19 @@ class SearchDeviceType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.name', 'ASC');
                 },
+            ])
+            */
+            ->add('categories', ChoiceType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'multiple' => false,
+                'choices'  => $deviceType_array
+                ,
+                'required' => false,
+                'placeholder' => false,
+                
             ])
             
             ->add('version', SearchType::class, [

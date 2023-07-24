@@ -6,7 +6,6 @@ use App\Class\SearchData;
 use App\Entity\Device;
 use App\Server\DbRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -26,9 +25,15 @@ class DeviceRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Device::class);
-        $this->paginator = $paginator;
     }
 
+    public function distinctVersions(){
+        return $this->createQueryBuilder('cc')
+        ->groupBy('cc.deviceFamily')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
     /**
      * Recherche les devices en fonction du formulaire
      *
@@ -47,12 +52,14 @@ class DeviceRepository extends ServiceEntityRepository
             $query->setMaxResults($limit);
         }
         
+        
         if($category != null){
             $query->leftJoin('d.deviceFamily', 'c');
             $query->andWhere('c.id = :id')
             ->setParameter('id', $category);
         }
         
+
         if ($version!=null) {
             $query->andWhere('d.version = :version')
             ->setParameter('version', $version);
@@ -202,12 +209,12 @@ class DeviceRepository extends ServiceEntityRepository
        * Get devices after filter search
        * @return PaginationInterface
        */
-      public function findSearch(SearchData $search): PaginationInterface
+      public function findSearch(SearchData $search, PaginatorInterface $paginator): PaginationInterface
       {
 
         $query = $this->getSearchQuery($search)->getQuery();
         
-        return $this->paginator->paginate(
+        return $paginator->paginate(
             $query,
             $search->page,
             10
@@ -255,7 +262,7 @@ class DeviceRepository extends ServiceEntityRepository
         
         if (!empty($search->categories)) {
             $query = $query
-                ->andWhere('c.id IN (:deviceFamily)')
+                ->andWhere('c.name IN (:deviceFamily)')
                 ->setParameter('deviceFamily', $search->categories);
         }
         

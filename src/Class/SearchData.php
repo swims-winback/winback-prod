@@ -19,9 +19,10 @@ class SearchData
     public $q = '';
 
     /*
-     @var DeviceFamily[]
-     */
-    public $categories = [];
+    @var DeviceFamily[]
+    */
+    //public $categories = [];
+    public $categories;
     /*
     #[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'devices')]
     #[ORM\JoinColumn(nullable: false)]
