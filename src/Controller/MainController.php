@@ -62,14 +62,16 @@ class MainController extends AbstractController
             $snArray[] = $device;
         }
         */
+        /*
         $deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
         $deviceCreated_array = $this->getDeviceCreated($deviceRepository); // number of devices created by day
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
-
+        */
+        /* TODO
         $firstChart = $this->getChart($chartBuilder, array_keys($deviceConnected_array), "Devices connected", array_values($deviceConnected_array), "Devices connected per week", Chart::TYPE_LINE);
         $secondChart = $this->getChart($chartBuilder, array_keys($deviceCreated_array), "Devices created", array_values($deviceCreated_array), "Devices created per week", Chart::TYPE_LINE);
         $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), 'label', array_values($deviceCount_array), 'Number of devices per type', Chart::TYPE_DOUGHNUT);
-        
+        */
         /*
         if (($clientIdentified = $clientRepository->findBy(array('email' => $email)))!=false) {
             
@@ -111,13 +113,17 @@ class MainController extends AbstractController
         return $this->render('main/index.html.twig', [
             'clientRegistration' => $form->createView(),
             'clientIdentified' => $clientIdentified,
-            'clientToSn' => $clientToSn,
+            //'clientToSn' => $clientToSn,
+            /*
             'deviceConnectedArray'=>$deviceConnected_array,
             'deviceCreatedArray'=>$deviceCreated_array,
             'snArray'=>$snArray,
+            */
+            /* TODO
             'firstChart'=>$firstChart,
             'secondChart'=>$secondChart,
             'thirdChart'=>$thirdChart,
+            */
         ]);
     }
 

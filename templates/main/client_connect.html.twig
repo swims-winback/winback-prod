@@ -1,0 +1,44 @@
+<div class="">
+    <!-- 
+    if user is role client &
+    if user is in client table, show sn + informations
+    -->
+    
+    <!--
+    if user doesn't exist in client table & is role client :
+    - show "register your device"
+    - valid form
+    - register user in client table
+    - in client table, link sn
+    -->
+    {#{% if clientIdentified and clientToSn %}
+        insert client
+
+    {% else %}
+    #}
+    {{ 'You are not identified yet. Please enter your Info to verify your identity and find your device.'|trans }}
+    
+    <!-- when form is submitted, send automatically a mail to admin to request client registration -->
+    {#
+    {{ form_start(clientRegistration) }}
+        {{ form_row(clientRegistration.email) }}
+        {{ form_row(clientRegistration.serial_number) }}
+        <button>Submit</button>
+    {{ form_end(clientRegistration) }}
+    #}
+    {{ form_start(clientRegistration) }}
+        {{ form_row(clientRegistration.email) }}
+        {#
+        {{ form_row(clientRegistration.serial_number) }}
+        #}
+        <button>Submit</button>
+    {{ form_end(clientRegistration) }}
+    <!--
+    <form action="">
+        <input type="text" placeholder="{{ 'Enter your SN'|trans }}">
+        <input type="text" placeholder="{{ 'Enter your Username or Mail'|trans }}">
+    </form>
+    -->
+    <!--TODO Maybe send a recap mail with info -->
+    {% endif %}
+</div>

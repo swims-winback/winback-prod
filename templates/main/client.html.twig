@@ -1,0 +1,15 @@
+You are identified, well done !
+<table class="table table-striped table-bordered table-hover w-100">
+    <thead>
+        <tr>
+        <th>Serial Number</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for client in clientToSn %}
+    <tr>
+    <td>{{client.Sn}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
