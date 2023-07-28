@@ -1,5 +1,5 @@
 <?php
-namespace App\Server;
+namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -8,13 +8,10 @@ use Ratchet\Server\IoServer;
 use App\Server\TCPServer;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class ServerCommand extends Command
+class TCPCommand extends Command
 {
-    protected static $defaultName = 'app:server';
+    protected static $defaultName = 'app:tcpserver';
     
     private $logger;
 
@@ -26,13 +23,13 @@ class ServerCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Start 5007 server')
-            ->setHelp('This command allows you to run a web socket to connect with 5006 server.');
+            ->setDescription('Start TCP server')
+            ->setHelp('This command allows you to run a web socket to connect with winback devices.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $server = new Server();
+        $server = new TCPServer();
         $server->runServer($this->logger);
     }
 }
