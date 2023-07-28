@@ -1,11 +1,11 @@
 <?php
 namespace App\Command;
 
+use App\Server\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Ratchet\Server\IoServer;
-use App\Server\TCPServer;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\ConsoleEvents;
