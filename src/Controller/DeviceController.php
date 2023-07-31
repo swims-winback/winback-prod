@@ -142,27 +142,24 @@ class DeviceController extends AbstractController
                 'error', 'Software '.$version.' not found, please try again !'
             );
         }
-        //$device->setSelected(false);
         return $this->redirectToRoute('device');
         
     }
 
     /**
-     * @Route("/forced/{id}/{select_bool}", name="forced")
+     * @Route("/forced/{forced}/{id}", name="forced")
      */
-    public function forced(Device $device, ManagerRegistry $doctrine, LoggerInterface $logger, int $id, $select_bool=false)
+    public function forced(DeviceRepository $deviceRepository, ManagerRegistry $doctrine, LoggerInterface $logger, $forced, $id)
     {
         $user = $this->getUser();
-        
-        if ($select_bool==0) {
+        $device = $deviceRepository->findOneBy(array("id"=>$id));
+        if ($forced==0) {
             $logger->critical($user." has deforced ".$device->getSn());
             $device->setForced(0);
-            //var_dump("unforced");
         }
         else {
             $logger->critical($user." has forced ".$device->getSn());
             $device->setForced(1);
-            //var_dump("forced");
         }
         
         $em = $doctrine->getManager();
@@ -170,6 +167,48 @@ class DeviceController extends AbstractController
         $em->flush();
         
         return $this->redirectToRoute('device');
+    }
+
+    /**
+     * @Route("/addDeviceModal/{version}/{forced}/{id}", name="add_modal")
+     * function called in js when updateVersion form is triggered
+     */
+    public function addDeviceModal(Request $request, DeviceRepository $deviceRepository, SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, string $version, $forced, int $id)
+    {
+        $user = $this->getUser();
+        $device = $deviceRepository->findOneBy(array("id"=>$id));
+        /* version */
+        $category = $device->getDeviceFamily();
+        $version_software = $softwareRepository->findOneBy(array('version'=>$version, 'deviceFamily'=>$category->getId()));
+        if ($version_software or $version == 0) {
+            $logTxt = $user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version;
+            $this->writeVersionLog($device->getSn(), $device->getDeviceFamily(), $logTxt);
+            $logger->critical($logTxt);
+            //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
+            $device->setVersionUpload($version);
+            
+            $this->addFlash(
+                'infoDevice', 'Device '.$device->getSn().' updated !'
+            );
+            if ($forced==0) {
+                $logger->critical($user." has deforced ".$device->getSn());
+                $device->setForced(0);
+            }
+            else {
+                $logger->critical($user." has forced ".$device->getSn());
+                $device->setForced(1);
+            }
+            $em = $doctrine->getManager();
+            $em->persist($device);
+            $em->flush();
+        }
+        else {
+            $this->addFlash(
+                'error', 'Software '.$version.' not found, please try again !'
+            );
+        }
+        return $this->redirectToRoute('device');
+        
     }
 
     /**

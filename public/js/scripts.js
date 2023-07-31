@@ -127,26 +127,8 @@ function addSelected(id, status) {
 		})
 	}
   */
-for (let validButton of validButtons) {
-  validButton.addEventListener("click", function () {
-    let id = validButton.getAttribute('name');
-    let zone = document.querySelector(`#update_${id}`);
-    let version = zone.value;
-    let forcedButton = document.querySelector(`#forced_${id}`);
-    if (version != "") {
-      addVersion(version, id);
-    }
-    if (forcedButton.checked == true) {
-      console.log(forcedButton.checked);
-      addForce(id, 1);
-    }
-    else {
-      addForce(id, 0);
-    }
-    window.location.reload();
-  })
- }
-// ######### CHANGE FORCED ######### //
+
+  // ######### CHANGE FORCED ######### //
 /**
  * Change force device status to 1 or 0
  * @param {int} id - device id
@@ -156,13 +138,67 @@ function addForce(id, forced) {
   $.ajax({
     type: "POST",
     cache: false,
-    url: `/forced/${id}/${forced}`,
+    url: `/forced/${forced}/${id}`,
     success: function () {
       console.log("device forced")
       console.log(forced)
     }
     })
 }
+
+function addDeviceModal(id, version, forced) {
+  $.ajax({
+    type: "POST",
+    cache: false,
+    url: `/addDeviceModal/${version}/${forced}/${id}`,
+    success: function () {
+      console.log("device forced")
+      console.log(forced)
+    }
+    })
+}
+
+
+for (let validButton of validButtons) {
+  validButton.addEventListener("click", function () {
+    let id = validButton.getAttribute('name');
+    let zone = document.querySelector(`#update_${id}`);
+    let version = zone.value;
+    let forcedButton = document.querySelector(`#forced_${id}`);
+    if (version != "") {
+      if (forcedButton.checked == true) {
+        addDeviceModal(id, version, 1)
+      }
+      else {
+        addDeviceModal(id, version, 0)
+      }
+    }
+    else {
+      if (forcedButton.checked == true) {
+        addDeviceModal(id, "", 1)
+      }
+      else {
+        addDeviceModal(id, "", 0)
+      }
+    }
+    /*
+    if (version != "") {
+      addVersionModal(version, id);
+    }
+    
+    if (forcedButton.checked == true) {
+      console.log(forcedButton.checked);
+      addForce(id, 1);
+    }
+    else {
+      console.log(forcedButton.checked);
+      addForce(id, 0);
+    }
+    */
+    window.location.reload();
+  })
+ }
+
 
 	// ######### Selected function ######### //
 
