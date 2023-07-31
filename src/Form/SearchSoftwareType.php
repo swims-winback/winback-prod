@@ -73,7 +73,7 @@ class SearchSoftwareType extends AbstractType
                     $deviceType_array
                 ,
                 'required' => false,
-                'placeholder' => false,
+                'placeholder' => '',
                 
             ])
             /*

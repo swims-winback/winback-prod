@@ -97,7 +97,7 @@ class SearchDeviceType extends AbstractType
                 'choices'  => $deviceType_array
                 ,
                 'required' => false,
-                'placeholder' => false,
+                'placeholder' => '',
                 
             ])
             
