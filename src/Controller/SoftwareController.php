@@ -235,7 +235,7 @@ class SoftwareController extends AbstractController
     public function addUpdateComment(ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, $id, $comment, LoggerInterface $logger) {
         $user = $this->getUser();
         $software = $softwareRepository->findOneBy(array('id' => $id));
-        $replace_comment = str_replace(' - ', "\r\n", $comment);
+        $comment = str_replace(' - ', "\r\n", $comment);
         
         if ($comment == "null") {
             $comment = "";
@@ -246,7 +246,7 @@ class SoftwareController extends AbstractController
             $logger->info($user." has added comment ".$comment);
             $this->addFlash('message', 'Comment '.$comment.' added with success !');
         }
-        $software->setUpdateComment($replace_comment);
+        $software->setUpdateComment($comment);
 
         $em = $doctrine->getManager();
         $em->persist($software);
