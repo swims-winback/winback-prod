@@ -103,7 +103,6 @@ for (let element of updateCommentButtons) {
       if (comment == "") {
         comment = null
       }
-      console.log(comment)
       addUpdateComment(id, comment);
       window.location.reload();
     };
