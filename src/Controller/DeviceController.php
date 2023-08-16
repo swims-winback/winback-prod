@@ -126,7 +126,7 @@ class DeviceController extends AbstractController
         if ($version_software or $version == 0) {
             $logTxt = $user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version;
             $this->writeVersionLog($device->getSn(), $device->getDeviceFamily(), $logTxt);
-            $logger->critical($logTxt);
+            $logger->warning($logTxt);
             //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
             $device->setVersionUpload($version);
             
@@ -154,11 +154,11 @@ class DeviceController extends AbstractController
         $user = $this->getUser();
         $device = $deviceRepository->findOneBy(array("id"=>$id));
         if ($forced==0) {
-            $logger->critical($user." has deforced ".$device->getSn());
+            $logger->warning($user." has deforced ".$device->getSn());
             $device->setForced(0);
         }
         else {
-            $logger->critical($user." has forced ".$device->getSn());
+            $logger->warning($user." has forced ".$device->getSn());
             $device->setForced(1);
         }
         
@@ -183,7 +183,7 @@ class DeviceController extends AbstractController
         if ($version_software or $version == 0) {
             $logTxt = $user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version;
             $this->writeVersionLog($device->getSn(), $device->getDeviceFamily(), $logTxt);
-            $logger->critical($logTxt);
+            $logger->warning($logTxt);
             //$logger->info($user." has updated ".$device->getSn()." version from ".$device->getVersionUpload()." to ".$version);
             $device->setVersionUpload($version);
             
@@ -191,11 +191,11 @@ class DeviceController extends AbstractController
                 'infoDevice', 'Device '.$device->getSn().' updated !'
             );
             if ($forced==0) {
-                $logger->critical($user." has deforced ".$device->getSn());
+                $logger->warning($user." has deforced ".$device->getSn());
                 $device->setForced(0);
             }
             else {
-                $logger->critical($user." has forced ".$device->getSn());
+                $logger->warning($user." has forced ".$device->getSn());
                 $device->setForced(1);
             }
             $em = $doctrine->getManager();
