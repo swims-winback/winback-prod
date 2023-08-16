@@ -33,7 +33,7 @@ when@dev:
                 path: var/log/dev/version/.log
                 buffer_size: 50
                 max_files: 10
-                channels: ["app"]      
+                channels: ["app"]
 
 when@test:
     monolog:
@@ -92,4 +92,23 @@ when@prod:
                 path: var/log/prod/version/.log
                 buffer_size: 50
                 max_files: 10
-                channels: ["app"] 
+                channels: ["app"]
+            server:
+                type: rotating_file
+                level: warning
+                path: var/log/dev/server/.log
+                buffer_size: 50
+                max_files: 10
+                channels: ["console"]
+            deduplicated:
+                type:    deduplication
+                handler: symfony_mailer
+            symfony_mailer:
+                type:       symfony_mailer
+                from_email: 'error@example.com'
+                to_email:   ['leadieudonat@gmail.com', 'ldieudonat@winback.com', 'bwollensack@winback.com']
+                subject:    'An Error Occurred! %%message%%'
+                level:      warning
+                channels: ["console"]
+                formatter:  monolog.formatter.html
+                content_type: text/html 
