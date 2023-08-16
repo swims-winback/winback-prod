@@ -108,7 +108,7 @@ when@prod:
                 from_email: 'error@example.com'
                 to_email:   ['leadieudonat@gmail.com', 'ldieudonat@winback.com', 'bwollensack@winback.com']
                 subject:    'An Error Occurred! %%message%%'
-                level:      warning
+                level:      critical
                 channels: ["console"]
                 formatter:  monolog.formatter.html
                 content_type: text/html 
