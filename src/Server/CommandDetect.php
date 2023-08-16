@@ -92,15 +92,20 @@ class CommandDetect extends AbstractController {
 		$version_split = explode(".", $version);
 		$prefix = intval($version_split[0]);
 		$suffix = intval($version_split[1]);
-	
-		$version_split_test = explode(".", $version_test);
-		$prefix_test = intval($version_split_test[0]);
-		$suffix_test = intval($version_split_test[1]);
-	
-		if ($prefix_test > $prefix or ($prefix_test == $prefix and $suffix_test >= $suffix)) {
-			//echo true;
-			return true;
+		if($version_test!=0){
+			$version_split_test = explode(".", $version_test);
+			$prefix_test = intval($version_split_test[0]);
+			$suffix_test = intval($version_split_test[1]);
+		
+			if ($prefix_test > $prefix or ($prefix_test == $prefix and $suffix_test >= $suffix)) {
+				//echo true;
+				return true;
+			}
 		}
+		else {
+			return false;
+		}
+
 	}
 
 	/**
