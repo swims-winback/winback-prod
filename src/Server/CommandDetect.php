@@ -244,7 +244,7 @@ class CommandDetect extends AbstractController {
 				// Define BoardType
 				if($command === 'DE' || $command === 'DD' || $command === 'DC' || $command === 'CD')
 				{
-					//echo "\r\nboardType characters: " . substr($data, 32, 4)."\r\n";
+					echo "\r\nboardType characters: " . substr($data, 32, 4)."\r\n";
 					$boardType = hexdec(substr($data, 32, 4));
 					if (!$boardType) {
 						$boardType = 2;
