@@ -105,7 +105,6 @@ class CommandDetect extends AbstractController {
 		else {
 			return false;
 		}
-
 	}
 
 	/**
@@ -247,7 +246,7 @@ class CommandDetect extends AbstractController {
 				{
 					//echo "\r\nboardType characters: " . substr($data, 32, 4)."\r\n";
 					$boardType = hexdec(substr($data, 32, 4));
-					if ($boardType == 0) {
+					if (!$boardType) {
 						$boardType = 2;
 					}
 					$deviceObj["boardType"] = $boardType;
