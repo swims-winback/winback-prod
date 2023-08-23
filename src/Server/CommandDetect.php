@@ -144,7 +144,6 @@ class CommandDetect extends AbstractController {
 	 * @return string $fileName
 	 */
 	function getVersionUpload($deviceInfo, $boardType, $deviceType, $dbRequest) {
-		//echo "\r\n BoardType: " . $boardType;
 		if (isset($deviceInfo[VERSION_UPLOAD]) && !empty($deviceInfo[VERSION_UPLOAD]) && ($boardType<32768)) {
 			$fileName = $this->getFilenameFromVersion($deviceInfo[VERSION_UPLOAD], $deviceType, $boardType);
 		} else {
@@ -175,6 +174,25 @@ class CommandDetect extends AbstractController {
 			} else {
 				return $fileName;
 			}
+		}
+	}
+
+	public function getConfig($command, $data) {
+		if($command === 'DE' || $command === 'DC' || $command === 'CD')
+		{
+			$boardType = hexdec(substr($data, 32, 4));
+			if (intval($boardType)) {
+				return $boardType;
+			}
+			else {
+				$boardType = 2;
+				return $boardType;
+			}
+		}
+		else
+		{
+			$boardType = 2;
+			return $boardType;
 		}
 	}
 
@@ -242,20 +260,8 @@ class CommandDetect extends AbstractController {
 					}
 				}
 				// Define BoardType
-				if($command === 'DE' || $command === 'DD' || $command === 'DC' || $command === 'CD')
-				{
-					echo "\r\nboardType characters: " . substr($data, 32, 4)."\r\n";
-					$boardType = hexdec(substr($data, 32, 4));
-					if (!$boardType) {
-						$boardType = 2;
-					}
-					$deviceObj["boardType"] = $boardType;
-				}
-				else
-				{
-					$boardType = 2;
-					$deviceObj["boardType"] = $boardType;
-				}
+				$boardType = $this->getConfig($command, $data);
+				$deviceObj["boardType"] = $boardType;
 				// Define IndexToGet
 				if($command ==='D8' || $command === 'CE' || $command === 'CB')
 				{
@@ -316,7 +322,6 @@ class CommandDetect extends AbstractController {
 						case 'DC':
 						case 'CD':
 							$version = hexdec($data[28].$data[29]).'.'.hexdec($data[30].$data[31]);
-							$boardType = hexdec(substr($data, 32, 4));
 							// TODO put boardType in database
 							$indexToGet = hexdec(substr($data, 36, 8));
 							$deviceObj["Device Version"] = $version;
