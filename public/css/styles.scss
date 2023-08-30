@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap');
-@import url('https://fonts.cdnfonts.com/css/gotham');
+//@import url('https://fonts.cdnfonts.com/css/gotham');
 
 $color1 : #f18841;
 $color2 : #f1874144;
@@ -27,24 +27,7 @@ $color6 : #acabab;
 .bg-black {
     background-color: #000000;
 }
-/*
-@media (max-width: 500px) { 
-    
-    html {
-        height: 100vh;
-    }
-    
-}
-*/
-/*
-@media (max-width: 500px) { 
-    
-    body {
-        height: 100vh;
-    }
-    
-}
-*/
+
 html {
     width: 100%;
     //min-height: 100%;
@@ -58,8 +41,7 @@ html {
 }
 
 body {
-    //font-family: 'Open Sans', sans-serif;
-    font-family: 'Gotham', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     color: $color5 !important;
     width: 100%;
     letter-spacing: 0px;
@@ -192,30 +174,6 @@ a {
     display: flex;
     justify-content: center;
 }
-
-/*
-.custom-class {
-    display: none;
-  }
-  @include media-breakpoint-up(sm) {
-
-  }
-*/
-
-// Small devices (landscape phones, 576px and up)
-//@media (min-width: 576px) { ... }
-
-// Medium devices (tablets, 768px and up)
-//@media (min-width: 768px) { ... }
-
-// Large devices (desktops, 992px and up)
-//@media (min-width: 992px) { ... }
-
-// X-Large devices (large desktops, 1200px and up)
-
-// XX-Large devices (larger desktops, 1400px and up)
-//@media (min-width: 1400px) { ... }
-
   
 .header {
     //display: block !important;
@@ -224,8 +182,6 @@ a {
     text-align: center;
     padding: 1em;
     justify-content: space-between;
-    //font-family: 'Open Sans', sans-serif;
-    font-family: 'Gotham', sans-serif;
     height: fit-content;
     .navbar-brand {
         //flex-basis: 70%;
@@ -263,8 +219,6 @@ a {
     */
     padding-left: 1em;
     padding-right: 1em;
-    //font-family: 'Open Sans', sans-serif;
-    font-family: 'Gotham', sans-serif;
     font-size: medium;
     font-weight: 500;
     //color: black !important;
@@ -273,7 +227,6 @@ a {
     flex-wrap: nowrap;
     .nav-link {
         //text-transform: uppercase;
-        //font-family: 'NotoSansExtraCondensedBold';
         //font-weight: 100;
         //font-size:medium;
         //font-style: normal;
@@ -515,11 +468,12 @@ background: #eee;
 #listDeviceTable {
     td {
         color: $color5;
-        font-family: 'Gotham Medium', sans-serif;
+        //font-family: 'Gotham Medium', sans-serif;
     }
 }
 
 .comment_update_input, .actualVersion_update_input {
+    background-color: #ffffff !important;
     &:active {
         //background-color: #ffffff !important;
         background-color:#f1874144 !important;

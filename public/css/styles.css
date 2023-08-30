@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap");
-@import url("https://fonts.cdnfonts.com/css/gotham");
 .bg-orange {
   background-color: #f18841;
   color: white !important;
@@ -19,24 +18,6 @@
   background-color: #000000;
 }
 
-/*
-@media (max-width: 500px) { 
-
-    html {
-        height: 100vh;
-    }
-
-}
-*/
-/*
-@media (max-width: 500px) { 
-
-    body {
-        height: 100vh;
-    }
-
-}
-*/
 html {
   width: 100%;
   min-height: 100vh;
@@ -49,7 +30,7 @@ html {
 }
 
 body {
-  font-family: "Gotham", sans-serif;
+  font-family: "Open Sans", sans-serif;
   color: #100c08 !important;
   width: 100%;
   letter-spacing: 0px;
@@ -155,14 +136,6 @@ a {
   justify-content: center;
 }
 
-/*
-.custom-class {
-    display: none;
-  }
-  @include media-breakpoint-up(sm) {
-
-  }
-*/
 .header {
   width: 100%;
   height: -moz-fit-content;
@@ -170,7 +143,6 @@ a {
   text-align: center;
   padding: 1em;
   justify-content: space-between;
-  font-family: "Gotham", sans-serif;
   height: fit-content;
 }
 .header .navbar-brand {
@@ -202,7 +174,6 @@ a {
   */
   padding-left: 1em;
   padding-right: 1em;
-  font-family: "Gotham", sans-serif;
   font-size: medium;
   font-weight: 500;
   display: flex;
@@ -425,9 +396,11 @@ table.dataTable thead .sorting_desc_disabled:before {
 
 #listDeviceTable td {
   color: #100c08;
-  font-family: "Gotham Medium", sans-serif;
 }
 
+.comment_update_input, .actualVersion_update_input {
+  background-color: #ffffff !important;
+}
 .comment_update_input:active, .actualVersion_update_input:active {
   background-color: rgba(241, 135, 65, 0.2666666667) !important;
 }
