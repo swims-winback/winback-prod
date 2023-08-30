@@ -137,12 +137,10 @@ class SoftwareController extends AbstractController
                 $fileName = $form->get('file')->getData()->getClientOriginalName();
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
-                $targetDirectory = $fileUploader->getTargetDirectory();
-                print_r($targetDirectory);
+                //$targetDirectory = $fileUploader->getTargetDirectory();
                 
                 $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
                 $softwareVersion = substr($fileName, -11, 7);
-                $softwareName = $originalFilename;
                 $pattern2 = '/-/i';
                 $softwareVersionModified = preg_replace($pattern2, '.', $softwareVersion);
                 $pattern3 = "/^0{1,2}/";

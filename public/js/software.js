@@ -149,7 +149,6 @@ for (let element of deleteButtons) {
   let filename = $(element).data("title");
   filename = filename.trim()
   if (actualFile_array.includes(filename)) {
-    console.log(filename)
     element.disabled = true;
    }
   }
