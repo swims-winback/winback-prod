@@ -32,6 +32,9 @@ services:
 
     App\EventListener\ExceptionListener:
         tags: [kernel.event_listener]
+        
+    Blackfire\Bridge\Symfony\Event\MonitoredCommandSubscriber: ~
+
 when@dev:       
     imports:
         - { resource: '../configServer/*.php' }
