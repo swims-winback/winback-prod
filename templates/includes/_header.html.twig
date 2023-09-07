@@ -14,6 +14,9 @@
                     {% if is_granted('ROLE_ADMIN') %}
                     <li><a class="nav-link" href="{{path('app_sn')}}">{{ 'SN'|trans }}</a></li>
                     {% endif %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a class="nav-link" href="{{path('app_error')}}">{{ 'Errors'|trans }}</a></li>
+                    {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-link dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,18 +45,18 @@
                 
                 </ul>
                 
+                
+                <div class="d-flex flex-nowrap justify-content-between align-items-center">
                 {% if is_granted('ROLE_USER') %}
-                <div class="d-flex flex-nowrap justify-content-center">
                     <div>
                         {{"Welcome"|trans}} {{ app.user }}
                     </div>
                     <a class="nav-link" href="{{path('app_logout')}}" style="margin-left: 0.5em;">
                         <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
                     </a>
-                </div>
                 {% endif %}
-                
-
+                {% include 'includes/_switch_mode.html.twig' %}
+                </div>
                 
             </div>
         </div>
