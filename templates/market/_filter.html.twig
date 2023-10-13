@@ -1,0 +1,17 @@
+{#{{ form_start(form, {attr: { id: 'filter', style: "", class: "d-flex flex-column justify-content-center"}}) }}#}
+<div id: 'filter', class: "d-flex flex-column justify-content-center">
+    <div class="input-group flex-nowrap">
+    <span class="input-group-text" id="addon-wrapping" style='border-right-style: none; border-top-right-radius: 0; border-bottom-right-radius: 0;'>
+    <i class="fa-solid fa-magnifying-glass"></i>
+    </span>
+    {{ form_widget(form.q, {attr: { style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
+    </div>
+    <!-- Device Type -->
+    <h6 class="mt-2">{{ 'Device Type'|trans }}</h6>
+    <div class="border border-0" id="collapseDeviceType">
+        {{ form_widget(form.category) }}
+    </div>
+    {{ form_widget(form.submit, { 'label': 'Click me' }) }}
+    {#<button type="submit" class="btn bg-orange btn-outline-orange">{{ 'Search'|trans }}</button>#}
+</div>
+{#{{ form_end(form) }}#}

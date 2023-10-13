@@ -392,6 +392,86 @@
         <source>Delete software</source>
         <target>__Delete software</target>
       </trans-unit>
+      <trans-unit id="VKDowX6" resname="Error">
+        <source>Error</source>
+        <target>__Error</target>
+      </trans-unit>
+      <trans-unit id="rvfeKNU" resname="Server">
+        <source>Server</source>
+        <target>__Server</target>
+      </trans-unit>
+      <trans-unit id="IeSesrK" resname="Log">
+        <source>Log</source>
+        <target>__Log</target>
+      </trans-unit>
+      <trans-unit id="QFJI9s." resname="Device Country">
+        <source>Device Country</source>
+        <target>기기 국가</target>
+      </trans-unit>
+      <trans-unit id="cB0CHQj" resname="Country">
+        <source>Country</source>
+        <target>국가</target>
+      </trans-unit>
+      <trans-unit id=".DP3Mkb" resname="City">
+        <source>City</source>
+        <target>도시</target>
+      </trans-unit>
+      <trans-unit id="min9RPF" resname="Server IP">
+        <source>Server IP</source>
+        <target>__Server IP</target>
+      </trans-unit>
+      <trans-unit id="4iMVUQ6" resname="Server Port">
+        <source>Server Port</source>
+        <target>__Server Port</target>
+      </trans-unit>
+      <trans-unit id=".yHoXoH" resname="Server ID">
+        <source>Server ID</source>
+        <target>__Server ID</target>
+      </trans-unit>
+      <trans-unit id="9ziNAZ3" resname="Winback Interface | Error">
+        <source>Winback Interface | Error</source>
+        <target>__Winback Interface | Error</target>
+      </trans-unit>
+      <trans-unit id="mcQKtAW" resname="Date">
+        <source>Date</source>
+        <target>__Date</target>
+      </trans-unit>
+      <trans-unit id="y3AjePM" resname="Errors">
+        <source>Errors</source>
+        <target>__Errors</target>
+      </trans-unit>
+      <trans-unit id="6iEA3Im" resname="Logs">
+        <source>Logs</source>
+        <target>__Logs</target>
+      </trans-unit>
+      <trans-unit id="4sJzSd5" resname="Treatments">
+        <source>Treatments</source>
+        <target>__Treatments</target>
+      </trans-unit>
+      <trans-unit id="welymEg" resname="Winback Interface | Logs">
+        <source>Winback Interface | Logs</source>
+        <target>__Winback Interface | Logs</target>
+      </trans-unit>
+      <trans-unit id="LnoHX85" resname="error 404">
+        <source>error 404</source>
+        <target>__error 404</target>
+      </trans-unit>
+      <trans-unit id="I6IR3yB" resname="Winback Interface | New Image">
+        <source>Winback Interface | New Image</source>
+        <target>__Winback Interface | New Image</target>
+      </trans-unit>
+      <trans-unit id="qPl5oZw" resname="Winback Interface | Market">
+        <source>Winback Interface | Market</source>
+        <target>__Winback Interface | Market</target>
+      </trans-unit>
+      <trans-unit id="hl6J3nj" resname="Upload">
+        <source>Upload</source>
+        <target>__Upload</target>
+      </trans-unit>
+      <trans-unit id="LZp3L1V" resname="Winback Interface | Users">
+        <source>Winback Interface | Users</source>
+        <target>__Winback Interface | Users</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

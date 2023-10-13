@@ -1,0 +1,78 @@
+<div class="divider"></div>
+<div class="modal-body d-flex flex-column justify-content-between align-items-center">
+        {% if is_granted("ROLE_ADMIN")%}
+        <div class="grey-square d-flex flex-column justify-content-between align-items-center">
+            <div class="row d-flex justify-content-between align-items-center w-100">
+                <div class="col-sm-6 d-flex flex-column justify-content-left mb-1">
+                    <b>{{ 'Server IP'|trans }}</b>
+                    <input type="text"
+                    data-id="{{device.id}}" 
+                    name="" value="{{device.serverIp}}" 
+                    id="server_ip_{{device.id}}"
+                    class="server_ip-zone" style='max-width:12em;'>
+                </div>
+                <div class="col-sm-6 d-flex flex-column justify-content-left mb-1">
+                    <b>{{ 'Server Port'|trans }}</b>
+                    <input type="text"
+                    data-id="{{device.id}}" 
+                    name="" value="{{device.serverPort}}" 
+                    id="server_port_{{device.id}}"
+                    class="server_port-zone" style='max-width:12em;'>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-between w-100">
+                <div class="d-flex justify-content-left flex-nowrap align-items-center align-self-stretch">
+                    <b class="me-1">{{ 'Server ID'|trans }}</b>
+                    <input type="checkbox" 
+                    id="server_id_{{device.id}}"
+                    {{ (device.serverId)? 'checked': ''}} 
+                    data-id="{{device.id}}" 
+                    name="switchbox">
+                </div>
+                <div class="w-50">
+                <button type="button"
+                class="update btn btn-outline-orange server-buttons"  
+                name="{{device.id}}">{{ 'Validate'|trans }}
+                </button>
+                </div>
+            </div>
+            {% elseif is_granted("ROLE_GOE")%}
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div>
+                    <b>{{ 'Server IP'|trans }}</b>
+                    <div>
+                    {{device.serverIp}}
+                    </div>
+                </div>
+                <div>
+                    <b>{{ 'Server Port'|trans }}</b>
+                    <div>
+                    {{device.serverPort}}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <hr>
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
+                <b>{{ 'Status'|trans }} :</b>
+                <div class="{{(device.isActive)? 'device-active': 'device-inactive'}}">{{(device.isActive)? 'Active':'Inactive'}}</div>
+            </div>
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+            <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
+                <b>{{ 'Connect'|trans }} :</b>
+                {% if (device.deviceFamily == "BIOBACK" or device.deviceFamily == "RSHOCK" or device.deviceFamily == "CRYOBACK4") %}
+                    <input class="btn bg-green btn-outline-green connect_button" 
+                    style="width:fit-content;"
+                    id="c_sn_{{device.sn}}" 
+                    data-id="connect_{{device.id}}" 
+                    name='{{device.sn}}' type="button" value="Connect" 
+                    data-bs-toggle="modal" data-bs-target="#testAcces_{{device.id}}">
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+</div>

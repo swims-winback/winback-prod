@@ -1,0 +1,31 @@
+<div class="modal-body d-flex flex-column justify-content-between align-items-center">
+    {% if is_granted("ROLE_GOE")%}
+    <div class="row d-flex justify-content-between align-items-center w-100 h-100 grey-square">
+        <div class="d-flex justify-content-left align-items-center mb-1">
+            <b class="text-nowrap me-2">{{ 'Upload Version'|trans }} :</b>
+            <input type="text"
+                data-id="{{device.id}}" 
+                name="" value="" 
+                id="update_{{device.id}}"
+                class="update-zone" style='width: 25%;'>
+        </div>
+        <div class="d-flex flex-nowrap justify-content-left align-self-stretch align-items-center mb-2">
+            <b class="text-nowrap me-2">{{ 'Forced'|trans }} :</b>
+            <input type="checkbox" 
+            id="forced_{{device.id}}"
+            {{ (device.forced)? 'checked': ''}} 
+            data-id="{{device.id}}" 
+            name="switchbox">
+        </div>
+        <div class="">
+            <button type="button"
+            class="update btn valid-buttons btn-outline-orange"  
+            name="{{device.id}}">{{ 'Validate'|trans }}
+            </button>
+        </div>
+
+    </div>
+    {% endif %}
+    <hr class="hr modal-device-hr my-2" />
+    <a class="btn btn-outline-orange" download href="{{ asset(ressource_path  ~ 'logs/version/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">Version History</a>
+</div>

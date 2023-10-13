@@ -19,10 +19,10 @@
         <div class="row w-100 px-2">
             <div class="col-md-2 d-flex justify-content-center">
                 <!-- ===== NEW SOFTWARE ===== -->
-                {% if is_granted("ROLE_ADMIN") %}
-                <a class="btn shadow-1 bg-orange btn-outline-orange floatingBtn d-flex align-items-center justify-content-center" 
+                {% if is_granted("ROLE_GOE") %}
+                <a id="btn-upload-soft" class="btn bg-orange btn-outline-orange floatingBtn d-flex align-items-center justify-content-center box-shadow" 
                     href="{{path('software_add')}}"
-                    style="border: none; border-radius: 50%; height: 4em; width: 4em; box-shadow: 2px 2px 3px #999; padding: 1em;" 
+                    style="border: none; border-radius: 50%; height: 4em; width: 4em; padding: 1em;" 
                     type="button">
                     <i class="fa-solid fa-plus"></i>
                 </a>
@@ -35,13 +35,13 @@
             </div>
             <div class="col-md-10">
                 <!-- ===== SOFTWARE TABLE PER FAMILY ===== -->
-                <div class="d-flex flex-column space-between">
+                <div class="d-flex flex-column justify-content-between">
                 
                 {% for family in families %}
                     <div class="accordion mt-2 mb-4" id="accordionSoftware">
                         
                         <div class="accordion-item">
-                            <h2 class="text-center accordion-header mt-2 mb-2" id="accordionHeading_{{ family.name }}">
+                            <h2 class="text-center mt-2 mb-2" id="accordionHeading_{{ family.name }}">
                                 {% if family.numberId == 10 %}
                                     HI-TENS
                                 {% elseif family.numberId == 14 %}
@@ -53,8 +53,7 @@
                             <div class="accordion-collapse collapse show responsive-table overflow-auto" id="accordionCollapse_{{ family.name }}" aria-labelledby="accordionHeading_{{ family.name }}" data-bs-parent="#accordionSoftware">
                                 
                                 <table class="table table-hover" id="softTable_{{ family.name }}">
-                                        {% if is_granted("ROLE_ADMIN") %}
-                                        <thead>
+                                            {% if is_granted("ROLE_ADMIN") or (is_granted("ROLE_GOE") and family.numberId == 15)%}
                                             <tr>
                                                 <th colspan="1" class="text-center">
                                                 Actual version :
@@ -67,25 +66,13 @@
                                                 </th>
                                                 <th colspan="1" class="text-center">
                                                     <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-hidden actualVersion-update-form">
-                                                        <input class="actualVersion_update_input border border-0 w-100" style="background-color:rgb(236, 236, 236);" type="text" name="nm" value="">
-                                                        <button class="actualVersion_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{family.id}}"><i class="fa-solid fa-check"></i></button>
+                                                        <input class="form-control actualVersion_update_input w-100" type="text" name="nm" value="">
+                                                        <button class="actualVersion_update_button btn btn-outline-orange" type="button" name="name" value="" data-id="{{family.id}}"><i class="fa-solid fa-check"></i></button>
                                                     </div>
-                                                    {#
-                                                    <select name="" id="">
-                                                    <option value="" selected disabled hidden>Actual Version</option>
-                                                    {% for soft in softwares %}
-                                                        <option value={{soft}} class="select-version" data-devicefamily="{{soft.deviceFamily}}">
-                                                        {{soft}}
-                                                        </option>
-                                                    {% endfor %}
-                                                    </select>
-                                                    #}
                                                 </th>
                                             </tr>
-                                        </thead>
-                                        {% endif %}
-                                        <thead class="accordion-item">
-                                            <tr class="accordion-header">
+                                            {% endif %}
+                                            <tr>
                                                 <th class="text-center">{{ 'Filename'|trans }}</th>
                                                 <th class="text-center">
                                                     <div class="d-flex flex-nowrap input-group justify-content-center">
@@ -97,13 +84,12 @@
                                                 <th class="text-center">
                                                 {{ 'Creation date'|trans }}
                                                 </th>
-                                                {% if is_granted("ROLE_ADMIN") %}
+                                                {% if is_granted("ROLE_ADMIN") or (is_granted("ROLE_GOE") and family.numberId == 15) %}
                                                 <th class="text-center"><i class="fa-solid fa-trash"></i></th>
                                                 {% endif %}
-                                                {% if is_granted("ROLE_SAV") %}
+                                                {% if is_granted("ROLE_SAV") or (is_granted("ROLE_GOE") and family.numberId == 15) %}
                                                 <th class="text-center">{{ 'Update Comment'|trans }}</th>
                                                 {% endif %}
-                                                
                                             </tr>
                                         </thead>
 
@@ -117,7 +103,7 @@
                                             <tr style="font-size: 12px;">
                                                 
                                                 <td class="text-center">
-                                                    {% if is_granted("ROLE_SAV") %}
+                                                    {% if is_granted("ROLE_SAV") or (is_granted("ROLE_GOE") and family.numberId == 15) %}
                                                         <a download href="{{ asset(ressource_path  ~ 'package/' ~ family.name ~ '/' ~ soft.name) }}" class="filename">{{soft.name}}</a>
                                                     {% else %}
                                                         {{soft.name}}
@@ -127,9 +113,9 @@
                                                 <td class="text-center">{{soft.createdAt|format_datetime('medium', 'short')}}</td>
 
                                                 
-                                                {% if is_granted("ROLE_ADMIN") %}
+                                                {% if is_granted("ROLE_ADMIN") or (is_granted("ROLE_GOE") and family.numberId == 15) %}
                                                 <td class="text-center">
-                                                    <button href="#" class="btn rounded-1 bg-orange btn-outline-orange press modal-trigger delete-button" 
+                                                    <button href="#" class="btn btn-outline-orange modal-trigger delete-button" 
                                                     data-bs-target="#modal_delete_{{soft.id}}"
                                                     data-id="delete_{{soft.id}}"
                                                     data-title="{{soft.name}}"
@@ -138,14 +124,14 @@
                                                 <td class="text-center">
                                                     <div id="comment_left_{{soft.id}}"></div>
                                                     <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <textarea class="comment_update_input border border-0 w-100" type="text" name="nm" value="" data-id="{{soft.id}}">{{soft.updateComment}}</textarea>
-                                                        <button class="comment_update_button btn btn-dark border-0" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
+                                                        <textarea class="form-control comment_update_input w-100" type="text" name="nm" value="" data-id="{{soft.id}}">{{soft.updateComment}}</textarea>
+                                                        <button class="comment_update_button btn btn-outline-orange" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
                                                     </div>
                                                 </td>
                                                 {% elseif is_granted("ROLE_SAV") %}
                                                 <td class="text-center">
                                                     <div class="d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <textarea class="comment_update_input border border-0" type="text" name="nm" value="" disabled>{{soft.updateComment}}</textarea>
+                                                        <textarea class="form-control comment_update_input border border-0" type="text" name="nm" value="" disabled>{{soft.updateComment}}</textarea>
                                                     </div>
                                                 </td>
                                                 {% endif %}
@@ -160,7 +146,7 @@
                                           
                                         </tbody>
                                 </table>
-                                
+
 
                             </div>
                         </div>

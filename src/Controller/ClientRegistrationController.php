@@ -53,7 +53,7 @@ class ClientRegistrationController extends AbstractController
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('client_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('admin@gmail.com', 'Winback Team'))
+                    ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
                     ->to($user->getEmail())
                     ->subject('Welcome')
                     ->htmlTemplate('client/confirmation_email.html.twig')

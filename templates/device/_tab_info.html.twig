@@ -1,0 +1,64 @@
+<div class="divider"></div>
+<!--<div class="px-4 pb-5 pt-1 w-100 h-100 d-flex flex-column justify-content-around align-items-stretch">-->
+<div class="modal-body d-flex flex-column justify-content-between align-items-center p-2">
+        <div class="d-flex flex-column justify-content-left grey-square m-1 align-self-stretch">
+            <h4 class="">{{device.sn}}</h4>
+            <div class="lead">
+                {% if device.deviceFamily.numberId == 10 %}
+                    HI-TENS
+                {% elseif device.deviceFamily.numberId == 14 %}
+                    BACK3TX
+                {% else %}
+                    {{ device.deviceFamily }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="align-self-stretch mt-2"><hr class="hr modal-device-hr" /></div>
+        <div class="row py-2 d-flex justify-content-between align-self-stretch m-1">
+            <div class="grey-square col me-1 mb-1">
+                <div class="row d-flex justify-content-left align-items-center col py-1">
+                    <b class="col-sm text-nowrap">{{ 'Version'|trans }}: </b>
+                    <span class="col-sm">{{device.version}}</span>
+                </div>
+                <div class="row d-flex justify-content-left align-items-center col py-1">
+                    <b class="col-sm text-nowrap">{{ 'IP Address'|trans }}: </b>
+                    <span class="col-sm">{{device.ipAddr}}</span>
+                </div>
+            </div>
+            <div class="grey-square col mb-1 align-self-stretch">
+                <div class="row d-flex justify-content-left align-items-center col py-1">
+                    <b class="col-sm text-nowrap">{{ 'Country'|trans }}: </b>
+                    <span class="col-sm">{{device.country}}</span>
+                </div>
+                <div class="row d-flex justify-content-left align-items-center col py-1">
+                    <b class="col-sm text-nowrap">{{ 'City'|trans }}: </b>
+                    <span class="col-sm">{{device.city}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="align-self-stretch mb-2"><hr class="hr modal-device-hr" /></div>
+            {#
+            <div class="col">
+                <div class="d-flex flex-column justify-content-left col-md-6 align-self-stretch">
+                    <b>{{ 'Advertising'|trans }} :</b>
+                    <div class="{{(device.pub)? 'device-active': 'device-inactive'}}">
+                    {{ (device.pub)? 'Yes': 'No'}}
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-left col-md-6 align-self-stretch">
+                    <b>{{ 'PIN code'|trans }} :</b>
+                    <div>{{device.codePin}}</div>
+                </div>
+            </div>
+            #}  
+            <div class="row py-2 d-flex flex-column justify-content-around grey-square m-1 align-self-stretch">
+                <div class="row d-flex justify-content-left align-items-center py-1">
+                    <b class="col-sm text-nowrap me-1">{{ 'Creation Date'|trans }} :</b>
+                    <span class="col-sm text-nowrap">{{device.createdAt|format_datetime('medium', 'short')}}</span>
+                </div>
+                <div class="row d-flex justify-content-left align-items-center py-1">
+                    <b class="col-sm text-nowrap me-1">{{ 'Update Date'|trans }} :</b>
+                    <span class="col-sm text-nowrap">{{device.updatedAt|format_datetime('medium', 'short')}}</span>
+                </div>
+            </div>
+</div>

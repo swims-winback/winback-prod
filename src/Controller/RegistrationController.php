@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController
             
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('noreply-hello@winback.com', 'Winback Team'))
+                    ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
                     ->to($user->getEmail())
                     ->subject('Welcome')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
@@ -67,7 +67,7 @@ class RegistrationController extends AbstractController
 
             
             $emailToAdmin = (new TemplatedEmail())
-            ->from(new Address('noreply-hello@winback.com', 'Winback Team'))
+            ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
             ->to('ldieudonat@winback.com')
             //->cc('bwollensack@winback.com')
             //->bcc('bcc@example.com')

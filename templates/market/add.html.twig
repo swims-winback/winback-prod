@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'Winback Interface | New Image'|trans}}{% endblock %}
+
+{% block content %}
+{% for device in devices %}
+    <div class="modal fade modal-device m-5" id="upload_image_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1" style="justify-content: center;">
+        <div class="modal-dialog modal-dialogue-device modal-dialog-centered d-flex justify-content-center">
+            <div class="modal-content d-flex" style="">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <h1>{{'New Software'|trans}}</h1>
+                    <b class="text-secondary">{{'Drag and Drop your files here.'|trans}}</b>
+                    <div style="border: 4px dashed #E6E9EC;" class="p-5 mt-2" id="uploadZone">
+                        {{ form_start(form) }}
+                            <div class="">
+                                {{ form_errors(form) }}
+                            </div>
+
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <span class="fa-solid fa-cloud-arrow-up" style="display: flex; position: absolute; z-index: -1; font-size: 14em; justify-content: center; color: #acabab81;"></span>
+                                <div class="form-field" id="">
+                                    {{ form_row(form.file) }}
+                                </div>
+
+                                <div class="form-field d-flex flex-nowrap justify-content-end" id="">
+                                    <a class="btn btn-secondary mb-3 me-2" href="{{path('software')}}" style="width: fit-content">
+                                    {{'Cancel'|trans}}
+                                    </a>
+                                    {{ form_row(form.Submit) }}
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

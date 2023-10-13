@@ -29,6 +29,9 @@ services:
     App\Services\FileUploader:
         arguments:
             $targetDirectory: '%uploads_directory%'
+    App\Services\ImageUploader:
+        arguments:
+            $targetDirectory: '%uploads_directory%'
 
     App\EventListener\ExceptionListener:
         tags: [kernel.event_listener]

@@ -35,7 +35,7 @@
                     </div>
                 {% endif %}
 
-                <div class="form-outline mb-1 w-100">
+                <div class="form-outline mb-2 w-100">
                     <div class="input-group flex-nowrap">
                     <span class="input-group-text border border-0" id="addon-wrapping"><i class="fa-solid fa-user"></i></span>
                     <input type="text" placeholder="{{ 'Email'|trans }}" name="username" id="inputUsername" class="form-control border border-0" required autofocus>
@@ -66,16 +66,17 @@
                 </div>
                 
 
-                <button class="btn btn-justify bg-orange btn-outline-orange mt-1 mb-1 mt-sm-2 mb-sm-2 w-50" type="submit">
-                {{ 'Sign in'|trans }}
+                <button class="btn btn-justify bg-orange btn-orange mt-1 mb-1 mt-sm-2 mb-sm-2 w-50 btn-login" type="submit">
+                {{ 'Login'|trans }}
                 <svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg>
                 </button>
-                <div class="divider d-flex align-items-center mb-1">
-                    {#<p class="text-center fw-bold mx-3 mb-0">{{ 'Or'|trans }}</p>#}
-                </div>
+                <hr class="w-100">
                 <div class="d-flex justify-content-around align-items-center w-50 p-0 flex-wrap">
                     <p class="mb-0 text-break text-nowrap mb-1">{{ 'Not registered yet ?'|trans }}</p>
-                    <a class="btn btn-justify btn-secondary txt-white text-break text-nowrap mb-1 w-100" href="{{ path('app_register') }}">{{ 'Sign Up'|trans }}<svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg></a>
+                    <a class="btn btn-justify btn-secondary txt-white text-break text-nowrap mb-1 w-100 btn-login" href="{{ path('app_register') }}">
+                    {{ 'Register'|trans }}
+                    <svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg>
+                    </a>
                 </div>
             </div>
 

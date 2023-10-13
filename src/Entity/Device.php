@@ -108,6 +108,9 @@ class Device
     #[ORM\OneToMany(mappedBy: 'serial_number', targetEntity: Log::class, orphanRemoval: true)]
     private Collection $logs;
 
+    #[ORM\OneToMany(mappedBy: 'sn', targetEntity: Error::class)]
+    private Collection $errors;
+
     #[ORM\Column]
     private ?bool $server_id = null;
 
@@ -124,6 +127,7 @@ class Device
         $this->softwares = new ArrayCollection();
         $this->deviceServers = new ArrayCollection();
         $this->logs = new ArrayCollection();
+        $this->errors = new ArrayCollection();
     }
 
     public function __toString()
@@ -434,6 +438,7 @@ class Device
         return $this->deviceServers;
     }
 
+    /*
     public function addDeviceServer(DeviceServer $deviceServer): self
     {
         if (!$this->deviceServers->contains($deviceServer)) {
@@ -455,6 +460,7 @@ class Device
 
         return $this;
     }
+    */
 
     public function getCountry(): ?string
     {
@@ -508,6 +514,14 @@ class Device
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Log>
+     */
+    public function getErrors(): Collection
+    {
+        return $this->errors;
     }
 
     public function isServerId(): ?bool

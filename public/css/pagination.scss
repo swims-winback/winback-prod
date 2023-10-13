@@ -13,7 +13,33 @@ $color1 : #f18841;
   .page-link {
     font-size: small;
   }
-  
+}
+
+:root, [data-bs-theme="light"] {
+  .page-link {
+    background-color: var(--bs-gray-200);
+    &:hover {
+      background-color:var(--bs-gray-300);
+    }
+    &:focus {
+      background-color: var(--bs-gray-300);
+    }
+  }
+}
+
+[data-bs-theme="dark"] {
+  .page-link {
+    background-color: #6c757d;
+    &:hover {
+      background-color:#5c636a;
+    }
+    &:focus {
+      background-color: #5c636a;
+    }
+  }
+  .disabled > .page-link {
+    color: var(--bs-secondary-color);
+  }
 }
 
 nav {
@@ -21,7 +47,7 @@ nav {
 }
 
 .page-link {
-  color: $color1;
+  color: var(--bs-body-color);
   &:hover {
     color: #b96731;
   }
@@ -32,8 +58,6 @@ nav {
   &.active,
   .active > & {
     z-index: 3;
-    //color: $color1;
-    //@include gradient-bg($color1);
     border-color: $color1;
     background-color: $color1;
   }

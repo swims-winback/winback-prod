@@ -1,0 +1,39 @@
+
+<div class="modal-body row" style="height: 15em;">
+    <div class="col d-flex flex-column justify-content-center" style="height:100%;">
+        <button class="btn btn-outline-orange mb-1" style="width: fit-content;">Download History</button>
+        <select name="" id="">
+            <option value="">Error</option>
+            <option value="">248</option>
+        </select>
+        <select name="" id="">
+            <option value="">Version</option>
+            <option value="">3.11</option>
+        </select>
+        <select name="" id="">
+            <option value="">Date</option>
+            <option value="">1er Janvier 2012</option>
+        </select>
+    </div>
+    <div class="col" style="height:100%; overflow: scroll;">
+        <table class="table text-center">
+        <thead>
+        <tr>
+        <th>error_id</th>
+        <th>version</th>
+        <th>date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for error in device.errors|reverse %}
+        <tr>
+        <td>{{error.error}}</td>
+        <td>{{error.version}}</td>
+        <td>{{error.date|format_datetime('medium', 'short')}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table> 
+    </div> 
+
+</div>

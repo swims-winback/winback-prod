@@ -43,13 +43,12 @@
                             </div>
 
                             <div class="card-footer w-100 d-flex justify-content-between">
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" style="height: fit-content;">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
+                                <button class="carousel-control-prev btn btn-outline-orange" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                    <i class="fa-solid fa-angle-left"></i>
                                 </button>
                                 {% for key, items in softwareArray %}
                                 {% if key == deviceFamily %}
-                                <select class="form-select w-75" id="dashSelect_{{deviceFamily}}">
+                                <select class="form-control form-select w-75" id="dashSelect_{{deviceFamily}}">
                                 <option value="" selected disabled hidden>Version</option>
                                 {% for item in items %}
                                     <option value={{item.version}} class="select-version" data-devicefamily="{{deviceFamily}}">
@@ -59,9 +58,8 @@
                                 </select>
                                 {% endif %}
                                 {% endfor %}
-                                <button class="carousel-control-next h-100" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
+                                <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                    <i class="fa-solid fa-angle-right"></i>
                                 </button>
                             </div>
                         </div>
@@ -77,7 +75,7 @@
             
         </div>
         <div class="example-wrapper">
-            {#{{ render_chart(chart, {'id': 'my-chart'})}}#}
+            {#{{ render_chart(treatmentChart) }}#}
         </div>
     </div>
     <!--

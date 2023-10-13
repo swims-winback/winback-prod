@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Winback Interface | Market'|trans }}{% endblock %}
+
+{% block content %}
+<div class="row w-100 h-100">
+    <div class="col-md-2 d-flex justify-content-center">
+        {% include "market/_filter.html.twig" %}
+    </div>
+                    <div class="col-md-10 h-100 d-flex flex-column justify-content-between align-items-center">
+                    <h1 class="text-center mb-4">{{ 'Device'|trans }}</h1>
+                    {% for message in app.flashes('error') %}
+                        <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+                        <!--
+                        <div class="p-3 my-2 rounded-2 alert alert-warning" id="selectedZone"></div>
+                        -->
+                    {% for message in app.flashes('infoDevice') %}
+                        <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                       
+                    <div id="listDevice" class="w-100" style="margin-bottom: 1em;">
+                        <div id="listDeviceTable" class="table-responsive w-100 h-100">
+                            <table class="table table-bordered table-hover w-100" id="deviceTable" data-toggle="table" data-pagination="true" data-sort-name="sn" data-search="true" style="height: 100px;">
+                                
+                                <thead class="w-100 align-middle">
+                                    <tr class="h-100 w-100 align-middle" id="deviceTableTitle">
+                                        <th scope="col" class="text-center text-nowrap">
+                                                {{ 'Serial Number'|trans }}
+                                        </th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Device Type'|trans }}</th>
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Upload'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody class="w-100 overflow-scroll" style="height: 15em">
+
+                                    {% for device in devices %}
+                                        <tr scope="row" class="w-100">
+                                            <td class="text-center text-nowrap">{{device.sn}}</td>
+                                            <td class="text-center">
+                                            {% if device.deviceFamily.numberId == 10 %}
+                                                HI-TENS
+                                            {% elseif device.deviceFamily.numberId == 14 %}
+                                                BACK3TX
+                                            {% else %}
+                                                {{ device.deviceFamily }}
+                                            {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a download href="#"
+                                                data-bs-target="#upload_image_{{device.id}}"
+                                                data-id="{{device.id}}"
+                                                data-title="{{device.sn}}"
+                                                data-bs-toggle="modal">
+                                                <i class="fa-solid fa-download"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+
+                    {{ knp_pagination_render(devices) }}
+                </div>
+
+                <div class="row w-100 d-flex flex-column align-items-center">
+                <!-- ===== INFO MODALS ===== -->
+                {% include 'market/add.html.twig' %}
+            </div>
+</div>
+{% endblock %}

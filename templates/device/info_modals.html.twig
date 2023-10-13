@@ -1,188 +1,64 @@
 <!-- ===== INFO MODALS ===== -->
 {% for device in devices %}
-    <div class="modal modal-device shadow-1 white falling w-100" id="modal_info_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1">
-        <div class="modal-dialog modal-dialogue-device w-100">
-            <div class="modal-content w-100 h-100">
-                <div class="modal-header">
-                <h5 class="text-center w-100 align-middle">{{ 'Device Info'|trans }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="divider"></div>
-                <div class="px-4 pb-5 pt-1 w-100 h-100 d-flex flex-column justify-content-around align-items-stretch">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Serial Number'|trans }} :</b>
-                            <div>{{device.sn}}</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Device Type'|trans }} :</b>
-                            <div>
-                                {% if device.deviceFamily.numberId == 10 %}
-                                    HI-TENS
-                                {% elseif device.deviceFamily.numberId == 14 %}
-                                    BACK3TX
-                                {% else %}
-                                    {{ device.deviceFamily }}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Version'|trans }} :</b>
-                            <div>{{device.version}}</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'IP Address'|trans }} :</b>
-                            <div>{{device.ipAddr}}</div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Country'|trans }} :</b>
-                            <div>{{device.country}}</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'City'|trans }} :</b>
-                            <div>{{device.city}}</div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Advertising'|trans }} :</b>
-                            <div class="{{(device.pub)? 'device-active': 'device-inactive'}}">
-                            {{ (device.pub)? 'Yes': 'No'}}
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'PIN code'|trans }} :</b>
-                            <div>{{device.codePin}}</div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Creation Date'|trans }} :</b>
-                            <div>{{device.createdAt|format_datetime('medium', 'short')}}</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Update Date'|trans }} :</b>
-                            <div>{{device.updatedAt|format_datetime('medium', 'short')}}</div>
-                        </div>
-                    </div>
-                    <hr class="hr" />
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Status'|trans }} :</b>
-                            <div class="{{(device.isActive)? 'device-active': 'device-inactive'}}">{{(device.isActive)? 'Active':'Inactive'}}</div>
-                        </div>
-                        {% if is_granted("ROLE_SUPER_ADMIN") %}
-                        <div class="d-flex flex-column justify-content-left w-50 align-self-stretch">
-                            <b>{{ 'Connect'|trans }} :</b>
-                            {% if (device.deviceFamily == "BIOBACK" or device.deviceFamily == "RSHOCK" or device.deviceFamily == "CRYOBACK4") %}
-                                <input class="btn bg-green btn-outline-green connect_button" 
-                                style="width:fit-content;"
-                                id="c_sn_{{device.sn}}" 
-                                data-id="connect_{{device.id}}" 
-                                name='{{device.sn}}' type="button" value="Connect" 
-                                data-bs-toggle="modal" data-bs-target="#testAcces_{{device.id}}">
+    <div class="modal fade modal-device p-sm-5" id="modal_info_{{device.id}}" data-ax="modal" aria-hidden="true" tabindex="-1" style="justify-content: center;">
+        <div class="modal-dialog modal-dialogue-device modal-dialog-centered d-flex justify-content-center w-100 m-0">
+            <div class="modal-content d-flex">
+                <div class="modal-header p-0 d-flex justify-content-between align-items-center navbar navbar-expand-sm">
+                    <div class="collapse navbar-collapse" id="navbarModal">
+                        <ul class="nav nav-tabs d-flex justify-content-left align-items-center w-100 flex-1">
+                            <li class="nav-item">
+                                <button id="info-tab_{{device.id}}" class="nav-link active" aria-current="page" data-bs-toggle="tab" data-bs-target="#info_{{device.id}}" role="tab" aria-controls="info" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Info'|trans }}</span></button>
+                            </li>
+                            {% if is_granted("ROLE_GOE") %}
+                                <li class="nav-item">
+                                    <button id="version-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#version2_{{device.id}}" role="tab" aria-controls="version2" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Version'|trans }}</span></button>
+                                </li>
                             {% endif %}
-                        </div>
-                        {% endif %}
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            <li class="nav-item">
+                                <button id="error-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#error_{{device.id}}" role="tab" aria-controls="error" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Error'|trans }}</span></button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="server-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#server_{{device.id}}" role="tab" aria-controls="server" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Server'|trans }}</span></button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="log-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#log_{{device.id}}" role="tab" aria-controls="log" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Log'|trans }}</span></button>
+                            </li class="nav-item">
+                            {% endif %}
+                        </ul>
                     </div>
-                    <hr class="hr" />
-
-                    {% if is_granted("ROLE_GOE")%}
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="d-flex flex-column justify-content-left">
-                            <b>{{ 'Upload Version'|trans }} :</b>
-                            <div>
-                                <input type="text"
-                                    data-id="{{device.id}}" 
-                                    name="" value="" 
-                                    id="update_{{device.id}}"
-                                    class="update-zone" style='width:12em;'>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-nowrap justify-content-left align-self-stretch align-items-center w-50">
-                            <b class="me-1">{{ 'Forced'|trans }} :</b>
-                            <div>
-                                <input type="checkbox" 
-                                id="forced_{{device.id}}"
-                                {{ (device.forced)? 'checked': ''}} 
-                                data-id="{{device.id}}" 
-                                name="switchbox">
-                            </div>
-                        </div>
-
-                    </div>
-                    {% if is_granted("ROLE_GOE")%}
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="w-50"></div>
-                        <div class="w-50">
-                            <button type="button"
-                            class="update btn btn-dark red shadow-1 rounded-1 small valid-buttons"  
-                            name="{{device.id}}">{{ 'Validate'|trans }}
-                            </button>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <hr class="hr" />
-                        {% if is_granted("ROLE_ADMIN")%}
-                        <div class="d-flex justify-content-between w-100">
-                            <div class="d-flex flex-column justify-content-left w-50">
-                                <b>{{ 'Server IP'|trans }}</b>
-                                <input type="text"
-                                data-id="{{device.id}}" 
-                                name="" value="{{device.serverIp}}" 
-                                id="server_ip_{{device.id}}"
-                                class="server_ip-zone" style='width:12em;'>
-                            </div>
-                            <div class="d-flex flex-column justify-content-left w-50">
-                                <b>{{ 'Server Port'|trans }}</b>
-                                <input type="text"
-                                data-id="{{device.id}}" 
-                                name="" value="{{device.serverPort}}" 
-                                id="server_port_{{device.id}}"
-                                class="server_port-zone" style='width:12em;'>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between w-100">
-                            <div class="d-flex justify-content-left flex-nowrap align-items-center align-self-stretch">
-                                <b class="me-1">{{ 'Server ID'|trans }}</b>
-                                <input type="checkbox" 
-                                id="server_id_{{device.id}}"
-                                {{ (device.serverId)? 'checked': ''}} 
-                                data-id="{{device.id}}" 
-                                name="switchbox">
-                            </div>
-                            <div class="w-50">
-                            <button type="button"
-                            class="update btn btn-dark red shadow-1 rounded-1 small server-buttons"  
-                            name="{{device.id}}">{{ 'Validate'|trans }}
-                            </button>
-                            </div>
-                        </div>
-                        {% elseif is_granted("ROLE_GOE")%}
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <div>
-                                <b>{{ 'Server IP'|trans }}</b>
-                                <div>
-                                {{device.serverIp}}
-                                </div>
-                            </div>
-                            <div>
-                                <b>{{ 'Server Port'|trans }}</b>
-                                <div>
-                                {{device.serverPort}}
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                    
-                    {% endif %}
-                    
+                    <button class="navbar-toggler border border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarModal" aria-controls="navbarModal" aria-expanded="false" aria-label="Toggle navigation">
+                    <span><i class="fa-solid fa-bars" id="#navbarToggler"></i></span>
+                    </button>
+                    <ul class="nav nav-tabs d-flex justify-content-center flex-nowrap align-items-center align-self-stretch">
+                        <li><button type="button" class="nav-link" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></li>
+                    </ul>
                 </div>
+
+
+                <div class="tab-content h-100" id="tabContent_{{device.id}}">
+                    <div class="tab-pane fade show active h-100 w-100" id="info_{{device.id}}" role="tabpanel" aria-labelledby="info-tab">
+                    {% include 'device/_tab_info.html.twig' %}
+                    </div>
+                    {% if is_granted("ROLE_GOE") %}
+                        <div class="tab-pane fade h-100 w-100" id="version2_{{device.id}}" role="tabpanel" aria-labelledby="version-tab">
+                        {% include 'device/_tab_version.html.twig' %}
+                        </div>
+                    {% endif %}
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <div class="tab-pane fade h-100 w-100" id="error_{{device.id}}" role="tabpanel" aria-labelledby="error-tab">
+                        {% include 'device/_tab_error.html.twig' %}
+                        </div>
+                        <div class="tab-pane fade h-100 w-100" id="server_{{device.id}}" role="tabpanel" aria-labelledby="server-tab">
+                        {% include 'device/_tab_server.html.twig' %}
+                        </div>
+                        <div class="tab-pane fade h-100" id="log_{{device.id}}" role="tabpanel" aria-labelledby="log-tab">
+                        {% include 'device/_tab_phone.html.twig' %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
             </div>
         </div>
     </div>

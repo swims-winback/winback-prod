@@ -62,16 +62,16 @@ class MainController extends AbstractController
             $snArray[] = $device;
         }
         */
-        /*
-        $deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
+        
+        //$deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
         $deviceCreated_array = $this->getDeviceCreated($deviceRepository); // number of devices created by day
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
-        */
-        /* TODO
-        $firstChart = $this->getChart($chartBuilder, array_keys($deviceConnected_array), "Devices connected", array_values($deviceConnected_array), "Devices connected per week", Chart::TYPE_LINE);
+        
+        // TODO
+        //$firstChart = $this->getChart($chartBuilder, array_keys($deviceConnected_array), "Devices connected", array_values($deviceConnected_array), "Devices connected per week", Chart::TYPE_LINE);
         $secondChart = $this->getChart($chartBuilder, array_keys($deviceCreated_array), "Devices created", array_values($deviceCreated_array), "Devices created per week", Chart::TYPE_LINE);
         $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), 'label', array_values($deviceCount_array), 'Number of devices per type', Chart::TYPE_DOUGHNUT);
-        */
+        
         /*
         if (($clientIdentified = $clientRepository->findBy(array('email' => $email)))!=false) {
             
@@ -119,11 +119,11 @@ class MainController extends AbstractController
             'deviceCreatedArray'=>$deviceCreated_array,
             'snArray'=>$snArray,
             */
-            /* TODO
-            'firstChart'=>$firstChart,
+            // TODO
+            //'firstChart'=>$firstChart,
             'secondChart'=>$secondChart,
             'thirdChart'=>$thirdChart,
-            */
+            
         ]);
     }
 
@@ -144,9 +144,12 @@ class MainController extends AbstractController
      * @Route("/devicesConnected/", name="get_devices_connected")
      */
     function getDeviceServer(DeviceServerRepository $deviceServerRepository) {
-        $date_array = $this->getDate();
+        //$date_array = $this->getDate();
+        $date_array = ["2023-09-27 11:33:09", "2023-09-27 10:55:24"];
         foreach ($date_array as $date) {
+            //print_r($date);
             $allDevices = $deviceServerRepository->findByDate($date);
+            print_r($allDevices);
             $deviceCount_array[$date] = count($allDevices);
         }
         return ($deviceCount_array);
