@@ -27,5 +27,7 @@
     </div>
     {% endif %}
     <hr class="hr modal-device-hr my-2" />
+    {% if is_granted("ROLE_SAV") %}
     <a class="btn btn-outline-orange" download href="{{ asset(ressource_path  ~ 'logs/version/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">Version History</a>
+    {% endif %}
 </div>
