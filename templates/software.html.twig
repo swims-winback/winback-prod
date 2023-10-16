@@ -123,14 +123,14 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div id="comment_left_{{soft.id}}"></div>
-                                                    <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
-                                                        <textarea class="form-control comment_update_input w-100" type="text" name="nm" value="" data-id="{{soft.id}}">{{soft.updateComment}}</textarea>
+                                                    <div class="input-group d-flex justify-content-center flex-nowrap text-break overflow-auto">
+                                                        <textarea class="form-control comment_update_input" type="text" name="nm" value="" data-id="{{soft.id}}">{{soft.updateComment}}</textarea>
                                                         <button class="comment_update_button btn btn-outline-orange" type="button" name="name" value="" data-id="{{soft.id}}"><i class="fa-solid fa-check"></i></button>
                                                     </div>
                                                 </td>
                                                 {% elseif is_granted("ROLE_SAV") %}
                                                 <td class="text-center">
-                                                    <div class="d-flex justify-content-center flex-nowrap text-break overflow-auto comment-update-form">
+                                                    <div class="d-flex justify-content-center flex-nowrap text-break overflow-auto">
                                                         <textarea class="form-control comment_update_input border border-0" type="text" name="nm" value="" disabled>{{soft.updateComment}}</textarea>
                                                     </div>
                                                 </td>

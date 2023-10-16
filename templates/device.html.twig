@@ -143,9 +143,7 @@
                                             {% if is_granted("ROLE_GOE") %}
                                             <td class="text-center">
                                             <div class="input-group d-flex flex-nowrap text-break overflow-auto justify-content-center">
-                                                <textarea class="comment_input form-control" style="height: 100%; box-shadow: 0px 0px 0px 0px rgba(0,0,0,0)" type="text" name="nm" data-id="{{device.id}}">
-                                                {{device.comment}}
-                                                </textarea> 
+                                                <textarea class="form-control comment_input" type="text" name="nm" data-id="{{device.id}}">{{device.comment}}</textarea> 
                                                 <button class="comment_button btn btn-outline-orange border-0 btn-left" type="button" name="name" value="" data-id="{{device.id}}"><i class="fa-solid fa-check"></i></button>
                                             </div>
                                             </td>
