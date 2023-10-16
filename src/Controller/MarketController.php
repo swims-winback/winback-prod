@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Class\SearchData;
 use App\Form\SearchDeviceType;
+use App\Form\Market\UploadImageType;
 use App\Repository\DeviceRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

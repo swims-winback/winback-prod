@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Market;
 
 use App\Entity\DeviceFamily;
 use App\Entity\Software;
@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class SoftwareType extends AbstractType
+class UploadImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
