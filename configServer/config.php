@@ -21,13 +21,13 @@ if (!defined('cmdBack')) define('cmdBack', array('DE','DD','DC','DB','DA','D9','
 if (!defined('LOGS_FILE')) define("LOGS_FILE", 'wintra.log');
 if (!defined('GATELOG_FILE')) define("GATELOG_FILE", 'serverGate.log');
 
-if (!defined('deviceType')) define('deviceType', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
-if (!defined('DEVICE_TYPE_ARRAY')) define('DEVICE_TYPE_ARRAY', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
-if (!defined('deviceTypeName')) define('deviceTypeName', array(10 => 'RSHOCK', 11 => 'CRYOBACK4', 12 => 'BACK4', 13 => 'BIOBACK', 14 => 'BACK3'));
-if (!defined('deviceTypeArray')) define('deviceTypeArray', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3/'));
+if (!defined('deviceType')) define('deviceType', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3TX/'));
+if (!defined('DEVICE_TYPE_ARRAY')) define('DEVICE_TYPE_ARRAY', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3TX/'));
+if (!defined('deviceTypeName')) define('deviceTypeName', array(10 => 'RSHOCK', 11 => 'CRYOBACK4', 12 => 'BACK4', 13 => 'BIOBACK', 14 => 'BACK3TX'));
+if (!defined('deviceTypeArray')) define('deviceTypeArray', array(10 => 'RSHOCK/', 11 => 'CRYOBACK4/', 12 => 'BACK4/', 13 => 'BIOBACK/', 14 => 'BACK3TX/'));
 if (!defined('deviceTypeId')) define('deviceTypeId', array(10 => 1, 12 => 3, 11 => 4, 14 => 5, 13 => 6)); //Ids corresponding to Ids automatically created in SQLdb
 if (!defined('deviceIdType')) define('deviceIdType', array(1 => 10, 3 => 12, 4 => 11, 5 => 14, 6 => 13));
-if (!defined('deviceId')) define('deviceId', array('RSHOCK/' => 10, 'CRYOBACK4/' => 11, 'BACK4/' => 12 , 'BIOBACK/' => 13, 'BACK3/' => 14));
+if (!defined('deviceId')) define('deviceId', array('RSHOCK/' => 10, 'CRYOBACK4/' => 11, 'BACK4/' => 12 , 'BIOBACK/' => 13, 'BACK3TX/' => 14));
 
 /*
  *      DEFINE File Info
