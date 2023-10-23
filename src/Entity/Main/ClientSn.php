@@ -6,6 +6,7 @@ use App\Repository\ClientSnRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientSnRepository::class)]
+#[ORM\Table(name:"`client_sn`")]
 class ClientSn
 {
     #[ORM\Id]
