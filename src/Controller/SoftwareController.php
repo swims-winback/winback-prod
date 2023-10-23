@@ -1,8 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\DeviceFamily;
-use App\Entity\Software;
+use App\Entity\Main\DeviceFamily;
+use App\Entity\Main\Software;
 use App\Form\SearchSoftwareType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

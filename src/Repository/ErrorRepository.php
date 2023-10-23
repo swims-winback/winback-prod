@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Class\SearchError;
-use App\Entity\Error;
+use App\Entity\Main\Error;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;

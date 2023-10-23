@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
-use App\Entity\ClientSn;
+use App\Entity\Main\Client;
+use App\Entity\Main\ClientSn;
 use App\Form\Client\ClientRegistrationType;
 use App\Repository\ClientRepository;
 use App\Repository\ClientSnRepository;

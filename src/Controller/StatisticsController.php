@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Statistics;
+use App\Entity\Main\Statistics;
 use App\Form\SearchStatisticsType;
 use App\Form\StatisticsUploadType;
 use App\Repository\StatisticRepository;

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Class\SearchSn;
-use App\Entity\Sn;
+use App\Entity\Main\Sn;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;

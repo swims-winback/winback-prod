@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\DeviceFamily;
-use App\Entity\Software;
+use App\Entity\Main\DeviceFamily;
+use App\Entity\Main\Software;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -3,9 +3,9 @@
 namespace App\Form;
 
 use App\Class\SearchError;
-use App\Entity\Device;
-use App\Entity\Error;
-use App\Entity\ErrorFamily;
+use App\Entity\Main\Device;
+use App\Entity\Main\Error;
+use App\Entity\Main\ErrorFamily;
 use App\Repository\DeviceRepository;
 use App\Repository\ErrorFamilyRepository;
 use App\Repository\ErrorRepository;

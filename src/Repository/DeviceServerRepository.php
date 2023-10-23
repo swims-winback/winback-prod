@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\DeviceServer;
+use App\Entity\Main\DeviceServer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,6 +39,7 @@ class DeviceServerRepository extends ServiceEntityRepository
         }
     }
 
+    
     public function findByDate($date)
     {
         return $this->createQueryBuilder('d')
@@ -47,7 +48,16 @@ class DeviceServerRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
-
+    /*
+    public function findByDate($date)
+    {
+        return $this->createQueryBuilder('d')
+        ->andWhere('d.date = :val')
+        ->setParameter('val', $date)
+        ->getQuery()
+        ->getResult();
+    }
+    */
 //    /**
 //     * @return DeviceServer[] Returns an array of DeviceServer objects
 //     */

@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Class\SearchData;
-use App\Entity\DeviceFamily;
-use App\Entity\Software;
+use App\Entity\Main\DeviceFamily;
+use App\Entity\Main\Software;
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
 use Doctrine\Persistence\ManagerRegistry;

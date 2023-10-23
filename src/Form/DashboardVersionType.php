@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Class\SearchVersion;
-use App\Entity\Device;
+use App\Entity\Main\Device;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

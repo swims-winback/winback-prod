@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Main;
 
 use App\Repository\SoftwareRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,7 +27,7 @@ class Software
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true, name:"`software_file`")]
     private $softwareFile;
 
 
@@ -56,7 +56,7 @@ class Software
 
     #[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'softwares')]
     //#[ORM\Column(type: 'string', length: 255)]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, name:"`device_family_id`")]
     private $deviceFamily;
 
     //#[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'softwares')]

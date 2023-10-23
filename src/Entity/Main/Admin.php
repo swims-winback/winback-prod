@@ -1,41 +1,42 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Main;
 
-use App\Repository\UserRepository;
+use App\Repository\AdminRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\Entity(repositoryClass: AdminRepository::class)]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 180)]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $username;
 
     #[ORM\Column(type: 'json')]
-    private $roles = ["ROLE_USER"];
+    private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $email;
 
-    #[ORM\Column(type: 'boolean')]
-    private $is_verified = false;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $firstname;
 
-    public function __toString(): string
-    {
-        return $this->username;
-    }
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $lastname;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function getId(): ?int
     {
@@ -52,6 +53,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
     }
 
     /**
@@ -71,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = "ROLE_USER";
+        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -119,14 +125,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getIsVerified(): ?bool
+    public function getFirstname(): ?string
     {
-        return $this->is_verified;
+        return $this->firstname;
     }
 
-    public function setIsVerified(bool $is_verified): self
+    public function setFirstname(string $firstname): self
     {
-        $this->is_verified = $is_verified;
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

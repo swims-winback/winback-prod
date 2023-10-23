@@ -2,12 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Statistic;
-use App\Entity\Statistics\StatisticAccessoires;
-use App\Entity\Statistics\StatisticPatho;
-use App\Entity\Statistics\StatisticPathoType;
-use App\Entity\Statistics\StatisticSn;
-use App\Entity\Statistics\StatisticZone;
+use App\Entity\Main\Statistic;
+use App\Entity\Main\Statistics\StatisticAccessoires;
+use App\Entity\Main\Statistics\StatisticPatho;
+use App\Entity\Main\Statistics\StatisticPathoType;
+use App\Entity\Main\Statistics\StatisticSn;
+use App\Entity\Main\Statistics\StatisticZone;
 use App\Repository\StatisticRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

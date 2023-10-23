@@ -18,7 +18,7 @@
   box-shadow: 0px 0px 0px 5px rgba(241, 135, 65, 0.6274509804);
 }
 :root .modal-content, [data-bs-theme=light] .modal-content {
-  max-width: 50em;
+  max-width: 70em;
 }
 :root .modal-btn, [data-bs-theme=light] .modal-btn {
   --bs-btn-color: #000000;
@@ -711,4 +711,8 @@ table.dataTable thead .sorting_desc_disabled:before {
 
 .registration-form .input-group div {
   width: 100%;
+}
+
+.protoChart {
+  min-width: 15em;
 }/*# sourceMappingURL=styles.css.map */

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\DeviceFamily;
+use App\Entity\Main\DeviceFamily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

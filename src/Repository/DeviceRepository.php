@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Class\SearchData;
-use App\Entity\Device;
+use App\Entity\Main\Device;
 use App\Server\DbRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;

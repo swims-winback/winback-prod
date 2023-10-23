@@ -1,42 +1,41 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Main;
 
-use App\Repository\AdminRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: AdminRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
-class Admin implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: 'string', length: 180)]
     private $username;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private $roles = ["ROLE_USER"];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $email;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $firstname;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $lastname;
-
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private $is_verified = false;
+
+    public function __toString(): string
+    {
+        return $this->username;
+    }
 
     public function getId(): ?int
     {
@@ -53,11 +52,6 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->username;
     }
 
     /**
@@ -77,7 +71,7 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = "ROLE_USER";
 
         return array_unique($roles);
     }
@@ -125,38 +119,14 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFirstname(): ?string
+    public function getIsVerified(): ?bool
     {
-        return $this->firstname;
+        return $this->is_verified;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setIsVerified(bool $is_verified): self
     {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): self
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
+        $this->is_verified = $is_verified;
 
         return $this;
     }

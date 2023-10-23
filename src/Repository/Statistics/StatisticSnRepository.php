@@ -2,7 +2,7 @@
 
 namespace App\Repository\Statistics;
 
-use App\Entity\Statistics\StatisticSn;
+use App\Entity\Main\Statistics\StatisticSn;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

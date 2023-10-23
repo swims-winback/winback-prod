@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-//use App\Entity\Admin;
-use App\Entity\Client;
-//use App\Entity\User;
+//use App\Entity\Main\Admin;
+use App\Entity\Main\Client;
+//use App\Entity\Main\User;
 use App\Form\Client\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;

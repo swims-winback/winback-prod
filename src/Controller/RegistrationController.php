@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Admin;
-use App\Entity\User;
+use App\Entity\Main\Admin;
+use App\Entity\Main\User;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/{_locale<%app.supported_locales%>}/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, ManagerRegistry $doctrine, MailerInterface $mailer): Response
     {
         //$user = new Admin();
         $user = new User();
@@ -46,9 +47,9 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $em = $doctrine->getManager();
+            $em->persist($user);
+            $em->flush();
 
             // generate a signed url and email it to the user
             

@@ -1,7 +1,7 @@
 <?php
 namespace App\Class;
 
-use App\Entity\DeviceFamily;
+use App\Entity\Main\DeviceFamily;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 

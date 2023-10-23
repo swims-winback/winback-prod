@@ -54,7 +54,7 @@ $hover-shadow-light : 0px 0px 20px 0px #0000007d;
     --box-shadow:  5px 5px 10px #5a5a5a, -5px -5px 10px #ffffff;
 
     .modal-content {
-        max-width: 50em;
+        max-width: 70em;
     }
     .modal-btn {
         --bs-btn-color: #000000;
@@ -808,4 +808,8 @@ background: #eee;
             width: 100%;
         }
     }
+}
+
+.protoChart {
+    min-width: 15em;
 }

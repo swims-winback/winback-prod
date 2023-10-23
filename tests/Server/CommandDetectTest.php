@@ -1,7 +1,7 @@
 <?php
 namespace App\Tests\Entity;
 
-use App\Entity\DeviceFamily;
+use App\Entity\Main\DeviceFamily;
 use App\Repository\DeviceFamilyRepository;
 use App\Server\CommandDetect;
 use App\Server\DataResponse;

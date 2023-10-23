@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Entity\Statistics;
+namespace App\Entity\Main\Statistics;
 
 use App\Repository\Statistics\StatisticZoneRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StatisticZoneRepository::class)]
+#[ORM\Table(name:"`statistic_zone`")]
 class StatisticZone
 {
     #[ORM\Id]

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Main;
 
 use App\Repository\DeviceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,26 +30,26 @@ class Device
     #[ORM\Column(type: 'string', nullable: true)]
     private $version;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', name:"`version_upload`")]
     private $versionUpload;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $forced = false;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, name:"`ip_addr`")]
     private $ipAddr;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name:"`log_pointeur`")]
     private $logPointeur;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $pub;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true, name:"`code_pin`")]
     private $codePin;
 
     #[ORM\ManyToOne(targetEntity: DeviceFamily::class, inversedBy: 'devices')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, name:"`device_family_id`")]
     private $deviceFamily;
 
     #[ORM\Column(type: 'boolean')]
@@ -68,17 +68,17 @@ class Device
     //#[ORM\OneToMany(mappedBy: 'sn', targetEntity: Statistics::class)]
     //private $statistics;
     
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', name:"`is_active`")]
     private $isActive = false;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true, name:"`device_file`")]
     private $deviceFile;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true, name:"`log_file`")]
     private $logFile;
 
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date', nullable: true, name:"`server_date`")]
     private $serverDate;
 
     #[ORM\ManyToMany(targetEntity: Software::class, inversedBy: 'devices')]

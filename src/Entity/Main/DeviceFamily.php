@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Main;
 
 use App\Repository\DeviceFamilyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DeviceFamilyRepository::class)]
+#[ORM\Table(name:"`device_family`")]
 class DeviceFamily
 {
     #[ORM\Id]
@@ -22,16 +23,16 @@ class DeviceFamily
     private $name;
 
 
-    #[ORM\Column(type: 'string', nullable: true, length: 255)]
+    #[ORM\Column(type: 'string', nullable: true, length: 255, name:"`therapy_type`")]
     private $therapyType;
 
     #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Device::class)]
     private $devices;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true, name:"`hexa_id`")]
     private $hexaId;
 
-    #[ORM\Column(type: 'integer', nullable: true, unique: true)]
+    #[ORM\Column(type: 'integer', nullable: true, unique: true, name:"`number_id`")]
     private $numberId;
 
     #[ORM\OneToMany(mappedBy: 'deviceFamily', targetEntity: Software::class, fetch:"EXTRA_LAZY", orphanRemoval:true)]
@@ -48,7 +49,7 @@ class DeviceFamily
 
     //TODO
     
-    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true, name:"`actual_version`")]
     private $actualVersion;
     
     /*

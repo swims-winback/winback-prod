@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Class\SearchData;
-use App\Entity\Device;
+use App\Entity\Main\Device;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
