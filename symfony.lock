@@ -120,8 +120,33 @@
     "guzzlehttp/psr7": {
         "version": "2.2.1"
     },
+    "hwi/oauth-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.6",
+            "ref": "18ce21f16066cccfa0803c9e846a2e4f4bec92ab"
+        },
+        "files": [
+            "./config/packages/hwi_oauth.yaml",
+            "./config/routes/hwi_oauth_routing.yaml"
+        ]
+    },
     "knplabs/knp-paginator-bundle": {
         "version": "v5.9.0"
+    },
+    "knpuniversity/oauth2-client-bundle": {
+        "version": "2.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.20",
+            "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
+        },
+        "files": [
+            "./config/packages/knpu_oauth2_client.yaml"
+        ]
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
@@ -277,18 +302,6 @@
     },
     "sebastian/version": {
         "version": "3.0.2"
-    },
-    "sensio/framework-extra-bundle": {
-        "version": "6.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "5.2",
-            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
-        },
-        "files": [
-            "config/packages/sensio_framework_extra.yaml"
-        ]
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.7",
@@ -511,9 +524,6 @@
         "version": "v1.25.0"
     },
     "symfony/polyfill-mbstring": {
-        "version": "v1.25.0"
-    },
-    "symfony/polyfill-php81": {
         "version": "v1.25.0"
     },
     "symfony/polyfill-uuid": {
