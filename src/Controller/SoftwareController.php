@@ -113,7 +113,7 @@ class SoftwareController extends AbstractController
                     if (str_ends_with($file, ".bin")) {
                         $fileArray = explode("v", $file);
                         $version = substr($fileArray[1], -11, 7);
-                        $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], ID);
+                        $deviceTypeId = $request->getDeviceType(deviceId[$deviceType], DEVICE_TYPE_ID);
                         $this->initSoftwareInDB($name=$file, $devType=$deviceTypeId, $version, $date=date("Y-m-d | H:i:s"), $request);
                     }
                 }
