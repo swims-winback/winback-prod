@@ -128,6 +128,8 @@ class SoftwareController extends AbstractController
     public function addSoftware(Request $request, DbRequest $dbRequest, ManagerRegistry $doctrine, FileUploader $fileUploader, DeviceFamilyRepository $deviceFamilyRepository, LoggerInterface $logger): Response
     {
         $software = new Software;
+        $user = $this->getUser();
+        $userRoles = $user->getRoles();
         $form = $this->createForm(SoftwareType::class, $software);
         $form->handleRequest($request);
 
@@ -138,28 +140,59 @@ class SoftwareController extends AbstractController
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
                 //$targetDirectory = $fileUploader->getTargetDirectory();
-                
-                $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
-                $softwareVersion = substr($fileName, -11, 7);
-                $pattern2 = '/-/i';
-                $softwareVersionModified = preg_replace($pattern2, '.', $softwareVersion);
-                $pattern3 = "/^0{1,2}/";
-                $pattern4 = "/\.0{1,2}/";
-                $softwareVersionModified2 = preg_replace($pattern3, '', $softwareVersionModified);
-                $softwareVersionModified3 = preg_replace($pattern4, '.', $softwareVersionModified2);
-                
-                $software->setDeviceFamily($family);
-                $software->setName($fileName);
-                $software->setSoftwareFile($fileName);
-                $software->setVersion($softwareVersionModified3);
-                
-                $user = $this->getUser();
-                $logger->info($user." has uploaded ".$fileName);
-                
-                $dbRequest->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"));
+                var_dump($family->getName());
+                var_dump($user->getRoles());
+                if ($userRoles[0]==="ROLE_GOE") {
+                    if ($family->getName()=="BACK3TE") {
+                        $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
+                        $softwareVersion = substr($fileName, -11, 7);
+                        $pattern2 = '/-/i';
+                        $softwareVersionModified = preg_replace($pattern2, '.', $softwareVersion);
+                        $pattern3 = "/^0{1,2}/";
+                        $pattern4 = "/\.0{1,2}/";
+                        $softwareVersionModified2 = preg_replace($pattern3, '', $softwareVersionModified);
+                        $softwareVersionModified3 = preg_replace($pattern4, '.', $softwareVersionModified2);
+                        
+                        $software->setDeviceFamily($family);
+                        $software->setName($fileName);
+                        $software->setSoftwareFile($fileName);
+                        $software->setVersion($softwareVersionModified3);
+                        
+                        $user = $this->getUser();
+                        $logger->info($user." has uploaded ".$fileName);
+                        
+                        $dbRequest->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"));
+                        $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
+                    }
+                    else {
+                        $this->addFlash('infoSoftware', 'Error: Software '.$fileName.' not added. Admin Role required.');
+                    }
+                }
+                else {
+
+                    $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
+                    $softwareVersion = substr($fileName, -11, 7);
+                    $pattern2 = '/-/i';
+                    $softwareVersionModified = preg_replace($pattern2, '.', $softwareVersion);
+                    $pattern3 = "/^0{1,2}/";
+                    $pattern4 = "/\.0{1,2}/";
+                    $softwareVersionModified2 = preg_replace($pattern3, '', $softwareVersionModified);
+                    $softwareVersionModified3 = preg_replace($pattern4, '.', $softwareVersionModified2);
+                    
+                    $software->setDeviceFamily($family);
+                    $software->setName($fileName);
+                    $software->setSoftwareFile($fileName);
+                    $software->setVersion($softwareVersionModified3);
+                    
+                    $user = $this->getUser();
+                    $logger->info($user." has uploaded ".$fileName);
+                    
+                    $dbRequest->updateSoftwareInDB($name=$fileName, $devType=$family->getId(), $version=$softwareVersionModified3, $date=date("Y-m-d | H:i:s"));
+                    $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
+                }
                 
             }
-            $this->addFlash('infoSoftware', 'Software '.$fileName.' added with success !');
+            
             return $this->redirectToRoute('software');
         }
         return $this->renderForm('software/add.html.twig', [
