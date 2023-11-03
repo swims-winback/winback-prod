@@ -46,8 +46,8 @@ if (!defined('SOFT_VERSION')) define("SOFT_VERSION", "version");
 if (!defined('SOFT_CREATED_AT')) define("SOFT_CREATED_AT", "created_at");
 
 /* Define Device Type properties */
-if (!defined('ID')) define('ID', 'id');
-if (!defined('NUMBER_ID')) define('NUMBER_ID', 'number_id');
+if (!defined('DEVICE_TYPE_ID')) define('DEVICE_TYPE_ID', 'id');
+if (!defined('DEVICE_TYPE_NB_ID')) define('DEVICE_TYPE_NB_ID', 'number_id');
 
 /* Define SN Table properties */
 if (!defined('SN_ID')) define('SN_ID', 'SN');

@@ -1,6 +1,9 @@
 <?php
 namespace App\Server;
 
+//use mysqli;
+//use PDO;
+
 /**
  * Define request methods to query & manage tables in database
  *
@@ -12,13 +15,39 @@ require_once dirname(__FILE__, 3).'/configServer/dbConfig.php';
 
 class DbRequest {
     
+//public ?mysqli $database = null;
     function __construct() {
     }
     
     /**
      * Connect to DB & return connexion
      * @return \mysqli|bool|string
-     */
+    */
+    /*
+    public function dbConnect(){
+        if ($this->database === null) {
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+            $this->database = mysqli_connect($_ENV['HOSTNAME'], $_ENV['ADMIN'], $_ENV['PWD'], $_ENV['DB'], $_ENV['DB_PORT']);
+            //var_dump($this->database);
+            if ($this->database -> connect_errno) {
+                echo "Failed to connect to MySQL: " . $this->database -> connect_error;
+                return "error";
+            }
+        }
+        return $this->database;
+    }
+    */
+    /*
+    public function dbConnect() {
+        if ($this->database === null) {
+            $dsn = 'mysql:dbname='.$_ENV['DB'].';host='.$_ENV['HOSTNAME'];
+            $user = $_ENV['ADMIN'];
+            $password = $_ENV['PWD'];
+            $this->database = new PDO($dsn, $user, $password);
+            return $this->database;
+        }
+    }
+    */
     public function dbConnect(){
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $connexion = mysqli_connect($_ENV['HOSTNAME'], $_ENV['ADMIN'], $_ENV['PWD'], $_ENV['DB'], $_ENV['DB_PORT']);
@@ -36,6 +65,14 @@ class DbRequest {
      * @param mixed $request
      * @return \mysqli_result|bool query result
      */
+    /*
+    function sendRq($request){
+        $this->database = $this->dbConnect();
+        $result = mysqli_query($this->database, $request);
+        //mysqli_close($this->database);
+        return $result;
+    }
+    */
     function sendRq($request){
         $connexion = $this->dbConnect();
         $result = mysqli_query($connexion, $request);
@@ -359,7 +396,7 @@ class DbRequest {
 
     function getDeviceType($id, $rowName)
     {
-        $whereCond = NUMBER_ID."='$id'";
+        $whereCond = DEVICE_TYPE_NB_ID."='$id'";
         $req = $this->select('*', DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
@@ -372,12 +409,12 @@ class DbRequest {
 
     function getDeviceTypeId($deviceType)
     {
-        $whereCond = NUMBER_ID."='$deviceType'";
-        $req = $this->select(ID, DEVICE_FAMILY_TABLE, $whereCond);
+        $whereCond = DEVICE_TYPE_NB_ID."='$deviceType'";
+        $req = $this->select(DEVICE_TYPE_ID, DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
-                return $row[ID];
+                return $row[DEVICE_TYPE_ID];
             }
         }
         return false;
@@ -391,7 +428,7 @@ class DbRequest {
      */
     function getDeviceTypeActualVers($deviceType)
     {
-        $whereCond = NUMBER_ID."='$deviceType'";
+        $whereCond = DEVICE_TYPE_NB_ID."='$deviceType'";
         $req = $this->select('actual_version', DEVICE_FAMILY_TABLE, $whereCond);
         $res = $this->sendRq($req);
         if($res != FALSE){
