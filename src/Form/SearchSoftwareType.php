@@ -34,6 +34,7 @@ class SearchSoftwareType extends AbstractType
                 $sn_array[$cat->getDeviceFamily()->getName()] = $cat->getDeviceFamily()->getName();
             }
         }
+        ksort($sn_array);
         return $sn_array;
     }
     public function buildForm(FormBuilderInterface $builder, array $options)
