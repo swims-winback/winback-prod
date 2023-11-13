@@ -140,8 +140,8 @@ class SoftwareController extends AbstractController
                 $deviceType = substr($fileName, 7, 2);
                 $family = $deviceFamilyRepository->findOneBy(array('numberId'=>$deviceType));
                 //$targetDirectory = $fileUploader->getTargetDirectory();
-                var_dump($family->getName());
-                var_dump($user->getRoles());
+                //var_dump($family->getName());
+                //var_dump($user->getRoles());
                 if ($userRoles[0]==="ROLE_GOE") {
                     if ($family->getName()=="BACK3TE") {
                         $originalFilename = $fileUploader->upload($softwareFile, "package/".$family->getName().'/');
@@ -195,7 +195,7 @@ class SoftwareController extends AbstractController
             
             return $this->redirectToRoute('software');
         }
-        return $this->renderForm('software/add.html.twig', [
+        return $this->render('software/add.html.twig', [
             'form' => $form,
         ]);
     }
@@ -220,7 +220,7 @@ class SoftwareController extends AbstractController
             return $this->redirectToRoute('software');
         }
 
-        return $this->renderForm('software/add.html.twig', [
+        return $this->render('software/add.html.twig', [
             'form' => $form,
             'software' => $software
         ]);

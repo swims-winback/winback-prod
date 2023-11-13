@@ -93,7 +93,7 @@ class StatisticsController extends AbstractController
      * @Route("/filterSn/{data}/", name="get_filter_sn")
      */
     public function getFilterSn($data) {
-        echo ($data);
+        //echo ($data);
         return $data;
     }
      //@Route("/filter/{category}/{element}/", name="get_filter")
@@ -142,11 +142,11 @@ class StatisticsController extends AbstractController
             $tool_filter = null;
         }
 
-        echo("\r\nsn: ".$sn_filter);
-        echo ("\r\npatho type: ".$type_patho_filter);
-        echo ("\r\nzone: ".$zone_filter);
-        echo ("\r\npatho: ".$patho_filter);
-        echo ("\r\ntool: ".$tool_filter);
+        //echo("\r\nsn: ".$sn_filter);
+        //echo ("\r\npatho type: ".$type_patho_filter);
+        //echo ("\r\nzone: ".$zone_filter);
+        //echo ("\r\npatho: ".$patho_filter);
+        //echo ("\r\ntool: ".$tool_filter);
 
         /* Get treatments number by sn */
         $deviceArray = $statisticRepository->findAllDevice($sn_filter, $type_patho_filter, $zone_filter, $patho_filter, $tool_filter);
@@ -222,7 +222,7 @@ class StatisticsController extends AbstractController
 
 
         //return $this->json('statistics registered', 200);
-        return $this->renderForm('statistics.html.twig', [
+        return $this->render('statistics.html.twig', [
             'form' => $form,
         ]); 
     }
