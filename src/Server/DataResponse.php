@@ -167,30 +167,51 @@ class DataResponse extends Utils
         }
 	}
     
-    function getProtocolDirectoryData($path, $device, $config){
-        $pathProto = $_ENV['PROTO_PATH'] . $device . $config.'/' . 'WB/' . $path;
-        if (file_exists($pathProto)) {
-            //echo "\r\n".$pathProto."\r\n";
-            $listFiles = scandir($pathProto);
-            $listFiles = array_slice($listFiles, 0, 102);
-            $directoryListString='';
-            for($i=0;$i<count($listFiles);$i++)if($listFiles[$i][0]!='.'){
-                if(strpos($listFiles[$i],'.')){
-                    $handle = fopen($pathProto.$listFiles[$i], 'rb');
-                    if($handle){
-                        $contents=fread($handle, 9);
-                        fclose($handle);
-                        $version=hexdec(bin2hex($contents[7]));
-                        $revision=hexdec(bin2hex($contents[8]));
-                        $directoryListString.=$listFiles[$i].','.((intval($version/100))%10).((intval($version/10))%10).($version%10).((intval($revision/100))%10).((intval($revision/10))%10).($revision%10).'|';
-                    }
-                }else $directoryListString.=$listFiles[$i].'|';
+    /**
+     * Summary of getProtocolDirectoryData
+     * @param mixed $path
+     * @param mixed $device
+     * @param mixed $config
+     * @param mixed $subtype sub device type present in the serial number in the form of B4, EM or NE
+     * @return string
+     */
+    function getProtocolDirectoryData($path, $device, $config, $subtype){
+        echo "Subtype :".$subtype;
+        if ($subtype == "B4") {
+            $subtype = "WB"; //Winback device
+        }
+        $pathProto = $_ENV['PROTO_PATH'] . $device . $config.'/' . $subtype . '/' . $path;
+        if ($subtype == "B4" or $subtype == "NE" or $subtype == "EM") {
+            if (file_exists($pathProto)) {
+                //echo "\r\n".$pathProto."\r\n";
+                $listFiles = scandir($pathProto);
+                $listFiles = array_slice($listFiles, 0, 102);
+                $directoryListString='';
+                for($i=0;$i<count($listFiles);$i++)if($listFiles[$i][0]!='.'){
+                    if(strpos($listFiles[$i],'.')){
+                        $handle = fopen($pathProto.$listFiles[$i], 'rb');
+                        if($handle){
+                            $contents=fread($handle, 9);
+                            fclose($handle);
+                            $version=hexdec(bin2hex($contents[7]));
+                            $revision=hexdec(bin2hex($contents[8]));
+                            $directoryListString.=$listFiles[$i].','.((intval($version/100))%10).((intval($version/10))%10).($version%10).((intval($revision/100))%10).((intval($revision/10))%10).($revision%10).'|';
+                        }
+                    }else $directoryListString.=$listFiles[$i].'|';
+                }
+                $dataSize=strlen($directoryListString);
+                $this->header[4]=chr(intval($dataSize/256));
+                $this->header[5]=chr($dataSize%256);
+                $Response = $this->header.$directoryListString;
+                return $Response;
             }
-            $dataSize=strlen($directoryListString);
-            $this->header[4]=chr(intval($dataSize/256));
-            $this->header[5]=chr($dataSize%256);
-            $Response = $this->header.$directoryListString;
-            return $Response;
+            else {
+                $directoryListString = false;
+                $this->header[4]=chr(0);
+                $this->header[5]=chr(0);
+                $Response = $this->header.$directoryListString;
+                return $Response;
+            }
         }
         else {
             $directoryListString = false;
@@ -214,7 +235,7 @@ class DataResponse extends Utils
 			mkdir($path, 0777, true);
 		}
 		$logFile = trim($sn).".txt";
-        if (file_exists($path.$logFile) && filesize($path.$logFile) < 1000000000) {
+        if (file_exists($path.$logFile) && filesize($path.$logFile) < 1000000) {
             $fd = fopen($_ENV['LOG_PATH']."command/".deviceType[$deviceType].$logFile, "a+");
             if($fd){
                 fwrite($fd, $logTxt);
@@ -525,9 +546,13 @@ class DataResponse extends Utils
         $path = $_ENV['LOG_PATH'].deviceTypeArray[$deviceType].trim($sn).".txt";
         if(file_exists($path)){
             $newPointeur = filesize($path);
+            //echo "\r\nPointeur before: ".$newPointeur."\r\n";
+            /*
             if (($newPointeur%10000000)>= 9999458) {
                 $newPointeur+=(10000000-($newPointeur%10000000));
+            echo "\r\nPointeur after: ".$newPointeur."\r\n";
             }
+            */
         }
         else {
             $newPointeur = 0;
