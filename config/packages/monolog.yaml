@@ -96,7 +96,7 @@ when@prod:
             server:
                 type: rotating_file
                 level: warning
-                path: var/log/dev/server/.log
+                path: var/log/prod/server/.log
                 buffer_size: 50
                 max_files: 10
                 channels: ["console"]
