@@ -34,6 +34,9 @@ if (!defined('UPDATE_COMMENT')) define('UPDATE_COMMENT', 'update_comment');
 if (!defined('COUNTRY')) define('COUNTRY', 'country');
 if (!defined('CITY')) define('CITY', 'city');
 if (!defined('SERVER_ID')) define('SERVER_ID', 'server_id');
+if (!defined('DEVICE_CONFIG')) define('DEVICE_CONFIG', 'config'); // config down
+if (!defined('CONFIG_UP')) define('CONFIG_UP', 'config_up'); // config up
+if (!defined('CONFIG_ID')) define('CONFIG_ID', 'config_id'); // boolean to change config
 /* Define User Table properties */
 
 if (!defined('LOGIN')) define('LOGIN', 'username');

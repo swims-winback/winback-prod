@@ -128,6 +128,60 @@ class DbRequest {
         $res = $this->sendRq($req);
     }
 
+    function setConfigUp($sn, $index){
+        $where = SN."='".$sn."'";
+        $req = $this->update(CONFIG_UP, $index, DEVICE_TABLE, $where);
+        $res = $this->sendRq($req);
+    }
+
+    function setConfigDown($sn, $index){
+        $where = SN."='".$sn."'";
+        $req = $this->update(DEVICE_CONFIG, $index, DEVICE_TABLE, $where);
+        $res = $this->sendRq($req);
+    }
+
+    function setConfigId($sn, $index){
+        $where = SN."='".$sn."'";
+        $req = $this->update(CONFIG_ID, $index, DEVICE_TABLE, $where);
+        $res = $this->sendRq($req);
+    }
+
+    function getConfigId($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select(CONFIG_ID, DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row[CONFIG_ID];
+            }
+        }
+        return 0;
+    }
+
+    function getConfigUp($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select(CONFIG_UP, DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row[CONFIG_UP];
+            }
+        }
+        return 0;
+    }
+
+    function getConfigDown($sn){
+        $whereCondition = SN."='".$sn."'";
+        $req = $this->select(DEVICE_CONFIG, DEVICE_TABLE,$whereCondition);
+        $res = $this->sendRq($req);
+        if($res != FALSE){
+            if($row = mysqli_fetch_assoc($res)){
+                return $row[DEVICE_CONFIG];
+            }
+        }
+        return 0;
+    }
+
     /**
      * init Device request In Device Table
      * @param string $sn
@@ -198,9 +252,40 @@ class DbRequest {
      * @param int $devType
      * @param string $ipAddr
      * @param string $logFile
+     * @param string $deviceConfig
      * @return array|bool|null $deviceInfo - row of all columns
      */
-    
+    /*
+    function setDeviceInfo(string $sn, string $vers, int $devType, string $ipAddr, string $logFile, $deviceConfig)
+    {
+        $utils = new Utils();
+        $whereCond = SN." = '".$sn."'";
+        $geography = $this->getLocationInfoByIp($ipAddr); //get location by ip
+        $geography["country"] = $utils->clean($geography["country"]);
+        $geography["city"] = $utils->clean($geography["city"]);
+        // treat punctuation in name
+        $req = $this->select('*', DEVICE_TABLE, $whereCond);
+        if($res = $this->sendRq($req)){
+            if($row = mysqli_fetch_assoc($res)){
+                $req = "UPDATE ".DEVICE_TABLE." SET ".DEVICE_VERSION." = '".$vers."',".IS_CONNECT." = 1,".LOG_FILE." = '".$logFile."',".DOWNLOAD." = 0,".UPDATED_AT." = '".date('Y-m-d | H:i:s')."',".IP_ADDR." = '".$ipAddr."',".COUNTRY." = '".$geography['country']."',".CITY." = '".$geography['city']."',".DEVICE_CONFIG." = '".$deviceConfig."'";
+                if(!empty($whereCond)){
+                    $req .= " WHERE ".$whereCond;
+                }
+                $res = $this->sendRq($req);
+                return $row;
+            }else{
+                $res = $this->initDeviceInDB($sn, $vers, $devType, $ipAddr, $logFile, $deviceConfig);
+                $res2 = $this->sendRq($req);
+                if($row = mysqli_fetch_assoc($res2)){
+                    return $row;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    */
     function setDeviceInfo(string $sn, string $vers, int $devType, string $ipAddr, string $logFile)
     {
         $utils = new Utils();
@@ -230,7 +315,6 @@ class DbRequest {
             return false;
         }
     }
-
 
     /**
      * Insert Device to SN Table if not exists yet

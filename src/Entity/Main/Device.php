@@ -120,6 +120,9 @@ class Device
     #[ORM\Column(length: 255)]
     private ?string $server_port = null;
 
+    #[ORM\Column]
+    private ?int $config = 0;
+
     public function __construct()
     {
         $this->versionUpload = new ArrayCollection();
@@ -556,6 +559,18 @@ class Device
     public function setServerPort(string $server_port): self
     {
         $this->server_port = $server_port;
+
+        return $this;
+    }
+
+    public function getConfig(): ?bool
+    {
+        return $this->config;
+    }
+
+    public function setConfig(bool $config): self
+    {
+        $this->config = $config;
 
         return $this;
     }

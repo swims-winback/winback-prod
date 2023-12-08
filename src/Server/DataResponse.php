@@ -98,7 +98,7 @@ class DataResponse extends Utils
     }
 
     /**
-     * Summary of setHeader
+     * Header of 6 bytes
      * @param int $cmd
      * @param int $reqId
      * @param int $dataSize
@@ -176,14 +176,10 @@ class DataResponse extends Utils
      * @return string
      */
     function getProtocolDirectoryData($path, $device, $config, $subtype){
-        echo "Subtype :".$subtype;
-        if ($subtype == "B4") {
-            $subtype = "WB"; //Winback device
-        }
-        $pathProto = $_ENV['PROTO_PATH'] . $device . $config.'/' . $subtype . '/' . $path;
-        if ($subtype == "B4" or $subtype == "NE" or $subtype == "EM") {
+            $pathProto = $_ENV['PROTO_PATH'] . $device . $config.'/' . $subtype . '/' . $path;
             if (file_exists($pathProto)) {
-                //echo "\r\n".$pathProto."\r\n";
+                echo "\r\n".$pathProto."\r\n";
+                echo "\r\nsubtype :" . $subtype."\r\n";
                 $listFiles = scandir($pathProto);
                 $listFiles = array_slice($listFiles, 0, 102);
                 $directoryListString='';
@@ -199,6 +195,7 @@ class DataResponse extends Utils
                         }
                     }else $directoryListString.=$listFiles[$i].'|';
                 }
+                echo "\r\ndirectory liststring: " . $directoryListString."\r\n";
                 $dataSize=strlen($directoryListString);
                 $this->header[4]=chr(intval($dataSize/256));
                 $this->header[5]=chr($dataSize%256);
@@ -206,20 +203,15 @@ class DataResponse extends Utils
                 return $Response;
             }
             else {
+                echo "\r\n".$pathProto."\r\n";
+                echo "\r\nsubtype :" . $subtype."\r\n";
                 $directoryListString = false;
                 $this->header[4]=chr(0);
                 $this->header[5]=chr(0);
                 $Response = $this->header.$directoryListString;
+                echo "false CC: " . bin2hex($Response);
                 return $Response;
             }
-        }
-        else {
-            $directoryListString = false;
-            $this->header[4]=chr(0);
-            $this->header[5]=chr(0);
-            $Response = $this->header.$directoryListString;
-            return $Response;
-        }
 	}
 
     /**
@@ -335,12 +327,21 @@ class DataResponse extends Utils
      * @return string
      */
     function getFile4096Bytes($directoryPath, $fromIndex = 0, $size = 0){
-		$contents = file_get_contents($directoryPath);
-		$Response = $this->header.substr($contents, $fromIndex, $size);
-		for($aInit = strlen($Response); $aInit < ($size+6); $aInit++){
-            $Response[$aInit] = chr(255);
+        if (file_exists($directoryPath)) {
+            $contents = file_get_contents($directoryPath);
+            $Response = $this->header.substr($contents, $fromIndex, $size);
+            for($aInit = strlen($Response); $aInit < ($size+6); $aInit++){
+                $Response[$aInit] = chr(255);
+            }
+            echo "\r\nResponse: " . bin2hex($Response) . "\r\n";
+            return $Response;
         }
-        return $Response;
+        else {
+            $Response = $this->header;
+            //$Response = $this->header;
+            echo "\r\nResponse: " . bin2hex($Response) . "\r\n";
+            return $Response;
+        }
 	}
 
     /**
@@ -490,7 +491,8 @@ class DataResponse extends Utils
             $preResponse = str_repeat(chr(0), $sub);
             $response = $preResponse . $response;
         }
-        //echo "\r\n".bin2hex($response)."\r\n";
+        //echo "\r\nresponse".$response."\r\n";
+        echo "\r\nresponse to byte".bin2hex($response)."\r\n";
         return $response;
     }
 
