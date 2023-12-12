@@ -93,12 +93,6 @@ class SnController extends AbstractController
         ]);
         
         $chart->setOptions([
-            'scales' => [
-                'y' => [
-                    'suggestedMin' => 0,
-                    'suggestedMax' => 100,
-                ],
-            ],
             'plugins'=> [
                 'title'=> [
                     'display'=> true,

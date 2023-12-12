@@ -30,6 +30,9 @@ class Sn
     //#[ORM\Column(name: 'Date', type: "datetime", nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    //#[ORM\Column(name: 'Date', type: "datetime", nullable: true)]
+    private ?string $creation_date = null;
     /*
     #[ORM\ManyToOne(inversedBy: 'serial_number')]
     private ?Client $client = null;
@@ -101,6 +104,17 @@ class Sn
         return $this;
     }
 
+    public function getCreationDate(): ?string
+    {
+        return $this->creation_date;
+    }
+
+    public function setCreationDate(?string $creation_date): self
+    {
+        $this->creation_date = $creation_date;
+
+        return $this;
+    }
     /*
     public function getClient(): ?Client
     {
