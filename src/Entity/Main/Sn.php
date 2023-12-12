@@ -14,15 +14,21 @@ class Sn
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $SN = null;
+    #[ORM\Column(length: 255, name:"`SN`")]
+    private ?string $sn = null;
+
+    #[ORM\Column(length: 255, nullable: true, name:"`Device`")]
+    private ?string $device = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Device = null;
+    private ?string $subtype = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $country = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true, name:"`Date`")]
     //#[ORM\Column(name: 'Date', type: "datetime", nullable: true)]
-    private ?\DateTimeInterface $Date = null;
+    private ?\DateTimeInterface $date = null;
 
     /*
     #[ORM\ManyToOne(inversedBy: 'serial_number')]
@@ -35,38 +41,62 @@ class Sn
         return $this->id;
     }
 
-    public function getSN(): ?string
+    public function getSn(): ?string
     {
-        return $this->SN;
+        return $this->sn;
     }
 
-    public function setSN(string $SN): self
+    public function setSn(string $sn): self
     {
-        $this->SN = $SN;
+        $this->sn = $sn;
 
         return $this;
     }
     
     public function getDevice(): ?string
     {
-        return $this->Device;
+        return $this->device;
     }
 
-    public function setDevice(?string $Device): self
+    public function setDevice(?string $device): self
     {
-        $this->Device = $Device;
+        $this->device = $device;
+
+        return $this;
+    }
+
+    public function getSubtype(): ?string
+    {
+        return $this->subtype;
+    }
+
+    public function setSubtype(?string $subtype): self
+    {
+        $this->subtype = $subtype;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }
     
     public function getDate(): ?\DateTimeInterface
     {
-        return $this->Date;
+        return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $Date): self
+    public function setDate(?\DateTimeInterface $date): self
     {
-        $this->Date = $Date;
+        $this->date = $date;
 
         return $this;
     }

@@ -22,13 +22,14 @@
                                         <th scope="col" class="h-100 p-0">
                                             <div class="h-100 d-flex justify-content-between input-group flex-nowrap text-center align-items-center ps-2">
                                                 <div class="w-100">Serial Number</div>
-                                                <span class="btn btn-light text-dark h-100 p-1" style="border-radius: 0;" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center" id="snSort" onclick=sortTable(1)></i></span>
+                                                <span class="btn h-100 p-1" style="border-radius: 0;" type="button"><i class="h-100 fa-solid fa-arrow-up-a-z d-flex align-items-center icon-interactive" id="snSort" onclick=sortTable(1)></i></span>
                                             </div>
                                         
                                         </th>
                                         <th scope="col" class="text-center">Device Type</th>
+                                        <th class="text-center">Device Subtype</th>
                                         <th scope="col" class="text-center">Date</th>
-                                        
+                                        <th class="text-center">Country</th>
                                     </tr>
                                 </thead>
                                 
@@ -37,9 +38,11 @@
                                     {% for item in sn %}
                                         
                                         <tr scope="row" class="w-100">
-                                            <td class="text-center text-nowrap">{{item.SN}}</td>
-                                            <td class="text-center">{{item.Device}}</td>
-                                            <td class="text-center">{{item.Date|format_datetime('short', 'none', locale='fr')}}</td>
+                                            <td class="text-center text-nowrap">{{item.sn}}</td>
+                                            <td class="text-center">{{item.device}}</td>
+                                            <td class="text-center">{{item.subtype}}</td>
+                                            <td class="text-center">{{item.date|format_datetime('short', 'none', locale='fr')}}</td>
+                                            <td class="text-center">{{item.country}}</td>
                                         </tr>
                                         
 
@@ -71,11 +74,11 @@
 
             </div>
             <!-- ===== /SN TABLE ===== -->
-
         </div>
     </div>
 {% endblock %}
 
+{#
 {% block javascripts %}
     
     <script>
@@ -125,3 +128,4 @@
     }
     </script>
 {% endblock %}
+#}

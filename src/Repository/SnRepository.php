@@ -66,7 +66,7 @@ class SnRepository extends ServiceEntityRepository
     public function findMinMax(SearchSn $search): array
     {
         $results = $this->getSearchQuery($search, true)
-            ->select('MIN(d.Date) as min', 'MAX(d.Date) as max')
+            ->select('MIN(d.date) as min', 'MAX(d.date) as max')
             ->getQuery()
             ->getScalarResult();
         return [(int)$results[0]['min'], (int)$results[0]['max']];
@@ -83,24 +83,70 @@ class SnRepository extends ServiceEntityRepository
 
         if (!empty($search->q)) {
             $query = $query
-                ->andWhere('d.SN LIKE :q or d.Device LIKE :q')
+                ->andWhere('d.sn LIKE :q or d.device LIKE :q')
                 ->setParameter('q', "%{$search->q}%");
         }
         
         if (!empty($search->min)) {
             $query = $query
-                ->andWhere('d.Date >= :min')
+                ->andWhere('d.date >= :min')
                 ->setParameter('min', $search->min);
         }
 
         if (!empty($search->max)) {
             $query = $query
-                ->andWhere('d.Date <= :max')
+                ->andWhere('d.date <= :max')
                 ->setParameter('max', $search->max);
         }
 
         return $query;
       }
+
+      public function findAllSubType()
+      {
+          return $this->createQueryBuilder('s')
+          ->select('s.subtype')
+          ->distinct()
+          ->getQuery()
+          ->getResult();
+      }
+
+      public function findAllDeviceType($subtype)
+      {
+          return $this->createQueryBuilder('s')
+          ->select('s.device')
+          ->andWhere('s.subtype = :sub')
+          ->setParameter('sub', $subtype)
+          ->distinct()
+          ->getQuery()
+          ->getResult();
+      }
+
+      public function findBySubType($value): array
+      {
+          return $this->createQueryBuilder('s')
+              ->andWhere('s.subtype = :val')
+              ->setParameter('val', $value)
+              //->orderBy('s.id', 'ASC')
+              //->setMaxResults(10)
+              ->getQuery()
+              ->getResult()
+          ;
+      }
+        public function findByDeviceType($value, $subtype): array
+        {
+            return $this->createQueryBuilder('s')
+                ->andWhere('s.device = :val')
+                ->setParameter('val', $value)
+                ->andWhere('s.subtype = :sub')
+                ->setParameter('sub', $subtype)
+                //->orderBy('s.id', 'ASC')
+                //->setMaxResults(10)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+      
 //    /**
 //     * @return Sn[] Returns an array of Sn objects
 //     */
