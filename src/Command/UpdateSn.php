@@ -3,6 +3,7 @@
 namespace App\Command;
 // ...
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,7 +15,9 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 class UpdateSn extends Command
 {
-    protected static $defaultName = "app:updateSn";
+    #[AsCommand(
+        name: "app:updateSn",
+     )]
     protected function configure()
     {
         $this
