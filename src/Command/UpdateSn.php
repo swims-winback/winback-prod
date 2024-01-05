@@ -1,18 +1,14 @@
 <?php
 
 namespace App\Command;
-// ...
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Completion\CompletionInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 class UpdateSn extends Command
 {
     #[AsCommand(
@@ -20,17 +16,13 @@ class UpdateSn extends Command
      )]
     protected function configure()
     {
-        $this
-        //->addArgument('filename', InputArgument::REQUIRED, 'Enter your filename (ex: PRODUCT_SELLING_2023) : ')
-        //->addArgument('month', InputArgument::REQUIRED, 'Enter the 3 first letters of month (ex: DEC) : ')
+        //...
     ;
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     { 
-        //$pathToHelloWorldScript = "./src/Process/helloworld.sh";
         $pathToPython = "./src/Process/UpdateSn.py";
         $pathToJson = "./src/Process/academy.json";
-        //$filename = $input->getArgument('filename');
 
         $helper = $this->getHelper('question');
         #fileQuestion
