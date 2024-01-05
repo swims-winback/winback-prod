@@ -608,22 +608,22 @@ table.dataTable thead .sorting_desc_disabled:before {
   box-shadow: 0px 0px 35px 0px rgba(255, 82, 36, 0.3058823529);
 }
 
-.log_percentage_cet_deep {
+.log_percentage_CET {
   background-color: rgba(254, 140, 34, 0.8);
   box-shadow: 0px 0px 35px 0px rgba(254, 141, 34, 0.3058823529);
 }
 
-.log_percentage_ret {
+.log_percentage_RET {
   background-color: #391fff;
   box-shadow: 0px 0px 35px 0px rgba(58, 31, 255, 0.3058823529);
 }
 
-.log_percentage_hi {
+.log_percentage_HI-TENS {
   background-color: rgba(0, 255, 247, 0.6352941176);
   box-shadow: 0px 0px 35px 0px rgba(0, 255, 248, 0.3058823529);
 }
 
-.log_percentage_ems {
+.log_percentage_HI-EMS {
   background-color: rgba(110, 176, 255, 0.6352941176);
   box-shadow: 0px 0px 35px 0px rgba(110, 176, 255, 0.3058823529);
 }
