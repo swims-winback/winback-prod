@@ -20,4 +20,6 @@ This will create a new server and connect with devices.
 If the server starts correctly, it prints server connexion information, device information and commands received.
 
 ### Start Interface:
-Open a terminal and run command: ```symfony console start:server```
+Open a terminal and run command: ```symfony start:server```
+With specific port:
+```symfony server:start --port=8080```
