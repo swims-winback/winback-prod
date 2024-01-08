@@ -5,6 +5,8 @@ import gspread as gs
 import os
 from dotenv import load_dotenv
 import sys
+from ConnectDb import create_db_connection
+from GetDate import GetDate
 
 class UpdateSn():
     """
@@ -102,7 +104,7 @@ class UpdateSn():
         except Error as err:
             print(f"Error: '{err}'")
     
-    def main(self, filename, month, pathToJson):
+    def main(self, filename, month, pathToJson, connection):
         products_list = self.importData(filename, month, pathToJson)
         sql = '''
         INSERT INTO sn (SN, Device, Date, country, subtype) 
@@ -113,11 +115,8 @@ class UpdateSn():
         country = VALUES(country),
         subtype = VALUES(subtype);
         '''
-        host = os.getenv('HOSTNAME')
-        admin = os.getenv('ADMIN')
-        pwd = os.getenv('PWD')
-        db = os.getenv('DB')
-        connection = self.create_db_connection(host, admin, pwd, db)
+
+        #connection = create_db_connection(host, admin, pwd, db)
         self.execute_list_query(connection, sql, products_list)
 
 if __name__ == "__main__":
@@ -125,4 +124,7 @@ if __name__ == "__main__":
     filename = sys.argv[2]
     month = sys.argv[3]
     pathToJson = sys.argv[1]
-    updateSn.main(filename, month, pathToJson)
+    connection = create_db_connection()
+    updateSn.main(filename, month, pathToJson, connection)
+    getDate = GetDate(connection)
+    getDate.main(connection)
