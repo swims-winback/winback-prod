@@ -33,6 +33,9 @@ class Sn
     #[ORM\Column(length: 255, nullable: true)]
     //#[ORM\Column(name: 'Date', type: "datetime", nullable: true)]
     private ?string $creation_date = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $client_code;
     /*
     #[ORM\ManyToOne(inversedBy: 'serial_number')]
     private ?Client $client = null;
@@ -128,4 +131,15 @@ class Sn
         return $this;
     }
     */
+    public function getClientCode(): ?string
+    {
+        return $this->client_code;
+    }
+
+    public function setClient(?string $client_code): self
+    {
+        $this->client_code = $client_code;
+
+        return $this;
+    }
 }
