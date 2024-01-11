@@ -6,6 +6,7 @@ use App\Class\SearchSn;
 use App\Form\SearchSnType;
 use App\Repository\SnRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -126,5 +127,41 @@ class SnController extends AbstractController
         
         return $deviceCountArray;
         //return $devicesFamily;
+    }
+
+    #[Route('/sn_check', name: 'sn_check')]
+    public function snCheck(SnRepository $snRepository): JsonResponse
+    {
+        $devices = $snRepository->findAll();
+        $data = [];
+
+        foreach ($devices as $device) {
+            $data[] = [
+                'Serial Number' => $device->getSn(),
+                'Device Type' => $device->getDevice(),
+                'Main Type' => $device->getSubtype(),
+                'Country' => $device->getCountry(),
+                'Creation Date' => $device->getCreationDate(),
+                'Code Client' => $device->getClientCode()
+            ];
+        }
+        return $this->json($data);
+    }
+
+    #[Route('/sn_check/{sn}', name: 'sn_check')]
+    public function snCheckOne(SnRepository $snRepository, $sn): JsonResponse
+    {
+        $device = $snRepository->findOneBy(["sn"=>$sn]);
+        $data = [];
+
+        $data[] = [
+            'Serial Number' => $device->getSn(),
+            'Device Type' => $device->getDevice(),
+            'Main Type' => $device->getSubtype(),
+            'Country' => $device->getCountry(),
+            'Creation Date' => $device->getCreationDate(),
+            'Code Client' => $device->getClientCode()
+        ];
+        return $this->json($data);
     }
 }
