@@ -137,30 +137,30 @@ class SnController extends AbstractController
 
         foreach ($devices as $device) {
             $data[] = [
-                'Serial Number' => $device->getSn(),
-                'Device Type' => $device->getDevice(),
-                'Main Type' => $device->getSubtype(),
-                'Country' => $device->getCountry(),
-                'Creation Date' => $device->getCreationDate(),
-                'Code Client' => $device->getClientCode()
+                'serial_number' => $device->getSn(),
+                'device_type' => $device->getDevice(),
+                'main_type' => $device->getSubtype(),
+                'country' => $device->getCountry(),
+                'creation_date' => $device->getCreationDate(),
+                'code_client' => $device->getClientCode()
             ];
         }
         return $this->json($data);
     }
 
-    #[Route('/sn_check/{sn}', name: 'sn_check')]
+    #[Route('/sn_check/{sn}', name: 'sn_check_{sn}')]
     public function snCheckOne(SnRepository $snRepository, $sn): JsonResponse
     {
         $device = $snRepository->findOneBy(["sn"=>$sn]);
         $data = [];
 
         $data[] = [
-            'Serial Number' => $device->getSn(),
-            'Device Type' => $device->getDevice(),
-            'Main Type' => $device->getSubtype(),
-            'Country' => $device->getCountry(),
-            'Creation Date' => $device->getCreationDate(),
-            'Code Client' => $device->getClientCode()
+            'serial_number' => $device->getSn(),
+            'device_type' => $device->getDevice(),
+            'main_type' => $device->getSubtype(),
+            'country' => $device->getCountry(),
+            'creation_date' => $device->getCreationDate(),
+            'code_client' => $device->getClientCode()
         ];
         return $this->json($data);
     }
