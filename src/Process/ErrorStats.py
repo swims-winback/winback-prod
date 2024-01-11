@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from os.path import exists
 import mysql.connector
 from mysql.connector import Error
+from ConnectDb import create_db_connection
 
 # plotly
 import plotly.figure_factory as ff
@@ -14,6 +15,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 class GetError():
+        
     def compareVersion(self, version, version_test):
         version_split = version.split(".")
         prefix = int(version_split[0])
@@ -77,20 +79,6 @@ class GetError():
         df_error_log['date'] = pd.to_datetime(df_error_log['date'], dayfirst=True, format='%d_%m_%y %H:%M:%S')
         df_error_log['date'] = df_error_log['date'].astype(str)
         return df_error_log
-    
-    def connect(self, host_name, user_name, password, db_name):
-        connection = None
-        try:
-            connection = mysql.connector.connect(
-                host = host_name,
-                user = user_name,
-                password = password,
-                database = db_name
-            )
-            print("MySQL Database connection successful")
-        except Error as err:
-            print(f"Error: '{err}'")
-        return connection
     
     def execute_list_query(self, connection, sql, val):
         cursor = connection.cursor()
@@ -158,8 +146,8 @@ class GetError():
         df_result = pd.DataFrame(result_array)
         return df_result
 
-    def main(self, deviceType):
-        file_path = os.getcwd()
+    def main(self, deviceType, connection, file_path):
+        #file_path = os.getcwd()
         file_path_dir = file_path+'/public/Ressource/logs'
         error_log = self.toDataframe(deviceType, file_path_dir)
         error_count = self.countValue(error_log)
@@ -173,7 +161,7 @@ class GetError():
 
         # toSql
         values_to_insert = error_log.values.tolist()
-        connection = self.connect('localhost', 'root', '', 'winback_dev')
+        #connection = self.connect('localhost', 'root', '', 'winback_dev')
         sql_result = self.writeSql(error_log, "error")
         for group in self.chunker(values_to_insert, 10):
             try:
@@ -184,5 +172,8 @@ class GetError():
 
 if __name__ == "__main__":
     getError = GetError()
-    deviceType = "BACK4"
-    getError.main(deviceType)
+    connection = create_db_connection()
+    #deviceType = "BACK4"
+    deviceType = sys.argv[1]
+    file_path = os.getenv('ROOT_ABS')
+    getError.main(deviceType, connection, file_path)

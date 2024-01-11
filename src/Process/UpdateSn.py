@@ -60,33 +60,6 @@ class UpdateSn():
         df_academy['SUBTYPE'][df_academy['DEVICE']=="GMOVE SUIT"] = "PRESSO"
         products_list = df_academy.values.tolist()
         return products_list
-
-
-    def create_db_connection(self, host_name, user_name, user_password, db_name):
-        """CONNECTION
-
-        Args:
-            host_name (_type_): _description_
-            user_name (_type_): _description_
-            user_password (_type_): _description_
-            db_name (_type_): _description_
-
-        Returns:
-            _type_: _description_
-        """
-        connection = None
-        try:
-            connection = mysql.connector.connect(
-                host=host_name,
-                user=user_name,
-                passwd=user_password,
-                database=db_name
-            )
-            print("MySQL Database connection successful")
-        except Error as err:
-            print(f"Error: '{err}'")
-
-        return connection
     
     def execute_list_query(self, connection, sql, val):
         """INSERTION
