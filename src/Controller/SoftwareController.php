@@ -155,7 +155,6 @@ class SoftwareController extends AbstractController
                         
                         $software->setDeviceFamily($family);
                         $software->setName($fileName);
-                        $software->setSoftwareFile($fileName);
                         $software->setVersion($softwareVersionModified3);
                         
                         $user = $this->getUser();
@@ -181,7 +180,6 @@ class SoftwareController extends AbstractController
                     
                     $software->setDeviceFamily($family);
                     $software->setName($fileName);
-                    $software->setSoftwareFile($fileName);
                     $software->setVersion($softwareVersionModified3);
                     
                     $user = $this->getUser();
