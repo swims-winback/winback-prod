@@ -3,7 +3,6 @@
 /public/Ressource/
 /public/uploads/
 /src/Ressource/
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -198,3 +197,4 @@ symfony.lock
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+.php-version
