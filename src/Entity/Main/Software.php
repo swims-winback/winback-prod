@@ -27,9 +27,6 @@ class Software
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
-    #[ORM\Column(type: 'string', nullable: true, name:"`software_file`")]
-    private $softwareFile;
-
 
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(name: 'created_at', type: "datetime_immutable", nullable: true)]
@@ -99,18 +96,6 @@ class Software
     public function setVersion(string $version): self
     {
         $this->version = $version;
-
-        return $this;
-    }
-
-    public function getSoftwareFile(): ?string
-    {
-        return $this->softwareFile;
-    }
-
-    public function setSoftwareFile(string $softwareFile): self
-    {
-        $this->softwareFile = $softwareFile;
 
         return $this;
     }
