@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 namespace App\Server;
 
@@ -355,10 +354,8 @@ class TCPServer extends Application
 									// Check & show percentage number
 									if (array_key_exists(3, $responseArray)) {
 										$percentage = $responseArray[3];
-										//echo "\r\n".$percentage."\r\n";
 										//register dc index in array
 										if ($percentage != $clientsInfo[$deviceKey][8]) {
-											$time_start = microtime(true);
 											//echo "\r\n".$percentage." and ".$clientsInfo[$deviceKey][8]."\r\n";
 											//$logger->info($percentage." and ".$clientsInfo[$deviceKey][8]);
 											$clientsInfo[$deviceKey][8] = $percentage;
@@ -367,10 +364,6 @@ class TCPServer extends Application
 											if ($percentage == 25 or $percentage == 50 or $percentage == 75 or $percentage == 100) {
 												$logger->info($sn." Downloading: ".$percentage." %");
 											}
-										
-											$time_end = microtime(true);
-											$execution_time = ($time_end - $time_start)*1000;
-											//echo "\r\n".$execution_time."\r\n";
 											//socket_write($clients[$deviceKey], $responseArray[1]);
 											
 										}
@@ -378,6 +371,7 @@ class TCPServer extends Application
 									else {
 										//print_r($responseArray[1]);
 										socket_write($clients[$deviceKey], $responseArray[1]);
+										//echo bin2hex($responseArray[1]);
 										//$clientServeur->main($data);
 									}
 									
@@ -388,7 +382,6 @@ class TCPServer extends Application
 								}
 								
 								$clientsInfo[$deviceKey][5] = $deviceCommand;
-								
 								//if (($deviceCommand === 'F9') || ($deviceCommand === 'FA') || ($deviceCommand === 'FE') || ($deviceCommand === 'DE')){
 								
 								//When server reconnects or device reconnects, avoid duplicate of linkConnection for one device and disconnect the preceding index from the list
