@@ -17,20 +17,20 @@ when@dev:
                 #channels: ["!event", "!doctrine", "!console"]
             doctrine:
                 type: rotating_file
-                path: var/log/dev/doctrine/.log
+                path: "%kernel.logs_dir%/%kernel.environment%/doctrine/.log"
                 buffer_size: 50
                 max_files: 10
                 channels: ["doctrine"]
             app:
                 type: rotating_file
-                path: var/log/dev/app/.log
+                path: "%kernel.logs_dir%/%kernel.environment%/app/.log"
                 buffer_size: 50
                 max_files: 10
                 channels: ["app"] 
             version:
                 type: rotating_file
                 level: warning
-                path: var/log/dev/version/.log
+                path: "%kernel.logs_dir%/%kernel.environment%/version/.log"
                 buffer_size: 50
                 max_files: 10
                 channels: ["app"]
@@ -90,14 +90,14 @@ when@prod:
             version:
                 type: rotating_file
                 level: warning
-                path: var/log/prod/version/.log
+                path: "%kernel.logs_dir%/%kernel.environment%/version/.log"
                 buffer_size: 50
                 max_files: 10
                 channels: ["app"]
             server:
                 type: rotating_file
                 level: warning
-                path: var/log/prod/server/.log
+                path: "%kernel.logs_dir%/%kernel.environment%/server/.log"
                 buffer_size: 50
                 max_files: 10
                 channels: ["console"]
