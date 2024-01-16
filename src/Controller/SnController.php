@@ -148,9 +148,10 @@ class SnController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/sn_check/{sn}', name: 'sn_check_{sn}')]
+    #[Route('/sn_check_copy/{sn}', name: 'sn_check_copy{sn}')]
     public function snCheckOne(SnRepository $snRepository, $sn)
     {
+
         $device = $snRepository->findOneBy(["sn"=>$sn]);
         $data = '';
 
@@ -166,6 +167,92 @@ class SnController extends AbstractController
             return $this->json($data);
         }
         else {
+            return new Response(
+                '<html><body>Serial Number not present in database: '.$sn.' <br>Please contact the technical teams.</body></html>'
+            );
+        }
+
+    }
+
+    #[Route('/sn_check/{sn}', name: 'sn_check{sn}')]
+    public function snCheckOneCopy(SnRepository $snRepository, $sn)
+    {
+        
+        $device = $snRepository->findOneBy(["sn"=>$sn]);
+        $data = '';
+
+        if ($device!=null) {
+            $data = [
+                'serial_number' => $device->getSn(),
+                'device_type' => $device->getDevice(),
+                'main_type' => $device->getSubtype(),
+                'country' => $device->getCountry(),
+                'creation_date' => $device->getCreationDate(),
+                'code_client' => $device->getClientCode()
+            ];
+            return $this->json($data);
+        }
+        else {
+            if($pos=strpos($sn,'-',0)){
+				$sn=str_replace('-','',$sn);				
+				$device = $snRepository->findOneBy(["sn"=>$sn]);
+                $data = [
+                    'serial_number' => $device->getSn(),
+                    'device_type' => $device->getDevice(),
+                    'main_type' => $device->getSubtype(),
+                    'country' => $device->getCountry(),
+                    'creation_date' => $device->getCreationDate(),
+                    'code_client' => $device->getClientCode()
+                ];
+                return $this->json($data);
+			}else if($pos=strpos($sn,'_',0)){
+				$sn=str_replace('_','',$sn);				
+				$device = $snRepository->findOneBy(["sn"=>$sn]);
+                $data = [
+                    'serial_number' => $device->getSn(),
+                    'device_type' => $device->getDevice(),
+                    'main_type' => $device->getSubtype(),
+                    'country' => $device->getCountry(),
+                    'creation_date' => $device->getCreationDate(),
+                    'code_client' => $device->getClientCode()
+                ];
+                return $this->json($data);
+			}else{
+				for($i=1;$i<strlen($sn);$i++){
+            		$snTemp=substr($sn,0,$i).'-'.substr($sn,$i,strlen($sn));				
+                    $device = $snRepository->findOneBy(["sn"=>$snTemp]);
+					if ($device!=null) {
+                        $data = [
+                            'serial_number' => $device->getSn(),
+                            'device_type' => $device->getDevice(),
+                            'main_type' => $device->getSubtype(),
+                            'country' => $device->getCountry(),
+                            'creation_date' => $device->getCreationDate(),
+                            'code_client' => $device->getClientCode()
+                        ];
+                        return $this->json($data);
+                        break;
+                    }
+        		}
+				if ($device==null){
+					for($i=1;$i<strlen($sn);$i++){
+						$snTemp=substr($sn,0,$i).'_'.substr($sn,$i,strlen($sn));				
+						$device = $snRepository->findOneBy(["sn"=>$snTemp]);
+						if ($device!=null) {
+                            $data = [
+                                'serial_number' => $device->getSn(),
+                                'device_type' => $device->getDevice(),
+                                'main_type' => $device->getSubtype(),
+                                'country' => $device->getCountry(),
+                                'creation_date' => $device->getCreationDate(),
+                                'code_client' => $device->getClientCode()
+                            ];
+                            return $this->json($data);
+                            break;
+                        }
+					}
+				}
+			}
             return new Response(
                 '<html><body>Serial Number not present in database: '.$sn.' <br>Please contact the technical teams.</body></html>'
             );
