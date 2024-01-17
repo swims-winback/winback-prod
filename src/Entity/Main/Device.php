@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
+#[ORM\Table(name:"`device`")]
 //#[ORM\Table(name:"device", indexes:#[ORM\Index(columns:["sn", "version"], flags:"fulltext")])]
 /**
  * @ORM\Table(name="device", indexes={@ORM\Index(columns={"sn", "version"}, flags={"fulltext"})})
