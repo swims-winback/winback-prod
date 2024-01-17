@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SoftwareRepository::class)]
-
+#[ORM\Table(name:"`software`")]
 class Software
 {
     #[ORM\Id]

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ErrorRepository::class)]
+#[ORM\Table(name:"`error`")]
 class Error
 {
     #[ORM\Id]
