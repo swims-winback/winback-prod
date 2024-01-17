@@ -10,12 +10,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[ORM\Table(name:"`client`")]
 class Client
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[ORM\Table(name:"`client`")]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
