@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'Winback Interface | Protocols'|trans}}{% endblock %}
+
+{% block content %}
+
+{% if protocols is empty %}
+<div class="container row">
+    <div class="col">
+    <h3>Protocols:</h3>
+    <div>Please choose a Serial Number to see your protocols:</div>
+    {{ form_start(searchForm, {attr: { id: 'filter', class: 'sticky-scroll'}}) }}
+        {{ form_row(searchForm.sn, {attr: { style: 'border-radius: 0;'}}) }}
+        <button type="submit" class="btn bg-orange btn-outline-orange">Submit</button>
+    {{ form_end(searchForm) }}
+    </div>
+</div>
+{% else %}
+    {% include "protocol/dashboard.html.twig" %}
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,95 @@
+<div class="container row">
+    <div class="col-3">
+    {{form(searchForm)}}
+    </div>
+    <div id="carouselExample" class="carousel slide col">
+        <div class="carousel-inner">    
+            {% for date, proto in protocols %}
+            <div class="carousel-item {{(date =='12_09_23')? 'active':''}}">
+                <div class="d-flex justify-content-between align-items-center my-2">
+                    <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                    <h4 class="m-0">{{date}}</h4>
+                    <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                </div>
+                <div class="row d-flex justify-content-left align-items-center">
+                    <div class="col">
+                        {% for proto_key, step in proto.protocol_id %}
+                        <hr class="w-100 mt-5">
+                        <h5><svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg> Patient {{proto_key}}</h5>
+                        <div class="table-responsive">
+                            <div class="table table-bordered table-device-mode text-center">
+                                    
+                                    <div class="row">
+                                        <div class="row border">
+                                            <div class="col border fw-bold">Step</div>
+                                            <div class="col border fw-bold">Out</div>
+                                            <div class="col-6 border fw-bold">Mode Parameters</div>
+                                        </div>
+                                        <div class="row border">
+                                            <div class="col-6"></div>
+                                            <div class="col">Mode</div>
+                                            <div class="col">Param 1</div>
+                                            <div class="col">Param 2</div>
+                                            <div class="col">Param 3</div>
+                                            <div class="col">Time (seconds)</div>
+                                        </div>
+                                        {% for step_key, way in step.step_id %}
+                                        <div class="row border">
+                                            <div class="col h6 mb-0 py-1">Step {{step_key}}</div>
+                                            <div class="col-9">
+                                                {% for way_key, mode in way.way_id %}
+                                                <div class="row border">
+                                                    
+                                                    <div class="col h6 mb-0 py-1">
+                                                    Way {{way_key}}
+                                                    </div>
+                                                    {% for param in mode %}
+                                                        <div class="col-8">
+                                                        {% for mode_key, items in param %}
+                                                        <div class="row border">
+                                                            <div class="col border h6 mb-0 py-1">
+                                                            <span class="log_percentage log_percentage_{{mode_key}} log_percentage_select text-light-emphasis {{(mode_key=="HI-TENS" or mode_key=="HI-EMS") ? 'text-nowrap' : ''}}">
+                                                            {{mode_key}}
+                                                            </span>
+                                                            </div>
+                                                            {% for i, j in items %}
+                                                                <div class="col border h6 mb-0 py-1">
+                                                                {% if i == 'param1' %}
+                                                                    {% if mode_key == 'HI-TENS' %}
+                                                                        {{j}} Hz
+                                                                    {% elseif mode_key == 'NEUTRAL' %}
+                                                                        
+                                                                    {% else %}
+                                                                        {{j}} %
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                <span class="text-light-emphasis badge badge-light mb-0">
+                                                                    {{j}}
+                                                                </span>
+                                                                {% endif %}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                        {% endfor %}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

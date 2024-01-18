@@ -12,9 +12,7 @@
                     {% for message in app.flashes('error') %}
                         <div class="p-3 my-2 rounded-2 alert alert-danger">{{ message }}</div>
                     {% endfor %}
-                        <!--
-                        <div class="p-3 my-2 rounded-2 alert alert-warning" id="selectedZone"></div>
-                        -->
+
                     {% for message in app.flashes('infoDevice') %}
                         <div class="p-3 my-2 rounded-2 alert alert-success">{{ message }}</div>
                     {% endfor %}

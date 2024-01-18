@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row w-100 h-100">
     <div class="col-md-3 d-flex flex-column justify-content-center sticky-scroll">
-        {% include "error/_filter.html.twig" %}
+        {#{% include "error/_filter.html.twig" %}#}
     </div>
     <div class="col-md-9 d-flex flex-column align-items-center">
         <h1 class="text-center mb-4">{{ 'Error'|trans }}</h1>
@@ -26,12 +26,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for error in errors %}
+                    {% for error in errors|reverse %}
                     <tr>
                     <td>{{error.error}}</td>
                     <td>{{error.sn}}</td>
                     <td>{{error.version}}</td>
-                    <td>{{error.date}}</td>
+                    <td>{{error.date|format_datetime('medium', 'short')}}</td>
                     </tr>
                     {% endfor %}
                     </tbody>

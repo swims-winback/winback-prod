@@ -14,16 +14,23 @@
                                     <button id="version-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#version2_{{device.id}}" role="tab" aria-controls="version2" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Version'|trans }}</span></button>
                                 </li>
                             {% endif %}
-                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            {% if is_granted("ROLE_ADMIN") and device.deviceFamily == "BACK4"%}
                             <li class="nav-item">
                                 <button id="error-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#error_{{device.id}}" role="tab" aria-controls="error" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Error'|trans }}</span></button>
                             </li>
+                            {% endif %}
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
                             <li class="nav-item">
                                 <button id="server-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#server_{{device.id}}" role="tab" aria-controls="server" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Server'|trans }}</span></button>
                             </li>
                             <li class="nav-item">
+                                <button id="phone-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#phone_{{device.id}}" role="tab" aria-controls="phone" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Protocols'|trans }}</span></button>
+                            </li class="nav-item">
+                            {#
+                            <li class="nav-item">
                                 <button id="log-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#log_{{device.id}}" role="tab" aria-controls="log" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Log'|trans }}</span></button>
                             </li class="nav-item">
+                            #}
                             {% endif %}
                         </ul>
                     </div>
@@ -45,15 +52,20 @@
                         {% include 'device/_tab_version.html.twig' %}
                         </div>
                     {% endif %}
-                    {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    {% if is_granted("ROLE_ADMIN") %}
                         <div class="tab-pane fade h-100 w-100" id="error_{{device.id}}" role="tabpanel" aria-labelledby="error-tab">
                         {% include 'device/_tab_error.html.twig' %}
                         </div>
+                    {% endif %}
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
                         <div class="tab-pane fade h-100 w-100" id="server_{{device.id}}" role="tabpanel" aria-labelledby="server-tab">
                         {% include 'device/_tab_server.html.twig' %}
                         </div>
-                        <div class="tab-pane fade h-100" id="log_{{device.id}}" role="tabpanel" aria-labelledby="log-tab">
+                        <div class="tab-pane fade h-100" id="phone_{{device.id}}" role="tabpanel" aria-labelledby="phone-tab">
                         {% include 'device/_tab_phone.html.twig' %}
+                        </div>
+                        <div class="tab-pane fade h-100" id="log_{{device.id}}" role="tabpanel" aria-labelledby="log-tab">
+                        {% include 'device/_tab_log.html.twig' %}
                         </div>
                     {% endif %}
                 </div>
