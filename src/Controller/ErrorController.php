@@ -7,9 +7,13 @@ use App\Form\SearchErrorType;
 use App\Repository\ErrorFamilyRepository;
 use App\Repository\ErrorRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -116,5 +120,29 @@ class ErrorController extends AbstractController
         ]);
 
         return $chart;
+    }
+
+    /**
+     * @Route("/update_db/{deviceType}", name="error_update")
+     */
+    function updateDb(KernelInterface $kernel, $deviceType) {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'app:errorCommand',
+            // (optional) define the value of command arguments
+            'deviceType' => $deviceType
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+
+        // return new Response(""), if you used NullOutput()
+        return new Response($content);
     }
 }
