@@ -48,18 +48,25 @@ class MainController extends AbstractController
 
         //$username = $this->getUser()->getUserIdentifier();
         $email = $this->getUser()->getUserIdentifier();
-        //$user = $userRepository->findOneBy(array('username' => $username));
-        $user = $userRepository->findOneBy(array('email' => $email));
+        //$user = $userRepository->findOneBy(array('email' => $email));
         //$email = $user->getEmail();
         
         //$deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
         $deviceCreated_array = $this->getDeviceCreated($deviceRepository); // number of devices created by day
+        $deviceCreated = $this->getDeviceCreatedCount($deviceRepository, $deviceFamilyRepository);
+        //var_dump($deviceCreated_back4['BACK4']);
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
-        
+
+        //$secondDataset = [$this->getDataset("Devices created", array_values($deviceCreated_array)), $this->getDataset("BACK 4", array_values($deviceCreated['BACK4']))];
+        $secondDataset = [];
+        foreach ($deviceCreated as $key => $value) {
+            $secondDataset[] = $this->getDataset($key, array_values($deviceCreated[$key]));
+        }
+        $thirdDataset = [$this->getDataset('label', array_values($deviceCount_array))];
         // TODO
         //$firstChart = $this->getChart($chartBuilder, array_keys($deviceConnected_array), "Devices connected", array_values($deviceConnected_array), "Devices connected per week", Chart::TYPE_LINE);
-        $secondChart = $this->getChart($chartBuilder, array_keys($deviceCreated_array), "Devices created", array_values($deviceCreated_array), "Devices created per week", Chart::TYPE_LINE);
-        $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), 'label', array_values($deviceCount_array), 'Number of devices per type', Chart::TYPE_DOUGHNUT);
+        $secondChart = $this->getChart($chartBuilder, array_keys($deviceCreated_array), $secondDataset, "Devices created per week", Chart::TYPE_LINE);
+        $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), $thirdDataset, 'Number of devices per type', Chart::TYPE_DOUGHNUT);
 
         return $this->render('main/index.html.twig', [
             /*
@@ -115,6 +122,19 @@ class MainController extends AbstractController
         return ($deviceCount_array);
     }
 
+    function getDeviceCreatedCount(DeviceRepository $deviceRepository, DeviceFamilyRepository $deviceFamilyRepository) {
+        $date_array = $this->getDate();
+        $devicesFamily = $deviceFamilyRepository->findAll();
+        for ($i = 0; $i < sizeof($devicesFamily); $i++) {
+            foreach ($date_array as $date) {
+                $allDevices = $deviceRepository->findByDate($date);
+                $device_array[$date] = count($allDevices);
+            }
+            $deviceCountArray[$devicesFamily[$i]->getName()] = $device_array;
+        }
+        return ($deviceCountArray);
+    }
+
     /**
      * getChart
      * @param ChartBuilderInterface $chartBuilder
@@ -124,21 +144,13 @@ class MainController extends AbstractController
      * @param string $text
      * @return Chart
      */
-    function getChart(ChartBuilderInterface $chartBuilder, $labels, $label, $dataArray, $text, $chartType) {
-        $backgroundArray = $this->backgroundArray;
-        $borderArray = $this->borderArray;
+    function getChart(ChartBuilderInterface $chartBuilder, $labels, $datasets, $text, $chartType) {
+
         //Chart::TYPE_LINE
         $chart = $chartBuilder->createChart($chartType);
         $chart->setData([
             'labels' => $labels,
-            'datasets' => [
-                [
-                    'label' => $label,
-                    'backgroundColor' => $backgroundArray,
-                    'borderColor' => $borderArray,
-                    'data' => $dataArray,
-                ],
-            ],
+            'datasets' => $datasets,
         ]);
     
         $chart->setOptions([
@@ -153,6 +165,20 @@ class MainController extends AbstractController
         ]);
 
         return $chart;
+    }
+
+    function getDataset($label, $dataArray) {
+        $backgroundArray = $this->backgroundArray;
+        $borderArray = $this->borderArray;
+        $dataset =
+            [
+                'label' => $label,
+                'backgroundColor' => $backgroundArray,
+                'borderColor' => $borderArray,
+                'data' => $dataArray,
+            ];
+        return $dataset;
+
     }
 
     public function getDeviceCount(DeviceFamilyRepository $deviceFamilyRepository) {
