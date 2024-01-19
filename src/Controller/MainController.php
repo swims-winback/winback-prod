@@ -2,16 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Main\Client;
-use App\Entity\Main\ClientSn;
-use App\Form\Client\ClientRegistrationType;
-use App\Repository\ClientRepository;
-use App\Repository\ClientSnRepository;
+//use App\Entity\Customer\User;
 use App\Repository\DeviceFamilyRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\DeviceServerRepository;
 use App\Repository\SoftwareRepository;
 use App\Repository\UserRepository;
+//use App\Security\AppAuthenticator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,22 +43,14 @@ class MainController extends AbstractController
     /**
      * @Route("/{_locale<%app.supported_locales%>}/user/", name="home")
      */
-    public function index(Request $request, ManagerRegistry $doctrine, ClientRepository $clientRepository, UserRepository $userRepository, DeviceServerRepository $deviceServerRepository, DeviceRepository $deviceRepository, ClientSnRepository $clientSnRepository, ChartBuilderInterface $chartBuilder, DeviceFamilyRepository $deviceFamilyRepository): Response
+    public function index(Request $request, ManagerRegistry $doctrine, UserRepository $userRepository, DeviceServerRepository $deviceServerRepository, DeviceRepository $deviceRepository, ChartBuilderInterface $chartBuilder, DeviceFamilyRepository $deviceFamilyRepository): Response
     {
 
-        $username = $this->getUser()->getUserIdentifier();
-        $user = $userRepository->findOneBy(array('username' => $username));
+        //$username = $this->getUser()->getUserIdentifier();
+        $email = $this->getUser()->getUserIdentifier();
+        //$user = $userRepository->findOneBy(array('username' => $username));
+        $user = $userRepository->findOneBy(array('email' => $email));
         $email = $user->getEmail();
-        $clientIdentified = $clientRepository->findBy(array('email' => $email));
-        $clientToSn = $clientSnRepository->findBy(array('client' => $email));
-        $snArray = array();
-        
-        /*
-        foreach ($clientToSn as $sn) {
-            $device = $deviceRepository->findOneBy(array('sn' => $sn->getSn()));
-            $snArray[] = $device;
-        }
-        */
         
         //$deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
         $deviceCreated_array = $this->getDeviceCreated($deviceRepository); // number of devices created by day
@@ -71,49 +60,8 @@ class MainController extends AbstractController
         //$firstChart = $this->getChart($chartBuilder, array_keys($deviceConnected_array), "Devices connected", array_values($deviceConnected_array), "Devices connected per week", Chart::TYPE_LINE);
         $secondChart = $this->getChart($chartBuilder, array_keys($deviceCreated_array), "Devices created", array_values($deviceCreated_array), "Devices created per week", Chart::TYPE_LINE);
         $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), 'label', array_values($deviceCount_array), 'Number of devices per type', Chart::TYPE_DOUGHNUT);
-        
-        /*
-        if (($clientIdentified = $clientRepository->findBy(array('email' => $email)))!=false) {
-            
-            foreach ($clientIdentified as $client) {
-                $clientSn = $client->getSerialNumber();
-                $sn = $snRepository->findOneBy(array('SN' => $clientSn));
-                $device = $deviceRepository->findOneBy(array('sn' => $clientSn));
-                array_push($clientSnArray, $sn);
-                array_push($clientDeviceArray, $device);
-                // make an array with sn as key, sn object as value, device object as value
-                // add clientSn to clientSnArray
-            }
-            
-        }
-        */
 
-        $form = $this->createForm(ClientRegistrationType::class);
-        $form->handleRequest($request);
-        $entityManager = $doctrine->getManager();
-        
-        
-        if ($form->isSubmitted() && $form->isValid()) {
-            $client = new Client();
-            //$clientSn = new ClientSn();
-            $email = $form->get('email')->getData();
-            $client->setEmail($email);
-
-            //$client->setSerialNumber($form->get('serial_number')->getData());
-            //$clientSn->setClient($email);
-            //$clientSn->setSn($form->get('serial_number')->getData());
-
-            $entityManager->persist($client);
-            //$entityManager->persist($clientSn);
-            $entityManager->flush();
-            //$user = $userRepository->findOneBy(array('email' => $email));
-            return $this->redirectToRoute('home');
-        }
-        
         return $this->render('main/index.html.twig', [
-            'clientRegistration' => $form->createView(),
-            'clientIdentified' => $clientIdentified,
-            //'clientToSn' => $clientToSn,
             /*
             'deviceConnectedArray'=>$deviceConnected_array,
             'deviceCreatedArray'=>$deviceCreated_array,
@@ -144,8 +92,8 @@ class MainController extends AbstractController
      * @Route("/devicesConnected/", name="get_devices_connected")
      */
     function getDeviceServer(DeviceServerRepository $deviceServerRepository) {
-        //$date_array = $this->getDate();
-        $date_array = ["2023-09-27 11:33:09", "2023-09-27 10:55:24"];
+        $date_array = $this->getDate();
+        //$date_array = ["2023-09-27 11:33:09", "2023-09-27 10:55:24"];
         foreach ($date_array as $date) {
             //print_r($date);
             $allDevices = $deviceServerRepository->findByDate($date);
