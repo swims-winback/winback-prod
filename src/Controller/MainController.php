@@ -50,7 +50,7 @@ class MainController extends AbstractController
         $email = $this->getUser()->getUserIdentifier();
         //$user = $userRepository->findOneBy(array('username' => $username));
         $user = $userRepository->findOneBy(array('email' => $email));
-        $email = $user->getEmail();
+        //$email = $user->getEmail();
         
         //$deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
         $deviceCreated_array = $this->getDeviceCreated($deviceRepository); // number of devices created by day
