@@ -17,13 +17,13 @@ class MapController extends AbstractController
         $data = [];
 
         foreach ($devices as $device) {
-            #$geoloc = $this->getLocationInfoByIp($device->getIpAddr());
+            $geoloc = $this->getLocationInfoByIp($device->getIpAddr());
             $data[] = [
                 'sn' => $device->getSn(),
                 'status' => $device->getIsActive(),
                 'country' => $device->getCountry(),
-                #'longitude' => $geoloc["longitude"],
-                #'latitude' => $geoloc["latitude"]
+                'longitude' => $geoloc["longitude"],
+                'latitude' => $geoloc["latitude"]
             ];
         }
         return $this->json($data);
