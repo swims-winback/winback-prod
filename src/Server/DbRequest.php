@@ -122,37 +122,25 @@ class DbRequest {
         $res = $this->sendRq($req);
     }
 
-    function setServerId($sn, $index){
-        $where = SN."='".$sn."'";
-        $req = $this->update(SERVER_ID, $index, DEVICE_TABLE, $where);
-        $res = $this->sendRq($req);
-    }
-
-    function setConfigUp($sn, $index){
-        $where = SN."='".$sn."'";
-        $req = $this->update(CONFIG_UP, $index, DEVICE_TABLE, $where);
-        $res = $this->sendRq($req);
-    }
-
     function setConfigDown($sn, $index){
         $where = SN."='".$sn."'";
         $req = $this->update(DEVICE_CONFIG, $index, DEVICE_TABLE, $where);
         $res = $this->sendRq($req);
     }
 
-    function setConfigId($sn, $index){
+    function setConfigId($sn, $index, $column){
         $where = SN."='".$sn."'";
-        $req = $this->update(CONFIG_ID, $index, DEVICE_TABLE, $where);
+        $req = $this->update($column, $index, DEVICE_TABLE, $where);
         $res = $this->sendRq($req);
     }
 
-    function getConfigId($sn){
+    function getConfigId($sn, $column){
         $whereCondition = SN."='".$sn."'";
-        $req = $this->select(CONFIG_ID, DEVICE_TABLE,$whereCondition);
+        $req = $this->select($column, DEVICE_TABLE,$whereCondition);
         $res = $this->sendRq($req);
         if($res != FALSE){
             if($row = mysqli_fetch_assoc($res)){
-                return $row[CONFIG_ID];
+                return $row[$column];
             }
         }
         return 0;
@@ -182,6 +170,11 @@ class DbRequest {
         return 0;
     }
 
+    function setImageId($sn, $index){
+        $where = SN."='".$sn."'";
+        $req = $this->update(IMAGE_ID, $index, DEVICE_TABLE, $where);
+        $res = $this->sendRq($req);
+    }
     /**
      * init Device request In Device Table
      * @param string $sn
@@ -290,9 +283,11 @@ class DbRequest {
     {
         $utils = new Utils();
         $whereCond = SN." = '".$sn."'";
-        $geography = $this->getLocationInfoByIp($ipAddr); //get location by ip
-        $geography["country"] = $utils->clean($geography["country"]);
-        $geography["city"] = $utils->clean($geography["city"]);
+        //$geography = $this->getLocationInfoByIp($ipAddr); //get location by ip
+        //$geography["country"] = $utils->clean($geography["country"]);
+        //$geography["city"] = $utils->clean($geography["city"]);
+        $geography["country"] = '';
+        $geography["city"] = '';
         // treat punctuation in name
         $req = $this->select('*', DEVICE_TABLE, $whereCond);
         if($res = $this->sendRq($req)){
