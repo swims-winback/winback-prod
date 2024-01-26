@@ -43,6 +43,8 @@ if (!defined('CONFIG_SN_UP')) define('CONFIG_SN_UP', 'sn_up'); // serial number 
 if (!defined('CONFIG_SN_ID')) define('CONFIG_SN_ID', 'sn_id'); // boolean to change sn config
 if (!defined('IMAGE_ID')) define('IMAGE_ID', 'image_id'); // boolean to change image config
 if (!defined('IMAGE_UP')) define('IMAGE_UP', 'image_up'); // new image config
+if (!defined('CONFIG_INDUS_ID')) define('CONFIG_INDUS_ID', 'config_indus_id'); // boolean to change indus config
+if (!defined('CONFIG_INDUS_UP')) define('CONFIG_INDUS_UP', 'config_indus_up'); // new indus config
 /* Define User Table properties */
 
 if (!defined('LOGIN')) define('LOGIN', 'username');
