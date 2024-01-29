@@ -27,7 +27,7 @@ class DeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, Device::class);
     }
 
-    public function distinctVersions(){
+    public function distinctFamilies(){
         return $this->createQueryBuilder('cc')
         ->groupBy('cc.deviceFamily')
         ->getQuery()
@@ -41,6 +41,31 @@ class DeviceRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult()
         ;
+    }
+
+    public function findAllFamily()
+    {
+        return $this->createQueryBuilder('s')
+        //->select('s.deviceFamily')
+        ->select('c', 's')
+        ->join('s.deviceFamily', 'c')
+        ->distinct()
+        //->groupBy('s.deviceFamily')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findAllVersion()
+    {
+        return $this->createQueryBuilder('s')
+        ->select('c.name', 's', 's.version')
+        ->join('s.deviceFamily', 'c')
+        ->distinct()
+        ->groupBy('s.version')
+        ->orderBy('c.name', 'ASC')
+        ->addOrderBy('s.version', 'DESC')
+        ->getQuery()
+        ->getResult();
     }
     /**
      * Recherche les devices en fonction du formulaire
@@ -283,11 +308,14 @@ class DeviceRepository extends ServiceEntityRepository
         return $query;
     }
 
-      public function findByDate($date)
+      public function findByDate($date, $deviceType)
       {
           return $this->createQueryBuilder('d')
           ->andWhere('d.created_at LIKE :val')
+          ->andWhere('d.deviceFamily = :val2')
+          ->select('d.sn')
           ->setParameter('val', '%'.$date.'%')
+          ->setParameter('val2', $deviceType)
           ->getQuery()
           ->getResult();
       }

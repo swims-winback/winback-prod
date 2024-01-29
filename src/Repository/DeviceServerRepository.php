@@ -44,6 +44,7 @@ class DeviceServerRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('d')
         ->andWhere('d.date LIKE :val')
+        //->groupBy('d.deviceFamily')
         ->setParameter('val', '%'.$date.'%')
         ->getQuery()
         ->getResult();

@@ -29,8 +29,8 @@ class SearchDeviceType extends AbstractType
         $this->paginator = $paginator;
     }
 
-    function getVersions(DeviceRepository $deviceRepository) {
-        $distinctCategories = $deviceRepository->distinctVersions();
+    function getFamilies(DeviceRepository $deviceRepository) {
+        $distinctCategories = $deviceRepository->distinctFamilies();
         foreach ($distinctCategories as $cat) {
             if ($cat->getDeviceFamily()->getNumberId() == 10) {
                 $sn_array['HI-TENS'] = $cat->getDeviceFamily()->getName();
@@ -57,11 +57,23 @@ class SearchDeviceType extends AbstractType
         return $result_array;
     }
 
+    function getVersions(DeviceRepository $deviceRepository) {
+        $deviceVersion = $deviceRepository->findAllVersion();
+        foreach ($deviceVersion as $key => $value) {
+            if ($deviceVersion[$key]["version"] != null) {
+                $versionArray[$deviceVersion[$key]["name"]][$deviceVersion[$key]["version"]] = $deviceVersion[$key]["version"];
+            }
+        }
+        return $versionArray;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $deviceRepository = new DeviceRepository($this->registry, $this->paginator);
-        $deviceType_array = $this->getVersions($deviceRepository);
+        $deviceType_array = $this->getFamilies($deviceRepository);
         $country_array = $this->getCountries($deviceRepository);
+        $version_array = $this->getVersions($deviceRepository);
+
         $builder
             
             ->add('q', TextType::class, [
@@ -110,7 +122,26 @@ class SearchDeviceType extends AbstractType
                 ],
                 'required' => false,
             ])
-            
+            /*
+            ->add('version', ChoiceType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'choices' => [
+                    ""=>"(null)",
+                    ""=>$version_array
+                ],
+                'placeholder' => 'Version',
+                
+                'placeholder_attr' => [
+                    'hidden' => 'hidden',
+                    'disable'=> 'disable'
+                ],
+                'required'=>false
+                
+            ])
+            */
             ->add('version_upload', SearchType::class, [
                 'label' => false,
                 'attr' => [
