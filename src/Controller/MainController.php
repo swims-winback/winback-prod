@@ -50,22 +50,27 @@ class MainController extends AbstractController
         $email = $this->getUser()->getUserIdentifier();
         //$user = $userRepository->findOneBy(array('email' => $email));
         //$email = $user->getEmail();
-        
-        //$deviceConnected_array = $this->getDeviceServer($deviceServerRepository); //number of devices connected by day
-        $deviceCreated_array = $this->getDeviceCreated($deviceRepository); // number of devices created by day
+        $deviceConnected_array = $this->getDeviceServerCount($deviceServerRepository, $deviceFamilyRepository);
+        ksort($deviceConnected_array);
         $deviceCreated = $this->getDeviceCreatedCount($deviceRepository, $deviceFamilyRepository);
-        //var_dump($deviceCreated_back4['BACK4']);
+
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
 
-        //$secondDataset = [$this->getDataset("Devices created", array_values($deviceCreated_array)), $this->getDataset("BACK 4", array_values($deviceCreated['BACK4']))];
+        //$firstDataset = [$this->getDataset("Devices connected", array_values($deviceConnected_array))];
+        $firstDataset = [];
+        foreach ($deviceConnected_array as $key => $value) {
+            $firstDataset[] = $this->getDataset($key, array_values($value));
+
+        }
         $secondDataset = [];
         foreach ($deviceCreated as $key => $value) {
             $secondDataset[] = $this->getDataset($key, array_values($deviceCreated[$key]));
         }
         $thirdDataset = [$this->getDataset('label', array_values($deviceCount_array))];
         // TODO
-        //$firstChart = $this->getChart($chartBuilder, array_keys($deviceConnected_array), "Devices connected", array_values($deviceConnected_array), "Devices connected per week", Chart::TYPE_LINE);
-        $secondChart = $this->getChart($chartBuilder, array_keys($deviceCreated_array), $secondDataset, "Devices created per week", Chart::TYPE_LINE);
+        $week = $this->getDateName($this->getDate());
+        $firstChart = $this->getChart($chartBuilder, $week, $firstDataset, "Devices connected per week", Chart::TYPE_LINE);
+        $secondChart = $this->getChart($chartBuilder, $week, $secondDataset, "Devices created per week", Chart::TYPE_LINE);
         $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), $thirdDataset, 'Number of devices per type', Chart::TYPE_DOUGHNUT);
 
         return $this->render('main/index.html.twig', [
@@ -75,7 +80,7 @@ class MainController extends AbstractController
             'snArray'=>$snArray,
             */
             // TODO
-            //'firstChart'=>$firstChart,
+            'firstChart'=>$firstChart,
             'secondChart'=>$secondChart,
             'thirdChart'=>$thirdChart,
             
@@ -95,21 +100,53 @@ class MainController extends AbstractController
         $date_array = array_reverse($date_array);
         return $date_array;
     }
+
+    function getDateName($date) {
+        $dateName = [];
+        foreach ($date as $key => $value) {
+            $dateName[] = date('D', strtotime($value));
+        }
+        return $dateName;
+    }
     /**
      * @Route("/devicesConnected/", name="get_devices_connected")
      */
+    
     function getDeviceServer(DeviceServerRepository $deviceServerRepository) {
         $date_array = $this->getDate();
-        //$date_array = ["2023-09-27 11:33:09", "2023-09-27 10:55:24"];
         foreach ($date_array as $date) {
-            //print_r($date);
             $allDevices = $deviceServerRepository->findByDate($date);
-            print_r($allDevices);
             $deviceCount_array[$date] = count($allDevices);
         }
         return ($deviceCount_array);
     }
+    
+    function getDeviceServerCount(DeviceServerRepository $deviceServerRepository, DeviceFamilyRepository $deviceFamilyRepository) {
+        $date_array = $this->getDate();
+        $devicesFamily = $deviceFamilyRepository->findAll();
+        $sortedDevices = [];
+        foreach ($date_array as $date) {
+            $allDevices = $deviceServerRepository->findByDate($date);
+            foreach ($allDevices as $device) {
+                //$sortedDevices[$device->getDevice()->getDeviceFamily()->getName()] = $device->getDevice()->getSn();
+                
+                $sortedDevices[$device->getDevice()->getDeviceFamily()->getName()][$date][] = $device->getDevice()->getSn();
 
+                
+            }
+            
+        }
+        
+        $countSortedDevices = [];
+        foreach ($sortedDevices as $date => $dateValue) {
+            foreach ($sortedDevices[$date] as $deviceType => $value) {
+                $countSortedDevices[$date][$deviceType] = count($sortedDevices[$date][$deviceType]);
+            }
+        }
+        
+
+        return ($countSortedDevices);
+    }
     /**
      * @Route("/devicesCreated/", name="get_devices_created")
      */
@@ -127,11 +164,12 @@ class MainController extends AbstractController
         $devicesFamily = $deviceFamilyRepository->findAll();
         for ($i = 0; $i < sizeof($devicesFamily); $i++) {
             foreach ($date_array as $date) {
-                $allDevices = $deviceRepository->findByDate($date);
+                $allDevices = $deviceRepository->findByDate($date, $devicesFamily[$i]->getId());
                 $device_array[$date] = count($allDevices);
             }
             $deviceCountArray[$devicesFamily[$i]->getName()] = $device_array;
         }
+        ksort($deviceCountArray);
         return ($deviceCountArray);
     }
 
@@ -161,7 +199,13 @@ class MainController extends AbstractController
                     'text'=> $text
                 ]
             ],
-            'maintainAspectRatio' => false,
+            'responsive' => true,
+            'maintainAspectRatio' => true,
+            'scales'=> [
+                'y'=> [
+                    'beginAtZero'=> true,
+                ]
+            ]
         ]);
 
         return $chart;
@@ -186,6 +230,7 @@ class MainController extends AbstractController
         for ($i=0; $i < sizeof($devicesFamily); $i++) {
             $deviceCountArray[$devicesFamily[$i]->getName()] = count($devicesFamily[$i]->getDevices());
         }
+        ksort($deviceCountArray);
         return $deviceCountArray;
     }
 
