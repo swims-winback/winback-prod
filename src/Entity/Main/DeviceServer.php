@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DeviceServerRepository::class)]
+#[ORM\Table(name:"`device_server`")]
 class DeviceServer
 {
     #[ORM\Id]
@@ -15,8 +16,8 @@ class DeviceServer
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'deviceServers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Device $device = null;
+    #[ORM\JoinColumn(nullable: false, referencedColumnName:"sn", name:"`device_id`")]
+    private ?Device $device;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
