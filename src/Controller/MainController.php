@@ -53,7 +53,7 @@ class MainController extends AbstractController
         $deviceConnected_array = $this->getDeviceServerCount($deviceServerRepository, $deviceFamilyRepository);
         ksort($deviceConnected_array);
         $deviceCreated = $this->getDeviceCreatedCount($deviceRepository, $deviceFamilyRepository);
-        var_dump($deviceCreated);
+
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
 
         //$firstDataset = [$this->getDataset("Devices connected", array_values($deviceConnected_array))];
