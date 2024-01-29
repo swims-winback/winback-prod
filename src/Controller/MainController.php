@@ -71,7 +71,7 @@ class MainController extends AbstractController
         $week = $this->getDateName($this->getDate());
         $firstChart = $this->getChart($chartBuilder, $week, $firstDataset, "Devices connected per week", Chart::TYPE_LINE);
         $secondChart = $this->getChart($chartBuilder, $week, $secondDataset, "Devices created per week", Chart::TYPE_LINE);
-        $thirdChart = $this->getChart($chartBuilder, array_keys($deviceCount_array), $thirdDataset, 'Number of devices per type', Chart::TYPE_DOUGHNUT);
+        $thirdChart = $this->getChartDisk($chartBuilder, array_keys($deviceCount_array), $thirdDataset, 'Number of devices per type', Chart::TYPE_DOUGHNUT);
 
         return $this->render('main/index.html.twig', [
             /*
@@ -206,6 +206,30 @@ class MainController extends AbstractController
                     'beginAtZero'=> true,
                 ]
             ]
+        ]);
+
+        return $chart;
+    }
+
+    function getChartDisk(ChartBuilderInterface $chartBuilder, $labels, $datasets, $text, $chartType) {
+
+        //Chart::TYPE_LINE
+        $chart = $chartBuilder->createChart($chartType);
+        $chart->setData([
+            'labels' => $labels,
+            'datasets' => $datasets,
+        ]);
+    
+        $chart->setOptions([
+            
+            'plugins'=> [
+                'title'=> [
+                    'display'=> true,
+                    'text'=> $text
+                ]
+            ],
+            'responsive' => true,
+            'maintainAspectRatio' => true,
         ]);
 
         return $chart;
