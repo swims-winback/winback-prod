@@ -53,7 +53,7 @@ class MainController extends AbstractController
         $deviceConnected_array = $this->getDeviceServerCount($deviceServerRepository, $deviceFamilyRepository);
         ksort($deviceConnected_array);
         $deviceCreated = $this->getDeviceCreatedCount($deviceRepository, $deviceFamilyRepository);
-
+        var_dump($deviceCreated);
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
 
         //$firstDataset = [$this->getDataset("Devices connected", array_values($deviceConnected_array))];
@@ -165,9 +165,10 @@ class MainController extends AbstractController
         for ($i = 0; $i < sizeof($devicesFamily); $i++) {
             foreach ($date_array as $date) {
                 $allDevices = $deviceRepository->findByDate($date, $devicesFamily[$i]->getId());
-                $device_array[$date] = count($allDevices);
+                //$device_array[$date] = count($allDevices);
+                $deviceCountArray[$devicesFamily[$i]->getName()][$date] = count($allDevices);
             }
-            $deviceCountArray[$devicesFamily[$i]->getName()] = $device_array;
+            //$deviceCountArray[$devicesFamily[$i]->getName()] = $device_array;
         }
         ksort($deviceCountArray);
         return ($deviceCountArray);
