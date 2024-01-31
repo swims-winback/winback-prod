@@ -50,6 +50,10 @@
                                         {% if is_granted("ROLE_GOE") %}
                                         <th scope="col" class="text-center text-nowrap">{{ 'Comment'|trans }}</th>
                                         {% endif %}
+                                        {% if is_granted("ROLE_ADMIN") %}
+                                        <th scope="col" class="text-center text-nowrap">{{ 'Config'|trans }}</th>
+                                        {% endif %}
+                                        
                                     </tr>
                                     <tr class="w-100 align-bottom">
                                         {% if is_granted("ROLE_SAV") %}
@@ -74,7 +78,7 @@
                                                 </div>
                                             {% endif %}
                                         </th>
-                                        <th colspan="5"></th>
+                                        <th colspan="6"></th>
                                     </tr>
                                 </thead>
                                 
@@ -117,6 +121,7 @@
                                             <td class="text-center">
                                             {% if download_link == true %}
                                                 <a download href="{{ asset(ressource_path  ~ 'logs/' ~ device.deviceFamily ~ '/' ~ device.logFile) }}">
+                                                {#<a download href="{{ "sftp://winback:i42aW;U=@linux-back.winback-assist.com:22/winback-dev/public" ~ ressource_path  ~ 'logs/' ~ device.deviceFamily ~ '/' ~ device.logFile }}">#}
                                                 <i class="fa-solid fa-download icon-interactive"></i>
                                                 </a>
                                             {% else %}
@@ -148,6 +153,12 @@
                                             </div>
                                             </td>
                                             {% endif %}
+                                            {% if is_granted("ROLE_ADMIN") %}
+                                            <td>
+                                            {{device.config}}
+                                            </td>
+                                            {% endif %}
+                                            
                                         </tr>
                                     {% endfor %}
                                     
