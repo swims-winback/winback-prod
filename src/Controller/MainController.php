@@ -80,10 +80,11 @@ class MainController extends AbstractController
             'snArray'=>$snArray,
             */
             // TODO
+            /*
             'firstChart'=>$firstChart,
             'secondChart'=>$secondChart,
             'thirdChart'=>$thirdChart,
-            
+            */
         ]);
     }
 
