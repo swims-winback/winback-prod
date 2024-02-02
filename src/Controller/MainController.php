@@ -55,7 +55,6 @@ class MainController extends AbstractController
         $deviceCreated = $this->getDeviceCreatedCount($deviceRepository, $deviceFamilyRepository);
 
         $deviceCount_array = $this->getDeviceCount($deviceFamilyRepository);
-
         //$firstDataset = [$this->getDataset("Devices connected", array_values($deviceConnected_array))];
         $firstDataset = [];
         foreach ($deviceConnected_array as $key => $value) {
@@ -67,12 +66,12 @@ class MainController extends AbstractController
             $secondDataset[] = $this->getDataset($key, array_values($deviceCreated[$key]));
         }
         $thirdDataset = [$this->getDataset('label', array_values($deviceCount_array))];
-        // TODO
         $week = $this->getDateName($this->getDate());
+        
         $firstChart = $this->getChart($chartBuilder, $week, $firstDataset, "Devices connected per week", Chart::TYPE_LINE);
         $secondChart = $this->getChart($chartBuilder, $week, $secondDataset, "Devices created per week", Chart::TYPE_LINE);
         $thirdChart = $this->getChartDisk($chartBuilder, array_keys($deviceCount_array), $thirdDataset, 'Number of devices per type', Chart::TYPE_DOUGHNUT);
-
+        
         return $this->render('main/index.html.twig', [
             /*
             'deviceConnectedArray'=>$deviceConnected_array,
@@ -80,11 +79,11 @@ class MainController extends AbstractController
             'snArray'=>$snArray,
             */
             // TODO
-            /*
+            
             'firstChart'=>$firstChart,
             'secondChart'=>$secondChart,
             'thirdChart'=>$thirdChart,
-            */
+            
         ]);
     }
 
