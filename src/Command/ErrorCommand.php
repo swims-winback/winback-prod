@@ -21,7 +21,7 @@ class ErrorCommand extends Command
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     { 
-        $pathToPython = "../src/Process/ErrorStats.py";
+        $pathToPython = "./src/Process/ErrorStats.py";
         $deviceType = $input->getArgument('deviceType');
         $process = new Process(['python', $pathToPython, $deviceType]);
         $process->start();
