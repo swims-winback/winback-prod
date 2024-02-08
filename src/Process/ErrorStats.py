@@ -14,7 +14,7 @@ import plotly.figure_factory as ff
 import plotly.express as px
 import plotly.graph_objects as go
 import time
-
+import datetime
 class GetError():
         
     def compareVersion(self, version, version_test):
@@ -32,7 +32,11 @@ class GetError():
     def getData(self, filename, device_type, path, last_date):
         with open(path+"/"+device_type+"/"+filename+".txt", encoding="utf8", errors='ignore') as f:
             doc = f.read()
-            
+            if last_date is not None:
+                x = datetime.datetime.strptime(last_date,'%Y-%m-%d %H:%M:%S').strftime('%d_%m_%y %H:%M:%S')
+                doc_array = re.split(x, doc, 1)
+                #print(doc_array[0])
+                doc = doc_array[1]
             chunk_array = re.split(r'\"?[Mm]ain version\"?:(\d{1,3}\.\d{1,3})', doc)
             new_chunk_array = []
             space = 20-len(filename)
@@ -50,8 +54,10 @@ class GetError():
                             if len(date) != 0 and len(error) != 0:
                                 if "B4" in filename:
                                     deviceType = "BACK4"
-                                if "NE" in filename or "EM" in filename:
+                                elif "NE" in filename or "EM" in filename:
                                     deviceType = "NEOCARE ELITE"
+                                else:
+                                    deviceType = "BACK4"
                                 if type(date[0]) is tuple:
                                     if date[0][0] != "":
                                         error_array = {"device_type":deviceType, "sn_id":filename, "version":version, "date":date[0][0], "error_id":error[0][0]} # we get only the first occurence to avoid repetitions due to device not switch off
@@ -207,52 +213,54 @@ class GetError():
             print("\r\nGroupe "+str(i)+" of "+str(int(len(file_list)/10)))
             for file in group:
                 file = file[:-4]
-                chunk_array = self.getData(file, deviceType, file_path_dir)
+                last_date = self.checkDB(file, connection)
+                chunk_array = self.getData(file, deviceType, file_path_dir, last_date)
                 if chunk_array != []:
                     error_array += chunk_array
             print("error_array: "+str(len(error_array)))
             print("--- %s seconds ---" % (time.time() - start_time))
             i+=1
-        error_log = self.toDataframe(error_array)
-        #print(error_log.head())
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print("--- 2nd Step ---")
-        error_count = self.countValue(error_log)
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print("--- 3rd Step ---")
-        val_counts = self.countBySn(error_log)
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print("--- 4th Step ---")
-        df_result = self.toResult(val_counts)
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print("--- 5th Step ---")
+        if error_array != []:
+            error_log = self.toDataframe(error_array)
+            #print(error_log.head())
+            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- 2nd Step ---")
+            error_count = self.countValue(error_log)
+            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- 3rd Step ---")
+            val_counts = self.countBySn(error_log)
+            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- 4th Step ---")
+            df_result = self.toResult(val_counts)
+            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- 5th Step ---")
+            
+            with pd.ExcelWriter(file_path+'/public/Ressource/scripts/'+"errorStats_"+deviceType+".xlsx") as writer:
+                error_log.to_excel(writer, sheet_name='error_log')
+                error_count.to_excel(writer, sheet_name='error_count')
+                val_counts.to_excel(writer, sheet_name='sn')
+                df_result.to_excel(writer, sheet_name='sn_detail')
+            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- 6th Step ---")
+            
+            # toSql
+            
+            values_to_insert = error_log.values.tolist()
+            sql_result = self.writeSql(error_log, "error")
+            for group in self.chunker(values_to_insert, 10):
+                try:
+                    self.execute_list_query(connection, sql_result, group)
+                except mysql.connector.Error as err:
+                    print("Something went wrong: {}".format(err))
         
-        with pd.ExcelWriter(file_path+'/public/Ressource/scripts/'+"errorStats_"+deviceType+".xlsx") as writer:
-            error_log.to_excel(writer, sheet_name='error_log')
-            error_count.to_excel(writer, sheet_name='error_count')
-            val_counts.to_excel(writer, sheet_name='sn')
-            df_result.to_excel(writer, sheet_name='sn_detail')
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print("--- 6th Step ---")
-        
-        # toSql
-        '''
-        values_to_insert = error_log.values.tolist()
-        sql_result = self.writeSql(error_log, "error")
-        for group in self.chunker(values_to_insert, 10):
-            try:
-                self.execute_list_query(connection, sql_result, group)
-            except mysql.connector.Error as err:
-                print("Something went wrong: {}".format(err))
-        '''
 
 if __name__ == "__main__":
     getError = GetError()
-    #deviceType = sys.argv[1]
-    #connection = create_db_connection()
-    #file_path = os.getenv('ROOT_ABS')
-    deviceType = "BACK4"
-    connection = ""
-    file_path = "C:/wamp64/www/public/winback_5005/"
-    #getError.main(deviceType, connection, file_path)
-    getError.checkDB("WIN0C_TEST_GUI9")
+    deviceType = sys.argv[1]
+    connection = create_db_connection()
+    file_path = os.getenv('ROOT_ABS')
+    #deviceType = "BACK4"
+    #connection = ""
+    #file_path = "C:/wamp64/www/public/winback_5005/"
+    getError.main(deviceType, connection, file_path)
+    #getError.checkDB("WIN0C_TEST_GUI9")

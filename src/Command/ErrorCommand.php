@@ -59,12 +59,14 @@ class ErrorCommand extends Command
         */
         /* Email */
         //$user = new User();
+        /*
         $emailToAdmin = (new TemplatedEmail())
             ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
             ->to('ldieudonat@winback.com')
             ->subject('Winback Assist - Error report')
             ->htmlTemplate('mail/error.html.twig');
         $this->mailer->send($emailToAdmin);
+        */
         return 0;
     }
 }
