@@ -120,6 +120,16 @@ class ErrorRepository extends ServiceEntityRepository
         ->getResult()
         ;
     }
+
+    public function findByDate($date)
+    {
+        return $this->createQueryBuilder('d')
+        ->andWhere('d.date LIKE :val')
+        //->select('d.sn')
+        ->setParameter('val', '%'.$date.'%')
+        ->getQuery()
+        ->getResult();
+    }
       /*
       public function findAllSn(DeviceRepository $deviceRepository) {
         $back4 = deviceTypeId[12];

@@ -65,6 +65,8 @@ class ErrorController extends AbstractController
         $errorCount_array = $this->getDeviceCount($errorFamilyRepository);
         $errorChart = $this->getChart($chartBuilder, array_keys($errorCount_array), 'label', array_values($errorCount_array), 'Number of devices per error', Chart::TYPE_DOUGHNUT);
 
+        $this->reportError($errorRepository);
+
         return $this->render('error/index.html.twig', [
             'errors' => $errors,
             'form' => $form->createView(),
@@ -144,5 +146,31 @@ class ErrorController extends AbstractController
 
         // return new Response(""), if you used NullOutput()
         return new Response($content);
+    }
+
+    function reportError(ErrorRepository $errorRepository) {
+        // check if error is 3
+        // date of today
+        $currentDate = date('Y-m-d');
+        $date = date('2022-12-06');
+        //var_dump($currentDate);
+        $errorFamily = $errorRepository->findByDate($date);
+        //var_dump($errorFamily);
+        $result = [];
+        $i = 0;
+        foreach ($errorFamily as $key => $value) {
+            
+            $result[] = $value->getSn()->getSn();
+        }
+        $result2 = $this->countOccurences($result);
+        var_dump($result2);
+
+        // find all errors of today
+        // if more than 3 records of sn are found for this date, add to result, to be send by mail
+    }
+
+    function countOccurences($inputArray) {
+        $occurences = array_count_values($inputArray);
+        return $occurences;
     }
 }
