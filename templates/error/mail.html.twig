@@ -1,0 +1,61 @@
+
+
+{% apply inline_css(source('@styles/email.css')) %}
+{#
+<header class="header-mail"><img src="{{ email.image('@images/wk_mail/wk_logo_header.png') }}" alt="Logo Header"></header>
+#}
+<h1 class="h1-mail">Error Report</h1>
+
+<p class="margin-bottom">
+<br>
+<div>
+
+{% for key, value in result %}
+    <span><h2>{{key}}</h2><h3>{{value.device_type}}</h3></span>
+    <table class="table-mail">
+        <thead>
+        <tr>
+        <th>Date</th>
+        <th>Error</th>
+        <th>Version</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for item in value.errors %}
+                <tr>
+                <td class="table-mail-cell">{{item.date}}</td>
+                <td class="table-mail-cell">{{item.error_id}}</td>
+                <td class="table-mail-cell">{{item.version}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endfor %}
+</div>
+<br>
+Don't hesitate to contact us with your feedback or if you encounter any issues to access your data.<br><br>
+<strong>The Winback Team.</strong>
+</p>
+<br>
+
+{#
+<footer class="footer-mail" style="background-color: #000000">
+    <!-- Social Icons -->
+    <div class="footer-mail-icons">
+        <img src="{{ email.image('@images/wk_mail/wk_fb_icon.png') }}" alt="Logo Fb">
+        <img src="{{ email.image('@images/wk_mail/wk_insta_icon.png') }}" alt="Logo Insta">
+        <img src="{{ email.image('@images/wk_mail/wk_linkedin_icon.png') }}" alt="Logo Link">
+    </div><br>
+    <div class="footer-mail-items"><img src="{{ email.image('@images/wk_mail/wk_logo_footer.png') }}" alt="Logo Footer"></div>
+    <!-- Adress -->
+    <div class="footer-mail-items footer-mail-adress">
+        <div class="footer-mail-item">20 Avenue Victor Hugo</div>
+        <div class="footer-mail-item">64200 Biarritz - France</div>
+        <div class="footer-mail-item">0483661666</div>
+        <div class="footer-mail-item">hello@winback.com</div>
+    </div>
+    <!-- Copyright -->
+    <div class="footer-mail-items"><em>Copyright Winback©, All rights reserved</em></div>
+</footer>
+#}
+{% endapply %}

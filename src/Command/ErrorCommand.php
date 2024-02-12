@@ -43,30 +43,6 @@ class ErrorCommand extends Command
             }
         }
         echo $process->getOutput();
-        /* PROCESS 2 */
-        /*
-        $pathToPython2 = "./src/Process/test.py";
-        $process2 = new Process(['python', $pathToPython2]);
-        $process2->start();
-        foreach ($process2 as $type => $data) {
-            if ($process2::OUT === $type) {
-                echo "\nDebug :".$data;
-            } else { // $process::ERR === $type
-                echo "\nErreur : ".$data;
-            }
-        }
-        echo $process2->getOutput();
-        */
-        /* Email */
-        //$user = new User();
-        /*
-        $emailToAdmin = (new TemplatedEmail())
-            ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
-            ->to('ldieudonat@winback.com')
-            ->subject('Winback Assist - Error report')
-            ->htmlTemplate('mail/error.html.twig');
-        $this->mailer->send($emailToAdmin);
-        */
         return 0;
     }
 }

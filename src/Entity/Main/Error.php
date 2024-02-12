@@ -37,6 +37,9 @@ class Error
     //private ?\DateTimeInterface $date = null;
     private ?string $date;
 
+    #[ORM\Column(length: 255, name:"`device_type`")]
+    private ?string $deviceType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +90,18 @@ class Error
     public function setDate(string $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDeviceType(): ?string
+    {
+        return $this->deviceType;
+    }
+
+    public function setDeviceType(?string $deviceType): self
+    {
+        $this->deviceType = $deviceType;
 
         return $this;
     }

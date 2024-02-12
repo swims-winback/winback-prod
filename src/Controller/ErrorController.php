@@ -7,6 +7,7 @@ use App\Form\SearchErrorType;
 use App\Repository\ErrorFamilyRepository;
 use App\Repository\ErrorRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -14,6 +15,8 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -40,6 +43,13 @@ class ErrorController extends AbstractController
         'rgb(201, 203, 207)'
       ];
 
+    private $mailer;
+    private $errorRepository;
+
+    public function __construct(MailerInterface $mailer, ErrorRepository $errorRepository) {                
+        $this->mailer = $mailer; 
+        $this->errorRepository = $errorRepository;             
+    }
     /**
      * @Route("/{_locale<%app.supported_locales%>}/user/app_error", name="app_error")
      */
@@ -148,25 +158,51 @@ class ErrorController extends AbstractController
         return new Response($content);
     }
 
-    function reportError(ErrorRepository $errorRepository) {
+    /**
+     * @Route("/mail-error", name="mail-error")
+     */
+    function reportError() {
         // check if error is 3
         // date of today
         $currentDate = date('Y-m-d');
-        $date = date('2022-12-06');
-        //var_dump($currentDate);
-        $errorFamily = $errorRepository->findByDate($date);
-        //var_dump($errorFamily);
+        $yesterday = new \DateTime('yesterday'); // will use our default timezone, Paris
+        $date = $yesterday->format('Y-m-d');
+        //$date = date('2023-04-13');
+        $errorFamily = $this->errorRepository->findByDate($date);
         $result = [];
+        $result3 = [];
         $i = 0;
         foreach ($errorFamily as $key => $value) {
             
             $result[] = $value->getSn()->getSn();
+            $result3[$value->getSn()->getSn()]["device_type"] = $value->getDeviceType();
+            $result3[$value->getSn()->getSn()]["errors"][] = [
+                "date" => $value->getDate(), 
+                "error_id" => $value->getError()->getErrorId(), 
+                "version" => $value->getVersion()];
         }
         $result2 = $this->countOccurences($result);
-        var_dump($result2);
+        foreach ($result2 as $key => $value) {
+            $result3[$key]["occurences"] = $value;
+        }
+        
+        if (!empty($result3)) {
+            $this->sendMail($result3);
+        }
+        
+        return $this->render('error/mail.html.twig', [
+            'result' => $result3,
+        ]);
+    }
 
-        // find all errors of today
-        // if more than 3 records of sn are found for this date, add to result, to be send by mail
+    function sendMail($result3) {
+        $emailToAdmin = (new TemplatedEmail())
+        ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
+        ->to('ldieudonat@winback.com')
+        ->subject('Winback Assist - Error report')
+        ->htmlTemplate('error/mail.html.twig')
+        ->context(['result' => $result3]);
+        $this->mailer->send($emailToAdmin);
     }
 
     function countOccurences($inputArray) {

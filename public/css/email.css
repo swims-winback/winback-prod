@@ -61,4 +61,17 @@ t .footer-mail-items {
 
 .margin-bottom {
   margin-bottom: 4em;
+}
+
+.span {
+  white-space: nowrap;
+}
+
+.table-mail {
+  border: solid;
+}
+.table-mail .table-mail-cell {
+  padding: 0.5em 1em;
+  text-align: center;
+  border: 1px solid;
 }/*# sourceMappingURL=email.css.map */
