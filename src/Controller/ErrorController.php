@@ -43,6 +43,19 @@ class ErrorController extends AbstractController
         'rgb(201, 203, 207)'
       ];
 
+    private $errorArray = [
+        218 => "Update error, one board software version not similar with GMU version",
+        220 => "No communication with led driver component in ACCESS board.",
+        221 => "5v voltage too high on ACCESS board.",
+        222 => "5v voltage too low on ACCESS board.",
+        234 => "Supply voltage too low on TECAR board.",
+        246 => "Supply voltage too low on GMU board.",
+        247 => "Emergency button cable not connected inside device.",
+        248 => "Communication lost between GMU and TECAR board.",
+        254 => "Emergency button pressed by someone.",
+
+    ];
+
     private $mailer;
     private $errorRepository;
 
@@ -71,12 +84,13 @@ class ErrorController extends AbstractController
             }
         }
         
-        //count by errors
+        //count by errors 
         $errorCount_array = $this->getDeviceCount($errorFamilyRepository);
         $errorChart = $this->getChart($chartBuilder, array_keys($errorCount_array), 'label', array_values($errorCount_array), 'Number of devices per error', Chart::TYPE_DOUGHNUT);
 
         $this->reportError($errorRepository);
 
+        var_dump($this->getErrorCountByDeviceType($errorRepository));
         return $this->render('error/index.html.twig', [
             'errors' => $errors,
             'form' => $form->createView(),
@@ -94,6 +108,44 @@ class ErrorController extends AbstractController
         return $deviceCountArray;
     }
 
+    public function getErrorCountByDeviceType(ErrorRepository $errorRepository) {
+        foreach ($errorRepository->distinctDeviceType() as $key => $value) {
+            $deviceTypes[$value["deviceType"]] = $value["deviceType"];
+        }
+        foreach ($deviceTypes as $key => $value) {
+            $errors = $errorRepository->findBy(array('deviceType'=>$value), array('error'=>'ASC'));
+            foreach ($errors as $errorKey => $errorValue) {
+                $errorResult[$key][] = $errorValue->getError()->getErrorId();
+                $errorDeviceType = $this->countOccurences($errorResult[$key]);
+            }
+            
+            
+            $deviceTypeResult[$key]=$errorDeviceType;
+            
+        }
+        return $deviceTypeResult;
+    }
+
+    /**
+     * get error by device type and date
+     */
+    public function getErrorCountByDate(ErrorRepository $errorRepository, $date) {
+        foreach ($errorRepository->distinctDeviceType() as $key => $value) {
+            $deviceTypes[$value["deviceType"]] = $value["deviceType"];
+        }
+        foreach ($deviceTypes as $key => $value) {
+            //$errors = $errorRepository->findBy(array('deviceType'=>$value, 'date'=>$date), array('error'=>'ASC'));
+            $errors = $errorRepository->findByDateDevice($value, $date);
+            foreach ($errors as $errorKey => $errorValue) {
+                $errorResult[$key][] = $errorValue->getError()->getErrorId();
+                $errorDeviceType[$key] = $this->countOccurences($errorResult[$key]);
+            }
+            $deviceTypeResult[$key]=$errorDeviceType[$key];
+            
+        }
+        return $deviceTypeResult;
+    }
+    
     /**
      * getChart
      * @param ChartBuilderInterface $chartBuilder
@@ -167,41 +219,47 @@ class ErrorController extends AbstractController
         $currentDate = date('Y-m-d');
         $yesterday = new \DateTime('yesterday'); // will use our default timezone, Paris
         $date = $yesterday->format('Y-m-d');
-        //$date = date('2023-04-13');
         $errorFamily = $this->errorRepository->findByDate($date);
         $result = [];
         $result3 = [];
+        $result4 = [];
         $i = 0;
         foreach ($errorFamily as $key => $value) {
-            
             $result[] = $value->getSn()->getSn();
-            $result3[$value->getSn()->getSn()]["device_type"] = $value->getDeviceType();
-            $result3[$value->getSn()->getSn()]["errors"][] = [
+            $result4[$value->getDeviceType()][$value->getSn()->getSn()]["errors"][] = [
                 "date" => $value->getDate(), 
                 "error_id" => $value->getError()->getErrorId(), 
-                "version" => $value->getVersion()];
+                "version" => $value->getVersion(),
+                "description" => $this->errorArray[$value->getError()->getErrorId()]];
+
         }
+
         $result2 = $this->countOccurences($result);
+        /*
         foreach ($result2 as $key => $value) {
-            $result3[$key]["occurences"] = $value;
+            $result4[$key]["occurences"] = $value;
+        }
+        */
+        $deviceTypeResult = $this->getErrorCountByDate($this->errorRepository, $date);
+        
+        if (!empty($result4)) {
+            $this->sendMail($result4, $deviceTypeResult);
         }
         
-        if (!empty($result3)) {
-            $this->sendMail($result3);
-        }
-        
+
         return $this->render('error/mail.html.twig', [
-            'result' => $result3,
+            'result' => $result4,
+            'deviceTypeResult' => $deviceTypeResult
         ]);
     }
 
-    function sendMail($result3) {
+    function sendMail($result, $deviceTypeResult) {
         $emailToAdmin = (new TemplatedEmail())
         ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
-        ->to('ldieudonat@winback.com')
+        ->to('ldieudonat@winback.com', 'bwollensack@winback.com')
         ->subject('Winback Assist - Error report')
         ->htmlTemplate('error/mail.html.twig')
-        ->context(['result' => $result3]);
+        ->context(['result' => $result, 'deviceTypeResult' => $deviceTypeResult]);
         $this->mailer->send($emailToAdmin);
     }
 

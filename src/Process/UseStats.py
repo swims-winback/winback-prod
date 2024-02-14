@@ -109,8 +109,6 @@ class UseStats:
         #df = self.getResult("input/BACK4/")
         file_path = os.getcwd()
         file_path_dir = file_path+"\public\Ressource\logs\BACK4"
-        if os.path.isdir(file_path+"\public\Ressource\logs\BACK4"):
-            print("hello")
         df = self.getResult(file_path_dir)
         df_year = self.getYear(df)
         df_month = self.getMonth(df)

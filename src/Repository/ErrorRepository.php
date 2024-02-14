@@ -121,12 +121,35 @@ class ErrorRepository extends ServiceEntityRepository
         ;
     }
 
+    public function distinctDeviceType(){
+        $query = $this->createQueryBuilder('cc')
+        ->groupBy('cc.deviceType')
+        ->addSelect('cc.deviceType')
+        ->getQuery()
+        ->getResult()
+        ;
+        return $query;
+    }
+
     public function findByDate($date)
     {
         return $this->createQueryBuilder('d')
         ->andWhere('d.date LIKE :val')
         //->select('d.sn')
         ->setParameter('val', '%'.$date.'%')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findByDateDevice($device, $date)
+    {
+        return $this->createQueryBuilder('d')
+        ->andWhere('d.deviceType = :val2')
+        ->andWhere('d.date LIKE :val')
+        //->select('d.sn')
+        ->setParameter('val2', $device)
+        ->setParameter('val', '%'.$date.'%')
+        ->orderBy('d.error', 'ASC')
         ->getQuery()
         ->getResult();
     }
