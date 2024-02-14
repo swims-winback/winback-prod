@@ -366,3 +366,160 @@ function addServerIp(ip, id) {
       url: `/addServerPort/${port}/${id}`,
     });
 }
+
+/*
+function getChart(data_Iin, data_Iout, data_Vout, labels) {
+  return ({
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Iin",
+        data: data_Iin,
+        backgroundColor: [
+          'rgba(105, 0, 132, .2)',
+        ],
+        borderColor: [
+          '#3A1FFF',
+        ],
+        borderWidth: 2,
+      },
+        {
+        label: "Iout",
+        data: data_Iout,
+        backgroundColor: [
+          'rgba(105, 0, 132, .2)',
+        ],
+        borderColor: [
+          '#00FFF1',
+        ],
+        borderWidth: 2,
+      },
+      {
+        label: "Vout",
+        data: data_Vout,
+        backgroundColor: [
+          'rgba(0, 137, 132, .2)',
+        ],
+        borderColor: [
+          '#FE8D22',
+        ],
+        borderWidth: 2,
+        tension: 0.2
+      }
+      ]
+    },
+    options: {
+      responsive: true,
+      color: '#FFFFFF',
+    }
+  })
+}
+
+function getLabels(array_length) {
+  var labels = []
+  for (let index = 1; index <= array_length; index ++) {
+    labels.push(index);
+  }
+  return labels
+}
+
+ctxl_array = document.getElementsByClassName("lineChart")
+ctxl_elem_array = []
+
+data_array = [
+  [[147, 182, 13, 13, 13, 13], [164, 187, 46, 43, 43, 43], [149, 170, 88, 87, 86, 85]],
+  [[6, 6, 236, 235, 229, 229], [20, 21, 232, 234, 237, 238], [42, 42, 65, 63, 59, 58]],
+  [[12, 12, 12, 12], [34, 35, 35, 36], [80, 81, 81, 82]],
+  [[163, 171, 167, 151], [293, 282, 290, 297], [41, 39, 41, 39]],
+  [[12, 12, 12], [34, 35, 35], [80, 81, 81]],
+  [[150, 137, 165], [270, 249, 292], [38, 38, 39]],
+  [[125, 118], [164, 159], [153, 148]],
+  [[6, 6], [17, 16], [39, 39]],
+  [[152, 160, 190], [177, 188, 213], [196, 207, 213]],
+  [[6, 6, 6], [19, 19, 18], [40, 40, 40]],
+  [[174, 191, 167], [185, 205, 182], [220, 218, 206]],
+  [[6, 6, 6], [21, 19, 20], [43, 41, 41]],
+  [[112, 133], [133, 154], [180, 185]],
+  [[6, 6], [20, 17], [42, 39]],
+  [[49, 50, 53, 247, 254, 245, 333], [117, 117, 115, 282, 300, 288, 297], [59, 58, 57, 53, 54, 52, 76]],
+  [[47, 49, 45, 6, 6, 6, 6], [121, 119, 119, 5, 5, 5, 5], [59, 59, 58, 8, 8, 8, 8]],
+  [[79, 82, 69, 97], [120, 122, 115, 137], [140, 141, 136, 154]],
+  [[75, 77, 77, 94], [118, 123, 120, 137], [156, 162, 145, 169]],
+  [[89, 98, 56, 123], [124, 142, 98, 159], [147, 157, 137, 178]],
+  [[87, 105, 52, 112], [123, 143, 89, 158], [158, 182, 135, 192]],
+  [[48, 238, 262, 227, 153, 290, 314, 242, 316, 352], [114, 311, 334, 318, 224, 369, 382, 334, 418, 377], [59, 51, 54, 48, 33, 48, 49, 45, 48, 52]],
+  [[38, 5, 5, 5, 6, 6, 6, 6, 6, 6], [123, 5, 5, 5, 6, 6, 6, 5, 5, 6], [60, 9, 9, 9, 9, 9, 8, 8, 8, 8]],
+  [[5, 6, 6, 6, 6, 5, 6, 6, 6], [22, 5, 5, 5, 4, 21, 5, 5, 4], [42, 9, 9, 9, 9, 41, 9, 8, 8]],
+  [[101, 126, 143, 136, 85, 103, 106, 105, 109], [135, 246, 273, 270, 184, 140, 219, 218, 221], [155, 32, 34, 33, 26, 154, 28, 26, 27]],
+  [[165, 103, 104, 76, 84], [234, 152, 154, 153, 154], [46, 82, 76, 74, 77]],
+  [[6, 60, 59, 82, 79], [5, 162, 152, 154, 158], [8, 72, 72, 77, 79]],
+  [[6, 6, 102, 62, 17], [5, 5, 138, 84, 32], [9, 8, 28, 17, 11]],
+  [[100, 6, 144, 6, 45], [158, 10, 162, 16, 71], [34, 4, 41, 8, 17]],
+  [[5, 5, 6, 6, 6, 6, 6], [20, 21, 5, 5, 5, 5, 5], [40, 41, 8, 8, 8, 8, 8]],
+  [[156, 184, 168, 215, 210, 169, 161], [187, 204, 294, 339, 344, 294, 293], [160, 186, 37, 41, 41, 36, 35]],
+  [[158, 129, 127, 181, 121, 148, 47], [205, 182, 180, 265, 208, 225, 95], [142, 121, 120, 40, 31, 33, 47]],
+  [[145, 102, 103, 171, 116, 147, 23], [193, 158, 159, 287, 224, 251, 84], [157, 120, 123, 38, 30, 31, 47]],
+  [[330, 312, 348, 228], [309, 312, 324, 216], [81, 75, 83, 72]],
+  [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+
+]
+for (let elem of ctxl_array) {
+  elem_id = elem.id
+  ctxl_elem = elem.getContext('2d');
+  ctxl_elem_array.push(ctxl_elem)
+}
+
+for (let index = 0; index < ctxl_elem_array.length; index++) {
+  elem = ctxl_elem_array[index];
+  data_Iin = data_array[index][0]
+  data_Iout = data_array[index][1]
+  data_Vout = data_array[index][2]
+  labels = getLabels(data_Vout.length)
+  console.log(labels)
+  param = getChart(data_Iin, data_Iout, data_Vout, labels)
+  lineChart_elem = new Chart(elem, param)
+  
+}
+
+var ctxL2 = document.getElementById("lineChart2").getContext('2d');
+var myLineChart2 = new Chart(ctxL2, {
+  type: 'line',
+  data: {
+    labels: ["1", "3", "5", "7"],
+    datasets: [{
+      label: "Iout",
+      data: [59, 80, 81, 56],
+      backgroundColor: [
+        'rgba(105, 0, 132, .2)',
+      ],
+      borderColor: [
+        '#3A1FFF',
+      ],
+      borderWidth: 2,
+    },
+    {
+      label: "Vout",
+      data: [28, 48, 40, 19],
+      backgroundColor: [
+        'rgba(0, 137, 132, .2)',
+      ],
+      borderColor: [
+        '#FE8D22',
+      ],
+      borderWidth: 2,
+      tension: 0.2
+    }
+    ]
+  },
+  options: {
+    responsive: true,
+    color: '#FFFFFF',
+  }
+});
+
+document.getElementById("reset-form-device").onclick = function () {
+  document.getElementById("filter").reset();
+  console.log("hello")
+}
+*/
