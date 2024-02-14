@@ -1,7 +1,8 @@
 
 <div class="modal-body row" style="height: 15em;">
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
-    <div class="col d-flex flex-column justify-content-center" style="height:100%;">
+
+    <div class="col-3 d-flex flex-column justify-content-center align-items-center" style="height:100%;">
+        {#
         <select name="" id="">
             <option value="">Error</option>
             <option value="">248</option>
@@ -14,27 +15,29 @@
             <option value="">Date</option>
             <option value="">1er Janvier 2012</option>
         </select>
+        #}
+        <button class="btn btn-outline-orange mb-1" style="width: fit-content;" onclick="tableToCSV()" type="button">Download Errors</button>
     </div>
-    {% endif %}
+
     <div class="col h-100" style="overflow: scroll;">
-        <table class="table table-striped text-center">
+        <table class="table table-striped text-center" border="1">
             <thead>
-                <tr>
-                <th>error_id</th>
-                <th>version</th>
-                <th>date</th>
+                <tr class="tr_error">
+                <th>Error</th>
+                <th>Version</th>
+                <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for error in device.errors|reverse %}
-                <tr>
+                <tr class="tr_error">
                 <td>{{error.error}}</td>
                 <td>{{error.version}}</td>
-                <td>{{error.date|format_datetime('medium', 'short')}}</td>
+                {#<td>{{error.date|format_datetime('short', 'short')}}</td>#}
+                <td>{{error.date}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <button class="btn btn-outline-orange mb-1" style="width: fit-content;">Download History</button>
     </div> 
 </div>
