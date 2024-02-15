@@ -88,8 +88,6 @@ class ErrorController extends AbstractController
         $errorCount_array = $this->getDeviceCount($errorFamilyRepository);
         $errorChart = $this->getChart($chartBuilder, array_keys($errorCount_array), 'label', array_values($errorCount_array), 'Number of devices per error', Chart::TYPE_DOUGHNUT);
 
-        $this->reportError($errorRepository);
-
         var_dump($this->getErrorCountByDeviceType($errorRepository));
         return $this->render('error/index.html.twig', [
             'errors' => $errors,
