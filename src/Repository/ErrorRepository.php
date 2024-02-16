@@ -79,21 +79,21 @@ class ErrorRepository extends ServiceEntityRepository
           }
           
           if (!empty($search->version)) {
-              $query = $query
-                  ->andWhere('d.version = :version')
-                  ->setParameter('version', $search->version);
+            $query = $query
+            ->andWhere('d.version IN (:version)')
+            ->setParameter('version', $search->version);
           }
           
           if (!empty($search->sn_category)) {
               $query = $query
-                  ->andWhere('c.sn IN (:sn)')
+                  ->andWhere('d.deviceType IN (:sn)')
                   ->setParameter('sn', $search->sn_category);
           }
           if (!empty($search->error_category)) {
             $query = $query
                 ->andWhere('e.error_id IN (:error)')
                 ->setParameter('error', $search->error_category);
-        }
+            }
           
           return $query;
       }
@@ -123,6 +123,7 @@ class ErrorRepository extends ServiceEntityRepository
     }
     */
     public function distinctVersions($device){
+
         return $this->createQueryBuilder('cc')
         ->andWhere('cc.deviceType = :val2')
         ->setParameter('val2', $device)
