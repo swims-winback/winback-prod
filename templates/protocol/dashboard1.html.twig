@@ -1,0 +1,36 @@
+
+
+    <div class="row d-flex flex-column justify-content-between">
+        <div class="row my-1">
+            <div class="col d-flex justify-content-around align-items-center h-100 p-5">
+                <div class="col">
+                {{ render_chart(treatmentDurationChart) }}
+                </div>
+                <div class="col-6">
+                    <div class="row d-flex flex-column align-items-center w-100">
+                    Average treatment duration
+                    <h5><span class="count display-4">22</span> minutes</h5>
+                    </div>
+                    <div class="row d-flex flex-column align-items-center w-100">
+                    Number of treatments
+                    <h5><span class="count display-4">35</span> Treatments</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
+                <h6>Number of treatments per day</h6>
+                {{ render_chart(thirdChart) }}
+            </div>
+        </div>
+        <div class="row my-1">
+            <div id="" class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
+                <h6>Mode usage per week (%)</h6>
+                {{ render_chart(firstChart) }}
+                {{ render_chart(firstChartWeek) }}
+            </div>
+            <div class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
+                <h6>Accessories usage per week (%)</h6>
+                {{ render_chart(secondChart) }}
+            </div>
+        </div>
+    </div>

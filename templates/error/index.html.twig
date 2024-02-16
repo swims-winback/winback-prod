@@ -23,6 +23,7 @@
                     <thead>
                     <tr>
                     <th>{{ 'Error'|trans }}</th>
+                    <th>{{ 'Device Type'|trans }}</th>
                     <th>{{ 'Serial Number'|trans }}</th>
                     <th>{{ 'Version'|trans }}</th>
                     <th>{{ 'Date'|trans }}</th>
@@ -32,6 +33,7 @@
                     {% for error in errors|reverse %}
                     <tr>
                     <td>{{error.error}}</td>
+                    <td>{{error.deviceType}}</td>
                     <td>{{error.sn}}</td>
                     <td>{{error.version}}</td>
                     <td>{{error.date|format_datetime('medium', 'short')}}</td>
