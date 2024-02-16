@@ -721,7 +721,6 @@ table.dataTable thead .sorting_desc_disabled:before {
 .filterDropdown-content {
   height: 10em;
   overflow: scroll;
-  margin-left: 5px;
 }
 .filterDropdown-content .form-check {
   display: flex;
