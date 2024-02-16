@@ -813,3 +813,26 @@ background: #eee;
 .protoChart {
     min-width: 15em;
 }
+
+/* Filter menus */
+.filterDropdown-content {
+    height: 10em;
+    overflow: scroll;
+    margin-left: 5px;
+    .form-check {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content:left;
+        width: 100% !important;
+    }
+    .form-check-input {
+        margin-right: 1.5em;
+    }
+}
+/* Show the dropdown menu on hover */
+.filterDropdown:hover .filterDropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.filterDropdown:hover .filterDropbtn {background-color: $color1;}

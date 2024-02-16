@@ -6,22 +6,26 @@
     {{ form_row(form.q, {attr: { style: 'border-left-style: none; border-top-left-radius: 0; border-bottom-left-radius: 0;'}}) }}
     </div>
     <!-- Device Type -->
-    
-        <h6 class="mt-2">{{ 'Device'|trans }}</h6>
-        <div class="border border-0" id="collapseDeviceType" style="height: 10em;">
-            {{ form_row(form.sn_category) }}
+        <div class="btn-group dropend filterDropdown w-100">
+        <button id="dropdownErrorCategory" class="btn btn-secondary dropdown-toggle d-flex flex-nowrap justify-content-between align-items-center filterDropbtn my-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <h6 class="mt-2">{{ 'Devices'|trans }}</h6>
+        </button>
+        {{ form_row(form.sn_category) }}
         </div>
     
     <!-- Error Type -->
-        <h6 class="mt-2">{{ 'Error'|trans }}</h6>
-        <div class="border border-0" id="collapseErrorType">
-            {{ form_row(form.error_category) }}
+        <div class="btn-group dropend filterDropdown w-100">
+        <button id="dropdownErrorCategory" class="btn btn-secondary dropdown-toggle d-flex flex-nowrap justify-content-between align-items-center filterDropbtn my-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <h6 class="mt-2">{{ 'Errors'|trans }}</h6>
+        </button>
+        {{ form_row(form.error_category) }}
         </div>
     <!-- Device Version -->
-        <h6 class="mt-2">{{ 'Device Version'|trans }}</h6>
-        <div class="border border-0" id="collapseDeviceVersion">
-            {{ form_row(form.version) }}
+        <div class="btn-group dropend filterDropdown w-100">
+        <button id="dropdownErrorCategory" class="btn btn-secondary dropdown-toggle d-flex flex-nowrap justify-content-between align-items-center filterDropbtn my-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <h6 class="mt-2">{{ 'Versions'|trans }}</h6>
+        </button>
+        {{ form_row(form.version) }}
         </div>
-
-    <button type="submit" class="btn bg-orange btn-outline-orange">{{ 'Search'|trans }}</button>
+    <button type="submit" class="btn bg-orange btn-outline-orange my-2">{{ 'Search'|trans }}</button>
 {{ form_end(form) }}

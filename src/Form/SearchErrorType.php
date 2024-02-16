@@ -25,12 +25,20 @@ class SearchErrorType extends AbstractType
     public function __construct(ManagerRegistry $registry) {
         $this->registry = $registry;
     }
+    /*
     function getCategories(ErrorRepository $errorRepository) {
         $distinctCategories = $errorRepository->distinctCategories();
         foreach ($distinctCategories as $cat) {
             $sn_array[$cat->getSn()->getSn()] = $cat->getSn()->getSn();
         }
         return $sn_array;
+    }
+    */
+    function getCategories(ErrorRepository $errorRepository) {
+        foreach ($errorRepository->distinctDeviceType() as $key => $value) {
+            $deviceTypes[$value["deviceType"]] = $value["deviceType"];
+        }
+        return $deviceTypes;
     }
     function getErrors(ErrorRepository $errorRepository) {
         $distinctCategories = $errorRepository->distinctErrors();
@@ -39,10 +47,16 @@ class SearchErrorType extends AbstractType
         }
         return $sn_array;
     }
+    // get versions by deviceType
     function getVersions(ErrorRepository $errorRepository) {
-        $distinctCategories = $errorRepository->distinctVersions();
-        foreach ($distinctCategories as $cat) {
-            $sn_array[$cat->getVersion()] = $cat->getVersion();
+        foreach ($errorRepository->distinctDeviceType() as $key => $value) {
+            $deviceTypes[$value["deviceType"]] = $value["deviceType"];
+        }
+        foreach ($deviceTypes as $key => $value) {
+            $distinctCategories = $errorRepository->distinctVersions($key);
+            foreach ($distinctCategories as $cat) {
+                $sn_array[$key][$cat->getVersion()] = $cat->getVersion();
+            }
         }
         return $sn_array;
     }
@@ -67,9 +81,10 @@ class SearchErrorType extends AbstractType
             ->add('sn_category', ChoiceType::class, [
                 'label' => false,
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control dropdown-menu filterDropdown-content px-2 text-center'
                 ],
                 'multiple' => true,
+                'expanded' => true,
                 'choices'  => [
                     'Serial Numbers'=>$sn_array
                 ],
@@ -79,9 +94,10 @@ class SearchErrorType extends AbstractType
             ->add('error_category', ChoiceType::class, [
                 'label' => false,
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control dropdown-menu filterDropdown-content px-2 text-center',
                 ],
                 'multiple' => true,
+                'expanded' => true,
                 'choices'  => 
                 [
                     ''=>$error_array
@@ -119,12 +135,17 @@ class SearchErrorType extends AbstractType
             ->add('version', ChoiceType::class, [
                 'label' => false,
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control dropdown-menu filterDropdown-content px-2 text-center',
                 ],
                 'multiple' => true,
+                'expanded' => true,
                 'choices'  => [
-                    'Versions'=>$version_array
-                ],
+                    "BACK3TE" => [$version_array["BACK3TE"]], 
+                    "BACK3TX"=>[$version_array["BACK3TX"]], 
+                    "BACK4" => [$version_array["BACK4"]], 
+                    "NEOCARE ELITE"=>[$version_array["NEOCARE ELITE"]]
+                    ]
+                ,
                 'required' => false,
                 
             ])

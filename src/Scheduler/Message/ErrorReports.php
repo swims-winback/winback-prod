@@ -35,6 +35,12 @@ class ErrorReports
         $output = new BufferedOutput();
         $errorCommand->run($input, $output);
         $content = $output->fetch();
+        /* BACK3TE */
+        $errorCommand = new ErrorCommand($this->mailer);
+        $input = new ArrayInput(['deviceType' => 'BACK3TE']);
+        $output = new BufferedOutput();
+        $errorCommand->run($input, $output);
+        $content = $output->fetch();
         /* mail */
         /*
         $emailToAdmin = (new TemplatedEmail())

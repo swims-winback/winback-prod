@@ -14,7 +14,7 @@
                                     <button id="version-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#version2_{{device.id}}" role="tab" aria-controls="version2" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Version'|trans }}</span></button>
                                 </li>
                             {% endif %}
-                            {% if is_granted("ROLE_ADMIN") and device.deviceFamily == "BACK4"%}
+                            {% if is_granted("ROLE_ADMIN") and (device.deviceFamily == "BACK4" or device.deviceFamily == "BACK3TX")%}
                             <li class="nav-item">
                                 <button id="error-tab_{{device.id}}" class="nav-link" aria-current="page" data-bs-toggle="tab" data-bs-target="#error_{{device.id}}" role="tab" aria-controls="error" aria-selected="true"><span class="text-center w-100 align-middle h6">{{ 'Error'|trans }}</span></button>
                             </li>

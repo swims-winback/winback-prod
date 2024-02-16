@@ -43,6 +43,20 @@ class ErrorController extends AbstractController
         'rgb(201, 203, 207)'
       ];
 
+      public $backgroundDevice = [
+        "BACK3TE"=>'rgba(255, 99, 132, 0.2)',
+        "BACK3TX"=>'rgba(255, 159, 64, 0.2)',
+        "BACK4"=>'rgba(255, 205, 86, 0.2)',
+        "NEOCARE ELITE"=>'rgba(75, 192, 192, 0.2)',
+    ];
+      
+    public $borderDevice = [
+        "BACK3TE"=>'rgb(255, 99, 132)',
+        "BACK3TX"=>'rgb(255, 159, 64)',
+        "BACK4"=>'rgb(255, 205, 86)',
+        "NEOCARE ELITE"=>'rgb(75, 192, 192)',
+      ];
+
     private $errorArray = [
         218 => "Update error, one board software version not similar with GMU version",
         220 => "No communication with led driver component in ACCESS board.",
@@ -87,12 +101,18 @@ class ErrorController extends AbstractController
         //count by errors 
         $errorCount_array = $this->getDeviceCount($errorFamilyRepository);
         $errorChart = $this->getChart($chartBuilder, array_keys($errorCount_array), 'label', array_values($errorCount_array), 'Number of devices per error', Chart::TYPE_DOUGHNUT);
-
-        var_dump($this->getErrorCountByDeviceType($errorRepository));
+        foreach ($this->getErrorCountByDeviceType($errorRepository) as $key => $value) {
+            $errorDataset = [$this->getDataset(array_keys($value), $this->backgroundArray, $this->borderArray, array_values($value))];
+            //$errorChart2 = $this->getChartComplex($chartBuilder, array_keys($value), $errorDataset, "text", Chart::TYPE_BAR);
+            $errorChart2 = $this->getChartComplex($chartBuilder, array_keys($value), $errorDataset, 'Number of devices per error', Chart::TYPE_DOUGHNUT);
+            $errorChartArray[$key] = $errorChart2;
+        }
+        
         return $this->render('error/index.html.twig', [
             'errors' => $errors,
             'form' => $form->createView(),
-            'errorChart' => $errorChart
+            'errorChart' => $errorChart,
+            'errorChartArray' => $errorChartArray
         ]);
     }
 
@@ -174,11 +194,43 @@ class ErrorController extends AbstractController
             
             'plugins'=> [
                 'title'=> [
-                    'display'=> true,
+                    'display'=> false,
                     'text'=> $text
                 ]
             ],
             'maintainAspectRatio' => false,
+        ]);
+
+        return $chart;
+    }
+
+    function getDataset($label, $backgroundArray, $borderArray, $dataArray) {
+        return 
+            [
+                'label' => $label,
+                'backgroundColor' => $backgroundArray,
+                'borderColor' => $borderArray,
+                'data' => $dataArray,
+                'borderWidth' => 1
+            ];
+    }
+    function getChartComplex(ChartBuilderInterface $chartBuilder, $labels, $datasets, $text, $chartType) {
+        //Chart::TYPE_LINE
+        $chart = $chartBuilder->createChart($chartType);
+        $chart->setData([
+            'labels' => $labels,
+            'datasets' => $datasets,
+        ]);
+    
+        $chart->setOptions([
+            
+            'plugins'=> [
+                'title'=> [
+                    'display'=> false,
+                    'text'=> $text
+                ]
+            ],
+            'maintainAspectRatio' => true,
         ]);
 
         return $chart;

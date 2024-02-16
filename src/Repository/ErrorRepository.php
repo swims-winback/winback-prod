@@ -113,8 +113,19 @@ class ErrorRepository extends ServiceEntityRepository
         ->getResult()
         ;
     }
+    /*
     public function distinctVersions(){
         return $this->createQueryBuilder('cc')
+        ->groupBy('cc.version')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+    */
+    public function distinctVersions($device){
+        return $this->createQueryBuilder('cc')
+        ->andWhere('cc.deviceType = :val2')
+        ->setParameter('val2', $device)
         ->groupBy('cc.version')
         ->getQuery()
         ->getResult()

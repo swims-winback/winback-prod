@@ -46,7 +46,8 @@ class GetError():
             for i in range(0, len(chunk_array), 2): # pair version number with date and error
                 if re.match(r"(\d{1,3}\.\d{1,3})", chunk_array[i]) and not re.match('(\"?Main version\"?:\d{1,3}.\d{1,3})', chunk_array[i+1]):
                     if device_type == "BACK4":
-                        from_version = "3.11"
+                        #from_version = "3.11"
+                        from_version = "3.5"
                         if self.compareVersion(from_version, chunk_array[i])==True: # if version is greater than 3.11
                             version = chunk_array[i]
                             date = re.findall(r"(\d{2}_\d{2}_\d{2} \d{2}:\d{2}:\d{2}) \| \*{3}ERROR \(\d\) \| state:\d{1,3}|\"?(\d{2}_\d{2}_\d{2} \d{2}:\d{2}:\d{2})\"?,\"?ERR\"?:{\"?state\"?:\d{1,3}", chunk_array[i+1])
@@ -71,6 +72,24 @@ class GetError():
                 
                     elif device_type == "BACK3TX":
                         from_version = "3.3"
+                        if self.compareVersion(from_version, chunk_array[i])==True: # if version is greater than 3.3
+                            version = chunk_array[i]
+                            date = re.findall(r"(\d{2}_\d{2}_\d{2} \d{2}:\d{2}:\d{2}) \| \*{3}ERROR \(\d\) \| state:\d{1,3}|\"?(\d{2}_\d{2}_\d{2} \d{2}:\d{2}:\d{2})\"?,\"?ERR\"?:{\"?state\"?:\d{1,3}", chunk_array[i+1])
+                            error = re.findall(r"ERROR \(\d\) \| state:(\d{1,3})|\"?ERR\"?:{\"?state\"?:(\d{1,3})", chunk_array[i+1])
+                            if len(date) != 0 and len(error) != 0:
+                                if type(date[0]) is tuple:
+                                    if date[0][0] != "":
+                                        error_array = {"device_type":device_type, "sn_id":filename, "version":version, "date":date[0][0], "error_id":error[0][0]}
+                                        new_chunk_array.append(error_array)
+                                    else:
+                                        error_array = {"device_type":device_type, "sn_id":filename, "version":version, "date":date[0][1], "error_id":error[0][1]}
+                                        new_chunk_array.append(error_array)
+                                else:
+                                    error_array = {"device_type":device_type, "sn_id":filename, "version":version, "date":date[0], "error_id":error[0]}
+                                    new_chunk_array.append(error_array)
+                    
+                    elif device_type == "BACK3TE":
+                        from_version = "1.0"
                         if self.compareVersion(from_version, chunk_array[i])==True: # if version is greater than 3.3
                             version = chunk_array[i]
                             date = re.findall(r"(\d{2}_\d{2}_\d{2} \d{2}:\d{2}:\d{2}) \| \*{3}ERROR \(\d\) \| state:\d{1,3}|\"?(\d{2}_\d{2}_\d{2} \d{2}:\d{2}:\d{2})\"?,\"?ERR\"?:{\"?state\"?:\d{1,3}", chunk_array[i+1])
