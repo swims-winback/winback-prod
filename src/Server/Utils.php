@@ -47,16 +47,6 @@ class Utils {
                     echo "\r\n{$fileName} is too big. Content cannot be get.\r\n";
                     return false;
                 }
-
-                /*
-                $content = file_get_contents($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName);
-                if ($content) {
-                    return $content;
-                } else {
-                    echo "\r\nContent cannot be get.\r\n";
-                    return false;
-                }
-                */
             } else {
                 $aValue = explode('_', $fileName);
                 $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
@@ -69,6 +59,31 @@ class Utils {
                         return false;
                     }
                     return $content;
+                }
+                echo "\r\n{$actualFile} doesn't exist, please check again.\r\n";
+                return false;
+            }
+        }
+        else {
+            echo "\r\nDirectory". $_ENV['PACK_PATH'] ."doesn't exist. Content cannot be get.\r\n";
+            return false;
+        }
+    }
+
+    function getFileSize(string $deviceType, string $fileName) : string|bool
+    {
+        if (file_exists($_ENV['PACK_PATH'])) { # check that directory exists and is accessible
+            if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName)) {
+                $size = filesize($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName);
+                return $size;
+            } else {
+                $aValue = explode('_', $fileName);
+                $boardType = $aValue[2]; //TODO to be used in the future in file_get_contents
+                $lastVersUp = $this->checkLastVersion($deviceType, $boardType);
+                $actualFile = $lastVersUp["name"];
+                if (file_exists($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $actualFile)) {
+                    $size = filesize($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $actualFile);
+                    return $size;
                 }
                 echo "\r\n{$actualFile} doesn't exist, please check again.\r\n";
                 return false;
