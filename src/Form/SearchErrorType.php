@@ -106,32 +106,7 @@ class SearchErrorType extends AbstractType
                 'required' => false,
                 
             ])
-            /*
-            ->add('error_category', EntityType::class, [
-                'class' => ErrorFamily::class,
-                'label' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'required' => false,
-                'expanded' => true,
-                'multiple' => true,
-                'query_builder' => function (ErrorFamilyRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->orderBy('u.error_id', 'ASC');
-                },
-            ])
-            */
-            /*
-            ->add('version', SearchType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Version',
-                ],
-                'required' => false,
-            ])
-            */
+
             ->add('version', ChoiceType::class, [
                 'label' => false,
                 'attr' => [

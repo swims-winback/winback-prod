@@ -277,11 +277,11 @@ class DeviceController extends AbstractController
         $device = $deviceRepository->findOneBy(array('id' => $id));
         if ($comment == "null") {
             $comment = "";
-            $logger->info($user." has deleted comment.");
+            $logger->info($user." has deleted comment to ".$device->getSn());
             $this->addFlash('infoDevice', 'Comment deleted with success !');
         }
         else {
-            $logger->info($user." has added comment ".$comment);
+            $logger->info($user." has added comment ".$comment." to ".$device->getSn());
             $this->addFlash('infoDevice', 'Comment '.$comment.' added with success to '.$device->getSn().'!');
         }
         $device->setComment($comment);

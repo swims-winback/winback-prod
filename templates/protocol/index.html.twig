@@ -7,7 +7,7 @@
 
 <div class="container-fluid row h-100">
     {% if protocols is not empty %}
-    <div class="col-md-3 d-flex flex-column justify-content-center sticky-scroll h-100">
+    <div class="col-md-2 d-flex flex-column justify-content-center sticky-scroll h-100">
     {% include "protocol/_sidenav.html.twig" %}
     </div>
     {% endif %}
@@ -31,9 +31,3 @@
 
 
 {% endblock %}
-
-{#
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/protocol.js')}}"></script>
-{% endblock %}
-#}

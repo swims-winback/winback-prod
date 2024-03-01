@@ -1,17 +1,13 @@
-$(".count").each(function () {
-    $(this)
-      .prop("Counter", 0)
-      .animate(
-        {
-          Counter: $(this).text(),
-        },
-        {
-          duration: 1000,
-          easing: "swing",
-          step: function (now) {
-            now = Number(Math.ceil(now)).toLocaleString('en');
-                                  $(this).text(now);
-          },
-        }
-      );
+$("#byWeek").click(function(){
+    $("#modeDay").hide();
+    $("#modeWeek").show();
+    $("#accDay").hide();
+    $("#accWeek").show();
+  });
+  
+  $("#byDay").click(function(){
+      $("#modeDay").show();
+      $("#modeWeek").hide();
+      $("#accDay").show();
+      $("#accWeek").hide();
   });

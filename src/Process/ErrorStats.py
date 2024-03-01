@@ -33,9 +33,10 @@ class GetError():
         with open(path+"/"+device_type+"/"+filename+".txt", encoding="utf8", errors='ignore') as f:
             doc = f.read()
             if last_date is not None:
-                x = datetime.datetime.strptime(last_date,'%Y-%m-%d %H:%M:%S').strftime('%d_%m_%y %H:%M:%S')
+                #x = datetime.datetime.strptime(last_date,'%Y-%m-%d %H:%M:%S').strftime('%d_%m_%y %H:%M:%S')
+                #print(last_date)
+                x = last_date.strftime('%d_%m_%y %H:%M:%S')
                 doc_array = re.split(x, doc, 1)
-                #print(doc_array[0])
                 doc = doc_array[1]
             chunk_array = re.split(r'\"?[Mm]ain version\"?:(\d{1,3}\.\d{1,3})', doc)
             new_chunk_array = []

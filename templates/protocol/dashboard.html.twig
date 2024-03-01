@@ -1,3 +1,7 @@
+{#<a download href="sftp://winback:i42aW;U=@linux-back.winback-assist.com/home/winback/winback-dev/public/Ressource/package/BACK4/WLE256_12_2_v000.002.bin" class="filename">WLE256_12_2_v000.002.bin</a>#}
+{#
+<a download href="{{ asset(ressource_path  ~ 'package/' ~ family.name ~ '/' ~ soft.name) }}" class="filename">{{soft.name}}</a>
+#}
 <div class="row" id="dashboard">
     <span class="d-flex text-nowrap justify-content-left align-items-center w-100 my-5"><svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg><h2 class="text-uppercase ms-1 mb-0" style="font-size: 21px;">Dashboard</h2></span>
     <div id="carouselExample" class="carousel slide col">
@@ -15,11 +19,11 @@
                 {% include "protocol/dashboard1.html.twig" %}
             </div>
             <div class="carousel-item">
-                <div class="d-flex justify-content-between align-items-center my-5">
+                <div class="d-flex justify-content-between align-items-center my-5 w-50">
                     <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
-                    <h4 class="m-0">Week 2</h4>
+                    <h4 class="my-0 mx-2">Week 2</h4>
                     <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>

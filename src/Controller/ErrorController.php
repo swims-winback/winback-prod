@@ -58,15 +58,15 @@ class ErrorController extends AbstractController
       ];
 
     private $errorArray = [
-        218 => "Update error, one board software version not similar with GMU version",
-        220 => "No communication with led driver component in ACCESS board.",
-        221 => "5v voltage too high on ACCESS board.",
-        222 => "5v voltage too low on ACCESS board.",
-        234 => "Supply voltage too low on TECAR board.",
-        246 => "Supply voltage too low on GMU board.",
-        247 => "Emergency button cable not connected inside device.",
-        248 => "Communication lost between GMU and TECAR board.",
-        254 => "Emergency button pressed by someone.",
+        218 => "Update error issue. One board version not like GMU board version.",
+        220 => "LED driver component in the ACCESS board (TECARX) defective.",
+        221 => "Over voltage on the ACCESS board (TECARX).",
+        222 => "Under voltage on the ACCESS board (TECARX).",
+        234 => "Supply voltage too low on the TECAR board.",
+        246 => "Supply voltage too low on the GMU board.",
+        247 => "Emergency button cable not connected inside the device.",
+        248 => "Communication between GMU and TECAR board lost.",
+        254 => "Device safety triggered or emergency button pressed.",
 
     ];
 
@@ -108,11 +108,26 @@ class ErrorController extends AbstractController
             $errorChartArray[$key] = $errorChart2;
         }
         
+        /* get select date */
+        for ($day = 1; $day <= 31; $day++) {
+            $days[] =$day;
+        }
+        $months = array("01"=>"January", "02"=>"February", "03"=>"March", "04"=>"April", "05"=>"May", "06"=>"June", "07"=>"July", "08"=>"August", "09"=>"September", "10"=>"October", "11"=>"November", "12"=>"December");
+
+        $currentYear = date('Y');
+        $startYear = $currentYear - 10;
+        for ($year=$currentYear; $year >= $startYear; $year--) { 
+            $years[substr($year, 2, 2)] = $year;
+        }
         return $this->render('error/index.html.twig', [
             'errors' => $errors,
             'form' => $form->createView(),
             'errorChart' => $errorChart,
-            'errorChartArray' => $errorChartArray
+            'errorChartArray' => $errorChartArray,
+            'days'=>$days,
+            'months'=>$months,
+            'years'=>$years,
+
         ]);
     }
 
@@ -148,18 +163,19 @@ class ErrorController extends AbstractController
      * get error by device type and date
      */
     public function getErrorCountByDate(ErrorRepository $errorRepository, $date) {
+        //deviceTypes array
+        $errorDeviceType = [];
         foreach ($errorRepository->distinctDeviceType() as $key => $value) {
             $deviceTypes[$value["deviceType"]] = $value["deviceType"];
         }
+        // for each deviceType, find errors by date
         foreach ($deviceTypes as $key => $value) {
-            //$errors = $errorRepository->findBy(array('deviceType'=>$value, 'date'=>$date), array('error'=>'ASC'));
             $errors = $errorRepository->findByDateDevice($value, $date);
             foreach ($errors as $errorKey => $errorValue) {
                 $errorResult[$key][] = $errorValue->getError()->getErrorId();
                 $errorDeviceType[$key] = $this->countOccurences($errorResult[$key]);
             }
             $deviceTypeResult[$key]=$errorDeviceType[$key];
-            
         }
         return $deviceTypeResult;
     }
@@ -307,6 +323,7 @@ class ErrorController extends AbstractController
         $emailToAdmin = (new TemplatedEmail())
         ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
         ->to('ldieudonat@winback.com', 'bwollensack@winback.com')
+        //->to('ldieudonat@winback.com')
         ->subject('Winback Assist - Error report')
         ->htmlTemplate('error/mail.html.twig')
         ->context(['result' => $result, 'deviceTypeResult' => $deviceTypeResult]);

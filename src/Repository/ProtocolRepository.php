@@ -58,16 +58,19 @@ class ProtocolRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Find Mode by sn and date
+     * @param string $value
+     * @param mixed $date
+     * @return array
+     */
     public function findMode($value, $date): array
     {
         return $this->createQueryBuilder('s')
-            //->select('s.mode_id')
             ->andWhere('s.sn = :val')
             ->setParameter('val', $value)
             ->andWhere('s.date = :sub')
             ->setParameter('sub', $date)
-            //->orderBy('s.id', 'ASC')
-            //->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;

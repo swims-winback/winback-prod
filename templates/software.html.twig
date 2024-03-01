@@ -19,7 +19,7 @@
         <div class="row w-100 px-2">
             <div class="col-md-2 d-flex justify-content-center">
                 <!-- ===== NEW SOFTWARE ===== -->
-                {% if is_granted("ROLE_ADMIN") %}
+                {% if is_granted("ROLE_GOE") %}
                 <a id="btn-upload-soft" class="btn bg-orange btn-outline-orange floatingBtn d-flex align-items-center justify-content-center box-shadow" 
                     href="{{path('software_add')}}"
                     style="border: none; border-radius: 50%; height: 4em; width: 4em; padding: 1em;" 
