@@ -2,35 +2,31 @@
 
     <div class="row d-flex flex-column justify-content-between">
         <div class="row my-1">
+            <div class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
+                <h6>Number of treatments</h6>
+                {{ render_chart(treatmentChart) }}
+            </div>
             <div class="col d-flex justify-content-around align-items-center h-100 p-5">
-                <div class="col">
-                {{ render_chart(treatmentDurationChart) }}
-                </div>
                 <div class="col-6">
                     <div class="row d-flex flex-column align-items-center w-100">
-                    Average treatment duration
-                    <h5><span class="count display-4">22</span> minutes</h5>
+                    <h5 class="d-flex flex-nowrap align-items-center"><span class="count display-4 me-1">{{totalTreatmentDuration}}</span><span>minutes</span></h5>
                     </div>
                     <div class="row d-flex flex-column align-items-center w-100">
-                    Number of treatments
-                    <h5><span class="count display-4">35</span> Treatments</h5>
+                    <h5 class="d-flex flex-nowrap align-items-center"><span class="count display-4 me-1">{{totalTreatmentCount}}</span><span>Treatments</span></h5>
                     </div>
                 </div>
             </div>
-            <div class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
-                <h6>Number of treatments per day</h6>
-                {{ render_chart(thirdChart) }}
-            </div>
         </div>
-        <div class="row my-1">
-            <div id="" class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
-                <h6>Mode usage per week (%)</h6>
-                {{ render_chart(firstChart) }}
-                {{ render_chart(firstChartWeek) }}
+        <div class="row my-1 d-flex justify-content-between">
+            <div class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
+                <h6>Mode usage (%)</h6>
+                <div id="modeDay" style="width: 40em; display: none;">{{ render_chart(modeChart, {'class': 'w-100'}) }}</div>
+                {{ render_chart(modeChartWeek, {'id': 'modeWeek'}) }}
             </div>
             <div class="col d-flex flex-column justify-content-between h-100" style="max-width: 50em;">
-                <h6>Accessories usage per week (%)</h6>
-                {{ render_chart(secondChart) }}
+                <h6>Accessories usage (%)</h6>
+                <div style="display: none;">{{ render_chart(accChart, {'id': 'accDay'}) }}</div>
+                {{render_chart(accChartWeek, {'id': 'accWeek'})}}
             </div>
         </div>
     </div>

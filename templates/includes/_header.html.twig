@@ -7,23 +7,33 @@
             <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarSupportedContent">
                 <ul class="navbar-nav d-flex align-items-center me-auto py-0 h-100">
                 {% if is_granted('ROLE_READER') %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('software')}}"><span>{{ 'Softwares'|trans }}</span></a></li>
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('device')}}"><span>{{ 'Devices'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('software')}}"><span>{{ 'Softwares'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('device')}}"><span>{{ 'Devices'|trans }}</span></a></li>
                     {% if is_granted("ROLE_ADMIN") %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('dashboard')}}"><span>{{ 'Dashboard'|trans }}</span></a></li>
+                    
+                    <li class="nav-item dropdown navDropdown h-100">
+                        <a class="nav-link p-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span>{{ 'Dashboard'|trans }}</span>
+                        </a>
+                        <ul class="form-control dropdown-menu navDropdown-content px-2">
+                            <li><a class="dropdown-item" href="{{path('dashboard')}}"><span>{{ 'Versions'|trans }}</span></a></li>
+                            <li><a class="dropdown-item" href="{{path('app_error')}}"><span>{{ 'Errors'|trans}}</span></a></li>
+                            <li><a class="dropdown-item" href="{{path('app_protocol')}}"><span>{{ 'Protocols'|trans}}</span></a></li>
+                        </ul>
+                    </li>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('app_sn')}}"><span>{{ 'SN'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('app_sn')}}"><span>{{ 'SN'|trans }}</span></a></li>
                     {% endif %}
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('app_error')}}"><span>{{ 'Errors'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('app_error')}}"><span>{{ 'Errors'|trans }}</span></a></li>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item dropdown h-100">
-                        <a class="nav-link py-lg-5 p-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <li class="nav-item dropdown navDropdown h-100">
+                        <a class="nav-link p-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>{{ 'Statistics'|trans }}</span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="form-control dropdown-menu navDropdown-content px-2">
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li><a class="dropdown-item" href="{{path('app_log')}}"><span>{{ 'Logs'|trans }}</span></a></li>
                             {% endif %}
@@ -32,12 +42,12 @@
                     </li>
                     {% endif %}
                 {% endif %}
-                    <li class="nav-item dropdown h-100" style="width: fit-content;">
-                        <a class="nav-link py-lg-5 p-2 dropdown-toggle" href="#" id="dropdown-language" role="button"
+                    <li class="nav-item dropdown navDropdown h-100" style="width: fit-content;">
+                        <a class="nav-link p-2 dropdown-toggle" href="#" id="dropdown-language" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span>{{ app.request.locale|locale_name(app.request.locale) }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-language">
+                        <ul class="dropdown-menu dropdown-menu-right navDropdown-content" aria-labelledby="dropdown-language">
                         <li><a class="dropdown-item" href="{{ path('device', {_locale: 'en'}) }}"><img class="icon-flags" src="{{asset('img/flags/uk.png')}}" alt=""> EN</a></li>
                         <li><a class="dropdown-item" href="{{ path('device', {_locale: 'fr'}) }}"><img class="icon-flags" src="{{asset('img/flags/france.png')}}" alt=""> FR</a></li>
                         <li><a class="dropdown-item" href="{{ path('device', {_locale: 'ko'}) }}"><img class="icon-flags" src="{{asset('img/flags/korea.png')}}" alt=""> KO</a></li>
@@ -52,7 +62,7 @@
                         <div class="fw-bold">
                             {{ app.user }}
                         </div>
-                        <a class="nav-link py-lg-5 p-2" href="{{path('app_logout')}}" style="margin-left: 0.5em;">
+                        <a class="nav-link p-2" href="{{path('app_logout')}}" style="margin-left: 0.5em;">
                             <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
                         </a>
                     {% endif %}
@@ -89,20 +99,20 @@
             <div class="modal-content bg-orange" style="width: fit-content;">
                 <ul class="navbar-nav d-flex align-items-center me-auto py-0 h-100">
                 {% if is_granted('ROLE_READER') %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('software')}}"><span>{{ 'Softwares'|trans }}</span></a></li>
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('device')}}"><span>{{ 'Devices'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('software')}}"><span>{{ 'Softwares'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('device')}}"><span>{{ 'Devices'|trans }}</span></a></li>
                     {% if is_granted("ROLE_ADMIN") %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('dashboard')}}"><span>{{ 'Dashboard'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('dashboard')}}"><span>{{ 'Dashboard'|trans }}</span></a></li>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('app_sn')}}"><span>{{ 'SN'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('app_sn')}}"><span>{{ 'SN'|trans }}</span></a></li>
                     {% endif %}
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <li class="nav-item h-100"><a class="nav-link py-lg-5 p-2" href="{{path('app_error')}}"><span>{{ 'Errors'|trans }}</span></a></li>
+                    <li class="nav-item h-100"><a class="nav-link p-2" href="{{path('app_error')}}"><span>{{ 'Errors'|trans }}</span></a></li>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item dropdown h-100">
-                        <a class="nav-link py-lg-5 p-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link p-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span>{{ 'Statistics'|trans }}</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -115,7 +125,7 @@
                     {% endif %}
                 {% endif %}
                     <li class="nav-item dropdown h-100" style="width: fit-content;">
-                        <a class="nav-link py-lg-5 p-2 dropdown-toggle" href="#" id="dropdown-language" role="button"
+                        <a class="nav-link p-2 dropdown-toggle" href="#" id="dropdown-language" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span>{{ app.request.locale|locale_name(app.request.locale) }}</span>
                         </a>
@@ -139,7 +149,7 @@
                     <div class="fw-bold p-2">
                         {{ app.user }}
                     </div>
-                    <a class="nav-link py-lg-5 p-2" href="{{path('app_logout')}}" style="margin-left: 0.5em;">
+                    <a class="nav-link p-2" href="{{path('app_logout')}}" style="margin-left: 0.5em;">
                         <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
                     </a>
                 {% endif %}

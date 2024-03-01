@@ -27,5 +27,26 @@
         </button>
         {{ form_row(form.version) }}
         </div>
+        <div class="d-flex justify-content-between w-100 my-2">
+            <select name="date" id="date">
+            <option value="" selected disabled>Day</option>
+            {% for day in days %}
+                <option value="{{day}}">{{day}}</option>
+            {% endfor %}
+            </select>
+            <select name="month" id="month">
+            <option value="" selected disabled>Month</option>
+            {% for key, month in months %}
+                <option value="{{key}}">{{month}}</option>
+            {% endfor %}
+            </select>
+            <select name="year" id="year">
+            <option value="" selected disabled>Year</option>
+            {% for key, year in years %}
+                <option value="{{key}}">{{year}}</option>
+            {% endfor %}
+            </select>
+        </div>
+
     <button type="submit" class="btn bg-orange btn-outline-orange my-2">{{ 'Search'|trans }}</button>
 {{ form_end(form) }}

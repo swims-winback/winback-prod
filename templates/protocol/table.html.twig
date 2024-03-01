@@ -1,15 +1,15 @@
 <div class="row container" id="table">
     <span class="d-flex text-nowrap justify-content-left align-items-center w-100 my-5"><svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg><h2 class="text-uppercase ms-1 mb-0" style="font-size: 21px;">Table</h2></span>
-    <div id="carouselExample" class="carousel slide col">
+    <div id="carouselProtocol" class="carousel slide col">
         <div class="carousel-inner">    
             {% for date, proto in protocols %}
-            <div class="carousel-item {{(date =='12_09_23')? 'active':''}}">
+            <div class="carousel-item {{(date == lastDayName)? 'active':''}}">
                 <div class="d-flex justify-content-between align-items-center my-2">
-                    <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselProtocol" data-bs-slide="prev">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
                     <h4 class="m-0">{{date}}</h4>
-                    <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <button class="carousel-control-next btn btn-outline-orange" type="button" data-bs-target="#carouselProtocol" data-bs-slide="next">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>
                 </div>
@@ -17,36 +17,29 @@
                     <div class="col">
                         {% for proto_key, step in proto.protocol_id %}
                         <hr class="w-100 mt-5">
-                        <h5><svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg> Patient {{proto_key}}</h5>
-                        <div class="table-responsive">
-                            <div class="table table-bordered table-device-mode text-center">
+                        <h5 data-bs-toggle="collapse" href="#collapse_{{proto_key}}" role="button" aria-expanded="false" aria-controls="collapseExample"><svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg> Patient {{proto_key}}</h5>
+                        <div class="table-responsive collapse" id="collapse_{{proto_key}}">
+                            <div class="table table-bordered table-device-mode text-center border">
                                     
                                     <div class="row">
                                         <div class="row border">
-                                            <div class="col border fw-bold">Step</div>
-                                            <div class="col border fw-bold">Out</div>
-                                            <div class="col-6 border fw-bold">Mode Parameters</div>
-                                        </div>
-                                        <div class="row border">
-                                            <div class="col-6"></div>
-                                            <div class="col">Mode</div>
-                                            <div class="col">Param 1</div>
-                                            <div class="col">Param 2</div>
-                                            <div class="col">Param 3</div>
-                                            <div class="col">Time (seconds)</div>
+                                            <div class="col-1 border fw-bold">Step</div>
+                                            <div class="col-1 border fw-bold">Out</div>
+                                            <div class="col border fw-bold">Mode Parameters</div>
+                                            <div class="col-1">Time</div>
                                         </div>
                                         {% for step_key, way in step.step_id %}
                                         <div class="row border">
-                                            <div class="col h6 mb-0 py-1">Step {{step_key}}</div>
-                                            <div class="col-9">
+                                            <div class="col-1 h6 mb-0 py-1 d-flex align-items-center justify-content-center"><span>{{step_key}}</span></div>
+                                            <div class="col">
                                                 {% for way_key, mode in way.way_id %}
                                                 <div class="row border">
                                                     
-                                                    <div class="col h6 mb-0 py-1">
-                                                    Way {{way_key}}
+                                                    <div class="col-1 mb-0 py-1 d-flex align-items-center justify-content-center">
+                                                    <span>Way {{way_key}}</span>
                                                     </div>
                                                     {% for param in mode %}
-                                                        <div class="col-8">
+                                                        <div class="col">
                                                         {% for mode_key, items in param %}
                                                         <div class="row border">
                                                             <div class="col border h6 mb-0 py-1">
@@ -75,8 +68,12 @@
                                                         {% endfor %}
                                                         </div>
                                                     {% endfor %}
+
                                                 </div>
                                                 {% endfor %}
+                                            </div>
+                                            <div class="col-1 d-flex align-items-center justify-content-center">
+                                            <span>{{way.time_tot}}</span>
                                             </div>
                                         </div>
                                         {% endfor %}

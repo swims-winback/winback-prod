@@ -100,7 +100,7 @@ class LogController extends AbstractController
             ]
         ],
         5=>[
-            'name'=>'BIOBACK',
+            'name'=>'MIX+HITENS',
             'param2'=>[
                 0=>'soft',
                 1=>'dynamic',

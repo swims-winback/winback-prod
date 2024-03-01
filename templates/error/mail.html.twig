@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <h1 class="h1-mail">Device Error Report</h1>
-    <h2 class="h2-mail">{{ "now"|date("m/d/y") }}</h2>
+    <h2 class="h2-mail">{{ "now"|date("Y-m-d") }}</h2>
 
     <h2>Error total</h2>
     <table width="100%">
@@ -38,10 +38,12 @@
 
         {% for keyDeviceType, valueDeviceType in result %}
             <h2>{{keyDeviceType}}</h2>
+            <table width="100%">
             {% for key, value in valueDeviceType %}
-            
+            <tr valign="top" align="center">
+                <td>
                 <span><h3>{{key}}</h3></span>
-                <table class="table-mail" width="100%">
+                <table class="table-mail" width="50%">
                     <thead>
                     <tr>
                     <th>Date</th>
@@ -61,7 +63,10 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                </td>
+            </tr>
             {% endfor %}
+            </table>
         {% endfor %}
 
     <br>

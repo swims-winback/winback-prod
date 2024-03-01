@@ -733,6 +733,10 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 
 /* Show the dropdown menu on hover */
+.navDropdown:hover .navDropdown-content {
+  display: block;
+}
+
 .filterDropdown:hover .filterDropdown-content {
   display: block;
 }

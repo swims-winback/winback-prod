@@ -23,7 +23,7 @@ class Scheduler implements ScheduleProviderInterface
         return (new Schedule())
         ->add(
             RecurringMessage::every('1 day', new ErrorReports($this->mailer, $this->errorRepository), 
-            from: new \DateTimeImmutable('07:00', new \DateTimeZone('Europe/Paris'))
+            from: new \DateTimeImmutable('09:00', new \DateTimeZone('Europe/Paris'))
             )
         );
     }

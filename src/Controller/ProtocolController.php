@@ -121,7 +121,7 @@ class ProtocolController extends AbstractController
             ]
         ],
         5=>[
-            'name'=>'BIOBACK',
+            'name'=>'MIX+HITENS',
             'param2'=>[
                 0=>'SOFT',
                 1=>'DYNAMIC',
@@ -133,6 +133,7 @@ class ProtocolController extends AbstractController
                 2=>'BOOST',
             ]
         ],
+        
         6=>[
             'name'=>'NEUTRAL',
             'param2'=>[
@@ -145,22 +146,23 @@ class ProtocolController extends AbstractController
                 2=>'BOOST',
             ]
         ],
+        
     ];
 
     public $acc_name = [
         0=>"NO_CONNECTED",
-        1=>"TECARX_RET_40",
-        2=>"TECARX_RET_60",
-        3=>"TECARX_RET_70",
-        4=>"TECARX_CET_40",
-        5=>"TECARX_CET_60",
-        6=>"TECARX_CET_70",
+        1=>"TECARX RET",
+        2=>"TECARX RET",
+        3=>"TECARX RET",
+        4=>"TECARX CET",
+        5=>"TECARX CET",
+        6=>"TECARX CET", // TODO regrouper les tecar
         7=>"TECARX_CET_60_CVX",
         8=>"TECARX_MIX_BODY",
         9=>"TECARX_MIX_FACE",
         10=>"TECARX_RET_40_CVX",
         11=>"TECARX_T6", # Hi-ret
-        12=>"TECAR3_RET_40",
+        12=>"TECAR3_RET_40", //tecar mobile
         13=>"TECAR3_RET_60",
         14=>"TECAR3_RET_70",
         15=>"TECAR3_CET_40",
@@ -188,6 +190,15 @@ class ProtocolController extends AbstractController
     #[Route('/{_locale<%app.supported_locales%>}/protocol', name: 'app_protocol')]
     public function index(ProtocolRepository $protocolRepository, Request $request, ChartBuilderInterface $chartBuilder): Response
     {
+        $lastDay = "2023-09-14";
+        $lastDayName = date('m/d/Y', strtotime($lastDay));
+        // weeks
+        //$week = $this->getWeek(); // get week before today
+        $week = $this->generateSevenDaysBefore($lastDay); // get week before user chosen day
+        //$randomWeek = [date("d_m_y", 12_09_23), date("d_m_y", 13_09_23), date("d_m_y", 14_09_23)];
+        $randomWeek = $this->getWeekFormat($week);
+        $weekName = $this->getWeekName($week);
+        $weekSlash = $this->getWeekSlash($week);
         // choose sn array by client id
         
         $sn_array = $protocolRepository->findSN();
@@ -219,107 +230,90 @@ class ProtocolController extends AbstractController
         if ($searchForm->isSubmitted() && $searchForm->isValid()) {
             $task = $searchForm->getData();
             $sn = $task['sn'];
-            $dates = $this->getDate($protocolRepository, $sn);
+            //$dates = $this->getDate($protocolRepository, $sn);
+            $dates = $randomWeek;
     
             foreach ($dates as $key => $value) {
-                $protocols = $this->getMode($protocolRepository, $value['date'], $sn);
-                $protocols_array[$value['date']] = $protocols;
+                $protocols = $this->getMode($protocolRepository, $value, $sn);
+                $protocols_array[$weekSlash[$key]] = $protocols;
             }
         }
         else {
             $protocols_array = [];
         }
-        
+        $protocols_array = array_reverse($protocols_array);
 
-        $week = $this->getWeek();
-        $weekName = $this->getWeekName($week);
         // utilisation mode / jour / semaine
-        $firstDataset = [];
-        $modeRandom = $this->getModeUseRandom();
-        foreach ($modeRandom as $modeKey => $modeValue) {
-            foreach ($modeRandom[$modeKey] as $key => $value) {
-                $firstDataset[] = $this->getDataset($this->modes_name[$modeKey]['name'], array_values($value), $this->backgroundMode[$modeKey], $this->borderMode[$modeKey]);
+        $modeDataset = [];
+        foreach ($randomWeek as $key => $value) {
+            $modeRandom[$value] = $this->getModeCount($protocolRepository, $value, $sn);
+        }
+        // get modes to weeks
+        $modeByWeekDay = $this->getWeekDay($modeRandom, $randomWeek);
+        foreach ($modeByWeekDay as $key => $value) {
+            $modeDataset[] = $this->getDataset($this->modes_name[$key]['name'], array_values($modeByWeekDay[$key]), $this->backgroundMode[$key], $this->borderMode[$key]);
+        }
+        $modeChart = $this->getChart($chartBuilder, $weekName, $modeDataset, 'text', Chart::TYPE_BAR, '');
+        $modeByWeek = $this->getWeekPercentage($modeByWeekDay);
+        foreach ($modeByWeek as $key => $value) {
+            $modeLabels[] = $this->modes_name[$key]['name'];
+            $modeData[] = $value;
+        }
+        // By Week
+        $modeDatasetWeek = [$this->getDataset('Usage', $modeData, $this->backgroundMode, $this->borderMode)];
+        $modeChartWeek = $this->getChart($chartBuilder, $modeLabels, $modeDatasetWeek, 'text', Chart::TYPE_DOUGHNUT, '', true, false);
+        // ========== utilisation ACCESSOIRES ========== //
+
+        // utilisation accessoire / jour / semaine
+        $accDataset = [];
+        foreach ($randomWeek as $key => $value) {
+            $accRandom[$value] = $this->getAccUseRandom();
+        }
+        $accByWeekDay = $this->getWeekDay($accRandom, $randomWeek);
+        
+        foreach ($accByWeekDay as $key => $value) {
+            if ($key > 6) {
+                $accDataset[] = $this->getDataset($key, array_values($accByWeekDay[$key]), $this->backgroundArray[random_int(0, 6)], $this->borderArray[random_int(0, 6)]);
+            }
+            else {
+                $accDataset[] = $this->getDataset($key, array_values($accByWeekDay[$key]), $this->backgroundArray[random_int(0, 6)], $this->borderArray[random_int(0, 6)]);
             }
         }
-        $firstChart = $this->getChart($chartBuilder, $weekName, $firstDataset, 'text', Chart::TYPE_BAR, 'percentage');
-        // utilisation mode / semaine
-        $modeWeek = $this->getModeUseRandomWeek();
-        //var_dump($modeWeek);
-        foreach ($modeWeek as $key => $value) {
-            //var_dump(array_values($value)[0]);
-            //$firstDatasetWeek = [$this->getDataset(array_keys($modeWeek), array_values($modeWeek), array_values($this->backgroundMode), array_values($this->borderMode))];
-            //$firstDatasetWeek[] = $this->getDataset(array_keys($value)[0], array_values($value)[0], $this->backgroundMode[$key], $this->borderMode[$key]);
-            $firstLabels[] = array_keys($value)[0];
-            $firstData[] = array_values($value)[0];
-        }
 
-        //var_dump($firstDatasetWeek);
-        $firstDatasetWeek = $this->getDataset('mode', $firstData, $this->backgroundMode, $this->borderMode);
-        $firstChartWeek = $this->getChart($chartBuilder, $firstLabels, $firstDatasetWeek, 'text', Chart::TYPE_BAR, '', false);
-        /*
-        $firstChartWeek = $chartBuilder->createChart(Chart::TYPE_BAR);
-        $firstChartWeek->setData([
-            'labels' => $firstLabels,
-            'datasets' =>  [[
-                'label' => ['mode'],
-                'backgroundColor' => $this->backgroundMode,
-                'borderColor' => $this->borderMode,
-                'data' => $firstData,
-            ]],   
-        ]);
-    
-        $firstChartWeek->setOptions([
-            'plugins'=> [
-                'title'=> [
-                    'display'=> true,
-                ],
-                'legend'=>[
-                    'display'=>false,
-                ],
-            ],
-            'responsive' => true,
-            'maintainAspectRatio' => true,
-            'scales'=> [
-                'y'=> [
-                    'beginAtZero'=> true,
-                    'display'=>true,
-                ]
-            ]
-        ]);
-        */
+        $accChart = $this->getChart($chartBuilder, $weekName, $accDataset, 'text', Chart::TYPE_BAR);
         // utilisation accessoire / semaine
-        $secondDataset = [];
-        $accRandom = $this->getAccUseRandom();
-        
-        foreach ($accRandom as $modeKey => $modeValue) {
-                //var_dump(array_values($modeValue));
-                if ($modeKey > 6) {
-                    $secondDataset[] = $this->getDataset($this->acc_name[$modeKey], array_values($modeValue), $this->backgroundArray[random_int(0, 6)], $this->borderArray[random_int(0, 6)]);
-                }
-                else {
-                    $secondDataset[] = $this->getDataset($this->acc_name[$modeKey], array_values($modeValue), $this->backgroundArray[$modeKey], $this->borderArray[$modeKey]);
-                }
+        //$accByWeek = $this->getWeekPercentage($accByWeekDay);
+        $accByWeek = $this->getAccUseRandom();
+        foreach ($accByWeek as $key => $value) {
+            $accLabels[] = $key;
+            $accData[] = $value;
+        }
+        $accDatasetWeek = [$this->getDataset('Usage', $accData, $this->backgroundArray, $this->borderArray)];
+        $accChartWeek = $this->getChart($chartBuilder, $accLabels, $accDatasetWeek, '', Chart::TYPE_DOUGHNUT, '', true, false);
+        // number of treatments
+        foreach ($randomWeek as $key => $value) {
+            $treatmentCount[$value] = $this->getTreatmentCount($protocolRepository, $value, $sn);
+            $treatmentDuration[$value] = array_sum(array_values($this->getTreatmentDuration($protocolRepository, $value, $sn)));
         }
 
-        $secondChart = $this->getChart($chartBuilder, $weekName, $secondDataset, 'text', Chart::TYPE_BAR);
+        // Treatment duration + total treatments in week
+        $treatmentDataset = [$this->getDataset("number of treatments", array_values($treatmentCount), $this->backgroundArray[0], $this->borderArray[0])];
+        $treatmentChart = $this->getChart($chartBuilder, array_values($weekName), $treatmentDataset, 'text', Chart::TYPE_BAR, "", false);
+        $totalTreatmentCount = array_sum(array_values($treatmentCount));
+        $totalTreatmentDuration = intval(array_sum(array_values($treatmentDuration))/60);
 
-        $treatmentRandom = $this->getTreatmentRandom();
 
-        $thirdDataset = [$this->getDataset($weekName, array_values($treatmentRandom), $this->backgroundArray, $this->borderArray)];
-        $thirdChart = $this->getChart($chartBuilder, array_values($weekName), $thirdDataset, 'text', Chart::TYPE_BAR);
-
-        // average treatment duration per week
-        $treatmentDurationDataset = [$this->getDataset('label', [22, 60-22], [$this->backgroundArray[0], 'rgba(201, 203, 207, 0.2)'], [$this->borderArray[0], 'rgba(201, 203, 207, 0.2)'])];
-        $treatmentDurationChart = $this->getChart($chartBuilder, [22, 60-22], $treatmentDurationDataset, 'text', Chart::TYPE_DOUGHNUT, 'percen', false, false);
         return $this->render('protocol/index.html.twig', [
             'protocols' => $protocols_array,
-            //'sn_array' => $sn_array,
             'searchForm' => $searchForm,
-            'firstChart'=> $firstChart,
-            'firstChartWeek'=> $firstChartWeek,
-            'secondChart'=> $secondChart,
-            'thirdChart'=> $thirdChart,
-            'treatmentDurationChart' => $treatmentDurationChart,
+            'modeChart'=> $modeChart,
+            'modeChartWeek'=> $modeChartWeek,
+            'accChart'=> $accChart,
+            'accChartWeek'=>$accChartWeek,
+            'treatmentChart'=> $treatmentChart,
+            'totalTreatmentCount'=> $totalTreatmentCount,
+            'totalTreatmentDuration'=> $totalTreatmentDuration,
+            'lastDayName'=>$lastDayName,
         ]);
     }
 
@@ -327,7 +321,6 @@ class ProtocolController extends AbstractController
         //find 7 days before today
         $i = 0;
         $date_array = [];
-        $deviceCount_array = [];
         while ($i <= 7) {
             $date = strtotime("-{$i} day");
             $date_array[] = date('Y-m-d', $date);
@@ -337,10 +330,42 @@ class ProtocolController extends AbstractController
         return $date_array;
     }
 
+    function generateSevenDaysBefore($date) {
+        $sevenDaysBefore = [];
+        // Convert the date string to a DateTime object
+        $dateObj = new \DateTime($date);
+   
+        // Loop to generate seven days before the given date
+        for ($i = 0; $i < 7; $i++) {
+            $sevenDaysBefore[] = $dateObj->format('Y-m-d');
+            $dateObj->modify("-1 day");
+        }
+        // Reverse the array to have the days in ascending order
+        $sevenDaysBefore = array_reverse($sevenDaysBefore);
+    
+        return $sevenDaysBefore;
+    
+    }
+
+    function getWeekFormat($date) {
+        $dateName = [];
+        foreach ($date as $key => $value) {
+            $dateName[] = date('d_m_y', strtotime($value));
+        }
+        return $dateName;
+    }
+
     function getWeekName($date) {
         $dateName = [];
         foreach ($date as $key => $value) {
             $dateName[] = date('D', strtotime($value));
+        }
+        return $dateName;
+    }
+    function getWeekSlash($date) {
+        $dateName = [];
+        foreach ($date as $key => $value) {
+            $dateName[] = date('m/d/Y', strtotime($value));
         }
         return $dateName;
     }
@@ -354,39 +379,102 @@ class ProtocolController extends AbstractController
         $modeObj = $protocolRepository->findMode($sn, $date);
         
         foreach ($modeObj as $key => $value) {
-            //var_dump($this->modes_name[$value->getModeId()]['param2'][$value->getParam2()]);
-            //$mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["way_id"][$value->getWayId()]["mode_id"][$this->modes_name[$value->getModeId()]['name']] = [$value->getFullDate(), $value->getParam1(), $value->getParam2(), $value->getParam3()];
             $mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["way_id"][$value->getWayId()]["mode_id"][$this->modes_name[$value->getModeId()]['name']] = array(
-                //"full_date" => $value->getFullDate(), 
                 "param1" => $value->getParam1(),
-                "param2" => $this->modes_name[$value->getModeId()]['param2'][$value->getParam2()], 
+                "param2" => $this->modes_name[$value->getModeId()]['param2'][$value->getParam2()],
                 "param3" => $this->modes_name[$value->getModeId()]['param3'][$value->getParam3()],
-                "time_tot" => $value->getTimeTot());
+                //"time_tot" => $value->getTimeTot());
+            );
+            if (intval($value->getTimeTot())<60) {
+                $mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["time_tot"] = $value->getTimeTot()."''";
+            }
+            else {
+                $mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["time_tot"] = $value->getTimeTot()."'";
+            }
+            
         }
-        //var_dump($mode_obj);
         return $mode_obj;
     }
 
-    function generateRandomPercentages($count) {
-        $percentages = [];
-    
-        // Generate random values for each element except the last one
-        for ($i = 0; $i < $count - 1; $i++) {
-            $randomPercentage = rand(1, 100 - array_sum($percentages));
-            $percentages[] = $randomPercentage;
+    public function getTreatmentCount(ProtocolRepository $protocolRepository, $date, $sn) {
+        $modeObj = $protocolRepository->findMode($sn, $date);
+        
+        foreach ($modeObj as $key => $value) {
+            $mode_obj[$value->getProtocolId()] = $value->getProtocolId();
         }
-    
-        // Calculate the last element to ensure the total is 100
-        $lastPercentage = 100 - array_sum($percentages);
-        $percentages[] = $lastPercentage;
-    
-        // Shuffle the array to randomize the order
-        shuffle($percentages);
-    
-        return $percentages;
+        if (!empty($mode_obj)) {
+            return count(array_values($mode_obj));
+        }
+        else {
+            return 0;
+        }
+        
+    }
+    public function getTreatmentDuration(ProtocolRepository $protocolRepository, $date, $sn) {
+        $modeObj = $protocolRepository->findMode($sn, $date);
+        $result = [];
+        foreach ($modeObj as $key => $value) {
+            $mode_obj[$value->getProtocolId()][$value->getStepId()] = $value->getTimeTot();
+        }
+        foreach ($mode_obj as $mode_objKey => $mode_objValue) {
+            $result[$mode_objKey] = array_sum(array_values($mode_objValue));
+        }
+        return $result;
     }
 
-    
+    public function getModeCount(ProtocolRepository $protocolRepository, $date, $sn) {
+        $modeObj = $protocolRepository->findMode($sn, $date);
+        
+        foreach ($modeObj as $key => $value) {
+            if ($value->getModeId() != 6) {
+                $mode_obj[] = $value->getModeId();
+                $mode_objCount = $this->countOccurences($mode_obj);
+            }
+        }
+        if (!empty($mode_obj)) {
+            $totalCount = count($mode_obj);
+            foreach ($mode_objCount as $modeKey => $modeValue) {
+                $mode_objPerc[$modeKey] = intval(($modeValue/$totalCount) * 100);
+            }
+        }
+        else {
+            foreach ($mode_objCount as $modeKey => $modeValue) {
+                $mode_objPerc[$modeKey] = 0;
+            }
+        }
+
+        return $mode_objPerc;
+    }
+
+    function getWeekDay($array, $week) {
+        $byWeekDay = [];
+        foreach ($array as $key => $value) {
+            foreach ($value as $modeKey => $modeValue) {
+                foreach ($week as $dayKey => $dayValue) {
+                    $byWeekDay[$modeKey][$dayValue] = 0;
+                }
+            }
+        }
+        foreach ($array as $key => $value) {
+            foreach ($value as $modeKey => $modeValue) {
+                    $byWeekDay[$modeKey][$key]=$modeValue;
+            }
+        }
+        return $byWeekDay;
+    }
+    function getWeekPercentage($byWeekDay) {
+        $byWeek = [];
+        // count by week
+        foreach ($byWeekDay as $key => $value) {
+            $byWeek[$key] = array_sum($value);
+        }
+        // count percentage
+        $total_percent = array_sum(array_values($byWeek));
+        foreach ($byWeek as $key => $value) {
+            $byWeek[$key] = ceil(($value / $total_percent) * 100);
+        }
+        return $byWeek;
+    }
     function getModeUseRandom() {
         $week = $this->getWeek();
         $modeRandom = [];
@@ -394,47 +482,45 @@ class ProtocolController extends AbstractController
         foreach ($this->modes_name as $keyMode => $valueMode) {
             foreach ($week as $key => $value) {
                 $modeRandom[$keyMode][$valueMode['name']][$value] = random_int(0, 50);
-                //$modeRandom[$keyMode][$valueMode['name']][$value] = $randomPercentages[$key];
             }
         }
         return $modeRandom;
     }
 
     function getModeUseRandomWeek() {
-        //
-        //$week = $this->getWeek();
         $modeRandom = [];
-
         foreach ($this->modes_name as $keyMode => $valueMode) {
-            //foreach ($week as $key => $value) {
                 $modeRandom[$keyMode][$valueMode['name']] = random_int(0, 50);
-                //$modeRandom[$keyMode][$valueMode['name']][$value] = $randomPercentages[$key];
-            //}
         }
         return $modeRandom;
     }
 
     function getAccUseRandom() {
         $week = $this->getWeek();
-        $modeRandom = [];
-        $acc_name = array_rand($this->acc_name, 5);
-
-
-        foreach ($acc_name as $keyMode => $valueMode) {
-            // Number of elements in the array
-            $numberOfElements = 5;
-            // Generate the array
-            $randomPercentages = $this->generateRandomPercentages($numberOfElements);
-            // Display the result
-            //var_dump($randomPercentages);
-            foreach ($week as $key => $value) {
-                
-                //print_r($key);
-                $modeRandom[$valueMode][$value] = random_int(0, 50);
-                //$modeRandom[$valueMode][$value] = $randomPercentages[$keyMode];
+        $accRandom = [];
+        //$acc_name = array_rand($this->acc_name, sizeof($week));
+        // get random array of id occurrences
+        $random_values = array();
+        for ($i=0; $i <= 5; $i++) {
+            $random_values[] = rand(1, 35);
+        }
+        $num_occurrences = array();
+        foreach ($random_values as $value) {
+            $num_occurrences[$this->acc_name[$value]] = random_int(1, 100);
+        }
+        $random_occurrences = array();
+        foreach ($num_occurrences as $value => $count) {
+            for ($i=0; $i < $count; $i++) { 
+                $random_occurrences[] = $value;
             }
         }
-        return $modeRandom;
+        //count Occurences
+        $count_occurrences = $this->countOccurences($random_occurrences);
+        $totalCount = array_sum($count_occurrences);
+        foreach ($count_occurrences as $key => $value) {
+            $accPerc[$key] = intval(($value / $totalCount) * 100);
+        }
+        return $accPerc;
     }
 
     function getTreatmentRandom() {
@@ -456,9 +542,6 @@ class ProtocolController extends AbstractController
      * @return Chart
      */
     function getChart(ChartBuilderInterface $chartBuilder, $labels, $datasets, $text, $chartType, $textY='percen', $displayLeg=true, $displayY=true) {
-        //$backgroundArray = $this->backgroundArray;
-        //$borderArray = $this->borderArray;
-        //Chart::TYPE_LINE
         $chart = $chartBuilder->createChart($chartType);
         $chart->setData([
             'labels' => $labels,
@@ -502,5 +585,10 @@ class ProtocolController extends AbstractController
             ];
         return $dataset;
 
+    }
+
+    function countOccurences($inputArray) {
+        $occurences = array_count_values($inputArray);
+        return $occurences;
     }
 }

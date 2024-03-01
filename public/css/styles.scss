@@ -830,6 +830,9 @@ background: #eee;
     }
 }
 /* Show the dropdown menu on hover */
+.navDropdown:hover .navDropdown-content {
+    display: block;
+}
 .filterDropdown:hover .filterDropdown-content {
     display: block;
 }
