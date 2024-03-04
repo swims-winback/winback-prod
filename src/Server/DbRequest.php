@@ -50,7 +50,9 @@ class DbRequest {
     */
     public function dbConnect(){
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $connexion = mysqli_connect($_ENV['HOSTNAME'], $_ENV['ADMIN'], $_ENV['PWD'], $_ENV['DB'], $_ENV['DB_PORT']);
+        //$connexion = new \mysqli($host, $username, $password, $database);
+        $connexion = new \mysqli($_ENV['DB_HOSTNAME'], $_ENV['DB_ADMIN'], $_ENV['DB_PWD'], $_ENV['DB_NAME']);
+        //$connexion = mysqli_connect($_ENV['HOSTNAME'], $_ENV['ADMIN'], $_ENV['PWD'], $_ENV['DB'], $_ENV['DB_PORT']);
         if ($connexion -> connect_errno) {
             echo "Failed to connect to MySQL: " . $connexion -> connect_error;
             return "error";

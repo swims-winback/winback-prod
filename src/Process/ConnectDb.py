@@ -18,10 +18,10 @@ def create_db_connection():
         _type_: _description_
     """
     connection = None
-    hostname = os.getenv('HOSTNAME')
-    admin = os.getenv('ADMIN')
-    pwd = os.getenv('PWD')
-    db = os.getenv('DB')
+    hostname = os.getenv('DB_HOSTNAME')
+    admin = os.getenv('DB_ADMIN')
+    pwd = os.getenv('DB_PWD')
+    db = os.getenv('DB_NAME')
     try:
         connection = mysql.connector.connect(
             host=hostname,

@@ -169,10 +169,10 @@ class GetDate():
             return snToDateArray
     def main(self, connection): 
         DB_TABLE = "sn"
-        host = os.getenv('HOSTNAME')
-        admin = os.getenv('ADMIN')
-        pwd = os.getenv('PWD')
-        db = os.getenv('DB')
+        host = os.getenv('DB_HOSTNAME')
+        admin = os.getenv('DB_ADMIN')
+        pwd = os.getenv('DB_PWD')
+        db = os.getenv('DB_NAME')
         
         #connection = create_db_connection(host, admin, pwd, db)
         winback_sn = self.connectFrom(db, DB_TABLE, connection)
