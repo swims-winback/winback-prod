@@ -42,14 +42,14 @@ class DataResponse extends Utils
      */
     function setFileContent(string $fileContent, $fromIndex = 0, $startOffset = 0){
         $startOffset += $fromIndex;
-        $fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset); // TODO check startOffset et fromIndex
-        return $fileContentFromIndex;
+        $fileContentSubstr = substr($fileContent, $startOffset, $length = FW_OCTETS); // Get content of file from a specific index
+        return $fileContentSubstr;
     }
 
     function getChunk($filename, $chunkSize, $fromIndex = 0, $startOffset = 0) {
         $startOffset += $fromIndex;
         $fileHandle = fopen($filename, 'rb');
-    
+
         if ($fileHandle === false) {
             die('Unable to open file.');
         }
@@ -66,7 +66,6 @@ class DataResponse extends Utils
         
         fclose($fileHandle);
     }
-
     /**
      * Summary of getIndexForImg
      * @param mixed $fileContent
@@ -400,7 +399,7 @@ class DataResponse extends Utils
         }
         return chr($sizeContent);
     }
-
+    
     /**
      * Initialize response array with 39 empty elements
      * @param int $nbData
