@@ -42,10 +42,30 @@ class DataResponse extends Utils
      */
     function setFileContent(string $fileContent, $fromIndex = 0, $startOffset = 0){
         $startOffset += $fromIndex;
-        $fileContentFromIndex = $this->getContentFromIndex($fileContent, $startOffset); // TODO check startOffset et fromIndex
-        return $fileContentFromIndex;
+        $fileContentSubstr = substr($fileContent, $startOffset, $length = FW_OCTETS); // Get content of file from a specific index
+        return $fileContentSubstr;
     }
 
+    function getChunk($filename, $chunkSize, $fromIndex = 0, $startOffset = 0) {
+        $startOffset += $fromIndex;
+        $fileHandle = fopen($filename, 'rb');
+
+        if ($fileHandle === false) {
+            die('Unable to open file.');
+        }
+        
+        if ($fromIndex != 0) {
+            fseek($fileHandle, $fromIndex);
+        }
+        while (!feof($fileHandle)) {
+            $chunk = fread($fileHandle, $chunkSize);
+            //echo strlen($chunk);
+            flush();
+            return $chunk;
+        }
+        
+        fclose($fileHandle);
+    }
     /**
      * Summary of getIndexForImg
      * @param mixed $fileContent
@@ -99,13 +119,13 @@ class DataResponse extends Utils
 
     /**
      * Header of 6 bytes
-     * @param int $cmd
+     * @param string $cmd
      * @param int $reqId
      * @param int $dataSize
      * @return string
      */
-    function setHeader(int $cmd, int $reqId, $dataSize=FW_OCTETS){
-        $this->header = chr($_ENV['AA']).chr(0).chr($reqId).chr($cmd).chr(intval($dataSize/256)).chr($dataSize%256);
+    function setHeader(string $cmd, int $reqId, $dataSize=FW_OCTETS){
+        $this->header = chr(hexdec('AA')).chr(0).chr($reqId).chr(hexdec($cmd)).chr(intval($dataSize/256)).chr($dataSize%256);
         return $this->header;
     }
     
@@ -318,6 +338,23 @@ class DataResponse extends Utils
         }
 	} 
 
+    function getImageFile(string $deviceType, $pathImage, $fromIndex = 0, $size = 0){
+		
+		$contents = file_get_contents($pathImage);	
+		if ($contents) {
+            $response = substr($contents, $fromIndex, $size);
+            for($aInit = strlen($response); $aInit < ($size); $aInit++){
+                $response[$aInit] = chr(255);
+            }
+            return $response;
+        }
+        else
+        {
+            echo "\r\nError: Check that image file exists for {$deviceType}.\r\n";
+            return false;
+        }
+	}
+
     /**
      * Summary of getFile4096Bytes
      * @param string $path
@@ -333,13 +370,13 @@ class DataResponse extends Utils
             for($aInit = strlen($Response); $aInit < ($size+6); $aInit++){
                 $Response[$aInit] = chr(255);
             }
-            echo "\r\nResponse: " . bin2hex($Response) . "\r\n";
+            //echo "\r\nResponse: " . bin2hex($Response) . "\r\n";
             return $Response;
         }
         else {
             $Response = $this->header;
             //$Response = $this->header;
-            echo "\r\nResponse: " . bin2hex($Response) . "\r\n";
+            //echo "\r\nResponse: " . bin2hex($Response) . "\r\n";
             return $Response;
         }
 	}
@@ -351,9 +388,10 @@ class DataResponse extends Utils
      * @param string $fileName
      * @return string
      */
-    function getCRCAutoDetect(string $deviceType, $startOffset, $fileName)
+    //function getCRCAutoDetect(string $deviceType, $startOffset, $fileName)
+    function getCRCAutoDetect($startOffset, $crcFileContent)
     {
-        $crcFileContent = $this->getFileContent($deviceType, $fileName);
+        //$crcFileContent = $this->getFileContent($deviceType, $fileName);
         $fileContentCRC = substr($crcFileContent, $startOffset, strlen($crcFileContent) - $startOffset);
         $sizeContent = 0;
         for($parse = 0; $parse < strlen($fileContentCRC); $parse++){
@@ -361,7 +399,7 @@ class DataResponse extends Utils
         }
         return chr($sizeContent);
     }
-
+    
     /**
      * Initialize response array with 39 empty elements
      * @param int $nbData
@@ -492,7 +530,7 @@ class DataResponse extends Utils
             $response = $preResponse . $response;
         }
         //echo "\r\nresponse".$response."\r\n";
-        echo "\r\nresponse to byte".bin2hex($response)."\r\n";
+        //echo "\r\nresponse to byte".bin2hex($response)."\r\n";
         return $response;
     }
 
