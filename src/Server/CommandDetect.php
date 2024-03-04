@@ -463,7 +463,7 @@ class CommandDetect extends AbstractController {
 						$firstComment = str_replace('\n', "\n", $firstComment);
 						$endstr = 100-strlen($firstComment); //If comment lower than max size, add blank space
 						$comment = $firstComment.str_repeat(" ", $endstr);
-						$comment = $firstComment;
+						//$comment = $firstComment;
 						}
 						else {
 							$comment = str_repeat(" ", 100);
