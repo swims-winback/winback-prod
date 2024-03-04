@@ -348,10 +348,10 @@ class CommandDetect extends AbstractController {
 							// TODO put boardType in database
 							$deviceObj["Device Version"] = $version;
 							break;
-						case 'CF':
-						case 'CE':
-						case 'CC':
-						case 'CB':
+					case 'CF':
+					case 'CE':
+					case 'CC':
+					case 'CB':
 							if(!empty($data[0])){
 								for($parse = 32; $parse < strlen($data) && $data[$parse]!='$'; $parse++){
 									$this->path .= $data[$parse];
@@ -396,7 +396,7 @@ class CommandDetect extends AbstractController {
 		$boardType = $deviceObj["boardType"];
 		$deviceConfig = $deviceObj["config"];
 
-if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
+	if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 		$deviceTypeId = deviceTypeId[$deviceType];
 		$deviceTypeName = deviceTypeName[$deviceType];
 		$logFile = trim($sn).".txt";
@@ -409,7 +409,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 		$request->initDeviceInSN($sn, $deviceTypeName);
 		$request->setDeviceToServer($sn);
 		$this->responseArray[2] = $deviceInfo;
-		}
+	}
 
 		// SET FORCED //
 		$forcedUpdate = $this->getForced($deviceInfo);
@@ -463,6 +463,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 							$firstComment = str_replace('\n', "\n", $firstComment);
 							$endstr = 100-strlen($firstComment); //If comment lower than max size, add blank space
 							$comment = $firstComment.str_repeat(" ", $endstr);
+							//$comment = $firstComent;
 						}
 						else {
 							$comment = str_repeat(" ", 100);
@@ -506,7 +507,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 					// change to 0 in db
 					$request->setConfigId($sn, 0, SERVER_ID);
 					$deviceInfo[SERVER_ID] = 0;
-				} 
+				}
 				else {
 					// case 2: config
 					// si demande de changement de config du côté du serveur
@@ -553,7 +554,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 							$deviceInfo[SERVER_ID] = 0;
 							$snId = 0;
 							//exit;
-						} 
+						}
 						else {
 							// commandId : 4, sous-commande
 							// industriaId : boolean, demande de changement
@@ -571,7 +572,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 								$industriaId = 0;
 								$deviceInfo[CONFIG_INDUS_ID] = 0;
 								# industriaId
-							} 
+							}
 							else {
 								$commandId = 0;
 								$config = 0;
@@ -584,11 +585,11 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 							}
 						}
 					}
-				}			
+				}
 				break;
 			//télécharger l'image
 			case "D7":
-/* 
+				/* 
 				// si l'id dans la bdd est égal à 1
 				if ($deviceInfo[IMAGE_ID] != 0) {
 					$commandId = 1;
@@ -623,15 +624,15 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				}
 				else {
 				*/
-				$commandId = 0;
-				$config = 0;
-				$contentSize = strlen($commandId) + strlen($config);
-				$header = $dataResponse->setHeader($command, $this->reqId, $contentSize);
-				$serverContent = $dataResponse->setResponseToByte($commandId, 0);
-				$configContent = $dataResponse->setResponseToByte(0, 0);
-				$tempResponse = $header.$serverContent.$configContent;
-				$response = $dataResponse->getCesarMatrix($tempResponse);
-//}
+					$commandId = 0;
+					$config = 0;
+					$contentSize = strlen($commandId) + strlen($config);
+					$header = $dataResponse->setHeader($command, $this->reqId, $contentSize);
+					$serverContent = $dataResponse->setResponseToByte($commandId, 0);
+					$configContent = $dataResponse->setResponseToByte(0, 0);
+					$tempResponse = $header.$serverContent.$configContent;
+					$response = $dataResponse->getCesarMatrix($tempResponse);
+				//}
 				break;
 			//synchro directory protocol
 			case "CC":
@@ -767,7 +768,7 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				$response = $dataResponse->setResponseData($content);
 				break;
 			//UART_CMD_UPDATE_PICTURES //update version
-			case "FD": 
+			case "FD":
 				if ($deviceInfo[FORCED_UPDATE] == 1) {
 					$request->setForced($sn, 0);
 					$deviceInfo[FORCED_UPDATE] = 0;
@@ -785,19 +786,19 @@ if ($command == 'DE' || $command == 'FE' || $command == 'F9') {
 				break;
 			//UART_CMD_UPDATE_SUBPROG4 //update version
 			case "FC":
-            case "F8":
-            case "F7":
-            case "F6":
-            case "F5":
+			case "F8":
+			case "F7":
+			case "F6":
+			case "F5":
 				$totalFileContent = $dataResponse->getFileContent($deviceType, $fileName);
 				$filesize = strlen($totalFileContent);
 				$percentage = intval(($indexToGet/$filesize)*100);
 				$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
-                $startOffset = $dataResponse->getIndexForProg($command, $totalFileContent);
+				$startOffset = $dataResponse->getIndexForProg($command, $totalFileContent);
 				$fileContent = $dataResponse->setFileContent($totalFileContent, $indexToGet, $startOffset);
 				$dataResponse->setHeader($command, $this->reqId);
 				$response = $dataResponse->setResponseData($fileContent);
-                break;
+				break;
 
 			//Receive log file
             case "F3":				
