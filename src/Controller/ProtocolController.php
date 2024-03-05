@@ -389,7 +389,7 @@ class ProtocolController extends AbstractController
                 $mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["time_tot"] = $value->getTimeTot()."''";
             }
             else {
-                $mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["time_tot"] = $value->getTimeTot()."'";
+                $mode_obj["protocol_id"][$value->getProtocolId()]["step_id"][$value->getStepId()]["time_tot"] = intval($value->getTimeTot()/60)."'";
             }
             
         }
