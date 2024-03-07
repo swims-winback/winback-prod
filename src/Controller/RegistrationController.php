@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Main\Admin;
-use App\Entity\Main\User;
+//use App\Entity\Main\User;
+use App\Entity\Customer\User;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
@@ -47,7 +47,7 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('customer');
             $em->persist($user);
             $em->flush();
 
@@ -90,7 +90,9 @@ class RegistrationController extends AbstractController
                 $request
             );
             */
-            return $this->redirectToRoute('app_login');
+            //return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('oauth_login');
+            
         }
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
@@ -114,7 +116,8 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_login');
+        //return $this->redirectToRoute('app_login');
+        return $this->redirectToRoute('oauth_login');
         //return $this->redirectToRoute('device');
     }
 }

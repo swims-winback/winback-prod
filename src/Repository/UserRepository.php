@@ -2,7 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\Main\User;
+//use App\Entity\Main\User;
+use App\Entity\Customer\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

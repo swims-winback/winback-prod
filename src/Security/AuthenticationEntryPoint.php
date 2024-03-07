@@ -29,6 +29,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             'You have to login in order to access this page.'
         );
         */
-        return new RedirectResponse($this->urlGenerator->generate('app_login'));
+        //return new RedirectResponse($this->urlGenerator->generate('app_login'));
+        return new RedirectResponse($this->urlGenerator->generate('oauth_login'));
     }
 }

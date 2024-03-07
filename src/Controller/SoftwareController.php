@@ -227,17 +227,18 @@ class SoftwareController extends AbstractController
     /**
      * @Route("/{_locale<%app.supported_locales%>}/user/software/delete/{deviceFamily}/{id}", name="software_delete")
     */    
-    public function deleteSoftware(Software $software, ManagerRegistry $doctrine, LoggerInterface $logger, DeviceFamily $deviceFamily, $id)
+    public function deleteSoftware(SoftwareRepository $softwareRepository, ManagerRegistry $doctrine, LoggerInterface $logger, DeviceFamily $deviceFamily, $id)
     {
-        $filesystem = new Filesystem();
+        //$filesystem = new Filesystem();
         // récupère le nom du software
-        $softwares = $deviceFamily->getSoftwares();
+        //$softwares = $deviceFamily->getSoftwares();
         /*
         $indexOf = $softwares->indexOf($software);
         echo($indexOf);
         $soft = $softwares->get($indexOf);
         */
-        $soft = $software;
+        //$soft = $software;
+        $soft = $softwareRepository->findOneBy(array('id' => $id));
         $name = $soft->getName();
         $deviceType = $soft->getDeviceFamily()->getName();
         if (file_exists($this->getParameter('uploads_directory').'package/'.$deviceType."/".$name)) {
@@ -247,9 +248,9 @@ class SoftwareController extends AbstractController
             unlink($this->getParameter('uploads_directory').'archive/'.'package/'.$deviceType."/".$name);
         }
 
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $deviceFamily->removeSoftware($soft);
-        $em->remove($software);
+        $em->remove($soft);
         $em->flush();
 
         $user = $this->getUser();

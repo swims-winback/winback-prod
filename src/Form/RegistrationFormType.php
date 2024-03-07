@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Main\Admin;
-use App\Entity\Main\User;
+//use App\Entity\Main\User;
+use App\Entity\Customer\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

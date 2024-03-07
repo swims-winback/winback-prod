@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Main\User;
+//use App\Entity\Main\User;
+use App\Entity\Customer\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,12 +27,26 @@ class ResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
+    /*
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
         private EntityManagerInterface $entityManager
     ) {
     }
+    */
 
+    
+    private $entityManager;
+
+    public function __construct(
+        private ResetPasswordHelperInterface $resetPasswordHelper,
+        //private EntityManagerInterface $entityManager
+        ManagerRegistry $doctrine
+    ) {
+        //$entityManager = $doctrine->getManager();
+        $this->entityManager = $doctrine->getManager('customer');
+    }
+    
     /**
      * Display & process form to request a password reset.
      */
@@ -158,7 +174,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('noreply-hello@winback.com', 'Winback Team'))
+            ->from(new Address('noreply@winback-assist.com', 'Winback Team'))
             ->to($user->getEmail())
             ->subject('Password Reset')
             ->htmlTemplate('reset_password/email.html.twig')

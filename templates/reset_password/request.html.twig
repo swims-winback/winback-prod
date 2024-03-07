@@ -4,7 +4,8 @@
 
 {% block content %}
 <div class="container p-5 d-flex flex-column justify-content-around">
-<a href="{{ path('app_login')}}" class="d-flex align-items-center flex-nowrap"><i class="fa-solid fa-arrow-left-long"></i><strong>{{'Back'|trans}}</strong></a>
+{#<a href="{{ path('app_login')}}" class="d-flex align-items-center flex-nowrap"><i class="fa-solid fa-arrow-left-long"></i><strong>{{'Back'|trans}}</strong></a>#}
+<a href="{{ path('oauth_login')}}" class="d-flex align-items-center flex-nowrap"><i class="fa-solid fa-arrow-left-long"></i><strong>{{'Back'|trans}}</strong></a>
     {% for flash_error in app.flashes('reset_password_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}

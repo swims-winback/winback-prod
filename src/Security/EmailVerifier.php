@@ -2,8 +2,10 @@
 
 namespace App\Security;
 
-use App\Entity\Main\User;
+//use App\Entity\Main\User;
+use App\Entity\Customer\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -17,11 +19,13 @@ class EmailVerifier
     private $mailer;
     private $entityManager;
 
-    public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, EntityManagerInterface $manager)
+    //public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, EntityManagerInterface $manager)
+    public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, ManagerRegistry $doctrine)
     {
         $this->verifyEmailHelper = $helper;
         $this->mailer = $mailer;
-        $this->entityManager = $manager;
+        //$this->entityManager = $manager;
+        $this->entityManager = $doctrine->getManager('customer');
     }
 
     public function sendEmailConfirmation(string $verifyEmailRouteName, $user, TemplatedEmail $email): void

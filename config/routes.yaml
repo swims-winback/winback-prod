@@ -21,8 +21,9 @@ error_404:
         template:    mail/error_404.html.twig
 
 protocol:
-    path: /user/protocol
+    path: /user/proto/protocol
     controller:    Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
         template:    protocol.html.twig
+
 

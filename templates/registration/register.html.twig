@@ -63,7 +63,8 @@
                     </div>
                     <div class="d-flex justify-content-around align-items-center w-100 p-0 flex-wrap">
                         <p class="mb-1 text-nowrap">{{ 'Already registered ?'|trans }}</p>
-                        <a class="btn btn-justify btn-secondary txt-white mb-1 w-100 btn-login" href="{{ path('app_login') }}">{{ 'Login'|trans }} <svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg></a>
+                        {#<a class="btn btn-justify btn-secondary txt-white mb-1 w-100 btn-login" href="{{ path('app_login') }}">{{ 'Login'|trans }} <svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg></a>#}
+                        <a class="btn btn-justify btn-secondary txt-white mb-1 w-100 btn-login" href="{{ path('oauth_login') }}">{{ 'Login'|trans }} <svg width="7" height="15" viewBox="0 0 7 15" fill="none"><path d="M-0.000264168 0H3.14905L6.81055 7.49834L3.14905 15H-0.000264168L3.66123 7.49834L-0.000264168 0Z" fill="white"></path></svg></a>
                     </div>
                 </div>
 

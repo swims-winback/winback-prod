@@ -1,14 +1,16 @@
 security:
-    enable_authenticator_manager: true
+    #enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        App\Entity\Main\User:
+        #App\Entity\Main\User:
+             #algorithm: auto
+        #App\Entity\Main\Admin:
+            #algorithm: auto
+        #App\Entity\Main\Client:
+            #algorithm: auto
+        App\Entity\Customer\User:
              algorithm: auto
-        App\Entity\Main\Admin:
-            algorithm: auto
-        App\Entity\Main\Client:
-            algorithm: auto
 
     role_hierarchy:
         ROLE_CLIENT:      [ROLE_USER]
@@ -25,7 +27,8 @@ security:
         app_user_provider:
             entity:
                 #class: App\Entity\Admin
-                class: App\Entity\Main\User
+                #class: App\Entity\Main\User
+                class: App\Entity\Customer\User
                 property: email
         #app_client_provider:
             #entity:
@@ -35,7 +38,6 @@ security:
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            
             security: false
         #client_secured_area:
             #pattern: ^/client
@@ -68,17 +70,23 @@ security:
         #admin_secured_area:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator
+            custom_authenticators: 
+                # App\Security\AppAuthenticator
+                - App\Security\KeycloakAuthenticator
             entry_point: App\Security\AuthenticationEntryPoint
             access_denied_handler: App\Security\AccessDeniedHandler
             form_login:
-                login_path: app_login
-                check_path: app_login
+                #login_path: app_login
+                #check_path: app_login
+                login_path: oauth_login
+                check_path: oauth_login
                 enable_csrf: true
             logout:
                 path: app_logout
+                #path: oauth_check
                 # where to redirect after logout
-                target: app_login
+                #target: app_login
+                target: oauth_login
             remember_me:
                 secret:   '%kernel.secret%' # required
                 lifetime: 604800 # 1 week in seconds
