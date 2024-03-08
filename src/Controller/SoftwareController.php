@@ -210,7 +210,7 @@ class SoftwareController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('default');
             $software = $form->getData();
             $em->persist($software);
             $em->flush();
@@ -266,7 +266,6 @@ class SoftwareController extends AbstractController
         $user = $this->getUser();
         $software = $softwareRepository->findOneBy(array('id' => $id));
         $comment = str_replace(' - ', "\r\n", $comment);
-        
         if ($comment == "null") {
             $comment = "";
             $logger->info($user." has deleted comment.");
@@ -278,7 +277,7 @@ class SoftwareController extends AbstractController
         }
         $software->setUpdateComment($comment);
 
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $em->persist($software);
         $em->flush();
         
@@ -306,7 +305,7 @@ class SoftwareController extends AbstractController
         }
         $deviceFamily->setActualVersion($software);
 
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $em->persist($deviceFamily);
         $em->flush();
         

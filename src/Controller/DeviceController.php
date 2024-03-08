@@ -104,7 +104,7 @@ class DeviceController extends AbstractController
                         );
                     }
                     $device->setSelected(false);
-                    $em = $doctrine->getManager();
+                    $em = $doctrine->getManager('default');
                     $em->flush();
                 }
             }
@@ -133,7 +133,7 @@ class DeviceController extends AbstractController
             $this->addFlash(
                 'infoDevice', 'Device '.$device->getSn().' updated !'
             );
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('default');
             $em->persist($device);
             $em->flush();
         }
@@ -162,7 +162,7 @@ class DeviceController extends AbstractController
             $device->setForced(1);
         }
         
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $em->persist($device);
         $em->flush();
         
@@ -198,7 +198,7 @@ class DeviceController extends AbstractController
                 $logger->warning($user." has forced ".$device->getSn());
                 $device->setForced(1);
             }
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('default');
             $em->persist($device);
             $em->flush();
         }
@@ -235,7 +235,7 @@ class DeviceController extends AbstractController
         print_r($select_bool);
         $device->setSelected(($select_bool==0)?0:1);
         //$device->setSelected($select_bool);
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $em->persist($device);
         $em->flush();
 
@@ -256,7 +256,7 @@ class DeviceController extends AbstractController
             $this->writeVersionLog($device->getSn(), $device->getDeviceFamily(), $logTxt);
             $logger->info($logTxt);
             $device->setVersionUpload($version);
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('default');
             $em->persist($device);
             $em->flush();
         }
@@ -286,7 +286,7 @@ class DeviceController extends AbstractController
         }
         $device->setComment($comment);
 
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $em->persist($device);
         $em->flush();
 
@@ -303,7 +303,7 @@ class DeviceController extends AbstractController
         $logger->info($user." has changed serverId to ".$serverId." for ".$device->getSn());
         $this->addFlash('infoDevice', 'ServerId '.$serverId.' changed for '.$device->getSn().'!');
         $device->setServerId($serverId);
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager('default');
         $em->persist($device);
         $em->flush();
         return $this->redirectToRoute('device');
@@ -324,7 +324,7 @@ class DeviceController extends AbstractController
             $this->addFlash(
                 'infoDevice', 'Device '.$device->getSn().' serverIP updated !'
             );
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('default');
             $em->persist($device);
             $em->flush();
         }
@@ -351,7 +351,7 @@ class DeviceController extends AbstractController
             $this->addFlash(
                 'infoDevice', 'Device '.$device->getSn().' serverPort updated !'
             );
-            $em = $doctrine->getManager();
+            $em = $doctrine->getManager('default');
             $em->persist($device);
             $em->flush();
         }
