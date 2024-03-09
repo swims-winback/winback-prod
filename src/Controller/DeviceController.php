@@ -270,6 +270,14 @@ class DeviceController extends AbstractController
     }
 
     /**
+     * @Route("/getDeviceId/{id}", name="get_device_id")
+     */
+    public function getDeviceId(DeviceRepository $deviceRepository, $id) {
+        $device = $deviceRepository->findOneBy(array('id' => $id));
+        return new Response($device->getSn());
+    }
+
+    /**
      * @Route("/addComment/{id}/{comment}", name="add_comment")
      */
     public function addComment(ManagerRegistry $doctrine, DeviceRepository $deviceRepository, $id, $comment, LoggerInterface $logger) {

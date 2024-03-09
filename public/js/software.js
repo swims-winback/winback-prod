@@ -67,14 +67,12 @@ for(let e of softTablesClick){
     );
 }
 
-
-//function getSoftware(id, comment) {
-function getSoftware(id, callback) {
+function getSoftware(id, comment, callback) {
   $.ajax({
     type:"GET",
     cache:false,
     url: `/getSoftId/${id}`,
-    data: {comment:comment},
+    data: {comment},
     success: function (data) {
       if (callback) {
         callback(data)
@@ -122,12 +120,10 @@ for (let element of updateCommentButtons) {
       }
 
       addUpdateComment(id, comment);
-      getSoftware(id, (data) => {
+      getSoftware(id, comment, (data) => {
         console.log(data);
         alert("Info: comment '"+comment + "' added to software "+data);
       });
-
-      //window.location.reload();
     };
 }
   

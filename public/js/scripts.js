@@ -220,7 +220,20 @@ for (let validButton of validButtons) {
     }
   }
   
-
+function getDevice(id, comment, callback) {
+  $.ajax({
+    type:"GET",
+    cache:false,
+    url: `/getDeviceId/${id}`,
+    data: {comment},
+    success: function (data) {
+      if (callback) {
+        callback(data)
+      }
+    }
+  });
+}
+  
 /**
  * Call addComment in DeviceController
  * @param {int} id - device id
@@ -236,7 +249,6 @@ function addComment(id, comment) {
       console.log(comment);
     }
   });
-  window.location.reload();
 }
   
 let commentButtons = document.getElementsByClassName("comment_button");
@@ -255,6 +267,9 @@ for (let element of commentButtons) {
       comment = null
     }
     addComment(id, comment);
+    getDevice(id, comment, (data) => {
+      alert("Info: comment '"+comment + "' added to device "+data)
+    })
   }
 }
 
