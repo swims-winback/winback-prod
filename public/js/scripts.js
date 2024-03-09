@@ -154,6 +154,7 @@ function addDeviceModal(id, version, forced) {
     success: function () {
       console.log("device forced")
       console.log(forced)
+      window.location.reload();
     }
     })
 }
@@ -168,17 +169,21 @@ for (let validButton of validButtons) {
     if (version != "") {
       if (forcedButton.checked == true) {
         addDeviceModal(id, version, 1)
+        //alert("Version changed with device forced")
       }
       else {
         addDeviceModal(id, version, 0)
+        //alert("Version changed, device not forced")
       }
     }
     else {
       if (forcedButton.checked == true) {
         addDeviceModal(id, "", 1)
+        //alert("device forced")
       }
       else {
         addDeviceModal(id, "", 0)
+        //alert("device deforced")
       }
     }
     /*
@@ -195,7 +200,7 @@ for (let validButton of validButtons) {
       addForce(id, 0);
     }
     */
-    window.location.reload();
+    //window.location.reload();
   })
  }
 
