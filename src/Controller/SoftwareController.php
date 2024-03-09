@@ -260,6 +260,14 @@ class SoftwareController extends AbstractController
     }
 
     /**
+     * @Route("/getSoftId/{id}", name="get_soft_id")
+     */
+    public function getSoftId(SoftwareRepository $softwareRepository, $id) {
+        $software = $softwareRepository->findOneBy(array('id' => $id));
+        return new Response($software->getName());
+    }
+
+    /**
      * @Route("/addUpdateComment/{id}/{comment}", name="add_update_comment")
      */
     public function addUpdateComment(ManagerRegistry $doctrine, SoftwareRepository $softwareRepository, $id, $comment, LoggerInterface $logger) {

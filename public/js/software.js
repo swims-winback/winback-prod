@@ -67,6 +67,22 @@ for(let e of softTablesClick){
     );
 }
 
+
+//function getSoftware(id, comment) {
+function getSoftware(id, callback) {
+  $.ajax({
+    type:"GET",
+    cache:false,
+    url: `/getSoftId/${id}`,
+    data: {comment:comment},
+    success: function (data) {
+      if (callback) {
+        callback(data)
+      }
+    }
+  });
+}
+
 function addUpdateComment(id, comment) {
   $.ajax({
     type:"POST",
@@ -99,12 +115,19 @@ let updateCommentInputs = document.getElementsByClassName("comment_update_input"
 for (let element of updateCommentButtons) {
     element.onclick = function() {
       let id = $(element).data("id");
+      console.log(element.previousElementSibling)
       let comment = element.previousElementSibling.value;
       if (comment == "") {
         comment = null
       }
+
       addUpdateComment(id, comment);
-      window.location.reload();
+      getSoftware(id, (data) => {
+        console.log(data);
+        alert("Info: comment '"+comment + "' added to software "+data);
+      });
+
+      //window.location.reload();
     };
 }
   
