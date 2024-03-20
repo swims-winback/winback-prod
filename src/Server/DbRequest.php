@@ -352,10 +352,16 @@ class DbRequest {
                     $req .= " WHERE ".$whereCond;
                 }
                 $res = $this->sendRq($req);
+                $date = date('Y-m-d | H:i:s', strtotime('-2 months'));
+                $req2 = "DELETE FROM `device_server` WHERE `date` < '".$date."' AND `device_id` = '".$sn."'";
+                $res2 = $this->sendRq($req2);
                 return true;
             }else{
                 $res = $this->initDeviceInServer($sn);
                 $res2 = $this->sendRq($req);
+                $date = date('Y-m-d | H:i:s', strtotime('-3 months'));
+                $req2 = "DELETE FROM `device_server` WHERE `date` < '".$date."' AND `device_id` = '".$sn."'";
+                $res3 = $this->sendRq($req2);
                 if($row = mysqli_fetch_assoc($res2)){
                     return true;
                 }
