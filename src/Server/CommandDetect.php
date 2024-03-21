@@ -255,15 +255,44 @@ class CommandDetect extends AbstractController {
 		if(!empty($data)){
             if(isset($data[0]) && !empty($data[0]) && isset($data[1])){
                 $command = (isset($data[20]) && isset($data[21]) !== "aa") ? $data[20].$data[21] : '';
+
 				// Get command in data received
 				$deviceObj["Command"] = $command;
 				// Get device type in data received
 				$deviceType = hexdec($data[3].$data[4]);
 				$deviceObj["Device Type"] = $deviceType;
-
+				/*
+				if ($command=="DD" and $deviceType==14) {
+					echo (strlen($data));
+					echo ($data);
+					exit;
+				}
+				*/
 				if (in_array($command, cmdBack)) {
 					if (strlen($data)<221) {
 						echo ($data);
+						//exit;
+						/*
+						for($i=14; $i<(14+206); $i++){
+							$dataTemp = hexdec(bin2hex($data[$i])); //TODO string offset
+							if($dataTemp === 127)
+							{
+								$dataTemp = 92 - 35 - $this->getserverCesarMatrixRxArray[($i-14)];
+							}
+							else 
+							{
+								$dataTemp = ((hexdec(bin2hex($data[$i]))-35) - $this->getserverCesarMatrixRxArray[($i-14)]); // TODO string offset
+							}
+							if($dataTemp < 0)
+							{
+								$data[$i] = chr($dataTemp+127);
+							}
+							else 
+							{
+								$data[$i] = chr($dataTemp+35);
+							}
+						}
+						*/
 					}
 					for($i=28; $i<(28+206); $i++){
 						$dataTemp = hexdec(bin2hex($data[$i])); //TODO string offset
@@ -405,8 +434,8 @@ class CommandDetect extends AbstractController {
 		 * [SN] : sn
 		 * [FORCED_UPDATE] : forced
 		*/
-		$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
 		$request->initDeviceInSN($sn, $deviceTypeName);
+		$deviceInfo = $request->setDeviceInfo($sn, $version, $deviceTypeId, $ipAddr, $logFile);
 		$request->setDeviceToServer($sn);
 		$this->responseArray[2] = $deviceInfo;
 	}
@@ -517,7 +546,7 @@ class CommandDetect extends AbstractController {
 						if ($deviceType==12 and ($this->compareVersion("3.30", $deviceInfo[DEVICE_VERSION]) == true or $deviceInfo[DEVICE_VERSION] == "0.45" or $deviceInfo[DEVICE_VERSION] == "0.47" or $deviceInfo[DEVICE_VERSION] == "0.48" or $deviceInfo[DEVICE_VERSION] == "0.49")) {
 							$configUp = chr(intval($request->getConfigUp($sn))).chr(intval($request->getConfigUp($sn))>>8);
 						}
-						elseif ($deviceType==14 and ($this->compareVersion("3.16", $deviceInfo[DEVICE_VERSION]) == true or $deviceInfo[DEVICE_VERSION] == "0.1")) {
+						elseif ($deviceType==14 and ($this->compareVersion("3.16", $deviceInfo[DEVICE_VERSION]) == true or $deviceInfo[DEVICE_VERSION] == "0.1" or $deviceInfo[DEVICE_VERSION] == "0.4")) {
 							$configUp = chr(intval($request->getConfigUp($sn))).chr(intval($request->getConfigUp($sn))>>8);
 						}
 						else {
@@ -589,12 +618,12 @@ class CommandDetect extends AbstractController {
 				break;
 			//télécharger l'image
 			case "D7":
-				/* 
+				/*
 				// si l'id dans la bdd est égal à 1
 				if ($deviceInfo[IMAGE_ID] != 0) {
 					$commandId = 1;
 					if ($deviceInfo[IMAGE_ID] == 1) {
-						$image_path = "C:\wamp64\www\public\winback\public\Ressource\images\BACK4\\".trim($sn).$deviceInfo[IMAGE_UP];
+						$image_path = "C:\wamp64\www\public\winback\public\Ressource\images\\".deviceTypeArray[$deviceType].trim($sn).$deviceInfo[IMAGE_UP];
 						//$image_path_copy = 
 						$size = filesize($image_path)-$indexToGet;
 						$filesize =  filesize($image_path);
@@ -618,6 +647,7 @@ class CommandDetect extends AbstractController {
 						//$serverContent = $dataResponse->setResponseToByte($commandId, 0);
 						$configContent = $dataResponse->setResponseToByte($config, 0);
 						$tempResponse = $header.$configContent;
+						echo "\r\nD7 Response 3: " . bin2hex($tempResponse) . "\r\n";
 						$response = $dataResponse->getCesarMatrix($tempResponse);
 						echo "\r\nD7 Response 3: " . bin2hex($response) . "\r\n";
 					}
@@ -741,7 +771,7 @@ class CommandDetect extends AbstractController {
 
 		/* ===== RSHOCK COMMANDS ===== */
 			//UART_CMD_AUTODETECT //Ready To Receive
-			case "FE": 
+			case "FE":
 				$logTxt = "Version: ".$deviceInfo[DEVICE_VERSION]." Upload version: ".$deviceInfo[VERSION_UPLOAD]." Address: ".$deviceInfo[IP_ADDR]." Country: ".$deviceInfo[COUNTRY];
 				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
 				$dataResponse->setHeader($command, $this->reqId, 39);
@@ -757,7 +787,7 @@ class CommandDetect extends AbstractController {
 				$response = $dataResponse->setResponseData($tempResponse);
 				break;
 			//Ready To Receive
-			case "F9": 
+			case "F9":
 				$logTxt = "Version: ".$deviceInfo[DEVICE_VERSION]." Upload version: ".$deviceInfo[VERSION_UPLOAD]." Address: ".$deviceInfo[IP_ADDR]." Country: ".$deviceInfo[COUNTRY];
 				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
 				$request->setConnect('1', $sn);
