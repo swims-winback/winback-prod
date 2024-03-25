@@ -377,10 +377,10 @@ class CommandDetect extends AbstractController {
 							// TODO put boardType in database
 							$deviceObj["Device Version"] = $version;
 							break;
-					case 'CF':
-					case 'CE':
-					case 'CC':
-					case 'CB':
+						case 'CF':
+						case 'CE':
+						case 'CC':
+						case 'CB':
 							if(!empty($data[0])){
 								for($parse = 32; $parse < strlen($data) && $data[$parse]!='$'; $parse++){
 									$this->path .= $data[$parse];
@@ -460,7 +460,7 @@ class CommandDetect extends AbstractController {
 				}
 				
 				$fileContent = $dataResponse->getChunk($path, FW_OCTETS);
-				echo (strlen($fileContent));
+				echo ($fileContent);
 				$dataResponse->setHeader($command, $this->reqId);
 				$tempResponse = $dataResponse->setResponseData($fileContent);
 
