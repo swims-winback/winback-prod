@@ -700,25 +700,34 @@ class CommandDetect extends AbstractController {
 				}
 				//* return index in tcpserver to not send response if index is repeated*//
 				$this->responseArray[0] = $indexToGet;
-				$filesize =  filesize($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName);
-				$percentage = intval(($indexToGet/$filesize)*100);
-				if ($percentage == 0 && $indexToGet == 4096 || $percentage == 99 && ($filesize-$indexToGet) < 4096) {
-					$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".filesize($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName) . ' bytes - '.$percentage." %\r\n");
-					if ($percentage == 99 && ($filesize-$indexToGet) < 4096) {
-						$request->setDownload($sn, 100);
-						$percentage = 100;
+				$path = $_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName;
+				if(file_exists($path)) {
+					$filesize =  filesize($path);
+					$percentage = intval(($indexToGet/$filesize)*100);
+					if ($percentage == 0 && $indexToGet == 4096 || $percentage == 99 && ($filesize-$indexToGet) < 4096) {
+						$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
+						echo("\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
+						if ($percentage == 99 && ($filesize-$indexToGet) < 4096) {
+							$request->setDownload($sn, 100);
+							$percentage = 100;
+						}
 					}
+					$this->responseArray[3] = $percentage;
+	
+					$fileContentArray = $dataResponse->setFileContent4096Bytes($path, $indexToGet);
+					$fileContent = $fileContentArray[0];
+					$nbDataToSend = $fileContentArray[1];
+					$dataResponse->setHeader($command, $this->reqId, $nbDataToSend);
+	
+					$response = $dataResponse->getCesarMatrix(
+						$tempResponse = $dataResponse->setResponseData($fileContent)
+					);
 				}
-				$this->responseArray[3] = $percentage;
+				else {
+					echo ($path . " doesn't exist");
+					exit;
+				}
 
-				$fileContentArray = $dataResponse->setFileContent4096Bytes($_ENV['PACK_PATH'].deviceTypeArray[$deviceType].$fileName, $indexToGet);
-				$fileContent = $fileContentArray[0];
-				$nbDataToSend = $fileContentArray[1];
-				$dataResponse->setHeader($command, $this->reqId, $nbDataToSend);
-
-				$response = $dataResponse->getCesarMatrix(
-					$tempResponse = $dataResponse->setResponseData($fileContent)
-				);
 				break;
 			//Load & copy Logs
 			case "DB":
