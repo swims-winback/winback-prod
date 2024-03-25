@@ -461,12 +461,12 @@ class CommandDetect extends AbstractController {
 				
 				$fileContent = $dataResponse->getChunk($path, FW_OCTETS);
 				echo ($fileContent);
-				exit;
+				//exit;
 				$dataResponse->setHeader($command, $this->reqId);
-				$tempResponse = $dataResponse->setResponseData($fileContent);
+				$tempResponse = $dataResponse->setResponseData($fileContent); // data to get software in CD
 
-				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse);
-
+				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse); //Pointeur to get log file in DB
+				echo (bin2hex($tempResponse));
 				$tempResponse[37] = $forcedUpdate;
 				$finalResponse = $dataResponse->getDate($tempResponse);
 				$pinCode = intval($deviceInfo[PIN_CODE]);
