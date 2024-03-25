@@ -460,7 +460,7 @@ class CommandDetect extends AbstractController {
 				}
 				
 				$fileContent = $dataResponse->getChunk($path, FW_OCTETS);
-				echo (filesize($fileContent));
+				echo (strlen($fileContent));
 				$dataResponse->setHeader($command, $this->reqId);
 				$tempResponse = $dataResponse->setResponseData($fileContent);
 
