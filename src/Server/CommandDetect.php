@@ -453,7 +453,12 @@ class CommandDetect extends AbstractController {
 				$logTxt = "Version: ".$deviceInfo[DEVICE_VERSION]." Upload version: ".$deviceInfo[VERSION_UPLOAD]." Address: ".$deviceInfo[IP_ADDR]." Country: ".$deviceInfo[COUNTRY];
 				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
 				//$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
-				$fileContent = $dataResponse->getChunk($_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName, FW_OCTETS);
+				$path = $_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName;
+				echo ($path);
+				if (!file_exists($path)) {
+					exit;
+				}
+				$fileContent = $dataResponse->getChunk($path, FW_OCTETS);
 				$dataResponse->setHeader($command, $this->reqId);
 				$tempResponse = $dataResponse->setResponseData($fileContent);
 
