@@ -4,6 +4,8 @@ namespace App\Server;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use function PHPUnit\Framework\throwException;
+
 class CommandDetect extends AbstractController {
 
     /***  Var to set from request  ***/
@@ -269,6 +271,7 @@ class CommandDetect extends AbstractController {
 				}
 				*/
 				if (in_array($command, cmdBack)) {
+					//throw new \Exception("hello");
 					if (strlen($data)<221) {
 						echo ($data);
 						//exit;
@@ -454,19 +457,12 @@ class CommandDetect extends AbstractController {
 				$dataResponse->writeVersionLog($sn, $deviceType, $logTxt);
 				//$fileContent = $dataResponse->setFileContent($dataResponse->getFileContent($deviceType, $fileName));
 				$path = $_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName;
-				echo ($path);
-				if (!file_exists($path)) {
-					exit;
-				}
 				
 				$fileContent = $dataResponse->getChunk($path, FW_OCTETS);
-				echo ($fileContent);
-				//exit;
 				$dataResponse->setHeader($command, $this->reqId);
 				$tempResponse = $dataResponse->setResponseData($fileContent); // data to get software in CD
 
 				$tempResponse = $dataResponse->pointeurToResponse($sn, $deviceType, $tempResponse); //Pointeur to get log file in DB
-				echo (bin2hex($tempResponse));
 				$tempResponse[37] = $forcedUpdate;
 				$finalResponse = $dataResponse->getDate($tempResponse);
 				$pinCode = intval($deviceInfo[PIN_CODE]);
@@ -590,7 +586,6 @@ class CommandDetect extends AbstractController {
 							$request->setConfigId($sn, 0, CONFIG_SN_ID);
 							$deviceInfo[SERVER_ID] = 0;
 							$snId = 0;
-							//exit;
 						}
 						else {
 							// commandId : 4, sous-commande
@@ -709,12 +704,11 @@ class CommandDetect extends AbstractController {
 				//* return index in tcpserver to not send response if index is repeated*//
 				$this->responseArray[0] = $indexToGet;
 				$path = $_ENV['PACK_PATH'] . deviceTypeArray[$deviceType] . $fileName;
-				if(file_exists($path)) {
 					$filesize =  filesize($path);
 					$percentage = intval(($indexToGet/$filesize)*100);
 					if ($percentage == 0 && $indexToGet == 4096 || $percentage == 99 && ($filesize-$indexToGet) < 4096) {
 						$dataResponse->writeCommandLog($sn, $deviceType, "\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
-						echo("\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
+						//echo("\r\n".date("Y-m-d H:i:s | ").$indexToGet."/".$filesize . ' bytes - '.$percentage." %\r\n");
 						if ($percentage == 99 && ($filesize-$indexToGet) < 4096) {
 							$request->setDownload($sn, 100);
 							$percentage = 100;
@@ -730,12 +724,6 @@ class CommandDetect extends AbstractController {
 					$response = $dataResponse->getCesarMatrix(
 						$tempResponse = $dataResponse->setResponseData($fileContent)
 					);
-				}
-				else {
-					echo ($path . " doesn't exist");
-					exit;
-				}
-
 				break;
 			//Load & copy Logs
 			case "DB":
